@@ -1,0 +1,129 @@
+{
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/api/v1/auth/refreshToken",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/token/refresh-token",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/auth/revoke",
+            "UpstreamHttpMethod": [ "DELETE" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/token/revoke-token",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/register/email",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/auth/register/email",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/register/phone",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/auth/register/phone",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/login/email",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/auth/login/email",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/login/phone",
+            "UpstreamHttpMethod": [ "Post" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/auth/login/phone",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/user",
+            "UpstreamHttpMethod": [ "Get" ],
+            "DownstreamPathTemplate": "/api/v1/user?id={id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ],
+            "QoSOptions": {
+                "ExceptionsAllowedBeforeBreaking": 2,
+                "DurationOfBreak": 10000,
+                "TimeoutValue": 2000
+            },
+            "RateLimitOptions": {
+                "ClientWhitelist": [],
+                "EnableRateLimiting": true,
+                "Period": "5s",
+                "PeriodTimespan": 1,
+                "Limit": 1
+            },
+            "FileCacheOptions": { "TtlSeconds": 30 },
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": [ "access_as_user" ]
+            }
+            //"RouteClaimsRequirement": {
+            //  "role": "Administrator"
+            //}
+        },
+        {
+            "UpstreamPathTemplate": "/shoes/{id}",
+            "UpstreamHttpMethod": [ "Delete" ],
+            "DownstreamPathTemplate": "/api/shoes/{id}",
+            "DownstreamScheme": "https",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5001
+                }
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer"
+            },
+            "RouteClaimsRequirement": {
+                "Role": "Administrator"
+            }
+        }
+    ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7044"
+  }
+}

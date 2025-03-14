@@ -1,0 +1,39 @@
+﻿using MongoDB.Driver;
+using System.Linq.Expressions;
+
+namespace Shared.Domain.Repository
+{
+    public partial interface IMongoRepository<TDocument>
+    {
+        Task<bool> PingMongo();
+        Task<IQueryable<TDocument>> AsQueryable();
+        Task<List<TDocument>> FilterByAsync(
+            Expression<Func<TDocument, bool>> filterExpression);
+        Task<List<TProjected>> FilterByAsync<TProjected>(
+            Expression<Func<TDocument, bool>> filterExpression,
+            Expression<Func<TDocument, TProjected>> projectionExpression);
+        Task<TDocument> FindAsync(Expression<Func<TDocument, bool>> filterExpression);
+        Task<TDocument> FindByIdAsync(string id);
+        Task InsertAsync(TDocument model);
+        Task InsertManyAsync(ICollection<TDocument> models);
+        Task UpdateAsync(TDocument model, UpdateDefinition<TDocument> updateDefinition);
+        Task ReplaceOneAsync(TDocument model);
+        Task ReplaceManyAsync(List<TDocument> models);
+        Task DeleteAsync(Expression<Func<TDocument, bool>> filterExpression);
+        Task DeleteByIdAsync(string id);
+        Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression);
+        Task DeleteManyAsync(List<TDocument> models);
+        Task<bool> IsExist(Expression<Func<TDocument, bool>> filterExpression);
+        Task<bool> IsExist(string id);
+        void DropCollection();
+        Task RenameCollectionAsync(string newName);
+        Task DropAllIndexesAsync();
+        Task DropIndexAsync(string indexName);
+        Task CreateIndexAsync(string indexName, CreateIndexOptions? options = null);
+        Task CreateIndexesAsync(IEnumerable<CreateIndexModel<TDocument>> models);
+        Task CreateIndexesAsync(Dictionary<string, CreateIndexOptions<TDocument>> keyOptions);
+        Task GetIndexListAsync(IEnumerable<string> keynames);
+        Task<long> CountAllDocumentsAsync();
+        Task<long> CountDocumentsAsync(Expression<Func<TDocument, bool>> filterExpression);
+    }
+}
