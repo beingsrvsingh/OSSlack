@@ -30,7 +30,7 @@ namespace Shared.Infrastructure
 
                 var httpContext = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>().HttpContext;
 
-                httpClient = Utitlities.AddHeadersToken(httpClient, httpContext);
+                Utitlities.AddHeadersToken(httpClient, httpContext);                
 
             }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.RetryAsync(3)).
             AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(5, TimeSpan.FromSeconds(5)));

@@ -1,0 +1,26 @@
+{
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/api/v1/log",
+            "UpstreamHttpMethod": [ "POST" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/Logger/log",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7075
+                }
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": [ "access_as_user" ]
+            },
+            "RouteClaimsRequirement": {
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "Customer"
+            }
+        }
+    ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7044"
+  }
+}

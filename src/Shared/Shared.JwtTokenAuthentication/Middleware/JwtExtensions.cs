@@ -74,6 +74,10 @@ public static class JwtExtensions
                     context.Response.WriteAsJsonAsync(new FailureResponse("https://tools.ietf.org/html/rfc7231#section-6.5.3", new { message = "User does not have sufficient permissions for this profile.", reason = "forbidden" })).Wait();
                     await Task.CompletedTask;
                 },
+                OnMessageReceived = async context =>
+                {
+                    await Task.CompletedTask;
+                }
 
             };
         });

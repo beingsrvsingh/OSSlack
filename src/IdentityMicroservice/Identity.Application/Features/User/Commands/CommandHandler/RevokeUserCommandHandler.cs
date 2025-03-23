@@ -24,7 +24,7 @@ namespace Identity.Application.Features.User.Commands.CommandHandler
         {
             var refreshToken = request.Token ?? cookieService.GetCookie("refreshToken");
 
-            var validToken =await tokenService.GetRefreshToken(refreshToken, request.UserId);
+            var validToken = await tokenService.GetRefreshToken(refreshToken, request.UserId);
 
             if (validToken is null)
                 return Result.Failure(new FailureResponse(code: "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1", description: "Token is malfuntioned."));

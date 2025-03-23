@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Logging.API.Migrations
+namespace Logging.Infrastructure.Migrations
 {
     [DbContext(typeof(LoggerContext))]
-    [Migration("20240128175622_Initial-Create")]
+    [Migration("20250323050737_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

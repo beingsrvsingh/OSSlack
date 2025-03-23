@@ -37,7 +37,8 @@ namespace Identity.Infrastructure.Services.Identity
             if (user is not null)
             {
                 // Generate Access Token
-                var tokenString = await jwtService.GenerateAccessTokenAsync(RequiredParamsForGenerateToken(user!));
+                var role = await userManager.GetRolesAsync(user);
+                var tokenString = await jwtService.GenerateAccessTokenAsync(RequiredParamsForGenerateToken(user!, role));
 
                 return Tokens.GenerateJwt(user!.Id, tokenString, string.Empty, (int)JwtConstant.JWT_TOKEN_EXPIRATION.Subtract(DateTime.Now).TotalSeconds);
             }
@@ -75,8 +76,6 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task SaveRefreshTokenAsync(AspNetUserRefreshToken refreshToken)
         {
-            await RemoveRefreshTokens(refreshToken);
-
             unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
             await unitOfWork.SaveChangesAsync();
         }
@@ -94,27 +93,17 @@ namespace Identity.Infrastructure.Services.Identity
             return await unitOfWork.RefreshTokenRepository.FirstOrDefaultAsync(u => u.Token == token && u.UserId == userId);
         }
 
-        private async Task RemoveRefreshTokens(AspNetUserRefreshToken token)
+        private static List<Claim> RequiredParamsForGenerateToken(ApplicationUser user, IList<string> role)
         {
-            var result = await GetRefreshToken(token.Token, token.UserId);
-
-            if (result is not null)
-            {
-                unitOfWork.RefreshTokenRepository.DeleteAsync(result);
-                await unitOfWork.SaveChangesAsync();
-            }
+            return AddClaims(user, role);
         }
 
-        private static List<Claim> RequiredParamsForGenerateToken(ApplicationUser user)
+        private static List<Claim> AddClaims(ApplicationUser user, IList<string> role)
         {
-            return GetClaims(user);
-        }
-
-        private static List<Claim> GetClaims(ApplicationUser user)
-        {
+            
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(JwtConstant.JWT_TOKEN_USERID_KEYS, user.Id));
-            claims.Add(new Claim(JwtConstant.JWT_TOKEN_ROLE_KEYS, JwtConstant.JWT_TOKEN_DEFAULT_ROLE));
+            claims.Add(new Claim(JwtConstant.JWT_TOKEN_ROLE_KEYS, role.FirstOrDefault()?.ToLower() ?? "customer"));
             claims.Add(new Claim(JwtConstant.JWT_TOKEN_SCOPE_KEYS, JwtConstant.JWT_TOKEN_SCOPE));
 
             if (!string.IsNullOrEmpty(user.PhoneNumber))

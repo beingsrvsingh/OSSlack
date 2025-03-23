@@ -1,4 +1,5 @@
-﻿using Logging.Applicaton.Service;
+﻿using Logging.Application;
+using Logging.Applicaton.Service;
 using Logging.Domain.Repositories;
 using Logging.Domain.Service;
 using Logging.Domain.UOW;
@@ -8,8 +9,6 @@ using Logging.Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Review.Application;
-using Review.Infrastructure.Persistence.Context;
 using Shared.Utilities;
 
 namespace Logging.Infrastructure
@@ -39,9 +38,9 @@ namespace Logging.Infrastructure
         //https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli
         public static void MigrateDatabase(IServiceProvider serviceProvider)
         {
-            var dbContextOptions = serviceProvider.GetRequiredService<DbContextOptions<ReviewDbContext>>();
+            var dbContextOptions = serviceProvider.GetRequiredService<DbContextOptions<LoggerContext>>();
 
-            using (var dbContext = new ReviewDbContext(dbContextOptions))
+            using (var dbContext = new LoggerContext(dbContextOptions))
             {
                 dbContext.Database.Migrate();
             }

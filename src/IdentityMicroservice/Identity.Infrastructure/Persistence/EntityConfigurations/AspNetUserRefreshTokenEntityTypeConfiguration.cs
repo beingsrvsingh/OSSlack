@@ -8,7 +8,7 @@ namespace Identity.Infrastructure.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AspNetUserRefreshToken> entity)
         {
-            //entity.HasKey(x => x.UserId);
+            entity.HasKey(x => new { x.UserId, x.Token});
             //entity.HasIndex(x => x.UserId).IsClustered(true).IsUnique();
             //entity.Property(x => x.Token).HasColumnType("nvarchar(450)");
             //entity.Property(x => x.LastName).HasColumnType("nvarchar(50)");

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Logging.API.Migrations
+namespace Logging.Infrastructure.Migrations
 {
     [DbContext(typeof(LoggerContext))]
     partial class LoggerContextModelSnapshot : ModelSnapshot
