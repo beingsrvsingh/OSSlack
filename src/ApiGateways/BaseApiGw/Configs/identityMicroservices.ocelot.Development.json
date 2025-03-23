@@ -73,6 +73,18 @@
             ]
         },
         {
+            "UpstreamPathTemplate": "/api/v1/user/{userId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/user/user-info/{userId}",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7190
+                }
+            ]
+        },
+        {
             "UpstreamPathTemplate": "/api/v1/user",
             "UpstreamHttpMethod": [ "GET" ],
             "DownstreamPathTemplate": "/api/v1/user?id={id}",

@@ -15,7 +15,9 @@ namespace Logging.Infrastructure.Migrations
                 name: "AppsLog",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     IpAddress = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
                     Logged = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Level = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
@@ -26,14 +28,16 @@ namespace Logging.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppsLog", x => x.UserId);
+                    table.PrimaryKey("PK_AppsLog", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Log",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     IpAddress = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
                     Logged = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Level = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
@@ -44,18 +48,18 @@ namespace Logging.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Log", x => x.UserId);
+                    table.PrimaryKey("PK_Log", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppsLog_UserId",
+                name: "IX_AppsLog_Id",
                 table: "AppsLog",
-                column: "UserId");
+                column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Log_UserId",
+                name: "IX_Log_Id",
                 table: "Log",
-                column: "UserId");
+                column: "Id");
         }
 
         /// <inheritdoc />

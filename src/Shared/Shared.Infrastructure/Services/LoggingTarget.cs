@@ -5,7 +5,9 @@ using NLog.Config;
 using NLog.Targets;
 using Shared.Application.Common.Services.Interfaces;
 using Shared.Domain.Entities;
+using System.Dynamic;
 using System.Security.Claims;
+using System.Text.Json;
 using Utilities.Services;
 
 namespace Shared.Utilities.Services
@@ -28,29 +30,26 @@ namespace Shared.Utilities.Services
 
         protected async override void Write(LogEventInfo logEvent)
         {
-            //await SendTheMessageToRemoteHost(this.Host, logEvent);
+            await SendTheMessageToRemoteHost(this.Host, logEvent);
         }
 
         private async Task SendTheMessageToRemoteHost(string host, LogEventInfo logEvent)
         {
-            if (!string.IsNullOrEmpty(context.HttpContext!.Request.Headers.Authorization))
+            //Post
+            Log log = new Log()
             {
-                //Post
-                Log log = new Log()
-                {
-                    UserId = userId is null ? string.Empty : userId,
-                    Level = logEvent.Level.Name,
-                    IpAddress = securityService.GetIpAddress,
-                    Logged = DateTime.UtcNow,
-                    Message = logEvent.Message,
-                    Exception = logEvent.Exception?.Message,
-                    Callsite = logEvent.StackTrace.ToString(),
-                    Logger = logEvent.LoggerName,
-                };
 
-                await loggingClient.AddLog(log);
-            }
+                UserId = userId is null ? string.Empty : userId,
+                Level = logEvent.Level.Name,
+                IpAddress = securityService.GetIpAddress,
+                Logged = DateTime.UtcNow,
+                Message = logEvent.Exception.Message,
+                Exception = Convert.ToString(logEvent.Exception),
+                Callsite = Convert.ToString(logEvent.Exception.StackTrace),
+                Logger = logEvent.LoggerName,
+            };
 
+            await loggingClient.AddLog(log);
         }
 
     }

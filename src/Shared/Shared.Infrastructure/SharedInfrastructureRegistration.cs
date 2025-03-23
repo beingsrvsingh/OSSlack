@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Shared.Application.Common.Services.Interfaces;
 using Shared.Domain.Repository;
+using Shared.Infrastructure.Constants;
 using Shared.Infrastructure.Repositories;
 using Shared.Infrastructure.Services;
 using Shared.Utilities.Services;
@@ -24,12 +25,10 @@ namespace Shared.Infrastructure
 
             services.AddHttpClient<ILoggingApiClient, LoggingApiClient>("LoggerMicroservice", httpClient =>
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7075");
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "Review-Microservice");
+                httpClient.BaseAddress = new Uri(Config.LoggerBaseApiGatewayUri);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");          
 
-                var httpContext = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>().HttpContext;
-
+                var httpContext = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>().HttpContext;                
                 Utitlities.AddHeadersToken(httpClient, httpContext);                
 
             }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.RetryAsync(3)).

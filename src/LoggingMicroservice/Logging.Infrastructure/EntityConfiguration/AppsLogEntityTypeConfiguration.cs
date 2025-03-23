@@ -8,7 +8,8 @@ namespace Logging.Infrastructure.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<AppsLog> entity)
         {
-            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.Id);
+            entity.Property(e => e.UserId).HasColumnType("varchar").HasMaxLength(50);
             entity.Property(e => e.IpAddress).HasColumnType("varchar").HasMaxLength(20);
             entity.Property(e => e.Level).HasColumnType("varchar").HasMaxLength(10);
             entity.Property(e => e.Message).HasColumnType("varchar").HasMaxLength(500);

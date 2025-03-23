@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logging.Infrastructure.Migrations
 {
     [DbContext(typeof(LoggerContext))]
-    [Migration("20250323050737_InitialCreate")]
+    [Migration("20250323100538_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,8 +27,11 @@ namespace Logging.Infrastructure.Migrations
 
             modelBuilder.Entity("Logging.Domain.Entities.AppsLog", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Callsite")
                         .HasMaxLength(2000)
@@ -59,17 +62,25 @@ namespace Logging.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
 
                     b.ToTable("AppsLog");
                 });
 
             modelBuilder.Entity("Logging.Domain.Entities.Log", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Callsite")
                         .HasMaxLength(2000)
@@ -100,9 +111,14 @@ namespace Logging.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
 
                     b.ToTable("Log");
                 });

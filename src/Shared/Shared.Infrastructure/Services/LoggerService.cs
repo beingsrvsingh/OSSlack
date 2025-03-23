@@ -1,12 +1,13 @@
 ﻿using Shared.Application.Common.Services.Interfaces;
 using NLog.Web;
+using NLog;
 
 namespace Shared.Infrastructure.Services
 {
     public class LoggerService : ILoggerService
     {
         // Create nlog.config (lowercase all) file in the root of your project
-        protected NLog.Logger logger = NLogBuilder.ConfigureNLog("nlog.config")!.GetCurrentClassLogger();
+        protected NLog.Logger logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config")!.GetCurrentClassLogger();
 
         public void LogError(string errorMessage)
         {

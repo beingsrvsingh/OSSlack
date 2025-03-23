@@ -73,8 +73,7 @@ namespace Identity.API.Controllers.v1
         [HttpPost, Route("login/phone")]
         public async Task<IActionResult> LoginUsingPhone([FromBody] LoginUserPhoneCommand request)
         {
-            var response = await Mediator.Send(request);
-
+            var response = await Mediator.Send(request);            
             if (!response.Succeeded)
                 return NotFound(response);
 

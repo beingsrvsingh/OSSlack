@@ -8,12 +8,19 @@ using Identity.Application.Features.User.Queries.UserInfo;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Application.Common.Services.Interfaces;
 
 namespace Identity.API.Controllers.v1
 {
     [Authorize]
     public class UserController : BaseController
     {
+        private readonly ILoggerService loggerService;
+
+        public UserController(ILoggerService loggerService)
+        {
+            this.loggerService = loggerService;
+        }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
@@ -25,7 +32,7 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet, Route("user-info")]
         public async Task<IActionResult> GetUserInfo([FromQuery] GetUserInfoQuery query)
-        {
+        {            
             return new OkObjectResult(await Mediator.Send(query));
         }
 

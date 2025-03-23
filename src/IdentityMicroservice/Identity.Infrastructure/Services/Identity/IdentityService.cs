@@ -70,7 +70,7 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task<ApplicationUser?> GetUserAsync(string userId)
         {
-            return await this._userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return await this._userManager.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
         }
 
         public async Task<IdentityResult> CreateUserAsync(CreateUserEmailCommand request, CancellationToken cancellationToken = default)
