@@ -43,9 +43,9 @@ namespace Shared.Utilities.Services
                 Level = logEvent.Level.Name,
                 IpAddress = securityService.GetIpAddress,
                 Logged = DateTime.UtcNow,
-                Message = logEvent.Exception.Message,
+                Message = logEvent.Message,
                 Exception = Convert.ToString(logEvent.Exception),
-                Callsite = Convert.ToString(logEvent.Exception.StackTrace),
+                Callsite = Convert.ToString(logEvent.Exception?.StackTrace),
                 Logger = logEvent.LoggerName,
             };
 
