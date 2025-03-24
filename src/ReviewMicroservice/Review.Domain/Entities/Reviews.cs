@@ -2,11 +2,13 @@
 
 public partial class Reviews
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
-    public string? UserId { get; set; }
+    public required string UserId { get; set; }
 
-    public int? ProductId { get; set; }
+    public required int ProductId { get; set; }
+
+    public required String UserName { get; set; }
 
     public int Star { get; set; }
 

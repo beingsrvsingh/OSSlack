@@ -12,18 +12,14 @@ namespace Review.Application.Features.Queries.QueryHandlers
     {
         private readonly IReviewService reviewService;
         private readonly ILoggerService logger;
-        private readonly HttpClient httpClient;
-        private readonly IIdentityAPIClient identityAPIClient;
-        private readonly IUserProvider userProvider;
+        private readonly IIdentityApiClient identityAPIClient;
 
-        public GetReviewByProductQueryHandler(IReviewService reviewService, ILoggerService logger, HttpClient httpClient, 
-            IIdentityAPIClient identityAPIClient, IUserProvider userProvider)
+        public GetReviewByProductQueryHandler(IReviewService reviewService, ILoggerService logger,
+            IIdentityApiClient identityAPIClient)
         {
             this.reviewService = reviewService;
             this.logger = logger;
-            this.httpClient = httpClient;
             this.identityAPIClient = identityAPIClient;
-            this.userProvider = userProvider;
         }
         public async Task<Result> Handle(GetReviewByProductQuery request, CancellationToken cancellationToken)
         {
@@ -45,7 +41,7 @@ namespace Review.Application.Features.Queries.QueryHandlers
 
             List<ReviewResponse> reviews = PrepareReviews(result, response);
 
-            return Result.Success(reviews);
+            return Result.Success(result);
         }
 
         private static List<ReviewResponse> PrepareReviews(IReadOnlyList<Reviews> result, GetUserReponse? response)
@@ -54,12 +50,12 @@ namespace Review.Application.Features.Queries.QueryHandlers
 
             foreach (var item in result)
             {
-                string name = !response!.Succeeded ? "Annoymous" : response.Data.FirstOrDefault(r => r.UserId == item.UserId)!.UserName;
+                string name = response == null || !response.Succeeded ? "Annoymous" : response.Data.FirstOrDefault(r => r.UserId == item.UserId)?.UserName ?? "Annoymous";
 
                 var reviewDetail = item.ReviewDetails.FirstOrDefault(x => (x.ReviewId == item.Id) && (x.UserId == item.UserId));
 
-                bool isHelpFul = reviewDetail is null ? false : reviewDetail.IsHelpFul;
-                bool isReported = reviewDetail is null ? false : (reviewDetail.ReviewReportLookUpid > 0 ? true : false);
+                bool isHelpFul = reviewDetail is not null && reviewDetail.IsHelpful;
+                bool isReported = reviewDetail is not null && reviewDetail.ReviewReportLookUpId > 0;
 
                 ReviewResponse review = new()
                 {

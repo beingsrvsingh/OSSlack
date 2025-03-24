@@ -30,7 +30,7 @@ namespace Shared.Utilities.Services
 
         protected async override void Write(LogEventInfo logEvent)
         {
-            await SendTheMessageToRemoteHost(this.Host, logEvent);
+            //await SendTheMessageToRemoteHost(this.Host, logEvent);
         }
 
         private async Task SendTheMessageToRemoteHost(string host, LogEventInfo logEvent)

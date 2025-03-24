@@ -28,15 +28,14 @@ namespace Review.Application.Features.Commands
             if (records is null)
             {
                 var review = request.Adapt<ReviewDetail>();
-                review.IsHelpFul = review.IsHelpFul;
                 review.UserId = userProvider.UserId;
 
                 this.reviewService.AddAsync(review);
             }
             else
             {
-                records.IsHelpFul = request.Helpful;
-                records.ModiFiedDate = DateTime.UtcNow;
+                records.IsHelpful = request.Helpful;
+                records.ModifiedDate = DateTime.UtcNow;
 
                 this.reviewService.UpdateAsync(records);
             }

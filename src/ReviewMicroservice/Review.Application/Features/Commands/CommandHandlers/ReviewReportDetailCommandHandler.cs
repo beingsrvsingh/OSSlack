@@ -32,7 +32,7 @@ namespace Review.Application.Features.Commands
                 review.UserId = userProvider.UserId;
                 review.ReviewId = reviewId;
                 review.ProductId = productId;
-                records!.ReviewReportLookUpid = reportLookupId;
+                records!.ReviewReportLookUpId = reportLookupId;
                 review.Message = request.Message;                
 
                 this.reportService.AddAsync(review);
@@ -40,9 +40,9 @@ namespace Review.Application.Features.Commands
             else
             {
                 //Lookup id
-                records.ReviewReportLookUpid = reportLookupId;
+                records.ReviewReportLookUpId = reportLookupId;
                 records.Message = request.Message;
-                records.ModiFiedDate = DateTime.UtcNow;
+                records.ModifiedDate = DateTime.UtcNow;
 
                 this.reportService.UpdateAsync(records);
             }

@@ -12,7 +12,7 @@ using Review.Infrastructure.Persistence.Context;
 namespace Review.Infrastructure.Migrations
 {
     [DbContext(typeof(ReviewDbContext))]
-    [Migration("20240203200220_Initial-Create")]
+    [Migration("20250324120654_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,7 +35,8 @@ namespace Review.Infrastructure.Migrations
 
                     b.Property<string>("Action")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -48,17 +49,31 @@ namespace Review.Infrastructure.Migrations
 
                     b.Property<string>("TableId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("TableName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TableId");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("TableId"), false);
+
+                    b.HasIndex("TableName");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("TableName"), false);
+
+                    b.HasIndex("UserId");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("UserId"), false);
 
                     b.ToTable("ReviewAuditLogs");
                 });
@@ -74,16 +89,15 @@ namespace Review.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime");
 
-                    b.Property<bool>("IsHelpFul")
+                    b.Property<bool>("IsHelpful")
                         .HasColumnType("bit")
-                        .HasColumnName("isHelpFul");
+                        .HasColumnName("isHelpful");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime?>("ModiFiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ProductId")
@@ -92,7 +106,7 @@ namespace Review.Infrastructure.Migrations
                     b.Property<int>("ReviewId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReviewReportLookUpid")
+                    b.Property<int?>("ReviewReportLookUpId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -100,10 +114,14 @@ namespace Review.Infrastructure.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id")
                         .HasName("PK_ReviewDetails");
 
-                    b.HasIndex(new[] { "ReviewReportLookUpid" }, "IX_ReviewDetail_ReportTypeId");
+                    b.HasIndex(new[] { "ReviewReportLookUpId" }, "IX_ReviewDetail_ReportTypeId");
 
                     b.HasIndex(new[] { "ReviewId" }, "IX_ReviewDetail_ReviewId");
 
@@ -155,7 +173,7 @@ namespace Review.Infrastructure.Migrations
                     b.Property<bool>("IsReviewed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<string>("ReviewReason")
@@ -182,8 +200,13 @@ namespace Review.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
                         .HasName("PK_dbo.Reviews");
@@ -201,8 +224,7 @@ namespace Review.Infrastructure.Migrations
 
                     b.HasOne("Review.Domain.Entities.ReviewReportLookup", "ReviewReportLookUp")
                         .WithMany("ReviewDetails")
-                        .HasForeignKey("ReviewReportLookUpid")
-                        .IsRequired()
+                        .HasForeignKey("ReviewReportLookUpId")
                         .HasConstraintName("FK_ReviewDetail_ReviewReportLookup");
 
                     b.Navigation("Review");

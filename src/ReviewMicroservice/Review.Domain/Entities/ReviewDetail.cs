@@ -6,19 +6,21 @@
 
         public int ReviewId { get; set; }
 
-        public int? ReviewReportLookUpid { get; set; }
+        public int? ReviewReportLookUpId { get; set; }
 
-        public string UserId { get; set; } = null!;
+        public required string UserId { get; set; }
 
-        public int ProductId { get; set; }
+        public required String UserName { get; set; }
+
+        public required int ProductId { get; set; }
 
         public string? Message { get; set; }
 
-        public bool IsHelpFul { get; set; }
+        public bool IsHelpful { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime? ModiFiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Reviews Review { get; set; } = null!;
 

@@ -1,0 +1,38 @@
+{
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/api/v1/review?productId={productId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/review/getreviewbyproduct?productId={productId}",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7110
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/api/v1/review",
+            "UpstreamHttpMethod": [ "POST" ],
+            "DownstreamScheme": "https",
+            "DownstreamPathTemplate": "/api/v1/Review",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 7110
+                }
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": [ "access_as_user" ]
+            },
+            "RouteClaimsRequirement": {
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "Customer"
+            }
+        }
+    ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7044"
+  }
+}

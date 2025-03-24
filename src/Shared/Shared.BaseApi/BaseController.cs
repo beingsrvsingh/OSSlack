@@ -16,7 +16,7 @@ namespace BaseApi
 
         public string UserId => this.HttpContext.User?.FindFirstValue("Id")!;
 
-        public string UserName => this.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        public string UserName => this.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier)! ?? this.HttpContext.User?.FindFirstValue("PhoneNumber")!;
 
         public string Role => this.HttpContext.User?.FindFirstValue(ClaimTypes.Role)!;
 

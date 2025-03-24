@@ -10,6 +10,7 @@ using Review.Domain.Repository;
 using Review.Infrastructure.Persistence.Context;
 using Review.Infrastructure.Repositories;
 using Review.Infrastructure.Services;
+using Review.Infrastructure.Utils.Constants;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Repositories;
 using Shared.Utilities;
@@ -40,15 +41,14 @@ namespace Review.Infrastructure
             services.AddScoped<IReviewDetailRepository, ReviewDetailRepository>();
             services.AddScoped<IReportLookUpRepository, ReportLookUpRepository>();
 
-            services.AddHttpClient<IIdentityAPIClient, IdentityAPIClient>("IdentityAPIMicroservice", httpClient =>
+            services.AddHttpClient<IIdentityApiClient, IdentityApiClient>("IdentityAPIMicroservice", httpClient =>
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7190");
+                httpClient.BaseAddress = new Uri(Config.IdentityBaseApiGatewayUri);
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                httpClient.DefaultRequestHeaders.Add("User-Agent", "Review-Microservice");
 
                 var httpContext = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>().HttpContext;
 
-                httpClient = Utitlities.AddHeadersToken(httpClient, httpContext);
+                Utitlities.AddHeadersToken(httpClient, httpContext);
 
             }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.RetryAsync(3)).
             AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(5, TimeSpan.FromSeconds(5)));

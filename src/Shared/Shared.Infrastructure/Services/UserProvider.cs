@@ -10,7 +10,7 @@ namespace Shared.Infrastructure.Services
 
         public string UserId => _httpContextAccessor.HttpContext?.User.FindFirstValue("Id")!;
 
-        public string UserName => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)!;
+        public string UserName => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)! ?? _httpContextAccessor.HttpContext?.User?.FindFirstValue("PhoneNumber")!;
 
         public string Role => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)!;
 

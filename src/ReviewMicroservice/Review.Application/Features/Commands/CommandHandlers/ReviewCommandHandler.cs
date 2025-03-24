@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using MediatR;
 using Review.Application.Services;
+using Review.Domain.Entities;
 using Shared.Application.Common.Services.Interfaces;
 using Shared.Utilities.Response;
 
@@ -18,8 +19,9 @@ namespace Review.Application.Features.Commands.CommandHandlers
         }
         public Task<Result> Handle(ReviewCommand request, CancellationToken cancellationToken)
         {
-            var review = request.Adapt<Review.Domain.Entities.Reviews>();
+            var review = request.Adapt<Reviews>();
             review.UserId = userProvider.UserId;
+            review.UserName = userProvider.UserName;
 
             this.reviewService.AddAsync(review);
 

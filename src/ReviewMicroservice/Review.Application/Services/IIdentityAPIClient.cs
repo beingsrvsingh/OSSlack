@@ -2,7 +2,7 @@
 
 namespace Review.Application.Services
 {
-    public interface IIdentityAPIClient
+    public interface IIdentityApiClient
     {
         Task<GetUserReponse?> GetUserAsync(object request);
     }

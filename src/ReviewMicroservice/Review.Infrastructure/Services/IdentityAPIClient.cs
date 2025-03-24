@@ -7,11 +7,11 @@ using System.Text.Json;
 
 namespace Review.Infrastructure.Services
 {
-    public class IdentityAPIClient : IIdentityAPIClient
+    public class IdentityApiClient : IIdentityApiClient
     {
         private readonly HttpClient httpClient;
 
-        public IdentityAPIClient(HttpClient httpClient)
+        public IdentityApiClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
         }

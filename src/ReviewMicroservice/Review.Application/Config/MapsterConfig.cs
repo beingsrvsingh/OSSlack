@@ -24,7 +24,7 @@ namespace Review.Application.Config
                 dest => Int32.Parse(Cryptography.DecryptString(dest.ReviewId)))
                 .Map(src => src.ProductId,
                 dest => Int32.Parse(Cryptography.DecryptString(dest.ProductId)))
-                .Map(src => src.ReviewReportLookUpid,
+                .Map(src => src.ReviewReportLookUpId,
                 dest => Int32.Parse(Cryptography.DecryptString(dest.ReportId)))
                 .Map(src => src.CreatedDate,
                 dest => DateTime.Now);

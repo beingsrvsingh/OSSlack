@@ -15,8 +15,7 @@ namespace Review.API.Controllers.v1
         [HttpGet, Route("GetReviewByProduct")]
         public async Task<IActionResult> GetReview([FromQuery] GetReviewByProductQuery query)
         {
-            var response = await Mediator.Send(query);
-            return new OkObjectResult(new {});
+            return new OkObjectResult(await Mediator.Send(query));
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]

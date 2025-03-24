@@ -17,10 +17,10 @@ namespace Review.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TableName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TableId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TableName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    TableId = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     OldValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NewValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -52,8 +52,9 @@ namespace Review.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Star = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ShortDescription = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
@@ -75,20 +76,21 @@ namespace Review.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReviewId = table.Column<int>(type: "int", nullable: false),
-                    ReviewReportLookUpid = table.Column<int>(type: "int", nullable: false),
+                    ReviewReportLookUpId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    isHelpFul = table.Column<bool>(type: "bit", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    isHelpful = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ModiFiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ReviewDetails", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ReviewDetail_ReviewReportLookup",
-                        column: x => x.ReviewReportLookUpid,
+                        column: x => x.ReviewReportLookUpId,
                         principalTable: "ReviewReportLookup",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -99,9 +101,27 @@ namespace Review.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReviewAuditLogs_TableId",
+                table: "ReviewAuditLogs",
+                column: "TableId")
+                .Annotation("SqlServer:Clustered", false);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewAuditLogs_TableName",
+                table: "ReviewAuditLogs",
+                column: "TableName")
+                .Annotation("SqlServer:Clustered", false);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewAuditLogs_UserId",
+                table: "ReviewAuditLogs",
+                column: "UserId")
+                .Annotation("SqlServer:Clustered", false);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReviewDetail_ReportTypeId",
                 table: "ReviewDetails",
-                column: "ReviewReportLookUpid");
+                column: "ReviewReportLookUpId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReviewDetail_ReviewId",
