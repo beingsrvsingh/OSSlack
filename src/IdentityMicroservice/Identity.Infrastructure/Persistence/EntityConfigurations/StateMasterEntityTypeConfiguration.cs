@@ -8,16 +8,14 @@ namespace Identity.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<StateMaster> entity)
         {
-            entity.ToTable("StateMaster");
+            entity.ToTable("state_master");
 
-            entity.HasIndex(e => e.CountryMasterId, "IX_StateMaster_CountryMasterId");
+            entity.HasIndex(e => e.CountryMasterId, "IX_state_master_counter_master_id");
 
             entity.Property(e => e.Name).HasMaxLength(100);
 
             entity.HasOne(d => d.CountryMaster).WithMany(p => p.StateMasters)
-                .HasForeignKey(d => d.CountryMasterId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StateMaster_CountryMaster");
+                .HasForeignKey(d => d.CountryMasterId);
         }
     }
 }

@@ -1,19 +1,35 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
-namespace Identity.Domain.Entities
+namespace Identity.Domain.Entities;
+public class AspNetUserRefreshToken
 {
-    public class AspNetUserRefreshToken
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public string UserId { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public string Token { get; set; }
-        public DateTime Expires { get; set; }
-        public DateTime Created { get; set; }
-        public string CreatedByIp { get; set; }
-    }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [Required]
+    public string UserId { get; set; } = null!;
+
+    [Required]
+    public string Token { get; set; } = null!;
+
+    public DateTime Expires { get; set; }
+
+    public DateTime Created { get; set; }
+
+    public string CreatedByIp { get; set; } = null!;
+
+    public DateTime? Revoked { get; set; }
+
+    public string? RevokedByIp { get; set; }
+
+    public string? ReplacedByToken { get; set; }
+
+    public bool IsExpired => DateTime.UtcNow >= Expires;
+
+    public bool IsActive => Revoked == null && !IsExpired;
+
+    [ForeignKey(nameof(UserId))]
+    public required ApplicationUser User { get; set; }
 }

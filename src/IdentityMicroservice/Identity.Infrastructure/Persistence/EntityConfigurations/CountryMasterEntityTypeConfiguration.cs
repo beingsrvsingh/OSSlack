@@ -8,9 +8,11 @@ namespace Identity.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<CountryMaster> entity)
         {
-            entity.ToTable("CountryMaster");
+            entity.ToTable("country_master");
 
-            entity.HasIndex(e => e.Name, "IX_CountryMaster_Name");
+            entity.HasIndex(e => e.Name, "IX_countery_master_Name");
+            entity.HasIndex(e => e.DialCode, "IX_country_master_dial_code"); // Added index on DialCode
+
 
             entity.Property(e => e.AlphaTwoCode).HasMaxLength(2);
             entity.Property(e => e.DialCode).HasMaxLength(10);

@@ -27,7 +27,7 @@ namespace Identity.Infrastructure
             var config = Helper.LoadAppSettings();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    options.UseNpgsql(config.GetConnectionString("DefaultConnection"),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 

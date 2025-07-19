@@ -5,7 +5,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace Identity.Infrastructure.Repositories
 {
-    public class UserInfoRepository : Repository<AspNetUserInfo>, IUserInfoRepository
+    public class UserInfoRepository : Repository<ApplicationUser>, IUserInfoRepository
     {
         private readonly ApplicationDbContext dbContext;
 

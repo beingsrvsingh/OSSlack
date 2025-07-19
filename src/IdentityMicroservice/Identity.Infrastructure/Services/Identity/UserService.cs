@@ -19,14 +19,14 @@ namespace Identity.Infrastructure.Services.Identity
             this.userManger = userManger;
         }        
 
-        public async Task<AspNetUserInfo?> GetUserInfoAsync(string id)
+        public async Task<ApplicationUser?> GetUserInfoAsync(string id)
         {
-            return await unitOfWork.UserInfoRepository.FirstOrDefaultAsync((x) => x.UserId.Equals(id) || x.UserId.Equals(id));
+            return await unitOfWork.UserInfoRepository.FirstOrDefaultAsync((x) => x.Id == id);
         }
 
         public async Task CreateUserInfoAsync(CreateUserInfoCommand request, CancellationToken cancellationToken)
         {
-            var userInfo = request.Adapt<AspNetUserInfo>();
+            var userInfo = request.Adapt<ApplicationUser>();
             unitOfWork.UserInfoRepository.AddAsync(userInfo);
             await unitOfWork.SaveChangesAsync();
         }
@@ -42,14 +42,14 @@ namespace Identity.Infrastructure.Services.Identity
             await unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<AspNetUserInfo?> GetUserAvatarAsync(string id)
+        public async Task<ApplicationUser?> GetUserAvatarAsync(string id)
         {
-            return await unitOfWork.UserInfoRepository.FirstOrDefaultAsync((x) => x.UserId.Equals(id) || x.UserId.Equals(id));
+            return await unitOfWork.UserInfoRepository.FirstOrDefaultAsync((x) => x.Id == id);
         }
 
         public async Task CreateUserAvatarAsync(CreateUserAvatarCommand request, CancellationToken cancellationToken)
         {
-            var userInfo = request.Adapt<AspNetUserInfo>();
+            var userInfo = request.Adapt<ApplicationUser>();
             unitOfWork.UserInfoRepository.AddAsync(userInfo);
             await unitOfWork.SaveChangesAsync();
         }
@@ -58,7 +58,12 @@ namespace Identity.Infrastructure.Services.Identity
         {
             var entity = await GetUserAvatarAsync(request.Id);
 
-            entity!.AvatarURI = request.AvatarURI;
+            if(entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity), "User not found");
+            }
+
+            entity.ProfilePictureUrl = request.AvatarURI;
 
             unitOfWork.UserInfoRepository.UpdateAsync(entity);
             await unitOfWork.SaveChangesAsync();

@@ -199,19 +199,19 @@ namespace Identity.Infrastructure.Repositories
                     switch (entry.State)
                     {
                         case EntityState.Added:
-                            auditEntry.Action = EntityState.Added.ToString();
+                            auditEntry.Action = AuditAction.Insert;
                             auditEntry.NewValues[propertyName] = newPropertyValues!;
                             break;
 
                         case EntityState.Deleted:
-                            auditEntry.Action = EntityState.Deleted.ToString();
+                            auditEntry.Action = AuditAction.Delete;
                             auditEntry.OldValues[propertyName] = oldPropertyValues!;
                             break;
 
                         case EntityState.Modified:
                             if (property.IsModified)
                             {
-                                auditEntry.Action = EntityState.Modified.ToString();
+                                auditEntry.Action = AuditAction.Update;
                                 auditEntry.OldValues[propertyName] = oldPropertyValues!;
                                 auditEntry.NewValues[propertyName] = newPropertyValues!;
                             }

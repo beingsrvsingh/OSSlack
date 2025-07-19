@@ -2,5 +2,5 @@
 
 namespace Identity.Domain.Core.Repository
 {
-    public interface IUserInfoRepository : IRepository<AspNetUserInfo> { }    
+    public interface IUserInfoRepository : IRepository<ApplicationUser> { }    
 }

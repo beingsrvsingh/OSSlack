@@ -1,14 +1,35 @@
-﻿namespace Identity.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Identity.Domain.Entities;
 
 public partial class AspNetUserDevice
 {
+    [Key]
     public int Id { get; set; }
 
-    public required string UserId { get; set; }
+    [Required]
+    public string UserId { get; set; } = null!;
 
-    public required string IpAddress { get; set; }
+    [Required]
+    public string IpAddress { get; set; } = null!;
 
-    public required string DeviceName { get; set; }
-    public required string Browser { get; set; }
-    public required string OS { get; set; }
+    [Required]
+    public string DeviceName { get; set; } = null!;
+
+    [Required]
+    public string Browser { get; set; } = null!;
+
+    [Required]
+    public string OS { get; set; } = null!;
+
+    public DateTime LastAccessed { get; set; } = DateTime.UtcNow;
+
+    public bool IsCurrent { get; set; } = false;
+
+    public bool IsTrusted { get; set; } = false;
+
+    [ForeignKey(nameof(UserId))]
+    public virtual ApplicationUser User { get; set; } = null!;
 }
+

@@ -6,9 +6,9 @@ namespace Identity.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<AspNetUserInfo?> GetUserInfoAsync(string id);
+        Task<ApplicationUser?> GetUserInfoAsync(string id);
 
-        Task<AspNetUserInfo?> GetUserAvatarAsync(string id);
+        Task<ApplicationUser?> GetUserAvatarAsync(string id);
 
         Task CreateUserInfoAsync(CreateUserInfoCommand request, CancellationToken cancellationToken = default);
 

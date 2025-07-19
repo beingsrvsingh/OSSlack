@@ -23,7 +23,7 @@ namespace Identity.Application.Features.User.Queries.QueryHandler.UserInfo
 
             return Result.Success(new UserAvatarResponse
             {
-                AvatarUri = userAvatar.AvatarURI!
+                AvatarUri = userAvatar.ProfilePictureUrl!
             });
         }
     }

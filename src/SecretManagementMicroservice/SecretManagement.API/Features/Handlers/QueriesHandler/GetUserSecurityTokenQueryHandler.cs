@@ -1,8 +1,8 @@
-﻿using Configuration.Features.Queries;
+﻿using SecretManagement.Features.Queries;
 using MediatR;
 using System.Net.Http.Headers;
 
-namespace Configuration.Features.QueriesHandler
+namespace SecretManagement.Features.QueriesHandler
 {
     internal class GetUserSecurityTokenQueryHandler : IRequestHandler<GetUserSecurityTokenQuery, String>
     {

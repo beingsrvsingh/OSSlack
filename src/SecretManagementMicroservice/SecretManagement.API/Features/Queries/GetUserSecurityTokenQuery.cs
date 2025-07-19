@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Configuration.Features.Queries
+namespace SecretManagement.Features.Queries
 {
     public record GetUserSecurityTokenQuery : IRequest<String>
     {

@@ -8,7 +8,7 @@ namespace Shared.Domain.Entities
         public EntityEntry Entry { get; } = entry;
         public string TableName { get; set; } = null!;
         public string KeyValues { get; set; } = null!;
-        public string Action { get; set; } = null!;
+        public AuditAction Action { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; } = null!;
         public Dictionary<string, object> OldValues { get; } = new Dictionary<string, object>();
