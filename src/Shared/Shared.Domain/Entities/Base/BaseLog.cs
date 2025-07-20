@@ -1,6 +1,6 @@
 ﻿namespace Shared.Domain.Entities
 {
-    public class Log
+    public class BaseLog
     {
         public string UserId { get; set; } = null!;
         public string IpAddress { get; set; } = null!;

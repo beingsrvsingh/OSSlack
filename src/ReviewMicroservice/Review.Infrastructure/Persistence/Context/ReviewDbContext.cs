@@ -9,7 +9,7 @@ public partial class ReviewDbContext(DbContextOptions<ReviewDbContext> options) 
     public virtual DbSet<Reviews> Reviews => Set<Reviews>();
     public virtual DbSet<ReviewReportLookup> ReportTypes => Set<ReviewReportLookup>();
     public virtual DbSet<ReviewDetail> ReviewDetails => Set<ReviewDetail>();
-    public virtual DbSet<ReviewAuditLog> ReviewAuditLogs => Set<ReviewAuditLog>();
+    public virtual DbSet<AuditLog> ReviewAuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -5,6 +5,6 @@ namespace Identity.Application.Features.User.Queries.UserInfo
 {
     public record GetUserAvatarQuery : IRequest<Result>
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     };
 }

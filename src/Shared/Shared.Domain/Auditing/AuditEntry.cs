@@ -19,15 +19,16 @@ namespace Shared.Domain.Entities
 
         public BaseAuditLog ToAudit()
         {
-            var audit = new BaseAuditLog();
-            audit.TableName = TableName;
-            audit.Action = Action;
-            audit.CreatedOn = CreatedOn;
-            audit.UserId = CreatedBy;
-            audit.TableId = KeyValues;
-            audit.OldValues = OldValues.Count == 0 ? null : JsonConvert.SerializeObject(OldValues);
-            audit.NewValues = NewValues.Count == 0 ? null : JsonConvert.SerializeObject(NewValues);
-            return audit;
+            return new BaseAuditLog
+            {
+                TableName = TableName,
+                Action = Action,
+                CreatedOn = CreatedOn,
+                UserId = CreatedBy,
+                TableId = KeyValues,
+                OldValues = OldValues.Count == 0 ? null : JsonConvert.SerializeObject(OldValues),
+                NewValues = NewValues.Count == 0 ? null : JsonConvert.SerializeObject(NewValues)
+            };
         }
     }
 }

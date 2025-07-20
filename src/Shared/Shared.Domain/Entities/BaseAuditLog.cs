@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Shared.Domain.Entities
-{
+namespace Shared.Domain.Entities;
+
+
 public class BaseAuditLog : BaseEntity
 {
     [Key]
@@ -28,6 +29,4 @@ public class BaseAuditLog : BaseEntity
     public DateTimeOffset CreatedOn { get; set; }
 
     public string? IpAddress { get; set; }
-}
-
 }

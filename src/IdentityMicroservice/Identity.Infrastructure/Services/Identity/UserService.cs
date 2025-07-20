@@ -38,7 +38,7 @@ namespace Identity.Infrastructure.Services.Identity
             userInfo!.FirstName = request.FirstName;
             userInfo.LastName = request.LastName;
 
-            unitOfWork.UserInfoRepository.UpdateAsync(userInfo);
+            await unitOfWork.UserInfoRepository.UpdateAsync(userInfo);
             await unitOfWork.SaveChangesAsync();
         }
 
@@ -65,7 +65,7 @@ namespace Identity.Infrastructure.Services.Identity
 
             entity.ProfilePictureUrl = request.AvatarURI;
 
-            unitOfWork.UserInfoRepository.UpdateAsync(entity);
+            await unitOfWork.UserInfoRepository.UpdateAsync(entity);
             await unitOfWork.SaveChangesAsync();
         }
 
@@ -83,7 +83,7 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task UpdateUserAddressAsnc(AspNetUserAddress request, CancellationToken cancellationToken = default)
         {
-            unitOfWork.AddressRepository.UpdateAsync(request);
+            await unitOfWork.AddressRepository.UpdateAsync(request);
             await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, request.Id);
         }
     }

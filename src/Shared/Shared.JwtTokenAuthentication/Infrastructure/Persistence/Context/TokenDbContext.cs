@@ -14,7 +14,7 @@ public partial class TokenDbContext(DbContextOptions<TokenDbContext> options, IR
     public virtual DbSet<AspNetUserSecurityToken> AspNetUserSecurityTokens => Set<AspNetUserSecurityToken>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.
-        UseSqlServer(Cryptography.DecryptString(registryService.GetConnectionString()), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+        UseSqlServer(Cryptography.DecryptString(registryService.GetConnectionString()!), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
         .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name));
 
     protected override void OnModelCreating(ModelBuilder builder)

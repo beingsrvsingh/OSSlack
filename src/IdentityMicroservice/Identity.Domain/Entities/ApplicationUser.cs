@@ -22,7 +22,7 @@ namespace Identity.Domain.Entities
         public virtual ICollection<AspNetUserAddress> AspNetUserAddresses { get; set; } = new List<AspNetUserAddress>();
         public virtual ICollection<AspNetUserDevice> AspNetUserDevices { get; set; } = new List<AspNetUserDevice>();
         public virtual ICollection<AspNetUserRefreshToken> AspNetUserRefreshTokens { get; set; } = new List<AspNetUserRefreshToken>();
-        public virtual ICollection<AspNetUserAuditLog> AspNetUserAudits { get; set; } = new List<AspNetUserAuditLog>();
+        public virtual ICollection<AuditLog> AspNetUserAudits { get; set; } = new List<AuditLog>();
 
     }
 }

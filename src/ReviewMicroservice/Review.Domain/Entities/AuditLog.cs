@@ -2,5 +2,5 @@
 
 namespace Review.Domain.Entities
 {
-    public class ReviewAuditLog : BaseAuditLog { }
+    public class AuditLog : BaseAuditLog { }
 }

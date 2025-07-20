@@ -4,7 +4,7 @@ using Shared.Domain.UOW;
 
 namespace Identity.Domain.Core.UOW
 {
-    public interface IUnitOfWork : IBaseUnitOfWork, IAuditLog, IDisposable
+    public interface IUnitOfWork : IBaseUnitOfWork
     {
         IApplicationUserRepository ApplicationUserRepository { get; }
         IUserInfoRepository UserInfoRepository { get; }

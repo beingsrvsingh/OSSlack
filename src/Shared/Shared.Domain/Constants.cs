@@ -1,6 +1,6 @@
 ﻿namespace Shared.Domain
 {
-    public class Constants
+    public static class Constants
     {
     }
 }

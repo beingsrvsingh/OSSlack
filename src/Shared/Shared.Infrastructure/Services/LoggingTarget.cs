@@ -36,7 +36,7 @@ namespace Shared.Utilities.Services
         private async Task SendTheMessageToRemoteHost(string host, LogEventInfo logEvent)
         {
             //Post
-            Log log = new Log()
+            BaseLog log = new BaseLog()
             {
 
                 UserId = userId is null ? string.Empty : userId,
@@ -49,7 +49,7 @@ namespace Shared.Utilities.Services
                 Logger = logEvent.LoggerName,
             };
 
-            await loggingClient.AddLog(log);
+            await loggingClient.AddLogAsync(log);
         }
 
     }

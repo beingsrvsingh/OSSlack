@@ -10,10 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
-using Shared.Infrastructure.Services;
-using Shared.Infrastructure.Workers;
 using Shared.Utilities;
 using System.Reflection;
 using Utilities;
@@ -31,14 +28,8 @@ namespace Identity.Infrastructure
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 
-            services.AddHostedService<ConfigurationLoadingBackgroundService>();
-
-            services.AddAllHealthChecks(config.GetConnectionString("DefaultConnection")!);
-
-            //Services
-            services.AddApplicationServices();
-            services.AddSharedInfrastructureDependencyInjection();
-            services.AddUtilitiesServiceRegistration();            
+            //Default Services
+            services.AddApplicationServices();   
 
             //add identity
             var builder = services.AddIdentityCore<ApplicationUser>(options =>

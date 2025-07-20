@@ -4,6 +4,6 @@ namespace SecretManagement.Features.Queries
 {
     public record GetUserSecurityTokenQuery : IRequest<String>
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

@@ -4,6 +4,6 @@ namespace Shared.Application.Common.Services.Interfaces
 {
     public interface ILoggingApiClient
     {
-        Task AddLog(Log request);
+        Task AddLogAsync(BaseLog request);
     }
 }

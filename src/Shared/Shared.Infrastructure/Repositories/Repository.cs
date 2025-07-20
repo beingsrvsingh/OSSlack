@@ -64,6 +64,16 @@ namespace Shared.Infrastructure.Repositories
             return await this.dbSet.FindAsync(id);
         }
 
+        public async virtual Task<T?> GetBy(Expression<Func<T, bool>> exp)
+        {
+            return await this.dbSet.AsNoTracking().FirstOrDefaultAsync(exp);
+        }
+
+        public async virtual Task<bool> AnyAsync(Expression<Func<T, bool>> exp)
+        {
+            return await this.dbSet.AnyAsync(exp);
+        }
+
         public virtual async Task<T?> GetByIdAsync(string id)
         {
             return await this.dbSet.FindAsync(id);
@@ -127,34 +137,32 @@ namespace Shared.Infrastructure.Repositories
             await this.dbSet.AddRangeAsync(entities);
         }
 
-        public virtual void UpdateAsync(T entity)
+        public virtual Task UpdateAsync(T entity)
         {
             this.dbSet.Update(entity);
+            return Task.CompletedTask;
         }
 
-        public virtual void DeleteAsync(T entity)
+        public virtual Task DeleteAsync(T entity)
         {
-            this.dbSet.Attach(entity);
-            this.dbSet.Remove(entity);
+            dbSet.Attach(entity);
+            dbSet.Remove(entity);
+            return Task.CompletedTask;
         }
 
-        public virtual void Delete(Expression<Func<T, bool>> where)
+        public virtual Task Delete(Expression<Func<T, bool>> where)
         {
             IEnumerable<T> objects = this.dbSet.Where<T>(where).AsEnumerable();
             foreach (T obj in objects)
             {
                 this.dbSet.Remove(obj);
             }
+            return Task.CompletedTask;
         }
 
-        public virtual void Save()
+        public async virtual Task SaveChangesAsync()
         {
-            this._dbContext.SaveChanges();
-        }
-
-        public async virtual Task<T?> GetBy(Expression<Func<T, bool>> exp)
-        {
-           return await this.dbSet.AsQueryable().FirstOrDefaultAsync(exp);
+            await this._dbContext.SaveChangesAsync();
         }        
     }
 }

@@ -10,7 +10,7 @@ namespace Identity.Application.Features.User.Commands.CreateUser
         [Display(Name = "Mobile Number")]
         public required string PhoneNumber { get; init; }
 
-        public String RoleName { get; set; }
+        public String RoleName { get; set; } = null!;
 
         public required string FirstName { get; init; }
 

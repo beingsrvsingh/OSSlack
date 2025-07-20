@@ -65,7 +65,7 @@ namespace Identity.Infrastructure.Services.Identity
                 var refreshToken = newRefreshToken.Adapt<AspNetUserRefreshToken>();
                 refreshToken.UserId = userId;
 
-                unitOfWork.RefreshTokenRepository.UpdateAsync(refreshToken);
+                await unitOfWork.RefreshTokenRepository.UpdateAsync(refreshToken);
                 await unitOfWork.SaveChangesAsync();
 
                 return new AuthenticateResponse(userId, jwtToken.AccessToken, newRefreshToken.Token, jwtToken.ExpiresIn);
@@ -82,7 +82,7 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task RevokeTokenAsync(AspNetUserRefreshToken aspNetUserRefreshToken)
         {
-            unitOfWork.RefreshTokenRepository.DeleteAsync(aspNetUserRefreshToken);
+            await unitOfWork.RefreshTokenRepository.DeleteAsync(aspNetUserRefreshToken);
             await unitOfWork.SaveChangesAsync();
         }
 

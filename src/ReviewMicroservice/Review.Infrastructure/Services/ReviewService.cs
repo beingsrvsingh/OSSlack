@@ -19,16 +19,16 @@ namespace Review.Infrastructure.Services
             return await repository.GetBy(r => r.Id == reviewId && r.UserId == userId && r.ProductId == productId);
         }
 
-        public void AddAsync(Reviews entities)
+        public async Task AddAsync(Reviews entities)
         {
             repository.AddAsync(entities);
-            repository.Save();
+            await repository.SaveChangesAsync();
         }
 
-        public void UpdateAsync(Reviews entities)
+        public async Task UpdateAsync(Reviews entities)
         {
-            repository.UpdateAsync(entities);
-            repository.Save();
+            await repository.UpdateAsync(entities);
+            await repository.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<Reviews>> GetReviewByProduct(int productId, int totalRecords = 0, int takeRecords = 10)

@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Identity.Infrastructure;
 using JwtTokenAuthentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -5,6 +7,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Shared.Application.Common.Services.Interfaces;
 using Shared.BaseApi.Extensions;
+using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Services;
 using System.Reflection;
@@ -15,11 +18,19 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
     builder.Services.AddHttpContextAccessor();
     //Authentication and authorization        
     builder.Services.AddJwtTokenAuthentication();
     //Services
     builder.Services.AddInfrastructureServices();
+
+    builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    {
+        containerBuilder.RegisterModule(new SharedInfrastructureModule());
+        containerBuilder.RegisterModule(new SharedUtilitiesModule());        
+    });
 
     // Custom exception handler
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -79,6 +80,26 @@ namespace Utilities
             context.Response.ContentType = MediaTypeNames.Application.Json;
             await context.Response.WriteAsync(JsonConvert.SerializeObject(new { Code = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1", Description = new string[] { "Token is missing." } }));
             return context;
+        }
+
+        public static bool IsValidJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return false;
+
+            try
+            {
+                var obj = JToken.Parse(json);
+                return true;
+            }
+            catch (JsonReaderException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

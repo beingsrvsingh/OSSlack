@@ -30,14 +30,14 @@ namespace Review.Application.Features.Commands
                 var review = request.Adapt<ReviewDetail>();
                 review.UserId = userProvider.UserId;
 
-                this.reviewService.AddAsync(review);
+                await this.reviewService.AddAsync(review);
             }
             else
             {
                 records.IsHelpful = request.Helpful;
                 records.ModifiedDate = DateTime.UtcNow;
 
-                this.reviewService.UpdateAsync(records);
+                await this.reviewService.UpdateAsync(records);
             }
 
             return Result.Success();

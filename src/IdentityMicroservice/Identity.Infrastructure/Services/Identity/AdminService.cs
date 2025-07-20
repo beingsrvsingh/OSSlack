@@ -12,25 +12,22 @@ namespace Identity.Infrastructure.Services.Identity
         {
             this.repository = repository;
         }
-        public Task AddCountryRange(List<CountryMaster> request)
+        public async Task AddCountryRange(List<CountryMaster> request)
         {
-            repository.CountryMasterRepository.AddRangeAsync(request.ToArray());
-            repository.CountryMasterRepository.Save();
-            return Task.CompletedTask;
+            await repository.CountryMasterRepository.AddRangeAsync(request.ToArray());
+            await repository.CountryMasterRepository.SaveChangesAsync();
         }
 
-        public Task AddCityRange(List<CityMaster> request)
+        public async Task AddCityRange(List<CityMaster> request)
         {
-            repository.CityMasterRepository.AddRangeAsync(request.ToArray());
-            repository.CityMasterRepository.Save();
-            return Task.CompletedTask;
+            await repository.CityMasterRepository.AddRangeAsync(request.ToArray());
+            await repository.CityMasterRepository.SaveChangesAsync();
         }
 
-        public Task AddStateRange(List<StateMaster> request)
+        public async Task AddStateRange(List<StateMaster> request)
         {
-            repository.StateMasterRepository.AddRangeAsync(request.ToArray());
-            repository.StateMasterRepository.Save();
-            return Task.CompletedTask;
+            await repository.StateMasterRepository.AddRangeAsync(request.ToArray());
+            await repository.StateMasterRepository.SaveChangesAsync();
         }
         public async Task<StateMaster?> GetStateByName(string name)
         {

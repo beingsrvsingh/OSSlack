@@ -5,6 +5,6 @@ namespace Identity.Application.Features.User.Commands
 {
     public class DeleteUserCommand : IRequest<Result>
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

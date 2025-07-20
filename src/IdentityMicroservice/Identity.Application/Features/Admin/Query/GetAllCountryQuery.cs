@@ -3,7 +3,7 @@ using Shared.Utilities.Response;
 
 namespace Identity.Application.Features.Admin.Commands
 {
-    public record GetAllCountryQuery : IRequest<IResult>
+    public record GetAllCountryQuery : IRequest<Result>
     {
     }
 }

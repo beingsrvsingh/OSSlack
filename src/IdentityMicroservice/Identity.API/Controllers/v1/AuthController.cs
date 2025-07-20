@@ -159,7 +159,6 @@ namespace Identity.API.Controllers.v1
             return Ok();
         }
 
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

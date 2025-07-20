@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Shared.Utilities.Response
 {
-    public class Result : BaseResponse, IResult
+    public class Result : BaseResponse
     {
         internal Result(bool succeeded, object? data, object? errors)
         {
@@ -40,7 +39,7 @@ namespace Shared.Utilities.Response
         }
     }
 
-    public class FailureResponse : IErrorResponse
+    public class FailureResponse
     {
         [SetsRequiredMembers]
         public FailureResponse(string code, object description)
@@ -51,10 +50,4 @@ namespace Shared.Utilities.Response
         public required string Code { get; set; }
         public required object Description { get; set; } = new();
     }
-
-    public interface IErrorResponse { }
-
-    public interface ISuccessResponse { }
-
-    public interface IResult { }
 }

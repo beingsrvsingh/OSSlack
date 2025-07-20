@@ -13,16 +13,16 @@ namespace Review.Infrastructure.Services
             return await repository.GetBy(r => r.ReviewId == reviewId && r.UserId == userId && r.ProductId == productId);
         }
 
-        public void AddAsync(ReviewDetail entities)
+        public async Task AddAsync(ReviewDetail entities)
         {
             repository.AddAsync(entities);
-            repository.Save();
+            await repository.SaveChangesAsync();
         }        
 
-        public void UpdateAsync(ReviewDetail entities)
+        public async Task UpdateAsync(ReviewDetail entities)
         {
-            repository.UpdateAsync(entities);
-            repository.Save();
+            await repository.UpdateAsync(entities);
+            await repository.SaveChangesAsync();
         }
     }
 }

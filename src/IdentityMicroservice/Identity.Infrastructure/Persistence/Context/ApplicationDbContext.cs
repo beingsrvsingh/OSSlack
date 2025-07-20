@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Identity.Domain.Entities;
+﻿using Identity.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -11,7 +10,7 @@ public partial class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
     public virtual DbSet<AspNetUserRefreshToken> AspNetUserRefreshTokens => Set<AspNetUserRefreshToken>();
-    public virtual DbSet<AspNetUserAuditLog> AspNetUserAuditLogs => Set<AspNetUserAuditLog>();
+    public virtual DbSet<AuditLog> AspNetUserAuditLogs => Set<AuditLog>();
     public virtual DbSet<AspNetUserDevice> AspNetUserDevices => Set<AspNetUserDevice>();
     public virtual DbSet<AspNetUserAddress> AspNetUserAddresses => Set<AspNetUserAddress>();
     public virtual DbSet<AspNetUserMembership> AspNetUserMemberships => Set<AspNetUserMembership>();

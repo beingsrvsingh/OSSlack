@@ -20,6 +20,7 @@ namespace Shared.Domain.Repository
 
         Task<T?> GetByIdAsync(int id);
         Task<T?> GetByIdAsync(string id);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> exp);
         Task<T?> SingleOrDefaultAsync();
         Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
         Task<T?> FirstOrDefaultAsync();
@@ -27,10 +28,10 @@ namespace Shared.Domain.Repository
         Func<IQueryable<T>, IOrderedQueryable<T>> GetOrderBy(string orderColumn, string orderType);
         T AddAsync(T entity);
         Task AddRangeAsync(params T[] entities);
-        void UpdateAsync(T entity);
-        void DeleteAsync(T entity);
-        void Delete(Expression<Func<T, bool>> where);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task Delete(Expression<Func<T, bool>> where);
 
-        void Save();
+        Task SaveChangesAsync();
     }
 }

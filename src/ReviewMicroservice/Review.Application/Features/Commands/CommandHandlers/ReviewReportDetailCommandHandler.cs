@@ -35,7 +35,7 @@ namespace Review.Application.Features.Commands
                 records!.ReviewReportLookUpId = reportLookupId;
                 review.Message = request.Message;                
 
-                this.reportService.AddAsync(review);
+                await this.reportService.AddAsync(review);
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Review.Application.Features.Commands
                 records.Message = request.Message;
                 records.ModifiedDate = DateTime.UtcNow;
 
-                this.reportService.UpdateAsync(records);
+                await this.reportService.UpdateAsync(records);
             }
             return Result.Success();
         }

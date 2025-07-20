@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Amazon.Runtime.Internal.Util;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -10,7 +12,7 @@ using System.Security.Authentication;
 
 namespace Shared.Infrastructure.Repositories
 {
-    public partial class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : MongoDocument
+    public partial class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDocument : BaseMongoDocument
     {
         private readonly IMongoCollection<TDocument> _collection;
         private readonly IMongoDatabase _database;
@@ -120,10 +122,11 @@ namespace Shared.Infrastructure.Repositories
 
         public async Task DropAllIndexesAsync()
           => await _collection.Indexes.DropAllAsync();
-
+        
         public async Task DropIndexAsync(string indexName)
           => await _collection.Indexes.DropOneAsync(indexName);
-
+          
+        [Obsolete]
         public async Task CreateIndexAsync(string indexName, CreateIndexOptions? options = null)
           => await _collection.Indexes.CreateOneAsync(indexName, options);
 
@@ -158,7 +161,7 @@ namespace Shared.Infrastructure.Repositories
                 var result = _database.RunCommand<BsonDocument>(new BsonDocument("ping", 1));
                 return Task.FromResult(true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Task.FromResult(false);
             }

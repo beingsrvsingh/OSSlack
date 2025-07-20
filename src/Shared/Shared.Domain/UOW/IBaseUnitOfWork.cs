@@ -1,15 +1,16 @@
 ﻿using System.Data;
+using Shared.Domain.Common.Entities.Interface;
 
 namespace Shared.Domain.UOW
 {
-    public interface IBaseUnitOfWork
+    public interface IBaseUnitOfWork : IAuditLog, IDisposable
     {
-        IDbConnection Connection { get; }
-        IDbTransaction Transaction { get; }
-        void Begin();
-        void Commit();
-        void Rollback();
-        //Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        IDbConnection? Connection { get; }
+        IDbTransaction? Transaction { get; }
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         string? GetSQL(string resourcePath)
         {

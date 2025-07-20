@@ -18,7 +18,7 @@ namespace JwtToken
         public static string Get(string name)
         {
             
-            string appSettings = configuration[name];
+            string appSettings = configuration[name]!;
             return appSettings;
         }
 

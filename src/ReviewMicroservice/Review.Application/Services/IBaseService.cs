@@ -2,8 +2,8 @@
 {
     public interface IBaseService<T> where T : class
     {        
-        void AddAsync(T entities);
+        Task AddAsync(T entities);
 
-        void UpdateAsync(T entities);
+        Task UpdateAsync(T entities);
     }
 }

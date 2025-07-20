@@ -29,7 +29,7 @@ namespace Review.Application.Features.Commands.CommandHandlers
             records.ReviewReason = request.ReviewReason;
             records.ReviewedBy = userProvider.UserName;
 
-            this.reviewService.UpdateAsync(records);
+            await this.reviewService.UpdateAsync(records);
 
             return Result.Success();
         }

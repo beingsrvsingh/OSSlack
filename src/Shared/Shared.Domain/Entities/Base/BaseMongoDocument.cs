@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Shared.Domain.Entities
 {
-    public abstract class MongoDocument
+    public abstract class BaseMongoDocument
     {
         [BsonId]
         [BsonRequired]
@@ -14,7 +14,7 @@ namespace Shared.Domain.Entities
         public long? DeleteDate { get; set; }
         public long? DeleteBy { get; set; }
 
-        public MongoDocument()
+        public BaseMongoDocument()
         {
             CreateDate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }

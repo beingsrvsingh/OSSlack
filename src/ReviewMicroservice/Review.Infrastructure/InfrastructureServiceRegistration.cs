@@ -32,7 +32,6 @@ namespace Review.Infrastructure
 
             //DI
             services.AddApplicationServices();
-            services.AddSharedInfrastructureDependencyInjection();
 
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IReviewDetailService, ReviewDetailService>();

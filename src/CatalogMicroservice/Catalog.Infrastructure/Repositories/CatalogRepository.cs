@@ -28,7 +28,7 @@ namespace Catalog.Infrastructure.Repositories
         }
     }
 
-    public class MongoModel : MongoDocument
+    public class MongoModel : BaseMongoDocument
     {
         public string name { get; set; } = null!;
     }    

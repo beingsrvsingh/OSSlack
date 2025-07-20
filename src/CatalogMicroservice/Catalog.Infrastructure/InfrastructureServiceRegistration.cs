@@ -28,7 +28,6 @@ namespace Catalog.Infrastructure
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 
             services.AddApplicationServices();
-            services.AddSharedInfrastructureDependencyInjection();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICatalogRepository, CatalogRepository>();

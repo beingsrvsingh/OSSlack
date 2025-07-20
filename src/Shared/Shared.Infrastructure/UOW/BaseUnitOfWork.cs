@@ -1,0 +1,200 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Data;
+using Shared.Domain;
+using Shared.Domain.Entities;
+using Shared.Domain.UOW;
+using Shared.Domain.Entities.Interface;
+using Mapster;
+
+namespace Shared.Infrastructur.UoW;
+
+public abstract class BaseUnitOfWork<TContext> : IBaseUnitOfWork, IDisposable
+    where TContext : DbContext
+{
+    protected readonly TContext _context;
+    private IDbTransaction? _transaction;
+    private IDbConnection? _connection;
+
+    public IDbConnection Connection => _connection ??= _context.Database.GetDbConnection();
+    public IDbTransaction? Transaction => _transaction;
+
+    protected BaseUnitOfWork(TContext context)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public void BeginTransaction()
+    {
+        if (_transaction != null)
+            throw new InvalidOperationException("Transaction already started.");
+
+        if (Connection.State != ConnectionState.Open)
+            Connection.Open();
+
+        _transaction = Connection.BeginTransaction();
+    }
+
+    public void CommitTransaction()
+    {
+        if (_transaction == null)
+            throw new InvalidOperationException("Transaction not started.");
+
+        try
+        {
+            _context.SaveChanges();
+            _transaction.Commit();
+        }
+        catch
+        {
+            _transaction.Rollback();
+            throw;
+        }
+        finally
+        {
+            _transaction.Dispose();
+            _transaction = null;
+        }
+    }
+
+    public void RollbackTransaction()
+    {
+        if (_transaction == null)
+            return;
+
+        _transaction.Rollback();
+        _transaction.Dispose();
+        _transaction = null;
+    }
+
+    public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public virtual Task<int> SaveChangesAsync(bool trackChanges = false, string createdBy = "", DateTime? createdOn = null, int recordId = 0)
+    {
+        List<AuditEntry> auditEntries = new();
+        if (trackChanges)
+        {
+            auditEntries = OnBeforeSaveChanges(recordId, createdBy, createdOn);
+        }
+
+        int result = _context.SaveChanges();
+
+        if (trackChanges)
+        {
+            result += OnAfterSaveChanges(auditEntries);
+        }
+
+        return Task.FromResult(result);
+    }
+
+    protected virtual List<AuditEntry> OnBeforeSaveChanges(int recordId, string createdBy, DateTime? createdOn)
+    {
+        _context.ChangeTracker.DetectChanges();
+        var auditEntries = new List<AuditEntry>();
+
+        foreach (var entry in _context.ChangeTracker.Entries())
+        {
+            if (entry.Entity is IAuditIgnore || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                continue;
+
+            var auditEntry = new AuditEntry(entry)
+            {
+                TableName = entry.Entity.GetType().Name,
+                CreatedBy = createdBy,
+                CreatedOn = createdOn ?? DateTime.UtcNow
+            };
+
+            auditEntries.Add(auditEntry);
+
+            foreach (var prop in entry.Properties)
+            {
+                if (prop.IsTemporary)
+                {
+                    auditEntry.TemporaryProperties.Add(prop);
+                    continue;
+                }
+
+                var propertyName = prop.Metadata.Name;
+                if (propertyName is "CreatedOn" or "ModifiedOn" or "CreatedBy" or "ModifiedBy")
+                    continue;
+
+                if (prop.Metadata.IsPrimaryKey())
+                {
+                    auditEntry.KeyValues = recordId == 0 ? prop.CurrentValue?.ToString() : recordId.ToString();
+                    continue;
+                }
+
+                object? newValue = prop.CurrentValue;
+                object? oldValue = prop.OriginalValue;
+
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        auditEntry.Action = AuditAction.Insert;
+                        auditEntry.NewValues[propertyName] = newValue!;
+                        break;
+
+                    case EntityState.Deleted:
+                        auditEntry.Action = AuditAction.Delete;
+                        auditEntry.OldValues[propertyName] = oldValue!;
+                        break;
+
+                    case EntityState.Modified:
+                        if (prop.IsModified)
+                        {
+                            auditEntry.Action = AuditAction.Update;
+                            auditEntry.OldValues[propertyName] = oldValue!;
+                            auditEntry.NewValues[propertyName] = newValue!;
+                        }
+                        break;
+                }
+            }
+        }
+
+        foreach (var entry in auditEntries.Where(e => !e.HasTemporaryProperties))
+        {
+            if (entry.OldValues.Count > 0 || entry.NewValues.Count > 0)
+            {
+                _context.Add(entry.ToAudit().Adapt<BaseAuditLog>());
+            }
+        }
+
+        return auditEntries.Where(e => e.HasTemporaryProperties).ToList();
+    }
+
+    protected virtual int OnAfterSaveChanges(List<AuditEntry> auditEntries)
+    {
+        if (auditEntries is null || auditEntries.Count == 0)
+            return 0;
+
+        foreach (var auditEntry in auditEntries)
+        {
+            foreach (var prop in auditEntry.TemporaryProperties)
+            {
+                if (prop.Metadata.IsPrimaryKey())
+                {
+                    auditEntry.KeyValues = prop.CurrentValue?.ToString() ?? string.Empty;
+                }
+                else
+                {
+                    auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue!;
+                }
+            }
+
+            var auditLog = auditEntry.ToAudit().Adapt<BaseAuditLog>();
+            _context.Add(auditLog);
+        }
+
+        return _context.SaveChanges();
+    }
+
+    public void Dispose()
+    {
+        _transaction?.Dispose();
+        _connection?.Dispose();
+        _context.Dispose();
+    }
+}

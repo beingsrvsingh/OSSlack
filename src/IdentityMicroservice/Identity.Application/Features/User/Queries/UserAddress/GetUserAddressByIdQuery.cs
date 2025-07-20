@@ -5,6 +5,6 @@ namespace Identity.Application.Features.User.Queries.UserAddress
 {
     public class GetUserAddressByIdQuery : IRequest<Result>
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     }
 }

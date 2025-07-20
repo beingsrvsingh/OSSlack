@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.Runtime.InteropServices;
+using Microsoft.Win32;
 using Utilities.Interfaces;
 
 namespace Utilities.Services
@@ -9,15 +10,39 @@ namespace Utilities.Services
         private readonly static string connectionStringName = "ConnectionString";
         private readonly static string tokenSeurityKeyName = "SecurityKey";
 
-        private static RegistryKey? RegistryKey => Registry.LocalMachine.OpenSubKey(registryPath, true);
+        private static RegistryKey? RegistryKey
+        {
+            get
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return Registry.CurrentUser.OpenSubKey(registryPath, true);
+                }
+                return null;
+            }
+        }
 
-        public string? GetConnectionString() => RegistryKey?.GetValue(connectionStringName)?.ToString();
+        public string? GetConnectionString()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return RegistryKey?.GetValue(connectionStringName)?.ToString();
+            }
+            return null;
+        }
 
         public string ConnectionStringKeyName { get { return connectionStringName; } }
 
         public string TokenSeurityKeyName { get { return tokenSeurityKeyName; } }
 
-        public string? GetSecurityKey() => RegistryKey?.GetValue(tokenSeurityKeyName)?.ToString();
+        public string? GetSecurityKey()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return RegistryKey?.GetValue(tokenSeurityKeyName)?.ToString();
+            }
+            return null;
+        }  
 
         public string GetRegistry(string key)
         {
@@ -31,7 +56,14 @@ namespace Utilities.Services
                 throw new ArgumentNullException(nameof(RegistryKey));
             }
 
-            RegistryKey?.SetValue(KeyName, Value);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                RegistryKey.SetValue(KeyName, Value);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("This method is only supported on Windows.");
+            }
         }
     }
 }

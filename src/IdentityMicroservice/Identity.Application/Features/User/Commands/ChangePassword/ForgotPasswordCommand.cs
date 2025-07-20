@@ -5,6 +5,6 @@ namespace Identity.Application.Features.User.Commands.ChangePassword
 {
     public class ForgotPasswordCommand : IRequest<Result>
     {
-        public string Email { get; init; }
+        public string Email { get; init; } = null!;
     }
 }

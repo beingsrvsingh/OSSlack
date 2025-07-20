@@ -5,7 +5,7 @@ using Shared.Utilities.Response;
 
 namespace Identity.Application.Features.Admin.Commands
 {
-    public class StateByNameQueryHandler : IRequestHandler<GetStateByNameQuery, IResult>
+    public class StateByNameQueryHandler : IRequestHandler<GetStateByNameQuery, Result>
     {
         private readonly IAdminService service;
         private readonly IWebHostEnvironment env;
@@ -15,7 +15,7 @@ namespace Identity.Application.Features.Admin.Commands
             this.service = service;
             this.env = env;
         }
-        public Task<IResult> Handle(GetStateByNameQuery request, CancellationToken cancellationToken)
+        public Task<Result> Handle(GetStateByNameQuery request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

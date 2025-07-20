@@ -1,8 +1,10 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
-using Review.Application;
 using Review.Infrastructure;
 using Shared.Application.Common.Services.Interfaces;
 using Shared.BaseApi.Extensions;
+using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Services;
 
@@ -12,11 +14,19 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);    
 
+    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
     //JWT Token authentication service
     builder.Services.AddJwtTokenAuthentication();
 
     // Add services to the container.    
     builder.Services.AddInfrastructureServices();
+
+    builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    {
+        containerBuilder.RegisterModule(new SharedInfrastructureModule());
+        containerBuilder.RegisterModule(new SharedUtilitiesModule());        
+    });
 
     // Custom exception handler
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
