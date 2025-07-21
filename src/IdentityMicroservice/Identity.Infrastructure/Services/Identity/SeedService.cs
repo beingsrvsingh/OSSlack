@@ -1,6 +1,6 @@
 ﻿using Identity.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 
 namespace Identity.Infrastructure.Services.Identity
 {

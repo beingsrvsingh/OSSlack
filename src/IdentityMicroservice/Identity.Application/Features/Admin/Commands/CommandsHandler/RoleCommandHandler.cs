@@ -1,6 +1,6 @@
 ﻿using Identity.Application.Services.Interfaces;
 using MediatR;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
 namespace Identity.Application.Features.Admin.Commands.CommandsHandler

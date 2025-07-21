@@ -3,10 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using Catalog.Infrastructure;
 using Catalog.Infrastructure.Repositories;
 using JwtTokenAuthentication;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Platform;
 using Shared.Infrastructure.Services;
 using System.Reflection;
 
@@ -20,8 +21,12 @@ try
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
     builder.Services.AddHttpContextAccessor();
+    
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
     //Authentication and authorization        
-    builder.Services.AddJwtTokenAuthentication();
+    builder.Services.AddJwtTokenAuthentication(platformService);
     //Services
     builder.Services.AddInfrastructureServices();
 

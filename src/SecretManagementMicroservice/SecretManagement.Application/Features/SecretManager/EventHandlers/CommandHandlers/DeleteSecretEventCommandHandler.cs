@@ -1,8 +1,8 @@
-using Shared.Application.Common.Services.Interfaces;
 using SecretManagement.Application.Services.Interfaces;
 using MediatR;
 using SecretManagement.Application.Features.SecretManager.Commands;
 using Shared.Utilities.Response;
+using Shared.Application.Interfaces.Logging;
 
 namespace SecretManagement.Application.Features.SecretManager.EventHandlers
 {

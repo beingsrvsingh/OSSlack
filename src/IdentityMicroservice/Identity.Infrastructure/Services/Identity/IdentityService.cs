@@ -1,19 +1,17 @@
-﻿using System.Collections.Immutable;
-using System.Security.Claims;
-using Azure.Core;
+﻿using System.Security.Claims;
 using Identity.Application.Contracts;
 using Identity.Application.Features.User.Commands;
 using Identity.Application.Features.User.Commands.ChangePassword;
 using Identity.Application.Features.User.Commands.CreateUser;
+using Identity.Application.Interfaces;
 using Identity.Application.Services.Interfaces;
 using Identity.Domain.Core.UOW;
 using Identity.Domain.Entities;
-using JwtTokenAuthentication.Application.Interfaces;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using UAParser;
 using Utilities.Services;
 

@@ -10,10 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Infrastructure.Extensions;
 using Shared.Utilities;
 using System.Reflection;
-using Utilities;
 
 namespace Identity.Infrastructure
 {

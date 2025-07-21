@@ -2,10 +2,11 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
 using Review.Infrastructure;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Platform;
 using Shared.Infrastructure.Services;
 
 ILoggerService loggerService = new LoggerService();
@@ -16,8 +17,11 @@ try
 
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-    //JWT Token authentication service
-    builder.Services.AddJwtTokenAuthentication();
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
+    //Authentication and authorization        
+    builder.Services.AddJwtTokenAuthentication(platformService);
 
     // Add services to the container.    
     builder.Services.AddInfrastructureServices();

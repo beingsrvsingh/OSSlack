@@ -1,5 +1,4 @@
 ﻿using BaseApi;
-using SecretManagement.Features.Queries;
 using Microsoft.AspNetCore.Mvc;
 using SecretManagement.Application.Features.SecretManager.Commands;
 using SecretManagement.Application.Features.SecretManager.Queries;
@@ -8,6 +7,8 @@ using MediatR;
 using SecretManagement.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using SecretManagement.Domain.Core.Repository;
+using SecretManagement.Application.Features.Commands;
+using SecretManagement.Application.Features.Queries;
 
 namespace SecretManagementService.Controllers
 {
@@ -74,7 +75,7 @@ namespace SecretManagementService.Controllers
                 return NotFound(result.Errors);
 
             return Ok(result.Data);
-    }
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateSecret([FromBody] CreateSecretKeyCommand command)
@@ -105,6 +106,23 @@ namespace SecretManagementService.Controllers
 
             await Mediator.Send(command);
             return Accepted(new { Message = "Secret deletion triggered successfully." });
+        }
+
+        [HttpPost]
+        [Route("environment")]
+        public async Task<IActionResult> CreateEnvironment([FromBody] CreateEnvironmentCommand command)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await Mediator.Send(command);
+            return Accepted(new { Message = "Environment creation triggered successfully." });
+        }
+
+        [HttpGet("health")]
+        public IActionResult HealthCheck()
+        {
+            return Ok(new { Status = "Healthy" });
         }
     }
 }

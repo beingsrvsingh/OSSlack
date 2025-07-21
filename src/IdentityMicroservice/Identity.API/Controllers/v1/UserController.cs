@@ -8,7 +8,7 @@ using Identity.Application.Features.User.Queries.UserInfo;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 
 namespace Identity.API.Controllers.v1
 {

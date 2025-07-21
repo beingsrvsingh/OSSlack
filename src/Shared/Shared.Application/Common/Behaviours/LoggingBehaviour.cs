@@ -1,5 +1,6 @@
-﻿using Shared.Application.Common.Services.Interfaces;
-using MediatR.Pipeline;
+﻿using MediatR.Pipeline;
+using Shared.Application.Interfaces.Logging;
+using Shared.Application.Interfaces;
 
 namespace Shared.Application.Common.Behaviours;
 

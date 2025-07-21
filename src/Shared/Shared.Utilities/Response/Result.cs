@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Shared.Utilities.Interfaces;
 
 namespace Shared.Utilities.Response
 {
-    public class Result : BaseResponse
+    public class Result : BaseResponse, IResult
     {
+        public object? Data { get; init; }
         internal Result(bool succeeded, object? data, object? errors)
         {
             Succeeded = succeeded;
@@ -11,33 +13,41 @@ namespace Shared.Utilities.Response
             Data = data;
         }
 
-        public object? Data { get; init; }
-
         public static Result Success()
-        {
-            return new Result(true, null, Array.Empty<string>());
-        }
+            => new Result(true, Array.Empty<string>(), Array.Empty<string>());
 
         public static Result Success(object data)
-        {
-            return new Result(true, data, null);
-        }
+            => new Result(true, data, null);
 
-        public static Result Failure()
-        {
-            return new Result(false, null, null);
-        }
+        public static Result Failure() => new Result(false, Array.Empty<String>(),Array.Empty<String>());
 
         public static Result Failure(object errors)
-        {
-            return new Result(false, null, errors);
-        }
+            => new Result(false, Array.Empty<String>(), errors);
 
         public static Result Failure(FailureResponse errors)
-        {
-            return new Result(false, null, errors);
-        }
+            => new Result(false, Array.Empty<String>(), errors);
     }
+
+    public class Result<T> : BaseResponse, IResult<T>
+    {
+        public T? Data { get; init; }
+
+        internal Result(bool succeeded, T? data, object? errors)
+        {
+            Succeeded = succeeded;
+            Data = data;
+            Errors = errors;
+        }
+
+        public static Result<T> Success(T data)
+            => new Result<T>(true, data, null);
+
+        public static Result<T> Failure(object errors)
+            => new Result<T>(false, default, errors);
+
+        public static Result<T> Failure(FailureResponse errors)
+            => new Result<T>(false, default, errors);
+    }    
 
     public class FailureResponse
     {

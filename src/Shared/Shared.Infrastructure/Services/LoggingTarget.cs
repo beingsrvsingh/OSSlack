@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Entities;
 using System.Dynamic;
 using System.Security.Claims;

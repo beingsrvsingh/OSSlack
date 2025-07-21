@@ -1,9 +1,9 @@
-﻿using JwtTokenAuthentication.Application.Interfaces;
-using JwtTokenAuthentication.Constants;
+﻿using JwtTokenAuthentication.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Contracts.Interfaces;
 using Shared.Utilities.Response;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,8 +13,8 @@ using System.Text;
 namespace Shared.JwtTokenAuthentication.Middleware;
 public static class JwtExtensions
 {
-    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
-    {
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IPlatformService platformService)
+    {        
         services.AddAuthentication()
         .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => 
         {
@@ -32,13 +32,13 @@ public static class JwtExtensions
                     if (string.IsNullOrEmpty(userId))
                         return keys;
 
-                    var key = services.BuildServiceProvider().GetRequiredService<IJwtService>().GetSecurityTokenAsync(userId).Result;
+                    var signingKey = platformService.GetCredential($"jwt:{userId}");
 
-                    if (key is null)
+                    if (signingKey is null)
                         return keys;
 
-                    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key?.SecurityKey!));
-                    keys.Add(signingKey);
+                    var signatureKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
+                    keys.Add(signatureKey);
                     return keys;
                 }
             };

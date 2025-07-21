@@ -6,5 +6,7 @@ namespace SecretManagement.Domain.Core.UOW
     public interface IUnitOfWork : IBaseUnitOfWork
     {
         ISecretRepository SecretRepository { get; }
+
+        IApiKeyRepository ApiKeyRepository();
     }
 }

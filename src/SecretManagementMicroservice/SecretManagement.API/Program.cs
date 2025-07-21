@@ -1,11 +1,12 @@
 using SecretManagement.Infrastructure;
 using JwtTokenAuthentication;
-using Shared.Application.Common.Services.Interfaces;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure.Services;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Shared.Infrastructure;
+using Shared.Infrastructure.Platform;
+using Shared.Application.Interfaces.Logging;
 
 ILoggerService loggerService = new LoggerService();
 try
@@ -15,8 +16,11 @@ try
 
     builder.Services.AddHttpContextAccessor();
 
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
     // Add services to the container.
-    builder.Services.AddJwtTokenAuthentication();
+    builder.Services.AddJwtTokenAuthentication(platformService);
     builder.Services.AddInfrastructureServices();
 
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>

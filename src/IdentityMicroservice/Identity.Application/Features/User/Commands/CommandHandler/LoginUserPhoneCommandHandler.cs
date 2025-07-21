@@ -1,10 +1,7 @@
 ﻿using Identity.Application.Services.Interfaces;
-using Identity.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
-using UAParser;
 using Utilities;
 using Utilities.Services;
 

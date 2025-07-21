@@ -1,6 +1,6 @@
-﻿using Shared.Application.Common.Services.Interfaces;
-using Identity.Domain.Events;
+﻿using Identity.Domain.Events;
 using MediatR;
+using Shared.Application.Interfaces.Logging;
 
 namespace Identity.Application.Features.User.EventHandlers
 {

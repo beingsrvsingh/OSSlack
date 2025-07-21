@@ -1,6 +1,6 @@
-﻿using Shared.Application.Common.Services.Interfaces;
-using NLog.Web;
+﻿using NLog.Web;
 using NLog;
+using Shared.Application.Interfaces.Logging;
 
 namespace Shared.Infrastructure.Services
 {

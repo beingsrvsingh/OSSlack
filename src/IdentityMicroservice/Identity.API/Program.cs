@@ -5,10 +5,11 @@ using JwtTokenAuthentication;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Platform;
 using Shared.Infrastructure.Services;
 using System.Reflection;
 
@@ -21,8 +22,12 @@ try
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
     builder.Services.AddHttpContextAccessor();
+
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
     //Authentication and authorization        
-    builder.Services.AddJwtTokenAuthentication();
+    builder.Services.AddJwtTokenAuthentication(platformService);
     //Services
     builder.Services.AddInfrastructureServices();
 
@@ -93,9 +98,7 @@ try
 
     using (var scope = app.Services.CreateScope())
     {
-        JwtTokenAuthenticationRegistration.MigrateConnectionString(scope.ServiceProvider);
-        InfrastructureServiceRegistration.MigrateDatabase(scope.ServiceProvider);
-        JwtTokenAuthenticationRegistration.MigrateDatabase(scope.ServiceProvider);        
+        InfrastructureServiceRegistration.MigrateDatabase(scope.ServiceProvider);     
     }
 
     await app.RunAsync();

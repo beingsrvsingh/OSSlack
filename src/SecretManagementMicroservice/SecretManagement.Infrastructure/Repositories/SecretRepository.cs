@@ -2,8 +2,6 @@ using SecretManagement.Domain.Core.Repository;
 using SecretManagement.Domain.Entities;
 using SecretManagement.Infrastructure.Persistence.Context;
 using Shared.Infrastructure.Repositories;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace SecretManagement.Infrastructure.Repositories;

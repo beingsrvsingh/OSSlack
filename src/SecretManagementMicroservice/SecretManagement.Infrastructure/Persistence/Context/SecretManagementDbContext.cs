@@ -1,5 +1,4 @@
 using SecretManagement.Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -12,7 +11,9 @@ public class SecretManagementDbContext : DbContext
 
     public virtual DbSet<Secret> Secrets => Set<Secret>();
 
-    public virtual DbSet<AuditLog> AspNetUserAuditLogs => Set<AuditLog>();
+    public virtual DbSet<ApiSecret> ApiSecrets => Set<ApiSecret>();
+
+    public virtual DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

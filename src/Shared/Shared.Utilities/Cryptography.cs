@@ -212,5 +212,13 @@ namespace Utilities.Cryptography
             encryptMessage = encryptMessage.Replace("+", "__x_");
             return encryptMessage;
         }
+
+        public static string GenerateHash(string text)
+        {
+            using var sha256 = SHA256.Create();
+            byte[] tokenBytes = Encoding.UTF8.GetBytes(text);
+            byte[] hashBytes = sha256.ComputeHash(tokenBytes);
+            return Convert.ToBase64String(hashBytes); // or use BitConverter.ToString(hashBytes).Replace("-", "") for hex
+        }
     }
 }

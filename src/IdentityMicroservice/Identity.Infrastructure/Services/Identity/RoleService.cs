@@ -2,7 +2,7 @@
 using Identity.Application.Services.Interfaces;
 using Identity.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 
 namespace Identity.Infrastructure.Services.Identity
 {

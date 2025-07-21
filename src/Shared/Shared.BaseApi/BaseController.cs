@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces;
 using System.Security.Claims;
 
 namespace BaseApi

@@ -1,5 +1,5 @@
 ﻿using Polly.Wrap;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Entities;
 using Shared.Infrastructure.Http;
 using Shared.Infrastructure.Resilience;

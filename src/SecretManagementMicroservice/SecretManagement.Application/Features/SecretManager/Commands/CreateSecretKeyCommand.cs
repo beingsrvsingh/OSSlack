@@ -1,9 +1,5 @@
-using Shared.Application.Common.Services.Interfaces;
 using Shared.Utilities.Response;
 using MediatR;
-using System.Text.Json;
-using Newtonsoft.Json.Linq;
-using Utilities;
 
 namespace SecretManagement.Application.Features.SecretManager.Commands
 {

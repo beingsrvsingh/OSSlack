@@ -1,16 +1,21 @@
 using JwtTokenAuthentication;
 using Logging.Infrastructure;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
+using Shared.Infrastructure.Platform;
 using Shared.Infrastructure.Services;
 
 ILoggerService loggerService = new LoggerService();
 try
 {
-    var builder = WebApplication.CreateBuilder(args);    
+    var builder = WebApplication.CreateBuilder(args);
 
     // Add services to the container.
-    builder.Services.AddJwtTokenAuthentication();    
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
+    //Authentication and authorization        
+    builder.Services.AddJwtTokenAuthentication(platformService);
     builder.Services.AddInfrastructureServices();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

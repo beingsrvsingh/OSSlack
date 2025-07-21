@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using MediatR;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces;
+using Shared.Application.Interfaces.Logging;
 
 namespace Shared.Application.Common.Behaviours;
 

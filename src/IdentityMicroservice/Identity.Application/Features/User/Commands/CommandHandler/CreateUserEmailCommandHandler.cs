@@ -3,7 +3,7 @@ using Identity.Application.Features.User.Commands.UserInfo;
 using Identity.Application.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 using Shared.Utilities.Response.Extensions;
 

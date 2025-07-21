@@ -3,6 +3,7 @@ using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Polly;
+using Shared.Infrastructure.Platform;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,12 @@ foreach (var file in Directory.GetFiles(configFolder, $"*.ocelot.{env}.json"))
 }
 
 builder.Services.AddOcelot(builder.Configuration).AddCacheManager(settings => settings.WithDictionaryHandle()).AddPolly();
-builder.Services.AddJwtTokenAuthentication();
+
+    var platformService = PlatformServiceFactory.Create();
+    builder.Services.AddSingleton(platformService);
+
+    //Authentication and authorization        
+    builder.Services.AddJwtTokenAuthentication(platformService);
 
 // Add services to the container.
 

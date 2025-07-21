@@ -2,8 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Shared.Domain.Mail;
 using System.Net;
 using System.Net.Mail;
-using Identity.Application.Common.Services.Interfaces;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
+using Shared.Application.Interfaces.Communication;
 
 namespace Shared.Infrastructure.Services
 {

@@ -8,7 +8,7 @@ using Identity.Application.Features.User.Commands.CreateUser;
 using Identity.Domain.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
 namespace Identity.API.Controllers.v1

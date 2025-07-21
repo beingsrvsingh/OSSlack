@@ -1,8 +1,8 @@
 ﻿using Identity.Application.Features.User.Commands.ChangePassword;
 using MediatR;
-using Shared.Application.Common.Services.Interfaces;
 using Identity.Application.Services.Interfaces;
 using Shared.Utilities.Response;
+using Shared.Application.Interfaces.Logging;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler
 {

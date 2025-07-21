@@ -8,6 +8,7 @@ namespace SecretManagement.Infrastructure.Repositories
     public class UnitOfWork : BaseUnitOfWork<SecretManagementDbContext>, IUnitOfWork
     {
         public ISecretRepository SecretRepository { get; }
+        private IApiKeyRepository? apiKeyRepository;
 
         public UnitOfWork(
             SecretManagementDbContext context,
@@ -15,6 +16,15 @@ namespace SecretManagement.Infrastructure.Repositories
         ) : base(context)
         {
             SecretRepository = secretRepository;
+        }
+
+        public IApiKeyRepository ApiKeyRepository()
+        {
+            if (apiKeyRepository == null)
+            {
+                apiKeyRepository = new ApiKeyRepository(_context);
+            }
+            return apiKeyRepository;
         }
     }
 }

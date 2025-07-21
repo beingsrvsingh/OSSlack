@@ -25,7 +25,7 @@ namespace SecretManagement.Infrastructure
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 
-            //Default Services         
+            //Default Services    
             services.AddApplicationServices();
 
             return services;

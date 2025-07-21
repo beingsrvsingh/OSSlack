@@ -2,7 +2,7 @@
 using MediatR;
 using Review.Application.Services;
 using Review.Domain.Entities;
-using Shared.Application.Common.Services.Interfaces;
+using Shared.Application.Interfaces;
 using Shared.Utilities.Response;
 using Utilities.Cryptography;
 
