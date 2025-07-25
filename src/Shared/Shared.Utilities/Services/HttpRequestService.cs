@@ -22,6 +22,6 @@ namespace Shared.Utilities.Services
             }
         }
 
-        public string GetUserAget => _contextAccessor.HttpContext != null ? _contextAccessor.HttpContext?.Request?.Headers["User-Agent"]! : "Autonomous";
+        public string GetUserAgent => _contextAccessor.HttpContext != null ? _contextAccessor.HttpContext?.Request?.Headers["User-Agent"]! : "Autonomous";
     }
 }

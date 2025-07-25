@@ -1,31 +1,32 @@
 ﻿using Identity.Application.Contracts;
 using Identity.Application.Features.User.Queries.UserInfo;
 using MediatR;
-using Identity.Application.Services.Interfaces;
 using Shared.Utilities.Response;
+using Shared.Application.Interfaces.Logging;
+using Mapster;
 
 namespace Identity.Application.Features.User.Queries.QueryHandler.UserInfo
 {
     public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, Result>
     {
-        private readonly IUserService userService;
+        private readonly IIdentityService identityService;
+        private readonly ILoggerService<GetUserInfoQueryHandler> _logger;
 
-        public GetUserInfoQueryHandler(IUserService userService)
+        public GetUserInfoQueryHandler(ILoggerService<GetUserInfoQueryHandler> logger, IIdentityService identityService)
         {
-            this.userService = userService;
+            this._logger = logger;
+            this.identityService = identityService;
         }
         public async Task<Result> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
         {
-            var userInfo = await userService.GetUserInfoAsync(request.Id);
+            var userInfo = await identityService.GetUserByIdAsync(request.UserId);
 
             if (userInfo is null)
                 return Result.Failure(new FailureResponse("UserInfoNotFound", new { mesage = "User info not found" }));
 
-            return Result.Success(new UserInfoResponse
-            {
-                FirstName = userInfo.FirstName!,
-                LastName = userInfo.LastName!,
-            });
+            var user = userInfo.Adapt<UserInfoResponse>();
+
+            return Result.Success(user);
         }
     }
 }

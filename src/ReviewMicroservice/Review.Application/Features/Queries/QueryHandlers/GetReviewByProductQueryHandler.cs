@@ -3,8 +3,8 @@ using Review.Application.Contracts;
 using Review.Application.Services;
 using Review.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Cryptography;
 using Shared.Utilities.Response;
-using Utilities.Cryptography;
 
 namespace Review.Application.Features.Queries.QueryHandlers
 {

@@ -51,6 +51,21 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPost, Route("login/email-password")]
+        public async Task<IActionResult> LoginUsingEmailPassword([FromBody] LoginUserEmailPasswordCommand request)
+        {
+            var response = await Mediator.Send(request);
+
+            if (!response.Succeeded)
+                return NotFound(response);
+
+
+            return Ok(response);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("login/email")]
         public async Task<IActionResult> LoginUsingEmail([FromBody] LoginUserEmailCommand request)
         {
@@ -81,7 +96,7 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("generate/otp/email")]
-        public async Task<IActionResult> GenerateOtpUsingEmail([FromBody] LoginUserEmailCommand request)
+        public async Task<IActionResult> GenerateOtpUsingEmail([FromBody] LoginUserEmailPasswordCommand request)
         {
             var response = await Mediator.Send(request);
 
@@ -95,7 +110,7 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("verify/otp/email")]
-        public async Task<IActionResult> VerifyOtpUsingEmail([FromBody] LoginUserEmailCommand request)
+        public async Task<IActionResult> VerifyOtpUsingEmail([FromBody] LoginUserEmailPasswordCommand request)
         {
             var response = await Mediator.Send(request);
 
@@ -109,7 +124,7 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("generate/otp/phone")]
-        public async Task<IActionResult> GenerateOtpUsingPhone([FromBody] LoginUserEmailCommand request)
+        public async Task<IActionResult> GenerateOtpUsingPhone([FromBody] LoginUserEmailPasswordCommand request)
         {
             var response = await Mediator.Send(request);
 
@@ -123,7 +138,7 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("verify/otp/phone")]
-        public async Task<IActionResult> VerifyOtpUsingPhone([FromBody] LoginUserEmailCommand request)
+        public async Task<IActionResult> VerifyOtpUsingPhone([FromBody] LoginUserEmailPasswordCommand request)
         {
             var response = await Mediator.Send(request);
 

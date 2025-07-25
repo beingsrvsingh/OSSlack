@@ -22,7 +22,7 @@ public class SigningKeyProvider : ISigningKeyProvider
     public string GetSigningKey()
     {        
         var signingKey = _secretManager.GetSecretKeyAsync("jwt-signing-key")
-                                       //.ConfigureAwait(false)
+                                       .ConfigureAwait(false)
                                        .GetAwaiter()
                                        .GetResult();
         

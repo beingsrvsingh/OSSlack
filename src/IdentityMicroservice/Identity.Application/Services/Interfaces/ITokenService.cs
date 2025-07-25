@@ -9,9 +9,9 @@ namespace Identity.Application.Services.Interfaces
 
         Task<AuthenticateResponse?> GenerateRefreshTokenAsync(string userId, string token, string ipAddress);
 
-        Task SaveRefreshTokenAsync(AspNetUserRefreshToken refreshToken);
+        Task<bool> SaveRefreshTokenAsync(AspNetUserRefreshToken refreshToken);
 
-        Task RevokeTokenAsync(AspNetUserRefreshToken aspNetUserRefreshToken);
+        Task<bool> RevokeTokenAsync(AspNetUserRefreshToken aspNetUserRefreshToken);
 
         Task<AspNetUserRefreshToken?> GetRefreshToken(string token, string userId);
     }

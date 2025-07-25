@@ -59,7 +59,8 @@ namespace Identity.Infrastructure.Persistence.EntityConfigurations
 
             entity.Property(e => e.CreatedAt)
                   .HasColumnName("created_at")
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                  .HasColumnType("datetime(6)")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.Property(e => e.UpdatedAt)
                   .HasColumnName("updated_at");

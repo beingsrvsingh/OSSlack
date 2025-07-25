@@ -16,9 +16,15 @@ namespace Identity.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var config = Helper.LoadAppSettings();
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("The connection string 'DefaultConnection' cannot be null or empty.");
+            }
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseNpgsql(config.GetConnectionString("DefaultConnection"),
+                    options.UseMySql(connectionString,
+                    new MySqlServerVersion(new Version(8, 0, 28)),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 

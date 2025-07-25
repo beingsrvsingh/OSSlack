@@ -6,29 +6,48 @@ namespace Identity.Infrastructure.Services.Identity
 {
     public class SeedService : ISeedService
     {
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ILoggerService<SeedService> loggerService;
-        public SeedService(ILoggerService<SeedService>loggerService, RoleManager<IdentityRole> roleManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILoggerService<SeedService> _logger;
+
+        public SeedService(ILoggerService<SeedService> logger, RoleManager<IdentityRole> roleManager)
         {
-            this.roleManager = roleManager;
-            this.loggerService = loggerService;
+            _logger = logger;
+            _roleManager = roleManager;
         }
 
-        public async Task CreateRoleSync()
+        public async Task<bool> CreateRoleSync()
         {
-            loggerService.LogInfo("Creating roles");
-            string[] Role = IIdentityRole.roles();
-            foreach (var role in Role)
+            _logger.LogInfo("Starting role creation...");
+
+            var roles = IIdentityRole.roles();
+            var allSucceeded = true;
+
+            foreach (var roleName in roles)
             {
-                bool isExist = await roleManager.RoleExistsAsync(role);
-                if (!isExist)
+                if (!await _roleManager.RoleExistsAsync(roleName))
                 {
-                    IdentityRole identity = new IdentityRole();
-                    identity.Name = role;
-                    await roleManager.CreateAsync(identity);
-                    loggerService.LogInfo("Created role {0}", role);
+                    var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInfo("Created role: {0}", roleName);
+                    }
+                    else
+                    {
+                        allSucceeded = false;
+                        _logger.LogError("Failed to create role: {0}. Errors: {1}",
+                            roleName,
+                            string.Join(", ", result.Errors.Select(e => e.Description)));
+                    }
+                }
+                else
+                {
+                    _logger.LogInfo("Role already exists: {0}", roleName);
                 }
             }
+
+            _logger.LogInfo("Role creation process finished.");
+            return allSucceeded;
         }
     }
 }

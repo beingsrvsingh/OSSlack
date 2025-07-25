@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Review.Application.Features.Commands;
 using Review.Domain.Entities;
+using Shared.Utilities.Cryptography;
 using System.Reflection;
-using Utilities.Cryptography;
 
 namespace Review.Application.Config
 {

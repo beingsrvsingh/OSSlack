@@ -7,7 +7,9 @@ using Identity.Domain.Entities;
 using JwtTokenAuthentication.Constants;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
-using Shared.Application.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Shared.Utilities;
 
 #nullable enable
 
@@ -15,100 +17,132 @@ namespace Identity.Infrastructure.Services.Identity
 {
     public class TokenService : ITokenService
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IJwtService jwtService;
-        private readonly IUserProvider userProvider;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IJwtService _jwtService;
+        private readonly ILogger<TokenService>? _logger;
 
-        public TokenService(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IJwtService jwtService, IUserProvider userProvider)
+        public TokenService(
+            ILogger<TokenService> logger,
+            UserManager<ApplicationUser> userManager,
+            IUnitOfWork unitOfWork,
+            IJwtService jwtService)
         {
-            this.userManager = userManager;
-            this.unitOfWork = unitOfWork;
-            this.jwtService = jwtService;
-            this.userProvider = userProvider;
+            _logger = logger;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
+            _jwtService = jwtService;
         }
-
         public async Task<AuthenticateResponse?> GenerateAccessToken(string userId)
         {
-            var user = await userManager.FindByIdAsync(userId);
-            if (user is not null)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                // Generate Access Token
-                var role = await userManager.GetRolesAsync(user);
-                var tokenString = await jwtService.GenerateAccessTokenAsync(RequiredParamsForGenerateToken(user!, role));
-
-                return Tokens.GenerateJwt(user!.Id, tokenString, string.Empty, (int)JwtConstant.JWT_TOKEN_EXPIRATION.Subtract(DateTime.Now).TotalSeconds);
+                _logger?.LogWarning("Access token generation failed: user not found (ID: {UserId})", userId);
+                return null;
             }
-            return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = BuildClaims(user, roles);
+
+            var tokenString = await _jwtService.GenerateAccessTokenAsync(claims);
+
+            var jwtOptions = Helper.LoadAppSettings();
+            int tokenLifetimeMinutes = jwtOptions.GetSection("JwtSettings").GetValue<int>("TokenLifetimeMinutes");
+            if (tokenLifetimeMinutes <= 0)
+            {
+                tokenLifetimeMinutes = 60;
+            }
+
+            _logger?.LogInformation("Access token generated for user {UserId}", userId);
+
+            return Tokens.GenerateJwt(user.Id, tokenString, string.Empty, tokenLifetimeMinutes);
         }
 
         public async Task<AuthenticateResponse?> GenerateRefreshTokenAsync(string userId, string token, string ipAddress)
         {
-            // replace old refresh token with a new one (rotate token)
-
             var existingToken = await GetRefreshToken(token, userId);
-
-            if (existingToken is null)
+            if (existingToken == null)
             {
+                _logger?.LogWarning("Refresh token not found for user {UserId}", userId);
                 return null;
             }
 
-            // generate new jwt
             var jwtToken = await GenerateAccessToken(userId);
-
-            if (jwtToken is not null)
+            if (jwtToken == null)
             {
-                var newRefreshToken = await jwtService.GenerateRefreshToken(userId, ipAddress);
-                var refreshToken = newRefreshToken.Adapt<AspNetUserRefreshToken>();
-                refreshToken.UserId = userId;
-
-                await unitOfWork.RefreshTokenRepository.UpdateAsync(refreshToken);
-                await unitOfWork.SaveChangesAsync();
-
-                return new AuthenticateResponse(userId, jwtToken.AccessToken, newRefreshToken.Token, jwtToken.ExpiresIn);
+                _logger?.LogError("Failed to generate new access token during refresh for user {UserId}", userId);
+                return null;
             }
 
-            return null;
-        }
+            var newRefreshToken = await _jwtService.GenerateRefreshToken(userId, ipAddress);
+            var refreshTokenEntity = newRefreshToken.Adapt<AspNetUserRefreshToken>();
+            refreshTokenEntity.UserId = userId;
 
-        public async Task SaveRefreshTokenAsync(AspNetUserRefreshToken refreshToken)
-        {
-            unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
-            await unitOfWork.SaveChangesAsync();
-        }
+            await _unitOfWork.RefreshTokenRepository.UpdateAsync(refreshTokenEntity);
+            await _unitOfWork.SaveChangesAsync();
 
-        public async Task RevokeTokenAsync(AspNetUserRefreshToken aspNetUserRefreshToken)
-        {
-            await unitOfWork.RefreshTokenRepository.DeleteAsync(aspNetUserRefreshToken);
-            await unitOfWork.SaveChangesAsync();
-        }
+            _logger?.LogInformation("Refresh token rotated for user {UserId}", userId);
 
-        // helper methods 
+            return new AuthenticateResponse(userId, jwtToken.AccessToken, newRefreshToken.Token, jwtToken.ExpiresIn);
+        }
 
         public async Task<AspNetUserRefreshToken?> GetRefreshToken(string token, string userId)
         {
-            return await unitOfWork.RefreshTokenRepository.FirstOrDefaultAsync(u => u.Token == token && u.UserId == userId);
+            return await _unitOfWork.RefreshTokenRepository.FirstOrDefaultAsync(
+                t => t.Token == token && t.UserId == userId
+            );
         }
 
-        private static List<Claim> RequiredParamsForGenerateToken(ApplicationUser user, IList<string> role)
+        public async Task<bool> SaveRefreshTokenAsync(AspNetUserRefreshToken refreshToken)
         {
-            return AddClaims(user, role);
+            try
+            {
+                _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+                await _unitOfWork.SaveChangesAsync();
+
+                _logger?.LogInformation("Refresh token saved for user {UserId}", refreshToken.UserId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to save refresh token for user {UserId}", refreshToken.UserId);
+                return false;
+            }
         }
 
-        private static List<Claim> AddClaims(ApplicationUser user, IList<string> role)
+        public async Task<bool> RevokeTokenAsync(AspNetUserRefreshToken refreshToken)
         {
-            
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(JwtConstant.JWT_TOKEN_USERID_KEYS, user.Id));
-            claims.Add(new Claim(JwtConstant.JWT_TOKEN_ROLE_KEYS, role.FirstOrDefault()?.ToLower() ?? "customer"));
-            claims.Add(new Claim(JwtConstant.JWT_TOKEN_SCOPE_KEYS, JwtConstant.JWT_TOKEN_SCOPE));
+            try
+            {
+                await _unitOfWork.RefreshTokenRepository.DeleteAsync(refreshToken);
+                await _unitOfWork.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(user.PhoneNumber))
+                _logger?.LogInformation("Refresh token revoked for user {UserId}", refreshToken.UserId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to revoke refresh token for user {UserId}", refreshToken.UserId);
+                return false;
+            }
+        }
+
+        private static List<Claim> BuildClaims(ApplicationUser user, IList<string> roles)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(JwtConstant.JWT_TOKEN_USERID_KEYS, user.Id),
+                new Claim(JwtConstant.JWT_TOKEN_ROLE_KEYS, roles.FirstOrDefault()?.ToLower() ?? "customer"),
+                new Claim(JwtConstant.JWT_TOKEN_SCOPE_KEYS, JwtConstant.JWT_TOKEN_SCOPE)
+            };
+
+            if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
             {
                 claims.Add(new Claim(JwtConstant.JWT_TOKEN_PHONENUMBER_KEYS, user.PhoneNumber));
             }
 
-            if (!string.IsNullOrEmpty(user.Email))
+            if (!string.IsNullOrWhiteSpace(user.Email))
             {
                 claims.Add(new Claim(JwtConstant.JWT_TOKEN_USERNAME_KEYS, user.Email));
             }

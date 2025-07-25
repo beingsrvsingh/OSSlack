@@ -4,8 +4,8 @@ namespace Identity.Application.Services.Interfaces
 {
     public interface IRoleService
     {
-        Task AddRoles(RoleCommand roleCommand);
+        Task<bool> AddUserRoleByEmailAsync(UserEmailRoleCommand userEmailRoleCommand);
 
-        Task AddUserRoles(UserRoleCommand userRoleCommand);
+        Task<bool> AddUserRoleByPhoneAsync(UserPhoneRoleCommand userPhoneRoleCommand);
     }
 }

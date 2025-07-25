@@ -1,5 +1,4 @@
-﻿using Identity.Application.Features.User.Commands.UserAddress;
-using Identity.Application.Features.User.Queries.UserAddress;
+﻿using Identity.Application.Features.User.Queries.UserAddress;
 using MediatR;
 using Identity.Application.Services.Interfaces;
 using Shared.Utilities.Response;
@@ -16,9 +15,16 @@ namespace Identity.Application.Features.User.Queries.QueryHandler.UserAddress
         }
         public async Task<Result> Handle(GetUserAddressByIdQuery request, CancellationToken cancellationToken)
         {
-            await userService.GetUserAddressById(request);
+            var userAddressDetails = await userService.GetUserAddressById(request);
 
-            return Result.Success();
+            if (userAddressDetails == null)
+            {
+                return Result.Failure(new FailureResponse(
+                    "UserAddressNotFound",
+                    $"No address found for the specified ID."));
+            }
+
+            return Result.Success(userAddressDetails);
         }
     }
 }

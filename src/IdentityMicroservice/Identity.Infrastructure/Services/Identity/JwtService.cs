@@ -1,6 +1,7 @@
 ﻿using Identity.Application.Contracts;
 using Identity.Application.Interfaces;
 using JwtTokenAuthentication.Constants;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Contracts.Interfaces;
 using Shared.Utilities;
@@ -46,22 +47,29 @@ namespace Identity.Infrastructure.Services
             return Task.FromResult(accessToken);
         }
 
-        public async Task<RefreshTokenResponse> GenerateRefreshToken(string userId, string ipAddress)
+        public Task<RefreshTokenResponse> GenerateRefreshToken(string userId, string ipAddress)
         {
             // generate token that is valid for 7 days
             var refreshToken = new RefreshTokenResponse();
             string rawKey = RetrieveSigningKey();
             if (!string.IsNullOrEmpty(rawKey))
             {
+                var jwtOptions = Helper.LoadAppSettings();
+                int refreshTokenLifeTimeInDays = jwtOptions.GetSection("JwtSettings").GetValue<int>("RefreshTokenLifetimeInDays");
+                if (refreshTokenLifeTimeInDays <= 0)
+                {
+                    refreshTokenLifeTimeInDays = 7;
+                }
+
                 refreshToken = new RefreshTokenResponse
                 {
                     Token = Utils.GenerateSecureToken(),
-                    Expires = JwtConstant.JWT_REFRESH_TOKEN_EXPIRATION,
+                    Expires = DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays),
                     Created = DateTime.UtcNow,
                     CreatedByIp = ipAddress
                 };
             }
-            return refreshToken;
+            return Task.FromResult(refreshToken);
         }
 
         public string GetClaims(List<Claim> claims, string claimTypes, CancellationToken cancellationToken = default)

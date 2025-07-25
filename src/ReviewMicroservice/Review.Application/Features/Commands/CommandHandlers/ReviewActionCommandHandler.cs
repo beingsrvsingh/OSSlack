@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Review.Application.Services;
 using Shared.Application.Interfaces;
+using Shared.Utilities.Cryptography;
 using Shared.Utilities.Response;
-using Utilities.Cryptography;
 
 namespace Review.Application.Features.Commands.CommandHandlers
 {

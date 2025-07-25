@@ -1,8 +1,8 @@
 ﻿using BaseApi;
 using Identity.Application.Contracts;
+using Identity.Application.Features.User.Commands;
 using Identity.Application.Features.User.Commands.UserAddress;
 using Identity.Application.Features.User.Commands.UserInfo;
-using Identity.Application.Features.User.Queries;
 using Identity.Application.Features.User.Queries.UserAddress;
 using Identity.Application.Features.User.Queries.UserInfo;
 using Mapster;
@@ -23,26 +23,10 @@ namespace Identity.API.Controllers.v1
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet]
-        public async Task<IActionResult> GetUser([FromQuery]GetUserQuery query)
+        [HttpGet, Route("user")]
+        public async Task<IActionResult> GetUser([FromQuery]GetUserInfoQuery query)
         {
             return new OkObjectResult(await Mediator.Send(query));
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet, Route("user-info")]
-        public async Task<IActionResult> GetUserInfo([FromQuery] GetUserInfoQuery query)
-        {            
-            return new OkObjectResult(await Mediator.Send(query));
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost, Route("user-info")]
-        public async Task<IActionResult> CreateUserInfo(CreateUserInfoRequest request)
-        {
-            var command = request.Adapt<CreateUserInfoCommand>();
-            command.UserId = UserId;
-            return new OkObjectResult(await Mediator.Send(command));
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,6 +34,7 @@ namespace Identity.API.Controllers.v1
         public async Task<IActionResult> UpdateUserInfo(UpdateUserInfoRequest request)
         {
             var command = request.Adapt<UpdateUserInfoCommand>();
+            command.UserId = UserId;
             return new OkObjectResult(await Mediator.Send(command));
         }
 
@@ -61,28 +46,18 @@ namespace Identity.API.Controllers.v1
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost, Route("user-avatar")]
-        public async Task<IActionResult> CreateUserAvatar(CreateUserAvatarRequest request)
-        {
-            var command = request.Adapt<CreateUserAvatarCommand>();
-            command.UserId = UserId;
-            command.AvatarURI = "https://demo.com/avatar.jpg";
-            return new OkObjectResult(await Mediator.Send(command));
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut, Route("user-avatar")]
         public async Task<IActionResult> UpdateUserAvatar(UpdateUserAvatarRequest request)
         {
             var command = request.Adapt<UpdateUserAvatarCommand>();
+            command.UserId = UserId;
             command.AvatarURI = "https://demo.com/avatar1.jpg";
             return new OkObjectResult(await Mediator.Send(command));
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet, Route("user-address")]
-        public async Task<IActionResult> GetUserAddressById(GetUserAddressByIdQuery query)
+        public async Task<IActionResult> GetUserAddressById([FromQuery]GetUserAddressByIdQuery query)
         {
             return new OkObjectResult(await Mediator.Send(query));
         }
@@ -96,9 +71,11 @@ namespace Identity.API.Controllers.v1
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut, Route("user-address")]
-        public async Task<IActionResult> UpdateUserAddress(UpdateUserAddressCommand request)
+        public async Task<IActionResult> UpdateUserAddress(UpdateUserAddressRequest request)
         {
-            return new OkObjectResult(await Mediator.Send(request));
+            var command = request.Adapt<UpdateUserAddressCommand>();
+            command.UserId = UserId;
+            return new OkObjectResult(await Mediator.Send(command));
         }
     }
 }

@@ -6,6 +6,6 @@ namespace Shared.Utilities.Interfaces
     {
         string GetIpAddress { get; }
 
-        string GetUserAget { get; }
+        string GetUserAgent { get; }
     }
 }

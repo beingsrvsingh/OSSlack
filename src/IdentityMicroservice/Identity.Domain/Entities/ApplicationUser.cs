@@ -6,7 +6,7 @@ namespace Identity.Domain.Entities
     public class ApplicationUser : IdentityUser, IActiveEntity, ISoftDeleteEntity
     {
         public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string? LastName { get; set; } = null!;
         public string? ProfilePictureUrl { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

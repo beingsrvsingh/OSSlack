@@ -14,6 +14,7 @@
         public static readonly string JWT_TOKEN_PHONENUMBER_KEYS = "phonenumber";
         public static readonly string JWT_TOKEN_SCOPE_KEYS = "scope";
         public static readonly string JWT_TOKEN_SCOPE = "access_as_user";
+        public static readonly TimeSpan JWT_TOKEN_LIFETIME = TimeSpan.FromHours(1);
 
     }
 }

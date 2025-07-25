@@ -27,7 +27,7 @@ namespace Identity.Infrastructure.Services.Identity
         private readonly IJwtService jwtService;
         private readonly IHttpRequestService securityService;
         private readonly IUnitOfWork unitOfWork;
-        private readonly ILoggerService<IdentityService> loggerService;
+        private readonly ILoggerService<IdentityService> _logger;
 
         public IdentityService(ILoggerService<IdentityService> loggerService,
             UserManager<ApplicationUser> userManager, IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
@@ -42,12 +42,12 @@ namespace Identity.Infrastructure.Services.Identity
             this.jwtService = jwtService;
             this.securityService = securityService;
             this.unitOfWork = unitOfWork;
-            this.loggerService = loggerService;
+            this._logger = loggerService;
         }
 
-        public async Task<ApplicationUser?> GetUserNameAsync(string userId)
+        public async Task<ApplicationUser?> GetUserNameAsync(string userName)
         {
-            return await _userManager.Users.FirstAsync(u => u.Id == userId);
+            return await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
         public async Task<ApplicationUser?> GetUserByIdAsync(string id)
@@ -66,111 +66,151 @@ namespace Identity.Infrastructure.Services.Identity
             return await this._userManager.FindByEmailAsync(email);
         }
 
-        public async Task<ApplicationUser?> GetUserAsync(string userId)
+        public async Task<IdentityResult> CreateUserEmailAsync(CreateUserEmailCommand request, CancellationToken cancellationToken = default)
         {
-            return await this._userManager.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        }
-
-        public async Task<IdentityResult> CreateUserAsync(CreateUserEmailCommand request, CancellationToken cancellationToken = default)
-        {
-            var applicationUser = new ApplicationUser()
+            try
             {
-                Email = request.Email,
-                UserName = request.Email,
-                FirstName = request.FirstName,
-                LastName = "Singh"
-            };
+                var applicationUser = new ApplicationUser()
+                {
+                    Email = request.Email,
+                    UserName = request.Email,
+                    FirstName = request.Email
+                };
 
-            return await _userManager.CreateAsync(applicationUser, request.Password);
-        }
-
-        public async Task<String?> CreateUserPhoneAsync(CreateUserPhoneCommand request, CancellationToken cancellationToken = default)
-        {
-            var applicationUser = new ApplicationUser()
+                return await _userManager.CreateAsync(applicationUser);
+            }
+            catch (Exception ex)
             {
-                PhoneNumber = request.PhoneNumber,
-                PhoneNumberConfirmed = true
-            };
-
-            this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);
-
-            await this.unitOfWork.SaveChangesAsync();
-
-            var users = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
-            return users?.Id;
-        }
-
-        public async Task CreateUserRoleAsync(String userId, string roleName, CancellationToken cancellationToken = default)
-        {
-            var applicationUser = await this._userManager.FindByIdAsync(userId);
-
-            if (applicationUser is not null)
-            {
-                await _userManager.AddToRoleAsync(applicationUser, roleName);
+                _logger.LogError(ex, "Error creating user with email {Email}", request.Email);
+                return IdentityResult.Failed(new IdentityError { Description = "Failed to create user due to an internal error." });
             }
         }
 
-        public async Task<SignInResult?> LoginAsync(LoginUserEmailCommand request)
+        public async Task<string?> CreateUserPhoneAsync(CreateUserPhoneCommand request, CancellationToken cancellationToken = default)
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true            
-            var applicationUser = await this.GetUserByEmailAsync(request.Email);
-            return await _signInManager.CheckPasswordSignInAsync(applicationUser!, request.Password, lockoutOnFailure: true);
+            try
+            {
+                var applicationUser = new ApplicationUser()
+                {
+                    PhoneNumber = request.PhoneNumber,
+                    PhoneNumberConfirmed = true,
+                    FirstName = request.PhoneNumber
+                };
+
+                this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);
+                await this.unitOfWork.SaveChangesAsync();
+
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+                return user?.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating user with phone number {PhoneNumber}", request.PhoneNumber);
+                return null;
+            }
         }
 
-        public async Task<ApplicationUser?> LoginAsync(LoginUserPhoneCommand request)
+        public async Task<bool> CreateUserRoleAsync(string userId, string roleName, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var applicationUser = await _userManager.FindByIdAsync(userId);
+                if (applicationUser is null) return false;
+
+                var result = await _userManager.AddToRoleAsync(applicationUser, roleName);
+                return result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding role {Role} to user {UserId}", roleName, userId);
+                return false;
+            }
+        }
+
+        public async Task<SignInResult?> LoginUserWithEmailPasswordAsync(LoginUserEmailPasswordCommand request)
+        {
+            var applicationUser = await GetUserByEmailAsync(request.Email);
+
+            if (applicationUser is null)
+            {
+                _logger.LogWarning("Login failed: user with email {Email} not found", request.Email);
+                return SignInResult.Failed;
+            }
+
+            return await _signInManager.CheckPasswordSignInAsync(applicationUser, request.Password, lockoutOnFailure: true);
+        }
+
+
+        public async Task<ApplicationUser?> LoginUserWithPhoneAsync(LoginUserPhoneCommand request)
         {
             return await this.GetUserByPhoneNumberAsync(request.PhoneNumber);
         }
 
+        public async Task<ApplicationUser?> LoginUserWithEmailAsync(LoginUserEmailCommand request)
+        {
+            return await this.GetUserByEmailAsync(request.Email);
+        }
+
         public async Task<AuthenticateResponse?> GenerateTokenAsync(string userId)
         {
-            var authenticationToken = await tokenService.GenerateAccessToken(userId);
-
-            var refreshToken = await jwtService.GenerateRefreshToken(userId, securityService.GetIpAddress);
-
-            var token = refreshToken.Adapt<AspNetUserRefreshToken>();
-            token.UserId = userId;
-            await tokenService.SaveRefreshTokenAsync(token);
-
-            if (authenticationToken != null)
+            var accessToken = await tokenService.GenerateAccessToken(userId);
+            if (accessToken == null)
             {
-                return new AuthenticateResponse(authenticationToken.Id, authenticationToken.AccessToken, refreshToken.Token, authenticationToken.ExpiresIn);
+                _logger.LogInfo("Access token generation failed.");
+                return null;
             }
-            this.loggerService.LogInfo("Email authentication token is null.");
-            return null;
+
+            var ipAddress = securityService.GetIpAddress;
+            var refreshToken = await jwtService.GenerateRefreshToken(userId, ipAddress);
+            if (refreshToken == null)
+            {
+                _logger.LogInfo("Refresh token generation failed.");
+                return null;
+            }
+
+            var refreshTokenEntity = refreshToken.Adapt<AspNetUserRefreshToken>();
+            refreshTokenEntity.UserId = userId;
+            await tokenService.SaveRefreshTokenAsync(refreshTokenEntity);
+
+            return new AuthenticateResponse(
+                accessToken.Id,
+                accessToken.AccessToken,
+                refreshToken.Token,
+                accessToken.ExpiresIn);
         }
 
         public async Task<bool> IsInRoleAsync(ApplicationUser user, string role)
         {
-            return await _userManager.IsInRoleAsync(user, role);
+            bool isInRole = await _userManager.IsInRoleAsync(user, role);
+            return isInRole;
         }
 
         public async Task<bool> AuthorizeAsync(string userId, string policyName)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
-            if (user is null)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                _logger.LogWarning("Authorization failed: user with ID {UserId} not found", userId);
                 return false;
+            }
 
             var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-
             var result = await _authorizationService.AuthorizeAsync(principal, policyName);
 
             return result.Succeeded;
         }
 
-        public async Task<List<Claim>> GetClaims(EmailDto email)
+        public async Task<List<Claim>> GetClaimsAsync(EmailDto email)
         {
             var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, email.Email)
-            };
+        {
+            new Claim(ClaimTypes.Name, email.Email)
+        };
 
             var user = await _userManager.FindByEmailAsync(email.Email);
-
-            if (user is null)
+            if (user == null)
             {
+                _logger.LogWarning("No user found for email {Email}", email.Email);
                 return new List<Claim>();
             }
 
@@ -179,38 +219,53 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+
+            _logger.LogInfo("Claims generated for user {Email}", email.Email);
             return claims;
         }
 
-        public async Task ChangePasswordAsync(ApplicationUser user, ChangePasswordCommand request, CancellationToken cancellationToken = default)
+        public async Task<IdentityResult?> ChangePasswordAsync(ApplicationUser user, ChangePasswordCommand request, CancellationToken cancellationToken = default)
         {
-            await this._userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            return result;
         }
 
-        public async Task<string> ForgotPasswordAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user, CancellationToken cancellationToken = default)
         {
-            return await this._userManager.GeneratePasswordResetTokenAsync(user);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return token;
         }
 
-        public async Task SetPasswordAsync(ApplicationUser user, SetPasswordCommand request, CancellationToken cancellationToken = default)
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, SetPasswordCommand request, CancellationToken cancellationToken = default)
         {
-            await this._userManager.ResetPasswordAsync(user, "", request.Password);
+            var result = await _userManager.ResetPasswordAsync(user, string.Empty, request.Password);
+            return result;
         }
 
         public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
         {
-            return await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
+            return result;
         }
 
-        public async Task<int> AddUserDevicesAsync(String userId, CancellationToken cancellationToken = default)
+        public async Task<int> AddUserDeviceAsync(string userId, CancellationToken cancellationToken = default)
         {
             var uaParser = Parser.GetDefault();
-            ClientInfo client = uaParser.Parse(securityService.GetUserAget);
+            ClientInfo client = uaParser.Parse(securityService.GetUserAgent);
 
-            var aspNetUserDevice = new AspNetUserDevice() { UserId = userId, IpAddress = securityService.GetIpAddress, DeviceName = client.Device.Family, Browser = client.UA.Family, OS = client.OS.Family };
+            var userDevice = new AspNetUserDevice
+            {
+                UserId = userId,
+                IpAddress = securityService.GetIpAddress,
+                DeviceName = client.Device.Family,
+                Browser = client.UA.Family,
+                OS = client.OS.Family
+            };
 
-            this.unitOfWork.UserDevicesRepository.AddAsync(aspNetUserDevice);
-            return await this.unitOfWork.SaveChangesAsync();
+            unitOfWork.UserDevicesRepository.AddAsync(userDevice);
+            var saveResult = await unitOfWork.SaveChangesAsync();
+
+            return saveResult;
         }
     }
 }

@@ -42,8 +42,12 @@ public static class JwtExtensions
 
                         var resolver = serviceProvider.GetRequiredService<ISigningKeyProvider>();
 
-                        var rawJson = resolver.GetSigningKey();
-                        var result = JsonSerializerWrapper.Deserialize<Result>(rawJson)
+                        var response = resolver.GetSigningKey();
+
+                        if (string.IsNullOrEmpty(response))
+                                throw new InvalidOperationException("Signing key retrieval failed: the key data is missing or invalid.");
+
+                        var result = JsonSerializerWrapper.Deserialize<Result>(response)
                             ?? throw new InvalidOperationException("Failed to deserialize signing key result.");
 
                         var signingKey = result.Data?.ToString();

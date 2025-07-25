@@ -2,6 +2,6 @@
 {
     public interface ISeedService
     {
-        Task CreateRoleSync();
+        Task<bool> CreateRoleSync();
     }
 }

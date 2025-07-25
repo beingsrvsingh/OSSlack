@@ -1,10 +1,10 @@
-﻿using Identity.Application.Services.Interfaces;
+﻿using Identity.Application.Features.User.Queries.UserInfo;
 using MediatR;
 using Shared.Utilities.Response;
 
 namespace Identity.Application.Features.User.Queries.QueryHandler
 {
-    public class GetUserQueryHandler : IRequestHandler<GetUserQuery, Result>
+    public class GetUserQueryHandler : IRequestHandler<GetUserInfoQuery, Result>
     {
         private readonly IIdentityService identityService;
 
@@ -13,14 +13,19 @@ namespace Identity.Application.Features.User.Queries.QueryHandler
             this.identityService = identityService;
         }
 
-        public async Task<Result> Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
         {
-            var users = await this.identityService.GetUserAsync(request.UserId);
+            var user = await identityService.GetUserByIdAsync(request.UserId);
 
-            if (users is null)
-                return Result.Failure("No Records Found");
+            if (user is null)
+            {
+                return Result.Failure(new FailureResponse(
+                    "UserNotFound",
+                    $"No records found for user ID '{request.UserId}'."));
+            }
 
-            return Result.Success(users);
+            return Result.Success(user);
         }
+
     }
 }

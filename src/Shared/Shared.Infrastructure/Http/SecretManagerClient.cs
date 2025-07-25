@@ -1,10 +1,6 @@
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
-using Shared.Contracts.Interfaces;
 
 namespace Shared.Infrastructure.Http;
 
