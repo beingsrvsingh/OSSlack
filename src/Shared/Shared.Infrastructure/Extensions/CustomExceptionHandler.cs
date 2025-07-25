@@ -9,9 +9,9 @@ namespace Shared.Infrastructure.Extensions
     public class CustomExceptionHandler : IExceptionHandler
     {
         private readonly Dictionary<Type, Func<HttpContext, Exception, Task>> _exceptionHandlers;
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<CustomExceptionHandler> loggerService;
 
-        public CustomExceptionHandler(ILoggerService loggerService)
+        public CustomExceptionHandler(ILoggerService<CustomExceptionHandler> loggerService)
         {
             this.loggerService = loggerService;
 

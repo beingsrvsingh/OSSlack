@@ -6,8 +6,8 @@ namespace Identity.Application.Features.User.EventHandlers
 {
     public class ForgotPasswordEventHandler : INotificationHandler<CreatedUserEmailEvent>
     {
-        private readonly ILoggerService logger;
-        public ForgotPasswordEventHandler(ILoggerService logger)
+        private readonly ILoggerService<ForgotPasswordEventHandler> logger;
+        public ForgotPasswordEventHandler(ILoggerService<ForgotPasswordEventHandler> logger)
         {
             this.logger = logger;
         }

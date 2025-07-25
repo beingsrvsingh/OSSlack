@@ -1,5 +1,4 @@
-﻿using JwtTokenAuthentication.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Shared.Domain.Common.Entities.Interface;
 
 namespace Identity.Domain.Entities
@@ -18,7 +17,6 @@ namespace Identity.Domain.Entities
         public bool IsDeleted { get; set; }
 
         public virtual AspNetUserMembership? Membership { get; set; }
-        public virtual AspNetUserSigningKey? AspNetUserSigningKey { get; set; }
         public virtual ICollection<AspNetUserAddress> AspNetUserAddresses { get; set; } = new List<AspNetUserAddress>();
         public virtual ICollection<AspNetUserDevice> AspNetUserDevices { get; set; } = new List<AspNetUserDevice>();
         public virtual ICollection<AspNetUserRefreshToken> AspNetUserRefreshTokens { get; set; } = new List<AspNetUserRefreshToken>();

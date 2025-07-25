@@ -6,7 +6,7 @@ namespace Shared.Utilities.Response
     public class Result : BaseResponse, IResult
     {
         public object? Data { get; init; }
-        internal Result(bool succeeded, object? data, object? errors)
+        public Result(bool succeeded, object? data, object? errors)
         {
             Succeeded = succeeded;
             Errors = errors;
@@ -17,9 +17,9 @@ namespace Shared.Utilities.Response
             => new Result(true, Array.Empty<string>(), Array.Empty<string>());
 
         public static Result Success(object data)
-            => new Result(true, data, null);
+            => new Result(true, data, Array.Empty<String>());
 
-        public static Result Failure() => new Result(false, Array.Empty<String>(),Array.Empty<String>());
+        public static Result Failure() => new Result(false, Array.Empty<String>(), Array.Empty<String>());
 
         public static Result Failure(object errors)
             => new Result(false, Array.Empty<String>(), errors);
@@ -32,7 +32,7 @@ namespace Shared.Utilities.Response
     {
         public T? Data { get; init; }
 
-        internal Result(bool succeeded, T? data, object? errors)
+        public Result(bool succeeded, T? data, object? errors)
         {
             Succeeded = succeeded;
             Data = data;
@@ -40,7 +40,7 @@ namespace Shared.Utilities.Response
         }
 
         public static Result<T> Success(T data)
-            => new Result<T>(true, data, null);
+            => new Result<T>(true, data, Array.Empty<String>());
 
         public static Result<T> Failure(object errors)
             => new Result<T>(false, default, errors);

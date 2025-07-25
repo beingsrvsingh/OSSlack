@@ -18,11 +18,8 @@ foreach (var file in Directory.GetFiles(configFolder, $"*.ocelot.{env}.json"))
 
 builder.Services.AddOcelot(builder.Configuration).AddCacheManager(settings => settings.WithDictionaryHandle()).AddPolly();
 
-    var platformService = PlatformServiceFactory.Create();
-    builder.Services.AddSingleton(platformService);
-
     //Authentication and authorization        
-    builder.Services.AddJwtTokenAuthentication(platformService);
+    builder.Services.AddJwtTokenAuthentication();
 
 // Add services to the container.
 

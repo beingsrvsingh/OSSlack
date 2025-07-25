@@ -10,8 +10,8 @@ namespace Identity.Infrastructure.Services.Identity
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly ILoggerService loggerService;
-        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ILoggerService loggerService)
+        private readonly ILoggerService<RoleService> loggerService;
+        public RoleService(ILoggerService<RoleService> loggerService, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             this.roleManager = roleManager;
             this.loggerService = loggerService;

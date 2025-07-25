@@ -11,9 +11,9 @@ public class CreateUserPhoneCommandHandler : IRequestHandler<CreateUserPhoneComm
 {
     private readonly IIdentityService identityService;
     private readonly IUserService userService;
-    private readonly ILoggerService loggerService;
+    private readonly ILoggerService<CreateUserPhoneCommandHandler> loggerService;
 
-    public CreateUserPhoneCommandHandler(IIdentityService identityService, IUserService userService, ILoggerService loggerService)
+    public CreateUserPhoneCommandHandler(ILoggerService<CreateUserPhoneCommandHandler> loggerService, IIdentityService identityService, IUserService userService)
     {
         this.identityService = identityService;
         this.userService = userService;
@@ -26,8 +26,6 @@ public class CreateUserPhoneCommandHandler : IRequestHandler<CreateUserPhoneComm
 
         if(!string.IsNullOrEmpty(userId))
         {
-            await this.identityService.CreateSigningKeyAsync(userId);
-
             await this.identityService.CreateUserRoleAsync(userId, request.RoleName);
 
             loggerService.LogInfo("{0} is created", request.PhoneNumber);

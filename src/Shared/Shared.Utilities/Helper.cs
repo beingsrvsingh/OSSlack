@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Text.Json;
 
 namespace Shared.Utilities
 {
@@ -13,10 +12,5 @@ namespace Shared.Utilities
                                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
                                 .Build();
         }
-
-        public static readonly JsonSerializerOptions _options = new()
-        {
-            PropertyNameCaseInsensitive = true
-        };
     }
 }

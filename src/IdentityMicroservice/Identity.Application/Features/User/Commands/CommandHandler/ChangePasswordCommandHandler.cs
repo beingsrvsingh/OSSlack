@@ -9,9 +9,9 @@ namespace Identity.Application.Features.User.Commands.CommandHandler
     public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Result>
     {
         private readonly IIdentityService identityService;
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<ChangePasswordCommandHandler> loggerService;
 
-        public ChangePasswordCommandHandler(IIdentityService identityService, ILoggerService loggerService)
+        public ChangePasswordCommandHandler(ILoggerService<ChangePasswordCommandHandler> loggerService, IIdentityService identityService)
         {
             this.identityService = identityService;
             this.loggerService = loggerService;

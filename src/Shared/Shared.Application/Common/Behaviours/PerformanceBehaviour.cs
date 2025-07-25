@@ -8,11 +8,11 @@ namespace Shared.Application.Common.Behaviours;
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;
-    private readonly ILoggerService logger;
+    private readonly ILoggerService<PerformanceBehaviour<TRequest, TResponse>> logger;
     private readonly IUserProvider _user;
 
     public PerformanceBehaviour(
-        ILoggerService logger,
+        ILoggerService<PerformanceBehaviour<TRequest, TResponse>> logger,
         IUserProvider user)
     {
         _timer = new Stopwatch();

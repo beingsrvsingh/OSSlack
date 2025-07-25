@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml;
 using Shared.Utilities.Response;
-using Utilities;
+using Shared.Utilities;
 
 namespace Identity.Application.Features.Admin.Commands.CommandsHandler
 {

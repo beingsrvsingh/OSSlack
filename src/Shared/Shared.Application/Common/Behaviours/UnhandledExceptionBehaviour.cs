@@ -5,9 +5,9 @@ namespace Shared.Application.Common.Behaviours;
 
 public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    private readonly ILoggerService logger;
+    private readonly ILoggerService<UnhandledExceptionBehaviour<TRequest, TResponse>> logger;
 
-    public UnhandledExceptionBehaviour(ILoggerService logger)
+    public UnhandledExceptionBehaviour(ILoggerService<UnhandledExceptionBehaviour<TRequest, TResponse>> logger)
     {
         this.logger = logger;
     }

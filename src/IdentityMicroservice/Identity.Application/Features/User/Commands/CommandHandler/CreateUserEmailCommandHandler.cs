@@ -12,10 +12,10 @@ namespace Identity.Application.Features.User.Commands.CommandHandler;
 public class CreateUserEmailCommandHandler : IRequestHandler<CreateUserEmailCommand, Result>
 {
     private readonly IIdentityService identityService;
-    private readonly ILoggerService loggerService;
+    private readonly ILoggerService<CreateUserEmailCommandHandler> loggerService;
     private readonly IUserService userService;
 
-    public CreateUserEmailCommandHandler(IIdentityService identityService,  ILoggerService loggerService, IUserService userService)
+    public CreateUserEmailCommandHandler(ILoggerService<CreateUserEmailCommandHandler> loggerService, IIdentityService identityService, IUserService userService)
     {
         this.identityService = identityService;
         this.loggerService = loggerService;
@@ -35,7 +35,6 @@ public class CreateUserEmailCommandHandler : IRequestHandler<CreateUserEmailComm
             {
                 CreateUserInfoCommand userInfoRequest = new() { FirstName = request.FirstName.Trim(), UserId = user.Id, LastName = request?.LastName?.Trim() ?? null };
                 await userService.CreateUserInfoAsync(userInfoRequest, cancellationToken);
-                await this.identityService.CreateSigningKeyAsync(user.Id);
                 await this.identityService.CreateUserRoleAsync(user.Id, request.RoleName);
                 await this.identityService.AddUserDevicesAsync(user.Id, cancellationToken);
 

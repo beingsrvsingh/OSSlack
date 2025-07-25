@@ -1,6 +1,5 @@
 using SecretManagement.Application.Services.Interfaces;
 using Shared.Contracts.Interfaces;
-using Shared.Infrastructure.Platform;
 
 namespace SecretManagement.Infrastructure.Services.Secrets;
 
@@ -8,28 +7,28 @@ public class PlatformManagerService : IPlatformManagerService
 {
     private readonly IPlatformService _platformService;
 
-    public PlatformManagerService()
+    public PlatformManagerService(IPlatformService platformService)
     {
-        this._platformService = PlatformServiceFactory.Create();
+        this._platformService = platformService;
     }    
 
-    public IEnumerable<string> GetAllCredentialKeys()
+    public async Task<IEnumerable<string>> GetAllCredentialKeys()
     {
-        return this._platformService.GetAllCredentialKeys();
+        return await this._platformService.GetAllCredentialKeysAsync();
     }
 
-    public void AddCredential(string keyName, string secret)
+    public async Task<bool> AddCredential(string keyName, string secret)
     {
-        this._platformService.AddCredential(keyName, secret);
+        return await this._platformService.AddCredentialAsync(keyName, secret);
     }
 
-    public string? GetCredential(string keyName)
+    public async Task<string?> GetCredential(string keyName)
     {
-        return this._platformService.GetCredential(keyName);
+        return await this._platformService.GetCredentialAsync(keyName);
     }
 
-    public void RemoveCredential(string keyName)
+    public async Task<bool> RemoveCredential(string keyName)
     {
-        this._platformService.RemoveCredential(keyName);
+        return await this._platformService.RemoveCredentialAsync(keyName);
     }
 }

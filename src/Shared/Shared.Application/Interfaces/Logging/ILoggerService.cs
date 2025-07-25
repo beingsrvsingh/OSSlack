@@ -1,6 +1,6 @@
 ﻿namespace Shared.Application.Interfaces.Logging
 {
-    public interface ILoggerService
+    public interface ILoggerService<T>
     {
         void LogError(Exception ex, string errorMessage, params object[] args);
 

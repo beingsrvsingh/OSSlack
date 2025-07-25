@@ -4,7 +4,7 @@ using Shared.Application.Interfaces.Logging;
 
 namespace Shared.Infrastructure.Services
 {
-    public class LoggerService : ILoggerService
+    public class LoggerService<T> : ILoggerService<T>
     {
         // Create nlog.config (lowercase all) file in the root of your project
         protected NLog.Logger logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config")!.GetCurrentClassLogger();

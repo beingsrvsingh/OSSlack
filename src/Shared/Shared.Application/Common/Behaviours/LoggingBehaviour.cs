@@ -4,9 +4,9 @@ using Shared.Application.Interfaces;
 
 namespace Shared.Application.Common.Behaviours;
 
-public class LoggingBehaviour<TRequest>(ILoggerService logger, IUserProvider user) : IRequestPreProcessor<TRequest> where TRequest : notnull
+public class LoggingBehaviour<TRequest>(ILoggerService<LoggingBehaviour<TRequest>> logger, IUserProvider user) : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly ILoggerService _logger = logger;
+    private readonly ILoggerService<LoggingBehaviour<TRequest>> _logger = logger;
     private readonly IUserProvider _user = user;
 
     public async Task Process(TRequest request, CancellationToken cancellationToken)

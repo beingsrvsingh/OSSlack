@@ -10,18 +10,30 @@ namespace SecretManagement.Application.Features.SecretManager.EventHandlers
 {
     public class CreateSecretEventCommandHandler : IRequestHandler<CreateSecretKeyCommand, Result>
     {
-        private readonly ILoggerService logger;
+        private readonly ILoggerService<CreateSecretEventCommandHandler> logger;
         private ISecretsService secretService;
-        public CreateSecretEventCommandHandler(ILoggerService logger, ISecretsService secretService)
+        public CreateSecretEventCommandHandler(ILoggerService<CreateSecretEventCommandHandler> logger, ISecretsService secretService)
         {
             this.logger = logger;
             this.secretService = secretService;
         }
         public async Task<Result> Handle(CreateSecretKeyCommand command, CancellationToken cancellationToken)
         {
-            var secret = command.Adapt<Secret>();
-            await secretService.CreateSecret(secret);
-            return Result.Success("Secret created successfully.");
+            try
+            {
+                var secret = command.Adapt<Secret>();
+                await secretService.CreateSecret(secret);
+                return Result.Success("Secret created successfully.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while creating the secret.");
+                
+                return Result.Failure(new FailureResponse(
+                "SecretCreationFailed",
+                "An error occurred while creating the secret. Please try again later."));
+            }
+
         }
     }
 }

@@ -26,8 +26,6 @@ namespace Identity.Application.Services.Interfaces
 
         Task<String?> CreateUserPhoneAsync(CreateUserPhoneCommand request, CancellationToken cancellationToken = default);
 
-        Task CreateSigningKeyAsync(string userId, CancellationToken cancellationToken = default);
-
         Task<SignInResult?> LoginAsync(LoginUserEmailCommand request);
 
         Task<ApplicationUser?> LoginAsync(LoginUserPhoneCommand request);

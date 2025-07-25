@@ -38,3 +38,13 @@ DBCC CHECKIDENT(STATEMASTER,RESEED,0)
 DBCC CHECKIDENT(PINCODEMASTER,RESEED,0)
 DBCC CHECKIDENT(DISTRICTMASTER,RESEED,0)
 DBCC CHECKIDENT(AREAMASTER,RESEED,0)
+
+## PRE-REQUISIT
+
+// Register essential framework services like IHttpClientFactory and IMemoryCache here in Program.cs.
+// These services are core infrastructure components provided by Microsoft.Extensions.DependencyInjection.
+// Registering them at this level ensures they are available throughout the microservice and properly integrated with Autofac.
+// Avoid registering these inside Autofac modules, as these methods are specific to IServiceCollection and must be configured early.
+
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();  

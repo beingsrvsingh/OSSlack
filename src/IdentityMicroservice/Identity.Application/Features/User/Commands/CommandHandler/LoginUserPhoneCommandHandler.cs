@@ -1,9 +1,9 @@
 ﻿using Identity.Application.Services.Interfaces;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities;
+using Shared.Utilities.Interfaces;
 using Shared.Utilities.Response;
-using Utilities;
-using Utilities.Services;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler;
 
@@ -11,11 +11,11 @@ public class LoginUserPhoneCommandHandler : IRequestHandler<LoginUserPhoneComman
 {
     private readonly IIdentityService identityService;
     private readonly ICookieService cookieService;
-    private readonly ISecurityService securityService;
-    private readonly ILoggerService _logger;
+    private readonly IHttpRequestService securityService;
+    private readonly ILoggerService<LoginUserPhoneCommandHandler> _logger;
 
-    public LoginUserPhoneCommandHandler(IIdentityService identityService, ILoggerService loggerService, 
-        ICookieService cookieService, ISecurityService securityService)
+    public LoginUserPhoneCommandHandler(ILoggerService<LoginUserPhoneCommandHandler> loggerService, IIdentityService identityService, 
+        ICookieService cookieService, IHttpRequestService securityService)
     {
         this.identityService = identityService;
         this._logger = loggerService;

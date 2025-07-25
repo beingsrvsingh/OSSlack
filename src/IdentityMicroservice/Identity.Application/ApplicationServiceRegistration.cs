@@ -4,7 +4,6 @@ using Shared.Application.Common.Behaviours;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Utilities;
 using Identity.Application.Common.Config;
 
 namespace Identity.Application

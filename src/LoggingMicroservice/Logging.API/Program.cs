@@ -3,38 +3,35 @@ using Logging.Infrastructure;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure.Platform;
-using Shared.Infrastructure.Services;
 
-ILoggerService loggerService = new LoggerService();
+var builder = WebApplication.CreateBuilder(args);
+
+//Authentication and authorization        
+builder.Services.AddJwtTokenAuthentication();
+builder.Services.AddInfrastructureServices();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGenerate();
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("EnableCORS", builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
+
+var loggerService = app.Services.GetRequiredService<ILoggerService<Program>>();
+
 try
 {
-    var builder = WebApplication.CreateBuilder(args);
-
-    // Add services to the container.
-    var platformService = PlatformServiceFactory.Create();
-    builder.Services.AddSingleton(platformService);
-
-    //Authentication and authorization        
-    builder.Services.AddJwtTokenAuthentication(platformService);
-    builder.Services.AddInfrastructureServices();
-
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGenerate();
-
-    //Cors
-    builder.Services.AddCors(options =>
-    {
-        options.AddPolicy("EnableCORS", builder =>
-        {
-            builder.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
-    });
-
-    var app = builder.Build();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -57,5 +54,7 @@ try
 }
 catch (Exception ex)
 {
-    loggerService.LogError("Identity-API-Program - ", ex.Message, ex.InnerException!);
+    loggerService.LogError(ex, "An error occurred in Identity-API-Program.");
+
+    throw;
 }

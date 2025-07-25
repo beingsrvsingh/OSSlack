@@ -7,8 +7,8 @@ namespace Identity.Infrastructure.Services.Identity
     public class SeedService : ISeedService
     {
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ILoggerService loggerService;
-        public SeedService(RoleManager<IdentityRole> roleManager, ILoggerService loggerService)
+        private readonly ILoggerService<SeedService> loggerService;
+        public SeedService(ILoggerService<SeedService>loggerService, RoleManager<IdentityRole> roleManager)
         {
             this.roleManager = roleManager;
             this.loggerService = loggerService;

@@ -1,4 +1,4 @@
-﻿namespace Utilities
+﻿namespace Shared.Utilities
 {
     public static class Constants
     {

@@ -11,18 +11,28 @@ namespace SecretManagement.Application.Features.SecretManager.EventHandlers
 {
     public class UpdateSecretEventCommandHandler : IRequestHandler<UpdateSecretKeyCommand, Result>
     {
-        private readonly ILoggerService logger;
+        private readonly ILoggerService<UpdateSecretEventCommandHandler> logger;
         private ISecretsService secretService;
-        public UpdateSecretEventCommandHandler(ILoggerService logger, ISecretsService secretService)
+        public UpdateSecretEventCommandHandler(ILoggerService<UpdateSecretEventCommandHandler> logger, ISecretsService secretService)
         {
             this.logger = logger;
             this.secretService = secretService;
         }
         public async Task<Result> Handle(UpdateSecretKeyCommand command, CancellationToken cancellationToken)
         {
-            var secret = command.Adapt<Secret>();
-            await secretService.UpdateSecret(secret);
-            return Result.Success();
+            try
+            {
+                var secret = command.Adapt<Secret>();
+                await secretService.UpdateSecret(secret);
+                return Result.Success("Secret updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while updating a secret.");
+                return Result.Failure(new FailureResponse(
+                "SecretUpdateFailed",
+                "An unexpected error occurred while updating the secret. Please try again later."));
+            }
         }
     }
 }

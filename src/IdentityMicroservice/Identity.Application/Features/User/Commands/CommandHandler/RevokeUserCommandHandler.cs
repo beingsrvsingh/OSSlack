@@ -1,19 +1,19 @@
 ﻿using Identity.Application.Features.User.Commands.Token;
 using MediatR;
-using Utilities.Services;
 using Identity.Application.Services.Interfaces;
 using Shared.Utilities.Response;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Interfaces;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler
 {
     public class RevokeUserCommandHandler : IRequestHandler<RevokeUserCommand, Result>
     {
         private readonly ITokenService tokenService;
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<RevokeUserCommandHandler> loggerService;
         private readonly ICookieService cookieService;
 
-        public RevokeUserCommandHandler(ITokenService tokenService, ILoggerService loggerService, ICookieService cookieService)
+        public RevokeUserCommandHandler(ILoggerService<RevokeUserCommandHandler> loggerService, ITokenService tokenService, ICookieService cookieService)
         {
             this.tokenService = tokenService;
             this.loggerService = loggerService;

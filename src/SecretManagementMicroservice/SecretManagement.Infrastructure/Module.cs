@@ -10,6 +10,5 @@ public class SecretManagementInfrastructureModule : Module
         builder.RegisterAssemblyTypes(typeof(SecretManagementInfrastructureModule).Assembly)
                .AsImplementedInterfaces()
                .InstancePerLifetimeScope();
-
-    }
+        }
 }

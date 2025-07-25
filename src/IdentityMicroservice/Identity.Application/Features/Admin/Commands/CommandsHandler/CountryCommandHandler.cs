@@ -5,8 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Shared.Utilities;
 using Shared.Utilities.Response;
-using System.Text.Json;
-using Utilities;
 
 namespace Identity.Application.Features.Admin.Commands.CommandsHandler
 {
@@ -25,7 +23,7 @@ namespace Identity.Application.Features.Admin.Commands.CommandsHandler
             var path = Path.Combine(this.env.ContentRootPath, Constants.STATIC_FILE_PATH, "country_master.json");
 
             using FileStream json = File.OpenRead(path);
-            List<CountryCommand>? countryCommands = JsonSerializer.Deserialize<List<CountryCommand>>(json, Helper._options);
+            List<CountryCommand>? countryCommands = JsonSerializerWrapper.Deserialize<List<CountryCommand>>(json);
 
             var request = countryCommands.Adapt<List<CountryMaster>>();
 

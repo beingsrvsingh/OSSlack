@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Shared.Infrastructure.Constants;
-using Utilities;
+using Shared.Utilities;
 
 namespace Shared.Infrastructure.Http
 {
@@ -35,7 +35,7 @@ namespace Shared.Infrastructure.Http
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var context = _httpContextAccessor.HttpContext;
-            Utitlities.AddHeadersToken(client, context); // Assuming this method exists and adds auth headers
+            Utils.AddHeadersToken(client, context); // Assuming this method exists and adds auth headers
 
             return client;
         }

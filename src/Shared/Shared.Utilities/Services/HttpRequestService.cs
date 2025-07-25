@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Shared.Utilities.Interfaces;
 
-namespace Utilities.Services
+namespace Shared.Utilities.Services
 {
-    public class SecurityService : ISecurityService
+    public class HttpRequestService : IHttpRequestService
     {
         private readonly IHttpContextAccessor _contextAccessor;
-        public SecurityService(IHttpContextAccessor contextAccessor)
+        public HttpRequestService(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }

@@ -3,10 +3,9 @@ using Identity.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities;
+using Shared.Utilities.Interfaces;
 using Shared.Utilities.Response;
-using UAParser;
-using Utilities;
-using Utilities.Services;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler;
 
@@ -15,11 +14,11 @@ public class LoginUserEmailCommandHandler : IRequestHandler<LoginUserEmailComman
     private readonly IIdentityService identityService;
     private readonly UserManager<ApplicationUser> userManager;
     private readonly ICookieService cookieService;
-    private readonly ISecurityService securityService;
-    private readonly ILoggerService _logger;
+    private readonly IHttpRequestService securityService;
+    private readonly ILoggerService<LoginUserEmailCommandHandler> _logger;
 
-    public LoginUserEmailCommandHandler(IIdentityService identityService, UserManager<ApplicationUser> userManager, ILoggerService loggerService, 
-        ICookieService cookieService, ISecurityService securityService)
+    public LoginUserEmailCommandHandler(ILoggerService<LoginUserEmailCommandHandler> loggerService, IIdentityService identityService, UserManager<ApplicationUser> userManager,
+        ICookieService cookieService, IHttpRequestService securityService)
     {
         this.identityService = identityService;
         this._logger = loggerService;

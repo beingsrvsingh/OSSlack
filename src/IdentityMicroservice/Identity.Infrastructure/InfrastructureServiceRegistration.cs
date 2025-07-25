@@ -1,11 +1,7 @@
 ﻿using Identity.Application;
 using Identity.Application.Services.Interfaces;
-using Identity.Domain.Core.Repository;
-using Identity.Domain.Core.UOW;
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence.Context;
-using Identity.Infrastructure.Repositories;
-using Identity.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -65,24 +61,7 @@ namespace Identity.Infrastructure
             services.Configure<PasswordHasherOptions>(option =>
             {
                 option.IterationCount = 12000;
-            });            
-
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<ISeedService, SeedService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAdminService, AdminService>();
-            services.AddScoped<IRoleService, RoleService>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-            services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
-            services.AddScoped<ICountryMasterRepository, CountryMasterRepository>();
-            services.AddScoped<IStateMasterRepository, StateMasterRepository>();
-            services.AddScoped<ICityMasterRepository, CityMasterRepository>();
+            });
 
             return services;
         }

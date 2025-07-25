@@ -11,10 +11,10 @@ namespace Review.Application.Features.Queries.QueryHandlers
     public class GetReviewByProductQueryHandler : IRequestHandler<GetReviewByProductQuery, Result>
     {
         private readonly IReviewService reviewService;
-        private readonly ILoggerService logger;
+        private readonly ILoggerService<GetReviewByProductQueryHandler> logger;
         private readonly IIdentityApiClient identityAPIClient;
 
-        public GetReviewByProductQueryHandler(IReviewService reviewService, ILoggerService logger,
+        public GetReviewByProductQueryHandler(ILoggerService<GetReviewByProductQueryHandler> logger, IReviewService reviewService,
             IIdentityApiClient identityAPIClient)
         {
             this.reviewService = reviewService;

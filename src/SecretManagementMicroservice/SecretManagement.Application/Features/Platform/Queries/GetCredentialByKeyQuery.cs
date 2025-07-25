@@ -1,8 +1,9 @@
 using MediatR;
+using Shared.Utilities.Response;
 
 namespace SecretManagement.Application.Platform.Queries;
 
-public class GetCredentialByKeyQuery : IRequest<string?>
+public class GetCredentialByKeyQuery : IRequest<Result>
 {
     public string KeyName { get; }
 

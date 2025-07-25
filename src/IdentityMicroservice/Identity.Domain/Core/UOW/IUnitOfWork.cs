@@ -11,8 +11,6 @@ namespace Identity.Domain.Core.UOW
 
         IRefreshTokenRepository RefreshTokenRepository { get; }
 
-        IUserSigningKeyRepository UserSigningKeyRepository { get; }
-
         IAddressRepository AddressRepository { get; }
 
         IUserDevicesRepository UserDevicesRepository { get; }

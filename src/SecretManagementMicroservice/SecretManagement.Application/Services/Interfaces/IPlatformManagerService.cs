@@ -3,9 +3,9 @@ namespace SecretManagement.Application.Services.Interfaces;
 
 public interface IPlatformManagerService
 {
-    IEnumerable<string> GetAllCredentialKeys();
-    string? GetCredential(string keyName);
+    Task<IEnumerable<string>> GetAllCredentialKeys();
+    Task<string?> GetCredential(string keyName);
 
-    void AddCredential(string keyName, string secret);
-    void RemoveCredential(string keyName);
+    Task<bool> AddCredential(string keyName, string secret);
+    Task<bool> RemoveCredential(string keyName);
 }

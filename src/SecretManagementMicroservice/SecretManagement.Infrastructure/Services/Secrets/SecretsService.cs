@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using SecretManagement.Application.Services.Interfaces;
 using SecretManagement.Domain.Core.UOW;
 using SecretManagement.Domain.Entities;
@@ -13,31 +14,18 @@ public class SecretsService : ISecretsService
         _uow = uow;
     }
 
-    public async Task<Secret?> GetSecret(string appName, string environment, string key)
+    public async Task<Dictionary<string, Secret>> GetAllSecrets(string userId)
     {
-       return await _uow.SecretRepository.GetBy(s =>
-            s.AppName == appName &&
-            s.Environment == environment &&
-            s.SecretKey == key &&
-            s.IsActive);
+        return await _uow.SecretRepository.GetAllAsync(userId);
     }
 
-    public async Task<bool> HasSecret(string appName, string environment, string key)
+    public async Task<Secret?> GetSecret(string appName, string environment, string key)
     {
-        try
-        {
-            var secret = await _uow.SecretRepository.GetBy(s =>
-                s.AppName == appName &&
-                s.Environment == environment &&
-                s.SecretKey == key &&
-                s.IsActive);
-
-            return secret != null;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error checking if secret exists", ex);
-        }
+        return await _uow.SecretRepository.GetBy(s =>
+             s.AppName == appName &&
+             s.Environment == environment &&
+             s.SecretKey == key &&
+             s.IsActive);
     }
 
     public async Task CreateSecret(Secret secret)
@@ -97,7 +85,7 @@ public class SecretsService : ISecretsService
         }
     }
 
-    public async Task DeleteSecret(string appName, string environment, string key)
+    public async Task DeleteSecret(string key, string appName, string environment)
     {
         Secret? existingSecret = await this._uow.SecretRepository.GetBy(s =>
             s.AppName == appName &&
@@ -112,10 +100,23 @@ public class SecretsService : ISecretsService
         existingSecret.UpdatedAt = DateTime.UtcNow;
 
         await _uow.SecretRepository.DeleteAsync(existingSecret);
-    }
-
-    public Dictionary<string, Secret> GetAllSecrets(string appName, string environment)
+    }    
+    
+    private async Task<bool> HasSecret(string appName, string environment, string key)
     {
-        return _uow.SecretRepository.GetAll(appName, environment);
+        try
+        {
+            var secret = await _uow.SecretRepository.GetBy(s =>
+                s.AppName == appName &&
+                s.Environment == environment &&
+                s.SecretKey == key &&
+                s.IsActive);
+
+            return secret != null;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error checking if secret exists", ex);
+        }
     }
 }

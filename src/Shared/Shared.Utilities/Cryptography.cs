@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Utilities.Cryptography
+namespace Shared.Utilities.Cryptography
 {
     public class Cryptography
     {

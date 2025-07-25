@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SecretManagement.Domain.Core.Repository;
 using SecretManagement.Domain.Entities;
 using SecretManagement.Infrastructure.Persistence.Context;
@@ -15,11 +16,11 @@ public class SecretRepository : Repository<Secret>, ISecretRepository
         this._dbContext = dbContext;
     }
 
-    public Dictionary<string, Secret> GetAll(string appName, string environment)
+    public async Task<Dictionary<string, Secret>> GetAllAsync(string userId)
     {
-        return _dbContext.Secrets
-            .Where(s => s.AppName == appName && s.Environment == environment && s.IsActive)
-            .ToDictionary(s => s.SecretKey, s => s);
+        return await _dbContext.Secrets
+            .Where(s => s.UserId == userId && s.IsActive)
+            .ToDictionaryAsync(s => s.SecretKey, s => s);
     }
 
 }

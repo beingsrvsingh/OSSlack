@@ -2,73 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using SecretManagement.Application.Features.SecretManager.Commands;
 using SecretManagement.Application.Features.SecretManager.Queries;
-using System.Threading.Tasks;
-using MediatR;
-using SecretManagement.Infrastructure.Persistence.Context;
-using Microsoft.EntityFrameworkCore;
-using SecretManagement.Domain.Core.Repository;
-using SecretManagement.Application.Features.Commands;
-using SecretManagement.Application.Features.Queries;
 
 namespace SecretManagementService.Controllers
 {
     public class SecretsManagerController : BaseController
     {
-        // private readonly SecretManagementDbContext context;
-        // private readonly ISecretRepository secretRepository;
 
-        // public SecretsManagerController(SecretManagementDbContext context)
-        // {
-        //     this.context = context;
-        //     this.secretRepository = secretRepository;
-        // }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost]
-        [Route("security-token")]
-        public async Task<IActionResult> GetSecurityToken(GetUserSecurityTokenQuery req)
+        [HttpGet("secrets")]
+        public async Task<IActionResult> GetAllSecrets()
         {
-            var response = await Mediator.Send(req);
+            var userId = User?.Identity?.Name ?? string.Empty;
 
-            return Ok(response);
-        }
+            var query = new GetAllSecretsQuery(userId);
 
-        [HttpPost]
-        [Route("encrypt")]
-        public IActionResult EncryptConnectionString(string connectionString)
-        {
-            // string keyName = this.registryService.ConnectionStringKeyName;
+            var response = await Mediator.Send(query);
 
-            // if (!string.IsNullOrEmpty(connectionString)) {
-            //     string encryptConnectionString = Cryptography.EncryptString(connectionString);
-            //     this.registryService.SetValue(keyName, encryptConnectionString);
-            // }
+            if (response == null || !response.Succeeded || response.Data == null)
+                return NotFound("No credentials found.");
 
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("get-encrypted-token-security-key")]
-        public IActionResult EncryptTokenSecurityKey()
-        {
-            // string keyName = this.registryService.TokenSeurityKeyName;
-
-            // if (!string.IsNullOrEmpty(JwtConstant.JWT_TOKEN_SECURITYKEY))
-            // {
-            //     string encryptConnectionString = Cryptography.EncryptString(JwtConstant.JWT_TOKEN_SECURITYKEY);
-            //     this.registryService.SetValue(keyName, encryptConnectionString);
-            //     return Ok();
-            // }
-
-            return BadRequest();
+            return Ok(response.Data);
         }
 
         [HttpGet("{appName}/{environment}/{key}")]
         public async Task<IActionResult> GetSecret(string appName, string environment, string key)
         {
             var query = new GetSecretQuery(appName, environment, key);
+
             var result = await Mediator.Send(query);
 
             if (!result.Succeeded)
@@ -83,7 +42,10 @@ namespace SecretManagementService.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await Mediator.Send(command); // triggers the notification handler
+            var result = await Mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
             return Accepted(new { Message = "Secret creation triggered successfully." });
         }
@@ -94,7 +56,11 @@ namespace SecretManagementService.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await Mediator.Send(command);
+            var result = await Mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
             return Accepted(new { Message = "Secret update triggered successfully." });
         }
 
@@ -104,25 +70,12 @@ namespace SecretManagementService.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await Mediator.Send(command);
+            var result = await Mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
             return Accepted(new { Message = "Secret deletion triggered successfully." });
-        }
-
-        [HttpPost]
-        [Route("environment")]
-        public async Task<IActionResult> CreateEnvironment([FromBody] CreateEnvironmentCommand command)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await Mediator.Send(command);
-            return Accepted(new { Message = "Environment creation triggered successfully." });
-        }
-
-        [HttpGet("health")]
-        public IActionResult HealthCheck()
-        {
-            return Ok(new { Status = "Healthy" });
         }
     }
 }

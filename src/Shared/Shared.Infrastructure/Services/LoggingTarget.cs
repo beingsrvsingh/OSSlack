@@ -5,10 +5,10 @@ using NLog.Config;
 using NLog.Targets;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Entities;
+using Shared.Utilities.Interfaces;
 using System.Dynamic;
 using System.Security.Claims;
 using System.Text.Json;
-using Utilities.Services;
 
 namespace Shared.Utilities.Services
 {
@@ -21,7 +21,7 @@ namespace Shared.Utilities.Services
         private IHttpContextAccessor context = new HttpContextAccessor();
         private string? userId => context.HttpContext?.User?.FindFirstValue("Id")!;
         private ILoggingApiClient loggingClient => context.HttpContext!.RequestServices.GetRequiredService<ILoggingApiClient>();
-        private ISecurityService securityService => context.HttpContext!.RequestServices.GetRequiredService<ISecurityService>();
+        private IHttpRequestService securityService => context.HttpContext!.RequestServices.GetRequiredService<IHttpRequestService>();
 
         public LoggingTarget()
         {

@@ -1,55 +1,36 @@
 ﻿using Identity.Application.Contracts;
 using Identity.Application.Interfaces;
-using Identity.Domain.Core.Repository;
 using JwtTokenAuthentication.Constants;
-using JwtTokenAuthentication.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Contracts.Interfaces;
+using Shared.Utilities;
+using Shared.Utilities.Interfaces;
+using Shared.Utilities.Response;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Utilities;
-using Utilities.Cryptography;
-using Utilities.Services;
 
 namespace Identity.Infrastructure.Services
 {
     public class JwtService : IJwtService
     {
-        private readonly IUserSigningKeyRepository userSigningKeyRepository;
-        private readonly ISecurityService securityService;
+        private readonly IHttpRequestService securityService;
+        private readonly ISigningKeyProvider signingKeyProvider;
 
-        public JwtService(ISecurityService securityService, IUserSigningKeyRepository userSigningKeyRepository)
+        public JwtService(IHttpRequestService securityService, ISigningKeyProvider signingKeyProvider)
         {
-            this.userSigningKeyRepository = userSigningKeyRepository;
             this.securityService = securityService;
-        }
-        public async Task CreateSigningKeyAsync(string userId, CancellationToken cancellationToken)
-        {
-            AspNetUserSigningKey signingKey = new()
-            {
-                UserId = userId,
-                SigningHash = Cryptography.GenerateHash(userId),
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddMonths(1),
-                IsRevoked = false,
-                CreatedByIp = securityService.GetIpAddress,
-                UserAgent = securityService.GetUserAget,
-                EncryptedSigningKey = Cryptography.EncryptString(userId)
-            };
-
-            userSigningKeyRepository.AddAsync(signingKey);
-            await userSigningKeyRepository.SaveChangesAsync();
+            this.signingKeyProvider = signingKeyProvider;
         }
 
-        public async Task<string> GenerateAccessTokenAsync(List<Claim> claims)
+        public Task<string> GenerateAccessTokenAsync(List<Claim> claims)
         {
-            string userId = GetClaims(claims, JwtConstant.JWT_TOKEN_USERID_KEYS);
+            string rawKey = RetrieveSigningKey();
 
-            var key = await GetSecurityTokenAsync(userId);
+            // Create SymmetricSecurityKey
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(rawKey));
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key?.EncryptedSigningKey!));
-
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var signinCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: JwtConstant.JWT_TOKEN_ISSUER,
@@ -60,21 +41,23 @@ namespace Identity.Infrastructure.Services
             );
 
             // Generate Access Token
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Task.FromResult(accessToken);
         }
 
         public async Task<RefreshTokenResponse> GenerateRefreshToken(string userId, string ipAddress)
         {
             // generate token that is valid for 7 days
-            var key = await GetSecurityTokenAsync(userId);
             var refreshToken = new RefreshTokenResponse();
-            if (!string.IsNullOrEmpty(key?.EncryptedSigningKey))
+            string rawKey = RetrieveSigningKey();
+            if (!string.IsNullOrEmpty(rawKey))
             {
                 refreshToken = new RefreshTokenResponse
                 {
-                    Token = Convert.ToBase64String(Utitlities.GenerateRandomNumber(Cryptography.DecryptString(key.EncryptedSigningKey))),
+                    Token = Utils.GenerateSecureToken(),
                     Expires = JwtConstant.JWT_REFRESH_TOKEN_EXPIRATION,
-                    Created = DateTime.Now,
+                    Created = DateTime.UtcNow,
                     CreatedByIp = ipAddress
                 };
             }
@@ -85,15 +68,29 @@ namespace Identity.Infrastructure.Services
         {
             return claims.First(c => JwtConstant.JWT_TOKEN_USERID_KEYS == claimTypes).Value;
         }
-
-        public async Task<AspNetUserSigningKey?> GetSecurityTokenAsync(string userId)
+        
+        private string RetrieveSigningKey()
         {
-            var key = await userSigningKeyRepository.FirstOrDefaultAsync(x => x.UserId == userId)!;
+            var response = signingKeyProvider.GetSigningKey();
 
-            if (string.IsNullOrEmpty(key?.EncryptedSigningKey))
-                return null;
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                throw new InvalidOperationException("Signing key response from SecretManager is null or empty.");
+            }
 
-            return key;
+            // Deserialize JSON into Result
+            var keyResult = JsonSerializerWrapper.Deserialize<Result>(response)
+                ?? throw new InvalidOperationException("Failed to deserialize signing key result.");
+
+            // Extract the key safely
+            var rawKey = keyResult.Data?.ToString();
+
+            if (string.IsNullOrWhiteSpace(rawKey))
+            {
+                throw new InvalidOperationException("SecretManager returned no usable signing key in response.");
+            }
+
+            return rawKey;
         }
     }
 }

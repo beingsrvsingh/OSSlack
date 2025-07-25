@@ -4,12 +4,16 @@ namespace Shared.Contracts.Interfaces
     /// <summary>
     /// Interface for platform-specific services.
     /// </summary>
-    public interface IPlatformService
-    {
-        IEnumerable<string> GetAllCredentialKeys();
-        string? GetCredential(string keyName);
+    public interface IPlatformService : IPlatform
+    {        
+    }
 
-        void AddCredential(string keyName, string secret);
-        void RemoveCredential(string keyName);
+    public interface IPlatform
+    {
+        Task<IEnumerable<string>> GetAllCredentialKeysAsync();
+        Task<string?> GetCredentialAsync(string keyName);
+
+        Task<bool> AddCredentialAsync(string keyName, string secret);
+        Task<bool> RemoveCredentialAsync(string keyName);
     }
 }

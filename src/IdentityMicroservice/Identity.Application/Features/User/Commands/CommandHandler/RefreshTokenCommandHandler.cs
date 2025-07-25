@@ -1,22 +1,22 @@
 ﻿using Identity.Application.Features.User.Commands.Token;
 using MediatR;
-using Utilities.Services;
 using Identity.Application.Services.Interfaces;
-using Utilities;
 using Shared.Utilities.Response;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Interfaces;
+using Shared.Utilities;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler;
 
 public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, Result>
 {
     private readonly ITokenService tokenService;
-    private readonly ILoggerService loggerService;
-    private readonly ISecurityService securityService;
+    private readonly ILoggerService<RefreshTokenCommandHandler> loggerService;
+    private readonly IHttpRequestService securityService;
     private readonly ICookieService cookieService;
 
-    public RefreshTokenCommandHandler(ITokenService tokenService, ILoggerService loggerService, 
-        ISecurityService securityService, ICookieService cookieService)
+    public RefreshTokenCommandHandler(ILoggerService<RefreshTokenCommandHandler> loggerService, ITokenService tokenService,
+        IHttpRequestService securityService, ICookieService cookieService)
     {
         this.tokenService = tokenService;
         this.loggerService = loggerService;

@@ -1,4 +1,3 @@
-
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
 using SecretManagement.Application.Features.Commands;
@@ -9,8 +8,7 @@ namespace SecretManagement.API.Controllers;
 
 public class PlatformController : BaseController
 {
-
-    [HttpGet("credentials")]
+    [HttpGet]
     public async Task<IActionResult> GetAllCredentials()
     {
         var response = await Mediator.Send(new GetAllCredentialsQuery());
@@ -19,16 +17,13 @@ public class PlatformController : BaseController
         return Ok(response);
     }
 
-    [HttpGet("credentials/{keyName}")]
-    public async Task<IActionResult> GetCredential([FromQuery] string keyName)
+    [HttpGet("{keyName}")]
+    public async Task<IActionResult> GetCredential(string keyName)
     {
         if (string.IsNullOrEmpty(keyName))
             return BadRequest("Key name cannot be null or empty.");
 
         var response = await Mediator.Send(new GetCredentialByKeyQuery(keyName));
-        if (response == null)
-            return NotFound($"Credential with key '{keyName}' not found.");
-
         return Ok(response);
     }
 
@@ -39,17 +34,17 @@ public class PlatformController : BaseController
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await Mediator.Send(command);
-        return Accepted(new { Message = "Environment creation triggered successfully." });
+        var response = await Mediator.Send(command);
+        return Accepted(response);
     }
 
-    [HttpDelete("credentials/{keyName}")]
+    [HttpDelete("{keyName}")]
     public async Task<IActionResult> RemoveCredential(string keyName)
     {
         if (string.IsNullOrWhiteSpace(keyName))
             return BadRequest("Key name cannot be null or empty.");
 
-        await Mediator.Send(new RemoveCredentialCommand(keyName));
-        return NoContent();
+        var response = await Mediator.Send(new RemoveCredentialCommand(keyName));
+        return Ok(response);
     }
 }

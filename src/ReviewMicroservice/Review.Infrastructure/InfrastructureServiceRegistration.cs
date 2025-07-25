@@ -15,7 +15,6 @@ using Shared.Infrastructure;
 using Shared.Infrastructure.Repositories;
 using Shared.Utilities;
 using System.Reflection;
-using Utilities;
 
 namespace Review.Infrastructure
 {
@@ -47,7 +46,7 @@ namespace Review.Infrastructure
 
                 var httpContext = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>().HttpContext;
 
-                Utitlities.AddHeadersToken(httpClient, httpContext);
+                Shared.Utilities.Utils.AddHeadersToken(httpClient, httpContext);
 
             }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.RetryAsync(3)).
             AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(5, TimeSpan.FromSeconds(5)));

@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Interfaces;
 using UAParser;
-using Utilities.Services;
 
 namespace Identity.Infrastructure.Services.Identity
 {
@@ -25,14 +25,14 @@ namespace Identity.Infrastructure.Services.Identity
         private readonly IAuthorizationService _authorizationService;
         private readonly ITokenService tokenService;
         private readonly IJwtService jwtService;
-        private readonly ISecurityService securityService;
+        private readonly IHttpRequestService securityService;
         private readonly IUnitOfWork unitOfWork;
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<IdentityService> loggerService;
 
-        public IdentityService(
+        public IdentityService(ILoggerService<IdentityService> loggerService,
             UserManager<ApplicationUser> userManager, IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
             IAuthorizationService authorizationService, SignInManager<ApplicationUser> _signInManager, ITokenService tokenService,
-            IJwtService jwtService, ISecurityService securityService, IUnitOfWork unitOfWork, ILoggerService loggerService)
+            IJwtService jwtService, IHttpRequestService securityService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             this._signInManager = _signInManager;
@@ -76,7 +76,9 @@ namespace Identity.Infrastructure.Services.Identity
             var applicationUser = new ApplicationUser()
             {
                 Email = request.Email,
-                UserName = request.Email
+                UserName = request.Email,
+                FirstName = request.FirstName,
+                LastName = "Singh"
             };
 
             return await _userManager.CreateAsync(applicationUser, request.Password);
@@ -102,14 +104,10 @@ namespace Identity.Infrastructure.Services.Identity
         {
             var applicationUser = await this._userManager.FindByIdAsync(userId);
 
-            if (applicationUser is not null )
+            if (applicationUser is not null)
             {
                 await _userManager.AddToRoleAsync(applicationUser, roleName);
             }
-        }
-
-        public async Task CreateSigningKeyAsync(string userId, CancellationToken cancellationToken = default) {
-            await this.jwtService.CreateSigningKeyAsync(userId);
         }
 
         public async Task<SignInResult?> LoginAsync(LoginUserEmailCommand request)
@@ -139,7 +137,7 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 return new AuthenticateResponse(authenticationToken.Id, authenticationToken.AccessToken, refreshToken.Token, authenticationToken.ExpiresIn);
             }
-            this.loggerService.LogInfo("Phone number authentication token is null.");
+            this.loggerService.LogInfo("Email authentication token is null.");
             return null;
         }
 
@@ -160,7 +158,7 @@ namespace Identity.Infrastructure.Services.Identity
             var result = await _authorizationService.AuthorizeAsync(principal, policyName);
 
             return result.Succeeded;
-        }        
+        }
 
         public async Task<List<Claim>> GetClaims(EmailDto email)
         {

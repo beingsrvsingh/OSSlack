@@ -1,6 +1,8 @@
-﻿namespace Utilities.Services
+﻿
+
+namespace Shared.Utilities.Interfaces
 {
-    public interface ISecurityService
+    public interface IHttpRequestService
     {
         string GetIpAddress { get; }
 

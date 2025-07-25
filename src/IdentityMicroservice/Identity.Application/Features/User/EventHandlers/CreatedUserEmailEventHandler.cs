@@ -6,8 +6,8 @@ namespace Identity.Application.Features.User.EventHandlers
 {
     public class CreatedUserEmailEventHandler : INotificationHandler<CreatedUserEmailEvent>
     {
-        private readonly ILoggerService logger;
-        public CreatedUserEmailEventHandler(ILoggerService logger)
+        private readonly ILoggerService<CreatedUserEmailEventHandler> logger;
+        public CreatedUserEmailEventHandler(ILoggerService<CreatedUserEmailEventHandler> logger)
         {
             this.logger = logger;
         }

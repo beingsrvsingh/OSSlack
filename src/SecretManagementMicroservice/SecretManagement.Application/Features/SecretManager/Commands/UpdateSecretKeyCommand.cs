@@ -1,6 +1,6 @@
 using Shared.Utilities.Response;
 using MediatR;
-using Utilities;
+using Shared.Utilities;
 
 namespace SecretManagement.Application.Features.SecretManager.Commands
 {
@@ -18,7 +18,7 @@ namespace SecretManagement.Application.Features.SecretManager.Commands
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Secret value cannot be null or empty.", nameof(value));
 
-                if (!Utitlities.IsValidJson(value))
+                if (!Utils.IsValidJson(value))
                     throw new ArgumentException("Secret value must be valid JSON.", nameof(value));
 
                 _secretValue = value;

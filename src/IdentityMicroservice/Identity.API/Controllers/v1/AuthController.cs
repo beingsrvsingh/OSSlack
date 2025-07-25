@@ -1,7 +1,4 @@
 ﻿using BaseApi;
-using FirebaseAdmin;
-using FirebaseAdmin.Auth;
-using Google.Apis.Auth.OAuth2;
 using Identity.Application.Features.User.Commands;
 using Identity.Application.Features.User.Commands.ChangePassword;
 using Identity.Application.Features.User.Commands.CreateUser;
@@ -9,15 +6,14 @@ using Identity.Domain.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Interfaces.Logging;
-using Shared.Utilities.Response;
 
 namespace Identity.API.Controllers.v1
 {
     [AllowAnonymous]
     public class AuthController : BaseController
     {
-        private readonly ILoggerService loggerService;
-        public AuthController(ILoggerService loggerService)
+        private readonly ILoggerService<AuthController> loggerService;
+        public AuthController(ILoggerService<AuthController> loggerService)
         {
             this.loggerService = loggerService;
         }

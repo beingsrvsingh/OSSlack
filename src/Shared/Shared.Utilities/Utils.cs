@@ -7,9 +7,9 @@ using System.Net.Mime;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Utilities
+namespace Shared.Utilities
 {
-    public class Utitlities
+    public class Utils
     {
         public static byte[] GenerateRandomNumber(string keys)
         {
@@ -19,6 +19,17 @@ namespace Utilities
                 rng.GetBytes(randomNumber);
                 return randomNumber;
             }
+        }
+
+        public static string GenerateSecureToken(int length = 32)
+        {
+            var bytes = new byte[length];
+            RandomNumberGenerator.Fill(bytes);
+
+            return Convert.ToBase64String(bytes)
+                         .Replace("+", "-")
+                         .Replace("/", "_")
+                         .Replace("=", "");
         }
 
         public static string GetToken(HttpContext context)

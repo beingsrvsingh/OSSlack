@@ -21,7 +21,6 @@ namespace Identity.Infrastructure.Repositories
         private ICountryMasterRepository? countryMasterRepository;
         private IStateMasterRepository? stateMasterRepository;
         private ICityMasterRepository? areaMasterRepository;
-        private IUserSigningKeyRepository? userSigningKeyRepository;
 
         public ICountryMasterRepository CountryMasterRepository
         {
@@ -116,18 +115,6 @@ namespace Identity.Infrastructure.Repositories
                     addressRepository = new AddressRepository(_context);
                 }
                 return addressRepository;
-            }
-        }
-
-        public IUserSigningKeyRepository UserSigningKeyRepository
-        {
-            get
-            {
-                if (userSigningKeyRepository is null)
-                {
-                    userSigningKeyRepository = new UserSigningKeyRepository(_context);
-                }
-                return userSigningKeyRepository;
             }
         }
     }

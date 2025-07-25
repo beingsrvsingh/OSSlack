@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Shared.Utilities.Interfaces;
 
-namespace Utilities.Services
+namespace Shared.Utilities.Services
 {
     public class CookieService(IHttpContextAccessor contextAccessor) : ICookieService
     {

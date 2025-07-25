@@ -15,9 +15,9 @@ namespace Identity.API.Controllers.v1
     [Authorize]
     public class UserController : BaseController
     {
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<UserController> loggerService;
 
-        public UserController(ILoggerService loggerService)
+        public UserController(ILoggerService<UserController> loggerService)
         {
             this.loggerService = loggerService;
         }

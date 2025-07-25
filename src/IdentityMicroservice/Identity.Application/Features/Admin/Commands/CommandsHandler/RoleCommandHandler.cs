@@ -8,9 +8,9 @@ namespace Identity.Application.Features.Admin.Commands.CommandsHandler
     public class RoleCommandHandler : IRequestHandler<RoleCommand, Result>, IRequestHandler<UserRoleCommand, Result>
     {
         private readonly IRoleService roleService;
-        private readonly ILoggerService loggerService;
+        private readonly ILoggerService<RoleCommandHandler> loggerService;
 
-        public RoleCommandHandler(IRoleService roleService, ILoggerService loggerService)
+        public RoleCommandHandler(IRoleService roleService, ILoggerService<RoleCommandHandler> loggerService)
         {
             this.roleService = roleService;
             this.loggerService = loggerService;

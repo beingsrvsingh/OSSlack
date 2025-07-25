@@ -1,5 +1,4 @@
 ﻿using Identity.Domain.Entities;
-using JwtTokenAuthentication.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -15,7 +14,6 @@ public partial class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public virtual DbSet<AspNetUserDevice> AspNetUserDevices => Set<AspNetUserDevice>();
     public virtual DbSet<AspNetUserAddress> AspNetUserAddresses => Set<AspNetUserAddress>();
     public virtual DbSet<AspNetUserMembership> AspNetUserMemberships => Set<AspNetUserMembership>();
-    public virtual DbSet<AspNetUserSigningKey> AspNetUserSigningKeys => Set<AspNetUserSigningKey>();
     public virtual DbSet<CityMaster> CityMasters => Set<CityMaster>();
     public virtual DbSet<CountryMaster> CountryMasters => Set<CountryMaster>();
     public virtual DbSet<StateMaster> StateMasters => Set<StateMaster>();

@@ -7,9 +7,9 @@ namespace JwtTokenAuthentication
 {
     public static class JwtTokenAuthenticationRegistration
     {
-        public static IServiceCollection AddJwtTokenAuthentication(this IServiceCollection services, IPlatformService platformService)
+        public static IServiceCollection AddJwtTokenAuthentication(this IServiceCollection services)
         {
-            services.AddJwtAuthentication(platformService);
+            services.AddJwtAuthentication();
             services.AddJwtAuthorization();
 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();                      
