@@ -21,5 +21,6 @@ namespace Identity.Application.Contracts
 
         [Required]
         public required string ZipCode { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

@@ -18,7 +18,7 @@ public class BaseAuditLogConfiguration<TAuditLog> : IEntityTypeConfiguration<TAu
 
         entity.Property(e => e.Id).HasColumnName("id");
         entity.Property(e => e.UserId).HasColumnName("user_id");
-        entity.Property(e => e.TableId).HasMaxLength(25).HasColumnName("table_id");
+        entity.Property(e => e.TableId).HasMaxLength(50).HasColumnName("table_id");
         entity.Property(e => e.OldValues).HasColumnName("old_values");
         entity.Property(e => e.NewValues).HasColumnName("new_values");
         entity.Property(e => e.IpAddress).HasColumnName("ip_address");

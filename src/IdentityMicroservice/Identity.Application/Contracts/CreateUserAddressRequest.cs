@@ -1,12 +1,9 @@
-    using MediatR;
-using Shared.Utilities.Response;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Identity.Application.Features.User.Commands
+namespace Identity.Application.Contracts
 {
-    public class CreateUserAddressCommand : IRequest<Result>
+    public class CreateUserAddressRequest
     {
-        public required string UserId { get; set; }
         [Required]
         public required string StreetAddress { get; set; }
 
@@ -23,7 +20,5 @@ namespace Identity.Application.Features.User.Commands
 
         [Required]
         public required string ZipCode { get; set; }
-
-        public bool IsDefault { get; set; }
     }
 }

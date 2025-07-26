@@ -1,13 +1,12 @@
-﻿using Identity.Application.Features.User.Commands;
+﻿using Identity.Application.Features;
+using Identity.Application.Features.User.Commands;
 using Identity.Application.Features.User.Commands.UserAddress;
 using Identity.Application.Features.User.Commands.UserInfo;
-using Identity.Application.Features.User.Queries.UserAddress;
 using Identity.Application.Services.Interfaces;
 using Identity.Domain.Core.UOW;
 using Identity.Domain.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
-using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 
 namespace Identity.Infrastructure.Services.Identity
@@ -39,16 +38,59 @@ namespace Identity.Infrastructure.Services.Identity
                     return false;
                 }
 
-                userInfo.FirstName = request.FirstName;
-                userInfo.LastName = request.LastName;
-
-                await unitOfWork.UserInfoRepository.UpdateAsync(userInfo);
+                userInfo.Adapt(userInfo);
                 await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, Convert.ToInt32(request.Id));
                 return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while updating user info with ID: {UserId}", request.Id);
+                return false;
+            }
+        }
+
+        public async Task<bool> ActivateUserAsync(ActivateUserCommand request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var userInfo = await identityService.GetUserByIdAsync(request.UserId);
+
+                if (userInfo == null)
+                {
+                    _logger.LogWarning("User not found with UserId: {UserId}", request.UserId);
+                    return false;
+                }
+
+                userInfo.Adapt(userInfo);
+                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user info with UserId: {UserId}", request.UserId);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeActivateUserAsync(DeActivateUserCommand request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var userInfo = await identityService.GetUserByIdAsync(request.UserId);
+
+                if (userInfo == null)
+                {
+                    _logger.LogWarning("User not found with UserId: {UserId}", request.UserId);
+                    return false;
+                }
+
+                userInfo.Adapt(userInfo);
+                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user info with Email: {UserId}", request.UserId);
                 return false;
             }
         }
@@ -72,7 +114,7 @@ namespace Identity.Infrastructure.Services.Identity
                 entity.ProfilePictureUrl = request.AvatarURI;
 
                 await unitOfWork.UserInfoRepository.UpdateAsync(entity);
-                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, Convert.ToInt32(request.UserId));
+                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now);
                 return true;
             }
             catch (Exception ex)
@@ -82,9 +124,9 @@ namespace Identity.Infrastructure.Services.Identity
             }
         }
 
-        public async Task<AspNetUserAddress?> GetUserAddressById(GetUserAddressByIdQuery query, CancellationToken cancellationToken = default)
+        public async Task<AspNetUserAddress?> GetUserAddressById(int id, CancellationToken cancellationToken = default)
         {
-            return await unitOfWork.AddressRepository.GetByIdAsync(query.Id);
+            return await unitOfWork.AddressRepository.GetByIdAsync(id);
         }
 
         public async Task<bool> CreateUserAddressAsync(CreateUserAddressCommand request, CancellationToken cancellationToken = default)
@@ -107,9 +149,13 @@ namespace Identity.Infrastructure.Services.Identity
         {
             try
             {
-                var userAddress = request.Adapt<AspNetUserAddress>();
-                await unitOfWork.AddressRepository.UpdateAsync(userAddress);
-                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, userAddress.Id);
+                var adddress = await GetUserAddressById(Convert.ToInt32(request.Id));
+                if (adddress == null)
+                    return false;
+
+                request.Adapt(adddress);
+
+                await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, Convert.ToInt32(request.Id));
                 return true;
             }
             catch (Exception ex)
@@ -118,5 +164,19 @@ namespace Identity.Infrastructure.Services.Identity
                 return false;
             }
         }
+
+        public async Task<bool> DeleteUserAddressAsync(int addressId)
+        {
+            var address = await unitOfWork.AddressRepository.GetByIdAsync(addressId);
+
+            if (address == null)
+                return false;
+
+            await unitOfWork.AddressRepository.DeleteAsync(address);
+            await unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
     }
 }

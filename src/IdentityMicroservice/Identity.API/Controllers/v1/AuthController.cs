@@ -1,4 +1,5 @@
 ﻿using BaseApi;
+using Identity.Application.Contracts;
 using Identity.Application.Features.User.Commands;
 using Identity.Application.Features.User.Commands.ChangePassword;
 using Identity.Application.Features.User.Commands.CreateUser;
@@ -6,6 +7,7 @@ using Identity.Domain.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Response;
 
 namespace Identity.API.Controllers.v1
 {
@@ -84,7 +86,7 @@ namespace Identity.API.Controllers.v1
         [HttpPost, Route("login/phone")]
         public async Task<IActionResult> LoginUsingPhone([FromBody] LoginUserPhoneCommand request)
         {
-            var response = await Mediator.Send(request);            
+            var response = await Mediator.Send(request);
             if (!response.Succeeded)
                 return NotFound(response);
 
@@ -151,28 +153,6 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete, Route("remove/email")]
-        public async Task<IActionResult> RemoveUserUsingEmail([FromBody] DeleteUserCommand request)
-        {
-            await Mediator.Send(request);
-
-            return Ok();
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpDelete, Route("remove/phone")]
-        public async Task<IActionResult> RemoveUserUsingPhone([FromBody] DeleteUserCommand request)
-        {
-            await Mediator.Send(request);
-
-            return Ok();
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand request)
         {
@@ -210,6 +190,32 @@ namespace Identity.API.Controllers.v1
                 return NotFound(response);
 
             return Ok(response);
+        }
+
+        [HttpPost("activate-user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ToggleUserActivation([FromBody] ToggleUserActivationRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.PhoneNumber.ToString()))
+            {
+                return BadRequest(Result.Failure("Provide either Email or PhoneNumber."));
+            }
+
+            Result result;
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                var command = new LoginUserEmailCommand { Email = request.Email };
+                result = await Mediator.Send(command);
+            }
+            else
+            {
+                var command = new LoginUserPhoneCommand { PhoneNumber = request.PhoneNumber };
+                result = await Mediator.Send(command);
+            }
+
+            return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
     }

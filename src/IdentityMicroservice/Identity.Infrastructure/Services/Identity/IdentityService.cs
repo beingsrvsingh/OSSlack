@@ -73,8 +73,7 @@ namespace Identity.Infrastructure.Services.Identity
                 var applicationUser = new ApplicationUser()
                 {
                     Email = request.Email,
-                    UserName = request.Email,
-                    FirstName = request.Email
+                    UserName = request.Email
                 };
 
                 return await _userManager.CreateAsync(applicationUser);
@@ -93,8 +92,8 @@ namespace Identity.Infrastructure.Services.Identity
                 var applicationUser = new ApplicationUser()
                 {
                     PhoneNumber = request.PhoneNumber,
-                    PhoneNumberConfirmed = true,
-                    FirstName = request.PhoneNumber
+                    CountryCode = request.CountryCode,
+                    PhoneNumberConfirmed = true
                 };
 
                 this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);

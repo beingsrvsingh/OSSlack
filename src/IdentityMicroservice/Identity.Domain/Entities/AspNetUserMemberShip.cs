@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Identity.Domain.Entities;
 
+namespace Identity.Domain.Entities;
+
 public class AspNetUserMembership
 {
     [Key]
@@ -19,7 +21,7 @@ public class AspNetUserMembership
     public DateTime EndDate { get; set; }
 
     public bool IsActive => DateTime.UtcNow >= StartDate && DateTime.UtcNow <= EndDate;
-        
+
     [ForeignKey(nameof(UserId))]
     public virtual ApplicationUser User { get; set; } = null!;
 }

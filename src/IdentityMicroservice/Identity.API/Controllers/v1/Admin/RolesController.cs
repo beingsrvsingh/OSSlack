@@ -1,10 +1,12 @@
 using BaseApi;
 using Identity.Application.Features.Admin.Commands;
 using Identity.Application.Features.User.Commands.CreateUser;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers.v1.Admin
 {
+    [Authorize (Roles = "Admin")]
     public class RolesController : BaseController
     {
         private readonly ILogger<RolesController> _logger;

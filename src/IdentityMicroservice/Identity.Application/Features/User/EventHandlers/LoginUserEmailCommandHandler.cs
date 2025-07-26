@@ -41,7 +41,7 @@ public class LoginUserEmailCommandHandler : IRequestHandler<LoginUserEmailComman
         if (!user.IsActive || user.IsDeleted)
         {
             _logger.LogWarning("User account either is deactivated or deleted.");
-            return Result.Failure("Phone not found.");
+            return Result.Failure("Email not found.");
         }
 
         _logger.LogInfo("User logged in.");

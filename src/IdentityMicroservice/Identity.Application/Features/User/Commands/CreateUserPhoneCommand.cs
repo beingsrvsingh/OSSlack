@@ -8,5 +8,6 @@ namespace Identity.Application.Features.User.Commands.CreateUser
     {
         [Phone]
         public required string PhoneNumber { get; init; }
+        public required int CountryCode { get; init; }
     }
 }

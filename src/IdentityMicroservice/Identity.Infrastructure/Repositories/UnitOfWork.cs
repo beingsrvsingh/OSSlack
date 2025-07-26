@@ -1,11 +1,14 @@
 using Identity.Domain.Core.Repository;
 using Identity.Domain.Core.UOW;
+using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence.Context;
+using Mapster;
+using Shared.Domain.Entities;
 using Shared.Infrastructur.UoW;
 
 namespace Identity.Infrastructure.Repositories
 {
-    public class UnitOfWork : BaseUnitOfWork<ApplicationDbContext>, IUnitOfWork
+    public class UnitOfWork : BaseUnitOfWork<ApplicationDbContext, AuditLog>, IUnitOfWork
     {
         public UnitOfWork(
         ApplicationDbContext context
@@ -116,6 +119,11 @@ namespace Identity.Infrastructure.Repositories
                 }
                 return addressRepository;
             }
+        }
+
+        protected override AuditLog ConvertAuditEntry(AuditEntry entry)
+        {
+            return entry.ToAudit().Adapt<AuditLog>();
         }
     }
 }

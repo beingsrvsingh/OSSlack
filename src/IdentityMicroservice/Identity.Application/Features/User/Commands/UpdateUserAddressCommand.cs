@@ -5,7 +5,7 @@ using Shared.Utilities.Response;
 namespace Identity.Application.Features.User.Commands.UserAddress
 {
     public class UpdateUserAddressCommand : IRequest<Result>
-    {   
+    {
         public required string Id { get; set; }
         public required string UserId { get; set; }
         [Required]
@@ -24,5 +24,6 @@ namespace Identity.Application.Features.User.Commands.UserAddress
 
         [Required]
         public required string ZipCode { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

@@ -9,8 +9,9 @@ using Mapster;
 
 namespace Shared.Infrastructur.UoW;
 
-public abstract class BaseUnitOfWork<TContext> : IBaseUnitOfWork, IDisposable
+public abstract class BaseUnitOfWork<TContext, TAuditLog> : IBaseUnitOfWork, IDisposable
     where TContext : DbContext
+    where TAuditLog : class
 {
     protected readonly TContext _context;
     private IDbTransaction? _transaction;
@@ -158,7 +159,7 @@ public abstract class BaseUnitOfWork<TContext> : IBaseUnitOfWork, IDisposable
         {
             if (entry.OldValues.Count > 0 || entry.NewValues.Count > 0)
             {
-                _context.Add(entry.ToAudit().Adapt<BaseAuditLog>());
+                _context.Add(ConvertAuditEntry(entry));
             }
         }
 
@@ -184,12 +185,13 @@ public abstract class BaseUnitOfWork<TContext> : IBaseUnitOfWork, IDisposable
                 }
             }
 
-            var auditLog = auditEntry.ToAudit().Adapt<BaseAuditLog>();
-            _context.Add(auditLog);
+            _context.Add(ConvertAuditEntry(auditEntry));
         }
 
         return _context.SaveChanges();
     }
+
+    protected abstract TAuditLog ConvertAuditEntry(AuditEntry entry);
 
     public void Dispose()
     {

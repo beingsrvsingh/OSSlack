@@ -15,7 +15,7 @@ namespace Identity.Application.Features.User.Queries.QueryHandler.UserAddress
         }
         public async Task<Result> Handle(GetUserAddressByIdQuery request, CancellationToken cancellationToken)
         {
-            var userAddressDetails = await userService.GetUserAddressById(request);
+            var userAddressDetails = await userService.GetUserAddressById(Convert.ToInt32(request.Id));
 
             if (userAddressDetails == null)
             {

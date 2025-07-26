@@ -8,7 +8,6 @@ namespace Identity.Application.Features.User.Commands
     {
         [Phone]
         [MaxLength(10)]
-        [Display(Name = "Mobile Number")]
         public required int PhoneNumber { get; init; }
     }
 }

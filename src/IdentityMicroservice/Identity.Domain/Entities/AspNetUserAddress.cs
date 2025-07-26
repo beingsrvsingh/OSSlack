@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Identity.Domain.Entities;
 
+namespace Identity.Domain.Entities;
+
 public partial class AspNetUserAddress
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity), Column(name: "id")]
