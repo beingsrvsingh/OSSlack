@@ -14,26 +14,7 @@ namespace Identity.API.Controllers.v1.Admin
         public RolesController(ILogger<RolesController> logger)
         {
             _logger = logger;
-        }
-
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost("seed-roles")]
-        public async Task<IActionResult> CreateRole()
-        {
-            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
-            var machineName = Environment.MachineName;
-            var hostName = System.Net.Dns.GetHostName();
-
-            var result = await Mediator.Send(new SeedRoleCommand());
-
-            if (result.Succeeded)
-            {
-                return Created(string.Empty, result.Data);
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError, result);
-        }
+        }        
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

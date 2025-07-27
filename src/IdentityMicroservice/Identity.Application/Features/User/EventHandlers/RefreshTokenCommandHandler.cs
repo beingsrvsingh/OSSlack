@@ -4,7 +4,7 @@ using Identity.Application.Services.Interfaces;
 using Shared.Utilities.Response;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Interfaces;
-using Shared.Utilities;
+using Shared.Utilities.Constants;
 
 namespace Identity.Application.Features.User.Commands.CommandHandler;
 
@@ -26,22 +26,23 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
 
     public async Task<Result> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var response = await tokenService.GenerateRefreshTokenAsync(
+        var newToken = await tokenService.GenerateRefreshTokenAsync(
             request.UserId,
             request.RefreshToken,
             securityService.GetIpAddress);
 
-        if (response != null)
+        if (newToken == null)
         {
-            // Set Refresh token in cookie to validate from cookie.
-            cookieService.RemoveAndSetCookie(response.RefreshToken, Constants.DEFAULT_COOKIE_PERIOD);
-
-            return Result.Success(response);
+            return Result.Failure(new FailureResponse(
+                code: "InvalidRefreshToken",
+                description: "The provided refresh token is invalid or expired."
+            ));
         }
 
-        return Result.Failure(new FailureResponse(
-            code: "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
-            description: "Refresh token is invalid."));
+        // Set the new refresh token in cookie
+        cookieService.RemoveAndSetCookie(newToken.RefreshToken, Constants.DEFAULT_COOKIE_PERIOD);
+
+        return Result.Success(newToken);
     }
 
 }

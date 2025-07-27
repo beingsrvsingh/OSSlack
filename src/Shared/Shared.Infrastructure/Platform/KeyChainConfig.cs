@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Shared.Contracts;
+using Shared.Utilities.Constants;
 
 namespace Shared.Infrastructure.Platform;
 
@@ -44,5 +45,11 @@ public class KeyChainConfig : IKeyChainConfig
     {
         string prefixKey = $"{EnvPrefix}{seperator}{keyName}";
         return prefixKey;
+    }
+
+    public string GetStaticPath(string fileName)
+    {
+        var path = Path.Combine(this._env.ContentRootPath, Constants.STATIC_FILE_PATH, fileName);
+        return path;
     }
 }

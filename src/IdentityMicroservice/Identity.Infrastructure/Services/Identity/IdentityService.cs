@@ -74,7 +74,9 @@ namespace Identity.Infrastructure.Services.Identity
                 {
                     Email = request.Email,
                     UserName = request.Email,
-                    FirebaseUid = request.FirebaseIdToken
+                    FirebaseUid = request.FirebaseIdToken,
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
                 };
 
                 return await _userManager.CreateAsync(applicationUser);
@@ -246,7 +248,7 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, SetPasswordCommand request, CancellationToken cancellationToken = default)
         {
-            var result = await _userManager.ResetPasswordAsync(user, string.Empty, request.Password);
+            var result = await _userManager.ResetPasswordAsync(user, request.ResetToken, request.Password);
             return result;
         }
 

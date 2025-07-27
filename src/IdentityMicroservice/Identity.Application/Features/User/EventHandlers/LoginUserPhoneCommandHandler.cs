@@ -1,7 +1,7 @@
 ﻿using Identity.Application.Services.Interfaces;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
-using Shared.Utilities;
+using Shared.Utilities.Constants;
 using Shared.Utilities.Interfaces;
 using Shared.Utilities.Response;
 

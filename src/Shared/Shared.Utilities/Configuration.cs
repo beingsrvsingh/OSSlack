@@ -36,6 +36,6 @@ namespace Shared.Utilities
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), $"{fileName}.json");
             return path;
-        }
+        }        
     }
 }

@@ -8,31 +8,37 @@ namespace Identity.API.Controllers.v1
     [AllowAnonymous]
     public class TokenController : BaseController
     {
-
+        /// <summary>
+        /// Generates a new access token using a valid refresh token.
+        /// </summary>
+        [HttpPost("refresh-token")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost, Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenCommand request)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
         {
             var response = await Mediator.Send(request);
 
             if (response.Succeeded)
-                return new OkObjectResult(response);
+                return Ok(response);
 
-            return new NotFoundObjectResult(response);
+            return BadRequest(response);
         }
 
+        /// <summary>
+        /// Revoke a refresh token for the specified user.
+        /// </summary>
+        [HttpDelete("revoke-token")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpDelete("revoke-token")]
-        public async Task<IActionResult> RevokeToken(RevokeUserCommand command)
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeUserCommand command)
         {
             var response = await Mediator.Send(command);
 
-            if(response.Succeeded)
-                return Ok(new { message = "Token revoked" });
+            if (response.Succeeded)
+                return Ok(response);
 
-            return new BadRequestObjectResult(response);
+            return BadRequest(response);
         }
+
     }
 }

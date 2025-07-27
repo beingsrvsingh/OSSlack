@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Repository;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -124,6 +125,49 @@ namespace Shared.Infrastructure.Repositories
                 Expression.Call(typeof(Queryable), methodName, new Type[] { typeof(T), type }, outerExpression.Body, Expression.Quote(lambda));
             var finalLambda = Expression.Lambda(resultExp, argQueryable);
             return (Func<IQueryable<T>, IOrderedQueryable<T>>)finalLambda.Compile();
+        }
+
+        public async Task<(List<T> Items, int TotalCount)> GetPaginatedAsync(
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            int totalCount = await query.CountAsync(cancellationToken);
+
+            if (orderBy != null)
+                query = orderBy(query);
+            else
+                query = query.OrderBy(e => true); // fallback to default ordering
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
+
+        public async Task BulkInsertAsync(
+        IList<T> entities,
+        int? batchSize = null,
+        CancellationToken cancellationToken = default)
+        {
+            if (entities == null || entities.Count == 0)
+                return;
+
+            await this._dbContext.BulkInsertAsync(entities, new BulkConfig
+            {
+                BatchSize = batchSize ?? 10000,
+                PreserveInsertOrder = true,
+                SetOutputIdentity = true
+            }, progress: null, type: null, cancellationToken);
         }
 
         public virtual T AddAsync(T entity)

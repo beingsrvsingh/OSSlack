@@ -26,6 +26,16 @@ namespace Shared.Domain.Repository
         Task<T?> FirstOrDefaultAsync();
         Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
         Func<IQueryable<T>, IOrderedQueryable<T>> GetOrderBy(string orderColumn, string orderType);
+        Task<(List<T> Items, int TotalCount)> GetPaginatedAsync(
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
+        Task BulkInsertAsync(
+        IList<T> entities, 
+        int? batchSize = null, 
+        CancellationToken cancellationToken = default);
         T AddAsync(T entity);
         Task AddRangeAsync(params T[] entities);
         Task UpdateAsync(T entity);

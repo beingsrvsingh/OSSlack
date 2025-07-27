@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Shared.Application.Interfaces.Logging;
-using Shared.Utilities;
+using Shared.Utilities.Constants;
 using Shared.Utilities.Interfaces;
 using Shared.Utilities.Response;
 

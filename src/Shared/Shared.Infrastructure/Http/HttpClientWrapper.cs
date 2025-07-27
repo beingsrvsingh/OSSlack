@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Shared.Infrastructure.Constants;
 using Shared.Utilities;
+using Shared.Utilities.Constants;
 
 namespace Shared.Infrastructure.Http
 {
@@ -21,7 +21,7 @@ namespace Shared.Infrastructure.Http
         public HttpClientWrapper(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _baseApiUrl = Config.LoggerBaseApiGatewayUri; // Or inject just the string if preferred
+            _baseApiUrl = Constants.LoggerBaseApiGatewayUri;
         }
 
         public HttpClient CreateClient()
@@ -35,7 +35,7 @@ namespace Shared.Infrastructure.Http
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var context = _httpContextAccessor.HttpContext;
-            Utils.AddHeadersToken(client, context); // Assuming this method exists and adds auth headers
+            Utils.AddHeadersToken(client, context);
 
             return client;
         }

@@ -48,3 +48,8 @@ DBCC CHECKIDENT(AREAMASTER,RESEED,0)
 
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();  
+
+## TO INSERT BULK RECORD (MYSQL)
+-	Add in connection string - AllowLoadLocalInfile=true;
+-	SHOW VARIABLES LIKE 'local_infile';
+-	SET GLOBAL local_infile = 1;

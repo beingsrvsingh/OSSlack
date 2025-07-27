@@ -1,35 +1,35 @@
 ﻿using Identity.Application.Services.Interfaces;
-using Identity.Domain.Entities;
-using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
-using Shared.Utilities;
+using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
 namespace Identity.Application.Features.Admin.Commands.CommandsHandler
 {
     public class CountryCommandHandler : IRequestHandler<CountryCommand, Result>
     {
+        private readonly ILoggerService<CountryCommandHandler> _logger;
         private readonly IAdminService service;
-        private readonly IWebHostEnvironment env;
 
-        public CountryCommandHandler(IAdminService service, IWebHostEnvironment env)
+        public CountryCommandHandler(ILoggerService<CountryCommandHandler> logger, IAdminService service)
         {
+            this._logger = logger;
             this.service = service;
-            this.env = env;
         }
-        public Task<Result> Handle(CountryCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CountryCommand request, CancellationToken cancellationToken)
         {
-            var path = Path.Combine(this.env.ContentRootPath, Constants.STATIC_FILE_PATH, "country_master.json");
+            if (request == null)
+            {
+                return Result.Failure(new FailureResponse("InvalidRequest", "The request payload cannot be null."));
+            }
+            
+            var success = await service.AddCountryAsync(request);
 
-            using FileStream json = File.OpenRead(path);
-            List<CountryCommand>? countryCommands = JsonSerializerWrapper.Deserialize<List<CountryCommand>>(json);
+            if (!success)
+            {
+                return Result.Failure(new FailureResponse("CountryInsertFailed", "Failed to add the country."));
+            }
 
-            var request = countryCommands.Adapt<List<CountryMaster>>();
-
-            service.AddCountryRange(request);
-
-            return Task.FromResult(Result.Success());
+            return Result.Success("Country added successfully.");
         }
     }
 }

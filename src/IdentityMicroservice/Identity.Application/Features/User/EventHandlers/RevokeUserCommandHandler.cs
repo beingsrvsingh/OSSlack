@@ -22,18 +22,36 @@ namespace Identity.Application.Features.User.Commands.CommandHandler
 
         public async Task<Result> Handle(RevokeUserCommand request, CancellationToken cancellationToken)
         {
+            // Prefer request token, fallback to cookie
             var refreshToken = request.Token ?? cookieService.GetCookie("refreshToken");
+
+            if (string.IsNullOrWhiteSpace(refreshToken))
+            {
+                return Result.Failure(new FailureResponse(
+                    code: "InvalidRequest",
+                    description: "Refresh token is missing."
+                ));
+            }
 
             var validToken = await tokenService.GetRefreshToken(refreshToken, request.UserId);
 
             if (validToken == null)
             {
                 return Result.Failure(new FailureResponse(
-                    code: "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",
-                    description: "Token is invalid or malformed."));
+                    code: "InvalidToken",
+                    description: "The token is invalid, expired, or does not belong to the user."
+                ));
             }
 
-            await tokenService.RevokeTokenAsync(validToken);
+            var hasRevoked = await tokenService.RevokeTokenAsync(validToken);
+
+            if (!hasRevoked)
+            {
+                return Result.Failure(new FailureResponse(
+                    code: "RevokeFailed",
+                    description: "Token revocation failed due to an internal error."
+                ));
+            }
 
             return Result.Success("Token revoked successfully.");
         }

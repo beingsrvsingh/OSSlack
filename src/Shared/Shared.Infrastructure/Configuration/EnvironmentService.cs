@@ -98,5 +98,10 @@ namespace Shared.Infrastructure.Configuration
                 return Task.FromResult(false);
             }
         }
+
+        public string GetStaticPath(string fileName)
+        {
+            return _keyChainConfig.GetStaticPath(fileName);
+        }
     }
 }

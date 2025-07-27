@@ -1,4 +1,4 @@
-﻿namespace Identity.Infrastructure.Constants
+﻿namespace Shared.Utilities.Constants
 {
     public static class HealthCheckTags
     {

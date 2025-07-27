@@ -15,8 +15,7 @@ namespace Identity.Application.Features.User.Commands.CommandHandler
 
         public async Task<Result> Handle(SetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await identityService.GetUserByEmailAsync(request.UserId);
-
+            var user = await identityService.GetUserByIdAsync(request.UserId);
             if (user is null)
             {
                 return Result.Failure(new FailureResponse(
@@ -24,7 +23,15 @@ namespace Identity.Application.Features.User.Commands.CommandHandler
                     $"User with ID '{request.UserId}' is invalid."));
             }
 
-            await identityService.ResetPasswordAsync(user, request);
+            var resetResult = await identityService.ResetPasswordAsync(user, request, cancellationToken);
+
+            if (!resetResult.Succeeded)
+            {
+                var errors = string.Join(", ", resetResult.Errors.Select(e => e.Description));
+                return Result.Failure(new FailureResponse(
+                    "PasswordResetFailed",
+                    $"Failed to reset password: {errors}"));
+            }
 
             return Result.Success("Password has been set successfully.");
         }

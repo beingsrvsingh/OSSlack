@@ -1,6 +1,6 @@
 ﻿namespace Identity.Application.Contracts
 {
-    internal class ExcelDTO
+    public class ExcelDTO
     {
         public int StateMasterId { get; set; }
         public string StateName { get; set; } = null!;

@@ -132,69 +132,13 @@ namespace Identity.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("generate/otp/email")]
-        public async Task<IActionResult> GenerateOtpUsingEmail([FromBody] LoginUserEmailPasswordCommand request)
-        {
-            var response = await Mediator.Send(request);
-
-            if (!response.Succeeded)
-                return NotFound(response);
-
-            return Ok(response);
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("verify/otp/email")]
-        public async Task<IActionResult> VerifyOtpUsingEmail([FromBody] LoginUserEmailPasswordCommand request)
-        {
-            var response = await Mediator.Send(request);
-
-            if (!response.Succeeded)
-                return NotFound(response);
-
-            return Ok(response);
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("generate/otp/phone")]
-        public async Task<IActionResult> GenerateOtpUsingPhone([FromBody] LoginUserEmailPasswordCommand request)
-        {
-            var response = await Mediator.Send(request);
-
-            if (!response.Succeeded)
-                return NotFound(response);
-
-            return Ok(response);
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("verify/otp/phone")]
-        public async Task<IActionResult> VerifyOtpUsingPhone([FromBody] LoginUserEmailPasswordCommand request)
-        {
-            var response = await Mediator.Send(request);
-
-            if (!response.Succeeded)
-                return NotFound(response);
-
-            return Ok(response);
-        }
-
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost, Route("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand request)
         {
             var response = await Mediator.Send(request);
 
             if (!response.Succeeded)
-                return NotFound(response);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -208,7 +152,7 @@ namespace Identity.API.Controllers.v1
             var response = await Mediator.Send(request);
 
             if (!response.Succeeded)
-                return NotFound(response);
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -222,7 +166,7 @@ namespace Identity.API.Controllers.v1
             var response = await Mediator.Send(request);
 
             if (!response.Succeeded)
-                return NotFound(response);
+                return BadRequest(response);
 
             return Ok(response);
         }

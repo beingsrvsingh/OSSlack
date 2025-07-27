@@ -1,36 +1,62 @@
 ﻿using BaseApi;
 using Identity.Application.Features.Admin.Commands;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers.v1.Admin
 {
     /// <summary>
-    /// This Controller responsible to migrate data to database
+    /// This Controller responsible to add data to database
     /// </summary>
     [Authorize]
     public class AdminsController : BaseController
-    {
-        [HttpGet, Route("Country")]
-        public async Task<IActionResult> GetAllCountries(ISender sender)
+    {        
+        [HttpPost, Route("country")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddCountry([FromBody] CountryCommand command)
         {
-            await Mediator.Send(sender);
-            return Ok();
+            if (command == null)
+                return BadRequest("Country data is required.");
+
+            var response = await Mediator.Send(command);
+
+            if (!response.Succeeded)
+                return BadRequest(response);
+
+            return Created(string.Empty, response);
         }
 
-        [HttpPost, Route("AddCountry")]
-        public async Task<IActionResult> AddCountries(ISender sender)
+        [HttpPost, Route("state")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddState([FromBody] StateCommand command)
         {
-            await Mediator.Send(new CountryCommand());
-            return Ok();
+            if (command == null)
+                return BadRequest("State data is required.");
+
+            var response = await Mediator.Send(command);
+
+            if (!response.Succeeded)
+                return BadRequest(response);
+
+            return Created(string.Empty, response);
         }
 
-        [HttpPost, Route("Cities")]
-        public async Task<IActionResult> AddCities(ISender sender)
+        [HttpPost, Route("city")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddCity([FromBody] CityCommand command)
         {
-            await Mediator.Send(new CityCommand());
-            return Ok();
+            if (command == null)
+                return BadRequest("City data is required.");
+
+            var response = await Mediator.Send(command);
+
+            if (!response.Succeeded)
+                return BadRequest(response);
+
+            return Created(string.Empty, response);
         }
 
     }
