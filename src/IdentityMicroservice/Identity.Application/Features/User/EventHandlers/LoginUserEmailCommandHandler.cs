@@ -11,23 +11,22 @@ public class LoginUserEmailCommandHandler : IRequestHandler<LoginUserEmailComman
 {
     private readonly IIdentityService identityService;
     private readonly ICookieService cookieService;
-    private readonly IHttpRequestService securityService;
     private readonly IFirebaseAuthService _firebaseAuthService;
     private readonly ILoggerService<LoginUserEmailCommandHandler> _logger;
 
     public LoginUserEmailCommandHandler(ILoggerService<LoginUserEmailCommandHandler> loggerService, IIdentityService identityService,
-        ICookieService cookieService, IHttpRequestService securityService, IFirebaseAuthService firebaseAuthService)
+        ICookieService cookieService, IFirebaseAuthService firebaseAuthService)
     {
         this.identityService = identityService;
         this._logger = loggerService;
         this.cookieService = cookieService;
-        this.securityService = securityService;
         this._firebaseAuthService = firebaseAuthService;
     }
 
     public async Task<Result> Handle(LoginUserEmailCommand request, CancellationToken cancellationToken)
     {
         //Uncoment the code once the firebase in-house
+        // _logger.LogInfo("Login request received for email: {0}", request.Email);
 
         // var payload = await _firebaseAuthService.VerifyTokenAndGetPayloadAsync(request.FirebaseIdToken);
         // if (payload == null)

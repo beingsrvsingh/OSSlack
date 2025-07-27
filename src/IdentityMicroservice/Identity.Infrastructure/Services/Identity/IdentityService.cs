@@ -73,7 +73,8 @@ namespace Identity.Infrastructure.Services.Identity
                 var applicationUser = new ApplicationUser()
                 {
                     Email = request.Email,
-                    UserName = request.Email
+                    UserName = request.Email,
+                    FirebaseUid = request.FirebaseIdToken
                 };
 
                 return await _userManager.CreateAsync(applicationUser);
@@ -91,9 +92,11 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 var applicationUser = new ApplicationUser()
                 {
+                    UserName = request.PhoneNumber,
                     PhoneNumber = request.PhoneNumber,
                     CountryCode = request.CountryCode,
-                    PhoneNumberConfirmed = true
+                    PhoneNumberConfirmed = true,
+                    FirebaseUid = request.FirebaseIdToken
                 };
 
                 this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);

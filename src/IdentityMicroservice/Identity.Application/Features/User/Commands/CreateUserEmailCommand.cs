@@ -8,5 +8,6 @@ namespace Identity.Application.Features.User.Commands.CreateUser
     {
         [EmailAddress]
         public required string Email { get; init; }
+        public required string FirebaseIdToken { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 using Shared.Domain.Common.Entities.Interface;
 
 namespace Shared.Domain.UOW
@@ -6,10 +7,11 @@ namespace Shared.Domain.UOW
     public interface IBaseUnitOfWork : IAuditLog, IDisposable
     {
         IDbConnection? Connection { get; }
-        IDbTransaction? Transaction { get; }
-        void BeginTransaction();
-        void CommitTransaction();
-        void RollbackTransaction();
+        IDbContextTransaction? Transaction { get; }
+        Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
+
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         string? GetSQL(string resourcePath)

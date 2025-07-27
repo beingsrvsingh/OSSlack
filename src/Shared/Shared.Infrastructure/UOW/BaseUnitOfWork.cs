@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Data;
-using Shared.Domain;
 using Shared.Domain.Entities;
 using Shared.Domain.UOW;
 using Shared.Domain.Entities.Interface;
 using Mapster;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Shared.Infrastructur.UoW;
 
@@ -14,58 +13,57 @@ public abstract class BaseUnitOfWork<TContext, TAuditLog> : IBaseUnitOfWork, IDi
     where TAuditLog : class
 {
     protected readonly TContext _context;
-    private IDbTransaction? _transaction;
+    private IDbContextTransaction? _transaction;
     private IDbConnection? _connection;
 
     public IDbConnection Connection => _connection ??= _context.Database.GetDbConnection();
-    public IDbTransaction? Transaction => _transaction;
+    public IDbContextTransaction? Transaction => _transaction;
 
     protected BaseUnitOfWork(TContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public void BeginTransaction()
+    
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_transaction != null)
             throw new InvalidOperationException("Transaction already started.");
 
-        if (Connection.State != ConnectionState.Open)
-            Connection.Open();
-
-        _transaction = Connection.BeginTransaction();
+        _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        return _transaction;
     }
 
-    public void CommitTransaction()
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_transaction == null)
             throw new InvalidOperationException("Transaction not started.");
 
         try
         {
-            _context.SaveChanges();
-            _transaction.Commit();
+            await _context.SaveChangesAsync();
+            await _transaction.CommitAsync();
         }
         catch
         {
-            _transaction.Rollback();
+            await _transaction.RollbackAsync();
             throw;
         }
         finally
         {
-            _transaction.Dispose();
+            await _transaction.DisposeAsync();
             _transaction = null;
         }
     }
 
-    public void RollbackTransaction()
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (_transaction == null)
-            return;
-
-        _transaction.Rollback();
-        _transaction.Dispose();
-        _transaction = null;
+        if (_transaction != null)
+        {
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
     }
 
     public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

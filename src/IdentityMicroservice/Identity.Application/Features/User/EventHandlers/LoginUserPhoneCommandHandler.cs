@@ -11,53 +11,55 @@ public class LoginUserPhoneCommandHandler : IRequestHandler<LoginUserPhoneComman
 {
     private readonly IIdentityService identityService;
     private readonly ICookieService cookieService;
-    private readonly IHttpRequestService securityService;
     private readonly IFirebaseAuthService _firebaseAuthService;
     private readonly ILoggerService<LoginUserPhoneCommandHandler> _logger;
 
     public LoginUserPhoneCommandHandler(ILoggerService<LoginUserPhoneCommandHandler> loggerService, IIdentityService identityService,
-        ICookieService cookieService, IHttpRequestService securityService, IFirebaseAuthService firebaseAuthService)
+        ICookieService cookieService, IFirebaseAuthService firebaseAuthService)
     {
         this.identityService = identityService;
         this._logger = loggerService;
         this.cookieService = cookieService;
-        this.securityService = securityService;
         this._firebaseAuthService = firebaseAuthService;
     }
 
     public async Task<Result> Handle(LoginUserPhoneCommand request, CancellationToken cancellationToken)
     {
-        var payload = await _firebaseAuthService.VerifyTokenAndGetPayloadAsync(request.FirebaseIdToken);
-        if (payload == null)
-        {
-            _logger.LogWarning("Firebase token validation failed.");
-            return Result.Failure(new FailureResponse("InvalidFirebaseToken", "Firebase token validation failed."));
-        }
+        // _logger.LogInfo("Login request received for phone number: {0}", request.PhoneNumber);
 
-        var firebaseUserId = payload.Subject;
-        var phoneNumberFromToken = payload.Claims.ContainsKey("phone_number") ? payload.Claims["phone_number"].ToString() : null;
+        // var payload = await _firebaseAuthService.VerifyTokenAndGetPayloadAsync(request.FirebaseIdToken);
+        // if (payload == null)
+        // {
+        //     _logger.LogWarning("Firebase token validation failed.");
+        //     return Result.Failure(new FailureResponse("InvalidFirebaseToken", "Firebase token validation failed."));
+        // }
 
-        if (phoneNumberFromToken == null || phoneNumberFromToken != request.PhoneNumber.ToString())
-        {
-            _logger.LogWarning("Phone number from Firebase token does not match request.");
-            return Result.Failure(new FailureResponse("PhoneNumberMismatch", "Phone number in token does not match the requested phone."));
-        }        
+        // var firebaseUserId = payload.Subject;
+        // var phoneNumberFromToken = payload.Claims.ContainsKey("phone_number") ? payload.Claims["phone_number"].ToString() : null;
 
-        var user = await identityService.FindByFirebaseUidAsync(firebaseUserId);
+        // if (phoneNumberFromToken == null || phoneNumberFromToken != request.PhoneNumber.ToString())
+        // {
+        //     _logger.LogWarning("Phone number from Firebase token does not match request.");
+        //     return Result.Failure(new FailureResponse("PhoneNumberMismatch", "Phone number in token does not match the requested phone."));
+        // }        
+
+        // var user = await identityService.FindByFirebaseUidAsync(firebaseUserId);
+
+        var user = await identityService.LoginUserWithPhoneAsync(request);
 
         if (user == null)
         {
-            _logger.LogWarning("Login failed: User with Firebase UID {FirebaseUid} and phone number {Phone} not found.", firebaseUserId, request.PhoneNumber);
+            _logger.LogWarning("Login failed: No user found for email {PhoneNumber}.", request.PhoneNumber);
             return Result.Failure(new FailureResponse(
                 code: "UserNotFound",
                 description: $"No user associated with phone number {request.PhoneNumber}."));
         }
 
-        if (!string.Equals(user.PhoneNumber, phoneNumberFromToken, StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.LogWarning($"Phone Number mismatch for user with Firebase UID {firebaseUserId}.");
-            return Result.Failure(new FailureResponse("PhoneNumberMismatch", "Phone Number mismatch with user record."));
-        }
+        // if (!string.Equals(user.PhoneNumber, phoneNumberFromToken, StringComparison.OrdinalIgnoreCase))
+        // {
+        //     _logger.LogWarning($"Phone Number mismatch for user with Firebase UID {firebaseUserId}.");
+        //     return Result.Failure(new FailureResponse("PhoneNumberMismatch", "Phone Number mismatch with user record."));
+        // }
 
         if (user.LockoutEnabled)
         {
