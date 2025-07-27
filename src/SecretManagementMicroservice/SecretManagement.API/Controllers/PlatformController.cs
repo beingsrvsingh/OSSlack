@@ -1,6 +1,7 @@
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
 using SecretManagement.Application.Features.Commands;
+using SecretManagement.Application.Features.Platform.Commands;
 using SecretManagement.Application.Platform.Queries;
 using SecretManagement.Application.Queries;
 
@@ -28,8 +29,19 @@ public class PlatformController : BaseController
     }
 
     [HttpPost]
-    [Route("add-credentials")]
+    [Route("add-credential")]
     public async Task<IActionResult> CreateEnvironment([FromBody] CreateEnvironmentCommand command)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var response = await Mediator.Send(command);
+        return Accepted(response);
+    }
+
+    [HttpPost]
+    [Route("add-credentials")]
+    public async Task<IActionResult> CreateEnvironments([FromBody] CreateEnvironmentsCommand command)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
