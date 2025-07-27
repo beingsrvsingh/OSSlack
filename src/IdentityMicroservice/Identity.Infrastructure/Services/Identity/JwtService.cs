@@ -1,12 +1,10 @@
 ﻿using Identity.Application.Contracts;
 using Identity.Application.Interfaces;
 using JwtTokenAuthentication.Constants;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Contracts.Interfaces;
 using Shared.Utilities;
 using Shared.Utilities.Interfaces;
-using Shared.Utilities.Response;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,20 +14,23 @@ namespace Identity.Infrastructure.Services
     public class JwtService : IJwtService
     {
         private readonly IHttpRequestService securityService;
-        private readonly ISigningKeyProvider signingKeyProvider;
+        private readonly IKeyValueProvider _provider;
+        private readonly string jwtSigningKey;
 
-        public JwtService(IHttpRequestService securityService, ISigningKeyProvider signingKeyProvider)
+        public JwtService(IHttpRequestService securityService, IKeyValueProvider provider)
         {
             this.securityService = securityService;
-            this.signingKeyProvider = signingKeyProvider;
+            this._provider = provider;
+            var jwtSigningKey = Configuration.GetValue<string>("Secrets", "jwtSigningKey");
+            this.jwtSigningKey = jwtSigningKey;
         }
 
         public Task<string> GenerateAccessTokenAsync(List<Claim> claims)
         {
-            string rawKey = RetrieveSigningKey();
+            string secretSigningValue = _provider.GetValue("platform", jwtSigningKey);
 
             // Create SymmetricSecurityKey
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(rawKey));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretSigningValue));
 
             var signinCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
@@ -49,56 +50,28 @@ namespace Identity.Infrastructure.Services
 
         public Task<RefreshTokenResponse> GenerateRefreshToken(string userId, string ipAddress)
         {
-            // generate token that is valid for 7 days
-            var refreshToken = new RefreshTokenResponse();
-            string rawKey = RetrieveSigningKey();
-            if (!string.IsNullOrEmpty(rawKey))
+            // generate token that is valid for 7 days            
+            var refreshTokenLifeTimeInDays = Configuration.GetValue<int>("JwtSettings", "RefreshTokenLifetimeInDays");
+            if (refreshTokenLifeTimeInDays <= 0)
             {
-                var jwtOptions = Helper.LoadAppSettings();
-                int refreshTokenLifeTimeInDays = jwtOptions.GetSection("JwtSettings").GetValue<int>("RefreshTokenLifetimeInDays");
-                if (refreshTokenLifeTimeInDays <= 0)
-                {
-                    refreshTokenLifeTimeInDays = 7;
-                }
-
-                refreshToken = new RefreshTokenResponse
-                {
-                    Token = Utils.GenerateSecureToken(),
-                    Expires = DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays),
-                    Created = DateTime.UtcNow,
-                    CreatedByIp = ipAddress
-                };
+                refreshTokenLifeTimeInDays = 7;
             }
+
+            var refreshToken = new RefreshTokenResponse();
+
+            refreshToken = new RefreshTokenResponse
+            {
+                Token = Utils.GenerateSecureToken(),
+                Expires = DateTime.UtcNow.AddDays(refreshTokenLifeTimeInDays),
+                Created = DateTime.UtcNow,
+                CreatedByIp = ipAddress
+            };
             return Task.FromResult(refreshToken);
         }
 
         public string GetClaims(List<Claim> claims, string claimTypes, CancellationToken cancellationToken = default)
         {
             return claims.First(c => JwtConstant.JWT_TOKEN_USERID_KEYS == claimTypes).Value;
-        }
-        
-        private string RetrieveSigningKey()
-        {
-            var response = signingKeyProvider.GetSigningKey();
-
-            if (string.IsNullOrWhiteSpace(response))
-            {
-                throw new InvalidOperationException("Signing key response from SecretManager is null or empty.");
-            }
-
-            // Deserialize JSON into Result
-            var keyResult = JsonSerializerWrapper.Deserialize<Result>(response)
-                ?? throw new InvalidOperationException("Failed to deserialize signing key result.");
-
-            // Extract the key safely
-            var rawKey = keyResult.Data?.ToString();
-
-            if (string.IsNullOrWhiteSpace(rawKey))
-            {
-                throw new InvalidOperationException("SecretManager returned no usable signing key in response.");
-            }
-
-            return rawKey;
         }
     }
 }

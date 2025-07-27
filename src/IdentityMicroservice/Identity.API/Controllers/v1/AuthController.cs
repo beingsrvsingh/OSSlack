@@ -52,46 +52,81 @@ namespace Identity.API.Controllers.v1
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("login/email-password")]
+        [HttpPost("login/email-password")]
         public async Task<IActionResult> LoginUsingEmailPassword([FromBody] LoginUserEmailPasswordCommand request)
         {
-            var response = await Mediator.Send(request);
+            var result = await Mediator.Send(request);
 
-            if (!response.Succeeded)
-                return NotFound(response);
+            if (!result.Succeeded)
+            {
+                HandleLoginFailure(result);
+            }
 
-
-            return Ok(response);
+            return Ok(result);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("login/email")]
+        [HttpPost("login/email")]
         public async Task<IActionResult> LoginUsingEmail([FromBody] LoginUserEmailCommand request)
         {
-            var response = await Mediator.Send(request);
+            var result = await Mediator.Send(request);
 
-            if (!response.Succeeded)
-                return NotFound(response);
+            if (!result.Succeeded)
+            {
+                HandleLoginFailure(result);
+            }
 
-
-            return Ok(response);
+            return Ok(result);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost, Route("login/phone")]
+        [HttpPost("login/phone")]
         public async Task<IActionResult> LoginUsingPhone([FromBody] LoginUserPhoneCommand request)
         {
-            var response = await Mediator.Send(request);
-            if (!response.Succeeded)
-                return NotFound(response);
+            var result = await Mediator.Send(request);
 
+            if (!result.Succeeded)
+            {
+                HandleLoginFailure(result);
+            }
 
-            return Ok(response);
+            return Ok(result);
+        }
+
+        [HttpPost("toggle-user-activation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ToggleUserActivation([FromBody] ToggleUserActivationRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.PhoneNumber.ToString()))
+            {
+                return BadRequest(Result.Failure("Either Email or PhoneNumber must be provided."));
+            }
+
+            Result result;
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                var command = new LoginUserEmailCommand { Email = request.Email, FirebaseIdToken = request.FirebaseIdToken };
+                result = await Mediator.Send(command);
+            }
+            else
+            {
+                var command = new LoginUserPhoneCommand { PhoneNumber = request.PhoneNumber, FirebaseIdToken = request.FirebaseIdToken };
+                result = await Mediator.Send(command);
+            }
+
+            return result.Succeeded ? Ok(result) : HandleLoginFailure(result);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -192,31 +227,25 @@ namespace Identity.API.Controllers.v1
             return Ok(response);
         }
 
-        [HttpPost("activate-user")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ToggleUserActivation([FromBody] ToggleUserActivationRequest request)
+        private IActionResult HandleLoginFailure(Result result)
         {
-            if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.PhoneNumber.ToString()))
+            if (result.Errors is FailureResponse errorObj)
             {
-                return BadRequest(Result.Failure("Provide either Email or PhoneNumber."));
-            }
+                var code = errorObj.Code?.ToLowerInvariant();
 
-            Result result;
-
-            if (!string.IsNullOrWhiteSpace(request.Email))
-            {
-                var command = new LoginUserEmailCommand { Email = request.Email };
-                result = await Mediator.Send(command);
+                return code switch
+                {
+                    "usernotfound" => NotFound(result),
+                    "userinactiveordeleted" or
+                    "userlocked" => BadRequest(result),
+                    "tokengenerationfailed" => StatusCode(StatusCodes.Status500InternalServerError, result),
+                    _ => BadRequest(result)
+                };
             }
-            else
-            {
-                var command = new LoginUserPhoneCommand { PhoneNumber = request.PhoneNumber };
-                result = await Mediator.Send(command);
-            }
-
-            return result.Succeeded ? Ok(result) : BadRequest(result);
+            return BadRequest(result);
         }
 
+
     }
+
 }

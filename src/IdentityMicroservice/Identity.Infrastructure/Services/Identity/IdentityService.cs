@@ -150,6 +150,12 @@ namespace Identity.Infrastructure.Services.Identity
             return await this.GetUserByEmailAsync(request.Email);
         }
 
+        public async Task<ApplicationUser?> FindByFirebaseUidAsync(string firebaseUid)
+        {
+            return null;
+            //return await _userManager.Users.FirstOrDefaultAsync(u => u.FirebaseUid == firebaseUid);
+        }
+
         public async Task<AuthenticateResponse?> GenerateTokenAsync(string userId)
         {
             var accessToken = await tokenService.GenerateAccessToken(userId);

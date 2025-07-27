@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Shared.Application.Interfaces.Logging;
+using Shared.Contracts;
 using Shared.Contracts.Interfaces;
 using Shared.Utilities;
 
@@ -10,14 +11,14 @@ namespace Shared.Infrastructure.Platform;
 public class WindowsSecretManager : IPlatform
 {
     private readonly ILoggerService<WindowsSecretManager> _logger;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IKeyChainConfig _keyChainConfig;
     private readonly string _envPrefix;
 
-    public WindowsSecretManager(ILoggerService<WindowsSecretManager> logger, IWebHostEnvironment webHostEnvironment)
+    public WindowsSecretManager(ILoggerService<WindowsSecretManager> logger, IKeyChainConfig keyChainConfig)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
-        _envPrefix = EnvironmentUtils.GetEnv(_webHostEnvironment.EnvironmentName);
+        this._keyChainConfig = keyChainConfig ?? throw new ArgumentNullException(nameof(keyChainConfig));;
+        _envPrefix = _keyChainConfig.EnvPrefix;
     }
 
     public Task<IEnumerable<string>> GetAllCredentialKeysAsync()
@@ -58,13 +59,13 @@ public class WindowsSecretManager : IPlatform
 
     public async Task<string?> GetCredentialAsync(string keyName)
     {
-        var fullKey = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var fullKey = _keyChainConfig.AddEnvPrefix(keyName);
         return await GetWindowsCredentialAsync(fullKey);
     }
 
     public Task<bool> AddCredentialAsync(string keyName, string secret)
     {
-        var fullKey = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var fullKey = _keyChainConfig.AddEnvPrefix(keyName);
         var bytes = Encoding.Unicode.GetBytes(secret);
 
         var credential = new CREDENTIAL
@@ -107,7 +108,7 @@ public class WindowsSecretManager : IPlatform
 
     public Task<bool> RemoveCredentialAsync(string keyName)
     {
-        var fullKey = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var fullKey = _keyChainConfig.AddEnvPrefix(keyName);
         bool success = CredDelete(fullKey, CRED_TYPE_GENERIC, 0);
 
         if (!success)

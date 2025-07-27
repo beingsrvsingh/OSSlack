@@ -7,6 +7,7 @@ public static class JsonSerializerWrapper
 {
     public static readonly JsonSerializerOptions Options = new()
     {
+        WriteIndented = true,
         PropertyNameCaseInsensitive = true
     };
 

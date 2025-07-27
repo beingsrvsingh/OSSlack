@@ -22,7 +22,7 @@ namespace Review.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            var config = Helper.LoadAppSettings();
+            var config = Configuration.LoadAppSettings();
 
             services.AddDbContext<ReviewDbContext>(options =>
                     options.UseSqlServer(config.GetConnectionString("DefaultConnection"),

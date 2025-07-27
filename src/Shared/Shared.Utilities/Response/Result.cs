@@ -6,6 +6,7 @@ namespace Shared.Utilities.Response
     public class Result : BaseResponse, IResult
     {
         public object? Data { get; init; }
+
         public Result(bool succeeded, object? data, object? errors)
         {
             Succeeded = succeeded;
@@ -47,7 +48,7 @@ namespace Shared.Utilities.Response
 
         public static Result<T> Failure(FailureResponse errors)
             => new Result<T>(false, default, errors);
-    }    
+    }
 
     public class FailureResponse
     {

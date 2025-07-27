@@ -47,7 +47,7 @@ namespace Identity.Infrastructure.Services.Identity
 
             var tokenString = await _jwtService.GenerateAccessTokenAsync(claims);
 
-            var jwtOptions = Helper.LoadAppSettings();
+            var jwtOptions = Configuration.LoadAppSettings();
             int tokenLifetimeMinutes = jwtOptions.GetSection("JwtSettings").GetValue<int>("TokenLifetimeMinutes");
             if (tokenLifetimeMinutes <= 0)
             {

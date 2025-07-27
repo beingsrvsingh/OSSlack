@@ -12,7 +12,7 @@ namespace SecretManagement.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            var config = Helper.LoadAppSettings();
+            var config = Configuration.LoadAppSettings();
 
             var connectionString = config.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(connectionString))

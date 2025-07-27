@@ -29,7 +29,7 @@ public class DynamicPlatformService : IPlatformService
         _macManager = macManager;
         _linuxManager = linuxManager;
         _configuration = configuration;
-        _config = Helper.LoadAppSettings();        
+        _config = Utilities.Configuration.LoadAppSettings();        
     }
 
     private bool UseRemote => _config.GetSection("Secrets").GetValue<bool>("UseRemote");

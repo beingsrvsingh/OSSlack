@@ -9,5 +9,6 @@ namespace Identity.Application.Features.User.Commands
         [Phone]
         [MaxLength(10)]
         public required int PhoneNumber { get; init; }
+        public required string FirebaseIdToken { get; set; }
     }
 }

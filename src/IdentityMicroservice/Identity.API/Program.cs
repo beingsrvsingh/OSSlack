@@ -60,7 +60,7 @@ builder.Services.AddDirectoryBrowser();
 
 builder.Services.AddHttpClient("SecretManagerClient", client =>
 {
-    var config = Helper.LoadAppSettings();
+    var config = Configuration.LoadAppSettings();
     var baseUrl = config.GetSection("Secrets").GetValue<String>("BaseUrl") ?? throw new InvalidOperationException("Secrets:BaseUrl is not configured.");
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });

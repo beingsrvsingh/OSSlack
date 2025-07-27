@@ -1,5 +1,4 @@
-﻿using Identity.Application.Services.Interfaces;
-using Identity.Domain.Entities;
+﻿using Identity.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Shared.Application.Interfaces.Logging;
@@ -33,48 +32,51 @@ public class LoginUserEmailPasswordCommandHandler : IRequestHandler<LoginUserEma
 
         if (signInResult == null)
         {
-            _logger.LogWarning("Sign-in result is null.");
-            return Result.Failure("UserId or Password is incorrect");
+            _logger.LogWarning("Login failed: sign-in result is null for email {Email}", request.Email);
+            return Result.Failure(new FailureResponse(
+                code: "SignInError",
+                description: "Invalid email or password."));
         }
 
         if (signInResult.IsLockedOut)
         {
-            _logger.LogWarning("User account locked out.");
-            return Result.Failure("UserId or Password is incorrect");
+            _logger.LogWarning("Login failed: user account locked out for email {Email}", request.Email);
+            return Result.Failure(new FailureResponse(
+                code: "AccountLocked",
+                description: "Your account is locked. Please try again later."));
         }
 
         if (!signInResult.Succeeded)
         {
-            _logger.LogInfo("User login failed.");
-            return Result.Failure("UserId or Password is incorrect");
+            _logger.LogWarning("Login failed: invalid credentials for email {Email}", request.Email);
+            return Result.Failure(new FailureResponse(
+                code: "InvalidCredentials",
+                description: "Invalid email or password."));
         }
-
-        _logger.LogInfo("User logged in.");
 
         var user = await userManager.FindByEmailAsync(request.Email);
-
         if (user == null)
         {
-            _logger.LogInfo("User does not exist.");
-            return Result.Failure("UserId or Password is incorrect");
+            _logger.LogWarning("Login failed: user not found in database for email {Email}", request.Email);
+            return Result.Failure(new FailureResponse(
+                code: "UserNotFound",
+                description: $"User with email {request.Email} does not exist."));
         }
-
-        _logger.LogInfo("User exists.");
 
         var token = await identityService.GenerateTokenAsync(user.Id);
-
         if (token == null)
         {
-            _logger.LogInfo("Token creation failed.");
-            return Result.Failure("UserId or Password is incorrect");
+            _logger.LogError("Login failed: token generation failed for user {UserId}", user.Id);
+            return Result.Failure(new FailureResponse(
+                code: "TokenGenerationFailed",
+                description: "Authentication token could not be generated."));
         }
 
-        _logger.LogInfo("Token created.");
-
-        // Set Refresh token in cookie to validate from cookie.
         cookieService.RemoveAndSetCookie(token.RefreshToken, Constants.DEFAULT_COOKIE_PERIOD);
 
         await identityService.AddUserDeviceAsync(user.Id, cancellationToken);
+
+        _logger.LogInfo("User {UserId} logged in and token created.", user.Id);
 
         return Result.Success(token);
     }

@@ -8,36 +8,20 @@ public class SecretManagerClient : ISecretManagerClient
 {
     private readonly HttpClient _httpClient;
     private readonly ILoggerService<SecretManagerClient> _logger;
-    private readonly IMemoryCache _cache;
-    private readonly TimeSpan _cacheDuration = TimeSpan.FromHours(24*30);
 
     public SecretManagerClient(
         ILoggerService<SecretManagerClient> logger,
-        IHttpClientFactory httpClientFactory,        
-        IMemoryCache cache)
+        IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateClient(nameof(SecretManagerClient)) ?? throw new ArgumentNullException(nameof(httpClientFactory));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));        
     }
 
-    public async Task<string?> GetSecretKeyAsync(string keyName, CancellationToken cancellationToken = default)
+    public async Task<string?> GetSecretKeyAsync(string resourcePath, string keyName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(keyName))
-        {
-            _logger.LogWarning("Key name is null or whitespace.");
-            return null;
-        }
-
-        if (_cache.TryGetValue(keyName, out string? cachedSecret))
-        {
-            _logger.LogInfo("Secret for key '{KeyName}' retrieved from cache.", keyName);
-            return cachedSecret;
-        }
-
         try
         {
-            var response = await _httpClient.GetAsync($"platform/{keyName}", cancellationToken);
+            var response = await _httpClient.GetAsync($"{resourcePath}/{keyName}", cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -45,12 +29,7 @@ public class SecretManagerClient : ISecretManagerClient
                 return null;
             }
 
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            if (string.IsNullOrWhiteSpace(content))
-                return null;
-
-            _cache.Set(keyName, content, _cacheDuration);
-            _logger.LogInfo("Secret for key '{KeyName}' cached for {Duration} minutes.", keyName, _cacheDuration.TotalMinutes);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);            
 
             return content;
         }

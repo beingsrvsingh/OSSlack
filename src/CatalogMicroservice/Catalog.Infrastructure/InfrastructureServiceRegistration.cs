@@ -20,7 +20,7 @@ namespace Catalog.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            var config = Helper.LoadAppSettings();
+            var config = Configuration.LoadAppSettings();
 
             services.AddDbContext<CatalogDbContext>(options =>
                     options.UseSqlServer(config.GetConnectionString("DefaultConnection"),

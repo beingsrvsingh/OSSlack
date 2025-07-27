@@ -5,6 +5,8 @@ namespace Identity.Domain.Entities
 {
     public class ApplicationUser : IdentityUser, IActiveEntity, ISoftDeleteEntity
     {
+        public string? FirebaseUid { get; set; }
+
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? ProfilePictureUrl { get; set; }

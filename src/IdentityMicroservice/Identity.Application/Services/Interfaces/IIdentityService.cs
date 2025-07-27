@@ -12,6 +12,7 @@ public interface IIdentityService
         Task<ApplicationUser?> GetUserByIdAsync(string id);
         Task<ApplicationUser?> GetUserByPhoneNumberAsync(int phoneNumber);
         Task<ApplicationUser?> GetUserByEmailAsync(string email);
+        Task<ApplicationUser?> FindByFirebaseUidAsync(string firebaseUid);
 
         Task<IdentityResult> CreateUserEmailAsync(CreateUserEmailCommand request, CancellationToken cancellationToken = default);
         Task<string?> CreateUserPhoneAsync(CreateUserPhoneCommand request, CancellationToken cancellationToken = default);

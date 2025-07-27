@@ -11,13 +11,13 @@ public class MacKeychainManager : IPlatform
     private readonly string KeyChainName;
     private readonly string KeyChainpassword;
     private readonly ILoggerService<MacKeychainManager> loggerService;
-
+    private readonly IKeyChainConfig keyChainConfig;
     private const int ProcessTimeoutSeconds = 10;
 
     public MacKeychainManager(ILoggerService<MacKeychainManager> loggerService, IKeyChainConfig keyChainConfig)
     {
         this.loggerService = loggerService ?? throw new ArgumentNullException(nameof(loggerService));
-        if (keyChainConfig == null) throw new ArgumentNullException(nameof(keyChainConfig));
+        this.keyChainConfig = keyChainConfig ?? throw new ArgumentNullException(nameof(keyChainConfig));
 
         this.KeyChainName = keyChainConfig.KeyChainName;
         this.KeyChainpassword = keyChainConfig.KeyChainPassword;
@@ -118,10 +118,8 @@ public class MacKeychainManager : IPlatform
 
     public async Task<bool> AddCredentialAsync(string keyName, string secret)
     {
-
         try
         {
-
             if (!await UnlockKeychainAsync())
             {
                 loggerService.LogWarning("Failed to unlock keychain.");
@@ -131,11 +129,11 @@ public class MacKeychainManager : IPlatform
             string keychainPath = GetKeychainPath();
 
             await CreateKeychainIfNotExistsAsync();
-
+            string name = keyChainConfig.AddEnvPrefix(keyName).ToUpperInvariant();
             var psi = new ProcessStartInfo
             {
                 FileName = "/usr/bin/security",
-                Arguments = $"add-generic-password -a {Environment.UserName} -s {keyName} -w {secret} -U {keychainPath}",
+                Arguments = $"add-generic-password -a {Environment.UserName} -s {name} -w {secret} -U {keychainPath}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -174,13 +172,13 @@ public class MacKeychainManager : IPlatform
                 loggerService.LogWarning("Failed to unlock keychain.");
                 return false;
             }
-
             string keychainPath = GetKeychainPath();
+            string name = keyChainConfig.AddEnvPrefix(keyName).ToUpperInvariant();
 
             var psi = new ProcessStartInfo
             {
                 FileName = "/usr/bin/security",
-                Arguments = $"delete-generic-password -a {Environment.UserName} -s {keyName} {keychainPath}",
+                Arguments = $"delete-generic-password -a {Environment.UserName} -s {name} {keychainPath}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -233,8 +231,9 @@ public class MacKeychainManager : IPlatform
         }
     }
 
-    private async Task<string?> GetMacKeychainSecret(string serviceName)
+    private async Task<string?> GetMacKeychainSecret(string keyName)
     {
+        string name = keyChainConfig.AddEnvPrefix(keyName).ToUpperInvariant();
         try
         {
             if (!await UnlockKeychainAsync())
@@ -248,7 +247,7 @@ public class MacKeychainManager : IPlatform
             var psi = new ProcessStartInfo
             {
                 FileName = "/usr/bin/security",
-                Arguments = $"find-generic-password -a {Environment.UserName} -s {serviceName} -w {keychainPath}",
+                Arguments = $"find-generic-password -a {Environment.UserName} -s {name} -w {keychainPath}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -267,7 +266,7 @@ public class MacKeychainManager : IPlatform
             if (proc.ExitCode != 0)
             {
                 string error = await proc.StandardError.ReadToEndAsync();
-                loggerService.LogWarning("Failed to retrieve credential for '{ServiceName}'. Error: {Error}", serviceName, error);
+                loggerService.LogWarning("Failed to retrieve credential for '{ServiceName}'. Error: {Error}", name, error);
                 return null;
             }
 
@@ -275,7 +274,7 @@ public class MacKeychainManager : IPlatform
         }
         catch (Exception ex)
         {
-            loggerService.LogError(ex, "Exception while retrieving keychain secret for '{ServiceName}'.", serviceName);
+            loggerService.LogError(ex, "Exception while retrieving keychain secret for '{ServiceName}'.", name);
             return null;
         }
     }

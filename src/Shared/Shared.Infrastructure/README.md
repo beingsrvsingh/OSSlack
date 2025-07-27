@@ -8,4 +8,4 @@ MACOS - DEV_KEYCHAIN_NAME | DEV_KEYCHAIN_PASSWORD
 WINDOW|LINUX = DEV_KEY_NAME
 
 ## MACOS-COMMANDS
-security find-generic-password -s jwt-signing-key -w app.keychain-db
+security find-generic-password -s jwtSigningKey -w app.keychain-db

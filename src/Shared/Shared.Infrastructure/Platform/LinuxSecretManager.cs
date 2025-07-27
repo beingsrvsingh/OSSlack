@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Shared.Application.Interfaces.Logging;
+using Shared.Contracts;
 using Shared.Contracts.Interfaces;
 using Shared.Utilities;
 
@@ -11,14 +12,13 @@ public class LinuxSecretManager : IPlatform
     private readonly string _basePath;
     private readonly string _envPrefix;
     private readonly ILoggerService<LinuxSecretManager> _logger;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IKeyChainConfig _keyChainConfig;
 
-    public LinuxSecretManager(ILoggerService<LinuxSecretManager> logger, IWebHostEnvironment environment)
+    public LinuxSecretManager(ILoggerService<LinuxSecretManager> logger, IKeyChainConfig keyChainConfig)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _webHostEnvironment = environment ?? throw new ArgumentNullException(nameof(environment));
-
-        _envPrefix = EnvironmentUtils.GetEnv(_webHostEnvironment.EnvironmentName);
+        this._keyChainConfig = keyChainConfig;
+        _envPrefix = _keyChainConfig.EnvPrefix;
         _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".linuxsecrets");
         Directory.CreateDirectory(_basePath);
     }
@@ -49,7 +49,7 @@ public class LinuxSecretManager : IPlatform
 
     public async Task<bool> AddCredentialAsync(string keyName, string secret)
     {
-        var envKeyName = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var envKeyName = _keyChainConfig.AddEnvPrefix(keyName);
         var filePath = GetSecretPath(envKeyName);
 
         try
@@ -66,7 +66,7 @@ public class LinuxSecretManager : IPlatform
 
     public async Task<string?> GetCredentialAsync(string keyName)
     {
-        var envKeyName = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var envKeyName = _keyChainConfig.AddEnvPrefix(keyName);
         var filePath = GetSecretPath(envKeyName);
 
         try
@@ -85,7 +85,7 @@ public class LinuxSecretManager : IPlatform
 
     public Task<bool> RemoveCredentialAsync(string keyName)
     {
-        var envKeyName = EnvironmentUtils.AddEnvironmentPrefix(keyName, _envPrefix);
+        var envKeyName = _keyChainConfig.AddEnvPrefix(keyName);
         var filePath = GetSecretPath(envKeyName);
 
         try

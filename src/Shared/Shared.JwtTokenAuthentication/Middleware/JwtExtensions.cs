@@ -1,6 +1,7 @@
 ﻿using JwtTokenAuthentication.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Contracts.Interfaces;
@@ -40,9 +41,11 @@ public static class JwtExtensions
                         var userId = GetUserIdFromToken(token);
                         if (string.IsNullOrEmpty(userId)) return keys;
 
-                        var resolver = serviceProvider.GetRequiredService<ISigningKeyProvider>();
+                        var resolver = serviceProvider.GetRequiredService<IKeyValueProvider>();
 
-                        var response = resolver.GetSigningKey();
+                        var jwtSigningKey = Configuration.GetValue<string>("Secrets", "jwtSigningKey");                        
+
+                        var response = resolver.GetValue("environment", jwtSigningKey);
 
                         if (string.IsNullOrEmpty(response))
                                 throw new InvalidOperationException("Signing key retrieval failed: the key data is missing or invalid.");
