@@ -101,7 +101,7 @@ namespace Identity.Infrastructure.Services.Identity
                     FirebaseUid = request.FirebaseIdToken
                 };
 
-                this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);
+                await this.unitOfWork.ApplicationUserRepository.AddAsync(applicationUser);
                 await this.unitOfWork.SaveChangesAsync();
 
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
@@ -272,7 +272,7 @@ namespace Identity.Infrastructure.Services.Identity
                 OS = client.OS.Family
             };
 
-            unitOfWork.UserDevicesRepository.AddAsync(userDevice);
+            await unitOfWork.UserDevicesRepository.AddAsync(userDevice);
             var saveResult = await unitOfWork.SaveChangesAsync();
 
             return saveResult;

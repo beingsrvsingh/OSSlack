@@ -63,7 +63,7 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 var country = request.Adapt<CountryMaster>();
 
-                repository.CountryMasterRepository.AddAsync(country);
+                await repository.CountryMasterRepository.AddAsync(country);
                 await repository.CountryMasterRepository.SaveChangesAsync();
                 return true;
             }
@@ -95,7 +95,7 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 var state = request.Adapt<StateMaster>();
                 
-                repository.StateMasterRepository.AddAsync(state);
+                await repository.StateMasterRepository.AddAsync(state);
                 await repository.StateMasterRepository.SaveChangesAsync();
                 return true;
             }
@@ -127,7 +127,7 @@ namespace Identity.Infrastructure.Services.Identity
             {
                 var city = request.Adapt<CityMaster>();
 
-                repository.CityMasterRepository.AddAsync(city);
+                await repository.CityMasterRepository.AddAsync(city);
                 await repository.CityMasterRepository.SaveChangesAsync();
                 return true;
             }
@@ -155,12 +155,12 @@ namespace Identity.Infrastructure.Services.Identity
 
         public async Task<StateMaster?> GetStateByName(string name)
         {
-            return await repository.StateMasterRepository.GetBy(state => state.Name.Contains(name));
+            return await repository.StateMasterRepository.GetByAsync(state => state.Name.Contains(name));
         }
 
         public async Task<CountryMaster?> GetCountryByNameAsync(string countryName)
         {
-            return await repository.CountryMasterRepository.GetBy(count => count.Name.Contains(countryName));
+            return await repository.CountryMasterRepository.GetByAsync(count => count.Name.Contains(countryName));
         }
 
         public async Task<bool> BulkInsertCountriesAsync(IEnumerable<CountryMaster> countries, int? batchSize = null, CancellationToken cancellationToken = default)

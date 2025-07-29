@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Shared.Domain.Repository;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -17,9 +18,25 @@ namespace Shared.Infrastructure.Repositories
             this.dbSet = _dbContext.Set<T>();
         }
 
+        public IQueryable<T> Query()
+        {
+            return dbSet.AsQueryable();
+        }
+
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await this.dbSet.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllAsync(
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+        {
+            IQueryable<T> query = dbSet.AsNoTracking();
+
+            if (orderBy != null)
+                query = orderBy(query);
+
+            return await query.ToListAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
@@ -55,9 +72,9 @@ namespace Shared.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-        public IEnumerable<T1> GetBy<T1>(Expression<Func<T, bool>> exp, Expression<Func<T, T1>> columns)
+        public async Task<IEnumerable<T1>> GetByAsync<T1>(Expression<Func<T, bool>> predicate, Expression<Func<T, T1>> selector)
         {
-            return this.dbSet.Where<T>(exp).Select<T, T1>(columns);
+            return await _dbContext.Set<T>().Where(predicate).Select(selector).ToListAsync();
         }
 
         public virtual async Task<T?> GetByIdAsync(int id)
@@ -65,7 +82,7 @@ namespace Shared.Infrastructure.Repositories
             return await this.dbSet.FindAsync(id);
         }
 
-        public async virtual Task<T?> GetBy(Expression<Func<T, bool>> exp)
+        public async virtual Task<T?> GetByAsync(Expression<Func<T, bool>> exp)
         {
             return await this.dbSet.AsNoTracking().FirstOrDefaultAsync(exp);
         }
@@ -170,15 +187,21 @@ namespace Shared.Infrastructure.Repositories
             }, progress: null, type: null, cancellationToken);
         }
 
-        public virtual T AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
-            this.dbSet.Add(entity);
-            return entity;
+            var result = await _dbContext.Set<T>().AddAsync(entity);
+            return result.Entity;
         }
 
         public async virtual Task AddRangeAsync(params T[] entities)
         {
             await this.dbSet.AddRangeAsync(entities);
+        }
+
+        public async Task RemoveRangeAsync(IEnumerable<T> entities)
+        {
+            dbSet.RemoveRange(entities);
+            await Task.CompletedTask;
         }
 
         public virtual Task UpdateAsync(T entity)
@@ -207,6 +230,11 @@ namespace Shared.Infrastructure.Repositories
         public async virtual Task SaveChangesAsync()
         {
             await this._dbContext.SaveChangesAsync();
-        }        
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _dbContext.Database.BeginTransactionAsync();
+        }
     }
 }

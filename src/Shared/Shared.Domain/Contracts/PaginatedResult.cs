@@ -3,18 +3,19 @@ namespace Shared.Domain.Contracts
 {
     public class PaginatedResult<T>
     {
-        public List<T> Items { get; set; } = new();
-        public int TotalCount { get; set; }
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
+        public List<T> Items { get; }
+        public int TotalCount { get; }
+        public int Page { get; }
+        public int PageSize { get; }
+        public int TotalPages { get; }
 
-        public PaginatedResult(List<T> items, int totalCount, int pageNumber, int pageSize)
+        public PaginatedResult(List<T> items, int totalCount, int page, int pageSize, int totalPages)
         {
             Items = items;
             TotalCount = totalCount;
-            PageNumber = pageNumber;
+            Page = page;
             PageSize = pageSize;
+            TotalPages = totalPages;
         }
     }
-
 }

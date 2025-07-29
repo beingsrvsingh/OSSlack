@@ -2,6 +2,6 @@
 {
     public interface IIdentityRole
     {
-        public static string[] roles() => new string[] { "Superuser", "Admin", "Customer", "Seller" };
+        public static string[] roles() => new string[] { "Superuser", "Admin", "Customer", "Seller", "Support" };
     }
 }

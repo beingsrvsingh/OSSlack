@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Review.Domain.Entities;
+﻿using Review.Domain.Entities;
 using Shared.Infrastructure.EntityConfigurations;
 
 namespace Identity.Infrastructure.Persistence.EntityConfigurations

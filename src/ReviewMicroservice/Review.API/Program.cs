@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
@@ -21,7 +22,8 @@ builder.Services.AddInfrastructureServices();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    containerBuilder.RegisterModule(new SharedInfrastructureModule());
+    containerBuilder.RegisterModule(new InfrastructureModule());
+    containerBuilder.RegisterModule(new SharedInfrastructureModule());    
     containerBuilder.RegisterModule(new SharedUtilitiesModule());
 });
 
@@ -29,7 +31,12 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Converting enum default(int) into text
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddMvc().ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

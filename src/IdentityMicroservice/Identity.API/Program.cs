@@ -3,15 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using Identity.Infrastructure;
 using JwtTokenAuthentication;
 using Microsoft.Extensions.FileProviders;
-using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
-using Shared.Contracts.Interfaces;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
-using Shared.Infrastructure.Http;
 using Shared.Utilities;
-using Shared.Utilities.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);

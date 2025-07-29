@@ -1,10 +1,13 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Shared.Domain.Repository
 {
     public interface IBaseRepositoryAsync<T> where T : class
     {
+        IQueryable<T> Query();
         Task<IReadOnlyList<T>> GetAllAsync();
+        Task<IReadOnlyList<T>> GetAllAsync(Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null);
         Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
         Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>>? predicate = null,
                                         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
@@ -14,9 +17,9 @@ namespace Shared.Domain.Repository
                                        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
                                        List<Expression<Func<T, object>>>? includes = null,
                                        bool disableTracking = true);
-        IEnumerable<T1> GetBy<T1>(Expression<Func<T, bool>> exp, Expression<Func<T, T1>> columns);
+        Task<IEnumerable<T1>> GetByAsync<T1>(Expression<Func<T, bool>> predicate, Expression<Func<T, T1>> selector);
 
-        Task<T?> GetBy(Expression<Func<T, bool>> exp);
+        Task<T?> GetByAsync(Expression<Func<T, bool>> exp);
 
         Task<T?> GetByIdAsync(int id);
         Task<T?> GetByIdAsync(string id);
@@ -33,15 +36,16 @@ namespace Shared.Domain.Repository
         int pageSize = 10,
         CancellationToken cancellationToken = default);
         Task BulkInsertAsync(
-        IList<T> entities, 
-        int? batchSize = null, 
+        IList<T> entities,
+        int? batchSize = null,
         CancellationToken cancellationToken = default);
-        T AddAsync(T entity);
+        Task<T> AddAsync(T entity);
         Task AddRangeAsync(params T[] entities);
+        Task RemoveRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task Delete(Expression<Func<T, bool>> where);
-
         Task SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

@@ -1,4 +1,5 @@
 using Mapster;
+using Review.Domain.Core.Repository;
 using Review.Domain.Core.UOW;
 using Review.Domain.Entities;
 using Review.Domain.Repository;
@@ -6,7 +7,6 @@ using Review.Infrastructure.Persistence.Context;
 using Review.Infrastructure.Repositories;
 using Shared.Domain.Entities;
 using Shared.Infrastructur.UoW;
-using System.Data;
 
 namespace Shared.Infrastructure.Repositories
 {
@@ -16,8 +16,10 @@ namespace Shared.Infrastructure.Repositories
         { }
 
         private IReviewRepository? reviewRepository;
-        private IReviewDetailRepository? reviewReportInfoRepository;
-        private IReportLookUpRepository? reportLookUpRepository;
+        private IReviewReportReasonRepository? reviewReportReasonRepository;
+        private IReviewReportRepository? reviewReportRepository;
+        public IReviewFeedbackRepository? reviewFeedbackRepository;
+        public IReviewMediaRepository? reviewMediaRepository;
 
         public IReviewRepository ReviewRepository
         {
@@ -31,33 +33,57 @@ namespace Shared.Infrastructure.Repositories
             }
         }
 
-        public IReviewDetailRepository ReviewReportDetailRepository
+        public IReviewReportRepository ReviewReportRepository
         {
             get
             {
-                if (reviewReportInfoRepository == null)
+                if (reviewReportRepository == null)
                 {
-                    reviewReportInfoRepository = new ReviewDetailRepository(_context);
+                    reviewReportRepository = new ReviewReportRepository(_context);
                 }
-                return reviewReportInfoRepository;
+                return reviewReportRepository;
             }
         }
 
-        public IReportLookUpRepository ReviewReportLookUpRepository
+        public IReviewReportReasonRepository ReviewReportReasonRepository
         {
             get
             {
-                if (reportLookUpRepository == null)
+                if (reviewReportReasonRepository == null)
                 {
-                    reportLookUpRepository = new ReportLookUpRepository(_context);
+                    reviewReportReasonRepository = new ReviewReportReasonRepository(_context);
                 }
-                return reportLookUpRepository;
+                return reviewReportReasonRepository;
             }
-        }    
+        }
+
+        public IReviewFeedbackRepository ReviewFeedbackRepository
+        {
+            get
+            {
+                if (reviewFeedbackRepository == null)
+                {
+                    reviewFeedbackRepository = new ReviewFeedbackRepository(_context);
+                }
+                return reviewFeedbackRepository;
+            }
+        }
+
+        public IReviewMediaRepository ReviewMediaRepository
+        {
+            get
+            {
+                if (reviewMediaRepository == null)
+                {
+                    reviewMediaRepository = new ReviewMediaRepository(_context);
+                }
+                return reviewMediaRepository;
+            }
+        }
 
         protected override AuditLog ConvertAuditEntry(AuditEntry entry)
         {
             return entry.ToAudit().Adapt<AuditLog>();
-        }    
+        }
     }
 }

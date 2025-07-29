@@ -22,3 +22,9 @@ drop table Reviews
 drop table reviewdetails
 drop table reviewreportlookup
 
+dotnet ef migrations add Initial-Create --output-dir Migrations --context ReviewDbContext --startup-project ../Review.API 
+
+dotnet ef database update --context ReviewDbContext --startup-project ../Review.API
+
+
+

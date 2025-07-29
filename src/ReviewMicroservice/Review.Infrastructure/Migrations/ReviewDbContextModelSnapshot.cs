@@ -17,226 +17,344 @@ namespace Review.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Review.Domain.Entities.ReviewAuditLog", b =>
+            modelBuilder.Entity("Review.Domain.Entities.AuditLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Action")
-                        .IsRequired()
+                    b.Property<int>("Action")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("int")
+                        .HasColumnName("action");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("longtext")
+                        .HasColumnName("ip_address");
 
                     b.Property<string>("NewValues")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext")
+                        .HasColumnName("new_values");
 
                     b.Property<string>("OldValues")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_values");
 
                     b.Property<string>("TableId")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("table_id");
 
                     b.Property<string>("TableName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("table_name");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TableId");
+                    b.HasIndex("TableId")
+                        .HasAnnotation("SqlServer:Clustered", false);
 
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("TableId"), false);
+                    b.HasIndex("TableName")
+                        .HasAnnotation("SqlServer:Clustered", false);
 
-                    b.HasIndex("TableName");
+                    b.HasIndex("UserId")
+                        .HasAnnotation("SqlServer:Clustered", false);
 
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("TableName"), false);
-
-                    b.HasIndex("UserId");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("UserId"), false);
-
-                    b.ToTable("ReviewAuditLogs");
+                    b.ToTable("audit_log", (string)null);
                 });
 
-            modelBuilder.Entity("Review.Domain.Entities.ReviewDetail", b =>
+            modelBuilder.Entity("Review.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime");
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("comment");
 
-                    b.Property<bool>("IsHelpful")
-                        .HasColumnType("bit")
-                        .HasColumnName("isHelpful");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("Message")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<int>("HelpfulCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("helpful_count");
 
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("ModeratedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("moderated_at");
+
+                    b.Property<string>("ModeratedByUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)")
+                        .HasColumnName("moderated_by_user_id");
+
+                    b.Property<string>("ModerationComment")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("moderation_comment");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("product_id");
 
-                    b.Property<int>("ReviewId")
-                        .HasColumnType("int");
+                    b.Property<int>("Rating")
+                        .HasColumnType("int")
+                        .HasColumnName("rating");
 
-                    b.Property<int?>("ReviewReportLookUpId")
-                        .HasColumnType("int");
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("title");
+
+                    b.Property<int>("UnhelpfulCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("unhelpful_count");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)")
+                        .HasColumnName("user_id");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id");
 
-                    b.HasKey("Id")
-                        .HasName("PK_ReviewDetails");
-
-                    b.HasIndex(new[] { "ReviewReportLookUpId" }, "IX_ReviewDetail_ReportTypeId");
-
-                    b.HasIndex(new[] { "ReviewId" }, "IX_ReviewDetail_ReviewId");
-
-                    b.ToTable("ReviewDetails");
+                    b.ToTable("reviews", (string)null);
                 });
 
-            modelBuilder.Entity("Review.Domain.Entities.ReviewReportLookup", b =>
+            modelBuilder.Entity("Review.Domain.Entities.ReviewFeedback", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsHelpful")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_helpful");
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("int")
+                        .HasColumnName("review_id");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_review_feedbacks_review_id_user_id");
+
+                    b.ToTable("review_feedbacks", (string)null);
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.ReviewMedia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("int")
+                        .HasColumnName("review_id");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("type");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId");
+
+                    b.ToTable("review_media", (string)null);
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.ReviewReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("reason");
+
+                    b.Property<DateTime>("ReportedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("reported_at");
+
+                    b.Property<string>("ReportedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("reported_by_user_id");
+
+                    b.Property<string>("ResolutionNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("resolution_note");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("resolved_at");
+
+                    b.Property<string>("ResolvedByUserId")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("resolved_by_user_id");
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("int")
+                        .HasColumnName("review_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId");
+
+                    b.ToTable("review_reports", (string)null);
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.ReviewReportReason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descriptions")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("display_order");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id")
-                        .HasName("PK_ReviewReportLookups");
-
-                    b.ToTable("ReviewReportLookup", (string)null);
-                });
-
-            modelBuilder.Entity("Review.Domain.Entities.Reviews", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<bool>("IsReviewed")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewReason")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ReviewedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("ReviewedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("ShortDescription")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("title");
 
-                    b.Property<int>("Star")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id")
-                        .HasName("PK_dbo.Reviews");
-
-                    b.ToTable("Reviews");
+                    b.ToTable("review_report_reasons", (string)null);
                 });
 
-            modelBuilder.Entity("Review.Domain.Entities.ReviewDetail", b =>
+            modelBuilder.Entity("Review.Domain.Entities.ReviewFeedback", b =>
                 {
-                    b.HasOne("Review.Domain.Entities.Reviews", "Review")
-                        .WithMany("ReviewDetails")
+                    b.HasOne("Review.Domain.Entities.Review", "Review")
+                        .WithMany("Feedbacks")
                         .HasForeignKey("ReviewId")
-                        .IsRequired()
-                        .HasConstraintName("FK_ReviewDetail_Reviews");
-
-                    b.HasOne("Review.Domain.Entities.ReviewReportLookup", "ReviewReportLookUp")
-                        .WithMany("ReviewDetails")
-                        .HasForeignKey("ReviewReportLookUpId")
-                        .HasConstraintName("FK_ReviewDetail_ReviewReportLookup");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Review");
-
-                    b.Navigation("ReviewReportLookUp");
                 });
 
-            modelBuilder.Entity("Review.Domain.Entities.ReviewReportLookup", b =>
+            modelBuilder.Entity("Review.Domain.Entities.ReviewMedia", b =>
                 {
-                    b.Navigation("ReviewDetails");
+                    b.HasOne("Review.Domain.Entities.Review", "Review")
+                        .WithMany("Medias")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_review_media_review_id");
+
+                    b.Navigation("Review");
                 });
 
-            modelBuilder.Entity("Review.Domain.Entities.Reviews", b =>
+            modelBuilder.Entity("Review.Domain.Entities.ReviewReport", b =>
                 {
-                    b.Navigation("ReviewDetails");
+                    b.HasOne("Review.Domain.Entities.Review", "Review")
+                        .WithMany("Reports")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_review_reports_review_id");
+
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.Review", b =>
+                {
+                    b.Navigation("Feedbacks");
+
+                    b.Navigation("Medias");
+
+                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }

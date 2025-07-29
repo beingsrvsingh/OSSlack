@@ -98,7 +98,7 @@ namespace Identity.Infrastructure.Services.Identity
         {
             try
             {
-                _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+                await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
                 await _unitOfWork.SaveChangesAsync();
 
                 _logger?.LogInformation("Refresh token saved for user {UserId}", refreshToken.UserId);

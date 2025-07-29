@@ -21,7 +21,7 @@ public class SecretsService : ISecretsService
 
     public async Task<Secret?> GetSecret(string appName, string environment, string key)
     {
-        return await _uow.SecretRepository.GetBy(s =>
+        return await _uow.SecretRepository.GetByAsync(s =>
              s.AppName == appName &&
              s.Environment == environment &&
              s.SecretKey == key &&
@@ -44,7 +44,7 @@ public class SecretsService : ISecretsService
         secret.Version = 1;
         secret.IsActive = true;
 
-        this._uow.SecretRepository.AddAsync(secret);
+        await this._uow.SecretRepository.AddAsync(secret);
         await this._uow.SecretRepository.SaveChangesAsync();
     }
 
@@ -53,7 +53,7 @@ public class SecretsService : ISecretsService
         Secret? existingSecret = null;
         try
         {
-            existingSecret = await this._uow.SecretRepository.GetBy(s =>
+            existingSecret = await this._uow.SecretRepository.GetByAsync(s =>
                 s.IsActive);
 
             if (existingSecret == null)
@@ -87,7 +87,7 @@ public class SecretsService : ISecretsService
 
     public async Task DeleteSecret(string key, string appName, string environment)
     {
-        Secret? existingSecret = await this._uow.SecretRepository.GetBy(s =>
+        Secret? existingSecret = await this._uow.SecretRepository.GetByAsync(s =>
             s.AppName == appName &&
             s.Environment == environment &&
             s.SecretKey == key &&
@@ -106,7 +106,7 @@ public class SecretsService : ISecretsService
     {
         try
         {
-            var secret = await _uow.SecretRepository.GetBy(s =>
+            var secret = await _uow.SecretRepository.GetByAsync(s =>
                 s.AppName == appName &&
                 s.Environment == environment &&
                 s.SecretKey == key &&

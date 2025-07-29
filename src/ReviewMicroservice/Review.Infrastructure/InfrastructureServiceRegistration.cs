@@ -5,14 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Review.Application;
 using Review.Application.Services;
-using Review.Domain.Core.UOW;
-using Review.Domain.Repository;
 using Review.Infrastructure.Persistence.Context;
-using Review.Infrastructure.Repositories;
 using Review.Infrastructure.Services;
 using Review.Infrastructure.Utils.Constants;
-using Shared.Infrastructure;
-using Shared.Infrastructure.Repositories;
 using Shared.Utilities;
 using System.Reflection;
 
@@ -23,21 +18,17 @@ namespace Review.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var config = Configuration.LoadAppSettings();
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("The connection string 'DefaultConnection' cannot be null or empty.");
+            }
 
             services.AddDbContext<ReviewDbContext>(options =>
-                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    options.UseMySql(connectionString,
+                    new MySqlServerVersion(new Version(8, 0, 28)),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
-
-            //DI
-            services.AddApplicationServices();
-
-            services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IReviewDetailService, ReviewDetailService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IReviewRepository, ReviewRepository>();
-            services.AddScoped<IReviewDetailRepository, ReviewDetailRepository>();
-            services.AddScoped<IReportLookUpRepository, ReportLookUpRepository>();
 
             services.AddHttpClient<IIdentityApiClient, IdentityApiClient>("IdentityAPIMicroservice", httpClient =>
             {
@@ -50,6 +41,8 @@ namespace Review.Infrastructure
 
             }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.RetryAsync(3)).
             AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(5, TimeSpan.FromSeconds(5)));
+
+            services.AddApplicationServices();
 
             return services;
         }

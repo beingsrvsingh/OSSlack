@@ -1,9 +1,6 @@
-﻿using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
+﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
 using System.Reflection;
 
 namespace Shared.BaseApi.Extensions;

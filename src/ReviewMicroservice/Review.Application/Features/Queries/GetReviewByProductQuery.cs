@@ -3,8 +3,11 @@ using Shared.Utilities.Response;
 
 namespace Review.Application.Features.Queries
 {
-    public record GetReviewByProductQuery : IRequest<Result>
+    public class GetReviewsByProductQuery : IRequest<Result>
     {
-        public required string ProductId { get; set; }
+        public required int ProductId { get; set; }
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
+
 }

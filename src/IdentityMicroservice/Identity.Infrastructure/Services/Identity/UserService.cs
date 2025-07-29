@@ -134,7 +134,7 @@ namespace Identity.Infrastructure.Services.Identity
             try
             {
                 var userAddress = request.Adapt<AspNetUserAddress>();
-                unitOfWork.AddressRepository.AddAsync(userAddress);
+                await unitOfWork.AddressRepository.AddAsync(userAddress);
                 await unitOfWork.SaveChangesAsync(true, request.UserId, DateTime.Now, userAddress.Id);
                 return true;
             }

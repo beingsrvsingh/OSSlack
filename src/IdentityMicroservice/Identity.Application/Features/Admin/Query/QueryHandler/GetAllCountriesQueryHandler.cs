@@ -24,7 +24,9 @@ namespace Identity.Application.Features.Admin.Query.QueryHandler
             pageSize: request.PageSize,
             cancellationToken: cancellationToken);
 
-            return new PaginatedResult<CountryResponse>(items, totalCount, request.PageNumber, request.PageSize);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)request.PageSize);
+
+            return new PaginatedResult<CountryResponse>(items, totalCount, request.PageNumber, request.PageSize, totalPages);
         }
     }
 
