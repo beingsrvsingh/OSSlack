@@ -10,5 +10,5 @@ public class IdentityInfrastructureModule : Module
         builder.RegisterAssemblyTypes(typeof(IdentityInfrastructureModule).Assembly)
                .AsImplementedInterfaces()
                .InstancePerLifetimeScope();
-        }
+    }
 }

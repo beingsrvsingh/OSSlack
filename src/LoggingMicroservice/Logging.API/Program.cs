@@ -1,14 +1,26 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
 using Logging.Infrastructure;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
-using Shared.Infrastructure.Platform;
+using Shared.Infrastructure;
+using Shared.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 //Authentication and authorization        
 builder.Services.AddJwtTokenAuthentication();
 builder.Services.AddInfrastructureServices();
+
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new InfrastructureModule());
+    containerBuilder.RegisterModule(new SharedInfrastructureModule());
+    containerBuilder.RegisterModule(new SharedUtilitiesModule());
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();

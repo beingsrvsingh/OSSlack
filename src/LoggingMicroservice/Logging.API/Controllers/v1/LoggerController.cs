@@ -1,27 +1,91 @@
 ﻿using BaseApi;
 using Logging.Application.Features.Command;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+using Logging.Application.Features.Query;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Utilities.Response;
 
 namespace Logging.Controllers.v1
 {
-    [Authorize]
     public class LoggerController : BaseController
     {
-        [HttpGet]
-        public IActionResult Get(ISender sender)
+        // ─────────────────────────────
+        //        WRITE OPERATIONS
+        // ─────────────────────────────
+
+        [HttpPost("android")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> LogAndroid([FromBody] LogAndroidCommand command)
         {
-            Mediator.Send(sender);
-            return Ok();
+            var result = await Mediator.Send(command);
+
+            return result.Succeeded
+                ? Ok(result)
+                : BadRequest(result);
         }
 
-        [Authorize(Roles = "Customer")]
-        [HttpPost("Log")]
-        public IActionResult Post(LogCommand command) 
+        [HttpPost("ios")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> LogIOS([FromBody] LogIOSCommand command)
         {
-            Mediator.Send(command);
-            return Ok();
+            var result = await Mediator.Send(command);
+
+            return result.Succeeded
+                ? Ok(result)
+                : BadRequest(result);
+        }
+
+        [HttpPost("web")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> LogWebService([FromBody] LogWebServiceCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            return result.Succeeded
+                ? Ok(result)
+                : BadRequest(result);
+        }
+
+        // ─────────────────────────────
+        //        READ OPERATIONS
+        // ─────────────────────────────
+
+        [HttpGet("android")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAndroidLogs([FromQuery] PaginatedQuery query)
+        {        
+            var result = await Mediator.Send(query);
+
+            return result.Succeeded
+                ? Ok(result)
+                : NotFound(result);
+        }
+
+        [HttpGet("ios")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetIOSLogs([FromQuery] PaginatedQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            return result.Succeeded
+                ? Ok(result)
+                : NotFound(result);
+        }
+
+        [HttpGet("web")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetWebServiceLogs([FromQuery] PaginatedQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            return result.Succeeded
+                ? Ok(result)
+                : NotFound(result);
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using Logging.Application;
-using Logging.Applicaton.Service;
-using Logging.Domain.Repositories;
-using Logging.Domain.Service;
-using Logging.Domain.UOW;
 using Logging.Infrastructure.Context;
-using Logging.Infrastructure.Persistence.Repository;
-using Logging.Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,16 +12,16 @@ namespace Logging.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var config = Configuration.LoadAppSettings();
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("The connection string 'DefaultConnection' cannot be null or empty.");
+            }
 
-            services.AddDbContext<LoggerContext>(options =>
-                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+            services.AddDbContext<LoggerDbContext>(options =>
+                    options.UseMySql(connectionString,
+                    new MySqlServerVersion(new Version(8, 0, 28)),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
-
-            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-            services.AddScoped<ILogService, LogService>();
-            services.AddScoped<IAppsLogService, AppsLogService>();
-            services.AddScoped<ILogRepository, LogRepository>();
-            services.AddScoped<IAppsLogRepository, AppsLogRepository>();
 
             services.AddApplicationServices();
 
@@ -38,9 +32,9 @@ namespace Logging.Infrastructure
         //https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli
         public static void MigrateDatabase(IServiceProvider serviceProvider)
         {
-            var dbContextOptions = serviceProvider.GetRequiredService<DbContextOptions<LoggerContext>>();
+            var dbContextOptions = serviceProvider.GetRequiredService<DbContextOptions<LoggerDbContext>>();
 
-            using (var dbContext = new LoggerContext(dbContextOptions))
+            using (var dbContext = new LoggerDbContext(dbContextOptions))
             {
                 dbContext.Database.Migrate();
             }

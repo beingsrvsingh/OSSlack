@@ -1,63 +1,62 @@
-﻿using Logging.Domain.Repositories;
+﻿using Logging.Domain.Entities;
+using Logging.Domain.Repositories;
 using Logging.Domain.UOW;
 using Logging.Infrastructure.Context;
 using Logging.Infrastructure.Persistence.Repository;
+using Mapster;
+using Shared.Domain.Entities;
+using Shared.Infrastructur.UoW;
 
 namespace Logging.Infrastructure.UOW
 {
-    public class UnitOfWork(LoggerContext context) : IUnitOfWork
+    public class UnitOfWork : BaseUnitOfWork<LoggerDbContext, AuditLog>, IUnitOfWork
     {
-        private readonly LoggerContext _dbContext = context;
-        private IAppsLogRepository? appsLogRepository;
-        private ILogRepository? logRepository;
+        public UnitOfWork(LoggerDbContext dbContext) : base(dbContext)
+        { }
 
-        public ILogRepository LogRepository
+        private IAndroidLogRepository? androidLogRepository;
+        private IIOSLogRepository? iOSLogRepository;
+        private IWebServiceLogRepository? webServiceLogRepository;
+
+        public IAndroidLogRepository AndroidLogRepository
         {
             get
             {
-                if (logRepository == null)
+                if (androidLogRepository == null)
                 {
-                    logRepository = new LogRepository(_dbContext);
+                    androidLogRepository = new AndroidLogRepository(_context);
                 }
-                return logRepository;
+                return androidLogRepository;
             }
         }
 
-        public IAppsLogRepository AppsLogRepository
+        public IIOSLogRepository IOSLogRepository
         {
             get
             {
-                if (appsLogRepository == null)
+                if (iOSLogRepository == null)
                 {
-                    appsLogRepository = new AppsLogRepository(_dbContext);
+                    iOSLogRepository = new IOSLogRepository(_context);
                 }
-                return appsLogRepository;
+                return iOSLogRepository;
             }
         }
 
-        public void Save()
+        public IWebServiceLogRepository WebServiceLogRepository
         {
-            _dbContext.SaveChanges();
-        }
-
-        private bool disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
+            get
             {
-                if (disposing)
+                if (webServiceLogRepository == null)
                 {
-                    _dbContext.Dispose();
+                    webServiceLogRepository = new WebServiceLogRepository(_context);
                 }
+                return webServiceLogRepository;
             }
-            disposed = true;
         }
 
-        public void Dispose()
+        protected override AuditLog ConvertAuditEntry(AuditEntry entry)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            return entry.ToAudit().Adapt<AuditLog>();
         }
     }
 }
