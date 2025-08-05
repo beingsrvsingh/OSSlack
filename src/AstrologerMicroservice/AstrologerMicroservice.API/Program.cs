@@ -1,15 +1,17 @@
+using System.Text.Json.Serialization;
+using AstrologerMicroservice.Application.Service;
+using AstrologerMicroservice.Infrastructure;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Catalog.Infrastructure;
-using Catalog.Infrastructure.Repositories;
 using JwtTokenAuthentication;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddOpenApi();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -22,13 +24,12 @@ builder.Services.AddInfrastructureServices();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    containerBuilder.RegisterModule(new InfrastructureModule());
     containerBuilder.RegisterModule(new SharedInfrastructureModule());
 });
 
 // Custom exception handler
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-
-builder.Services.AddScoped<ISampleMongoRepository, SampleMongoRepository>();
 
 //Cors
 builder.Services.AddCors(options =>
@@ -39,6 +40,11 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
+});
+
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 // Add services to the container.
@@ -79,6 +85,6 @@ try
 }
 catch (Exception ex)
 {
-    loggerService.LogError(ex, "An error occurred in Catalog-API-Program.");
+    loggerService.LogError(ex, "An error occurred in Astrologer-API-Program.");
     throw;
 }
