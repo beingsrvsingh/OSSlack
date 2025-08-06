@@ -35,7 +35,6 @@ namespace AstrologerMicroservice.Domain.Entities
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
         public virtual ICollection<ServicePackage> ServicePackages { get; set; } = new List<ServicePackage>();
-        public virtual ICollection<ProductItem> ProductItems { get; set; } = new List<ProductItem>();
     }
 
 }

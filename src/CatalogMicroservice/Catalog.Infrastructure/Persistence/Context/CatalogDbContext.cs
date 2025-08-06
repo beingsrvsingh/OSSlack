@@ -11,9 +11,19 @@ public partial class CatalogDbContext : DbContext
 
     public virtual DbSet<CategoryMaster> CategoryMasters => Set<CategoryMaster>();
 
-    public virtual DbSet<SubCategoryMaster> SubCategoryMasters => Set<SubCategoryMaster>();
+    // Category
+    public DbSet<CategoryMaster> Categories => Set<CategoryMaster>();
+    public DbSet<CategoryLocalizedText> CategoryLocalizedTexts => Set<CategoryLocalizedText>();
 
-    public virtual DbSet<ChildSubCategoryMaster> ChildSubCategoryMasters => Set<ChildSubCategoryMaster>();    
+    // SubCategory
+    public DbSet<SubCategoryMaster> SubCategories => Set<SubCategoryMaster>();
+    public DbSet<SubCategoryLocalizedText> SubCategoryLocalizedTexts => Set<SubCategoryLocalizedText>();
+
+    // Pooja Kits
+    public DbSet<PoojaKitMaster> PoojaKits => Set<PoojaKitMaster>();
+    public DbSet<PoojaKitItemMaster> PoojaKitItems => Set<PoojaKitItemMaster>();
+    public DbSet<PoojaKitLocalizedText> PoojaKitLocalizedTexts => Set<PoojaKitLocalizedText>();
+    public DbSet<PoojaKitItemLocalizedText> PoojaKitItemTags => Set<PoojaKitItemLocalizedText>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

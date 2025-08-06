@@ -1,18 +1,30 @@
-﻿namespace Catalog.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Catalog.Domain.Entities;
 
 public partial class SubCategoryMaster
 {
+    [Key]
     public int Id { get; set; }
 
-    public int CategoryId { get; set; }
+    [Required]
+    public int CategoryMasterId { get; set; }
 
+    [Required, MaxLength(100)]
     public string Name { get; set; } = null!;
 
-    public int DisplayOrder { get; set; }
+    public string? Description { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
-    public virtual CategoryMaster Category { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<ChildSubCategoryMaster> ChildSubCategoryMasters { get; set; } = new List<ChildSubCategoryMaster>();
+    [ForeignKey("CategoryMasterId")]
+    public virtual CategoryMaster CategoryMaster { get; set; } = null!;
+
+    public virtual ICollection<PoojaKitMaster> PoojaKits { get; set; } = new List<PoojaKitMaster>();
+    public ICollection<SubCategoryLocalizedText> Localizations { get; set; } = new List<SubCategoryLocalizedText>();
+
 }

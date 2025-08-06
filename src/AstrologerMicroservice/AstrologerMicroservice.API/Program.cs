@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using AstrologerMicroservice.Application.Service;
 using AstrologerMicroservice.Infrastructure;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;

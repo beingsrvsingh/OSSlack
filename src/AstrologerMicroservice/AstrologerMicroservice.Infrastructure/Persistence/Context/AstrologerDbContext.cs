@@ -13,7 +13,6 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Context
         public DbSet<Astrologer> Astrologers => Set<Astrologer>();
         public DbSet<ServicePackage> ServicePackages => Set<ServicePackage>();
         public DbSet<ServiceCategory> ServiceCategories => Set<ServiceCategory>();
-        public DbSet<ProductItem> ProductItems => Set<ProductItem>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
         public DbSet<Language> Languages => Set<Language>();
@@ -21,6 +20,8 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Context
 
         public DbSet<AstrologerLanguage> AstrologerLanguages => Set<AstrologerLanguage>();
         public DbSet<AstrologerExpertise> AstrologerExpertises => Set<AstrologerExpertise>();
+        public DbSet<ServiceTagPackage> ServiceTagPackages => Set<ServiceTagPackage>();
+        public DbSet<ServiceTagPackageMaster> TagMasters => Set<ServiceTagPackageMaster>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

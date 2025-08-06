@@ -1,25 +1,89 @@
+using System.Text.Json.Serialization;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using JwtTokenAuthentication;
+using Product.Infrastructure;
+using Shared.Application.Interfaces.Logging;
+using Shared.BaseApi.Extensions;
+using Shared.Infrastructure;
+using Shared.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//builder.Services.AddOpenApi();
 
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Services.AddHttpContextAccessor();
+
+//Authentication and authorization        
+builder.Services.AddJwtTokenAuthentication();
+//Services
+builder.Services.AddInfrastructureServices();
+
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new InfrastructureModule());
+    containerBuilder.RegisterModule(new SharedInfrastructureModule());
+});
+
+// Custom exception handler
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("EnableCORS", builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGenerate();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var loggerService = app.Services.GetRequiredService<ILoggerService<Program>>();
+
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseExceptionHandler(options => { });
+
+    app.MapControllers();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        InfrastructureServiceRegistration.MigrateDatabase(scope.ServiceProvider);
+    }
+
+    app.Run();
+
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    loggerService.LogError(ex, "An error occurred in PRODUCT-API-Program.");
+    throw;
+}
