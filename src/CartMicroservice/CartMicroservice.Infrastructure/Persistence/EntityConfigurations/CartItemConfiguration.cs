@@ -53,7 +53,7 @@ namespace CartMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("custom_options_json");
 
             builder.Property(ci => ci.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
             builder.Property(ci => ci.UpdatedAt)

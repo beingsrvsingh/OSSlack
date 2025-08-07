@@ -35,7 +35,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_active");
 
             builder.Property(pki => pki.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
             builder.Property(pki => pki.UpdatedAt)

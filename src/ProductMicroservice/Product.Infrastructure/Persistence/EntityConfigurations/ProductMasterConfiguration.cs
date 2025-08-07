@@ -49,7 +49,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_featured");
 
             builder.Property(p => p.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
             builder.Property(p => p.SubCategoryNameSnapshot)

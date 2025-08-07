@@ -9,8 +9,6 @@ public partial class CatalogDbContext : DbContext
     public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         : base(options) { }
 
-    public virtual DbSet<CategoryMaster> CategoryMasters => Set<CategoryMaster>();
-
     // Category
     public DbSet<CategoryMaster> Categories => Set<CategoryMaster>();
     public DbSet<CategoryLocalizedText> CategoryLocalizedTexts => Set<CategoryLocalizedText>();

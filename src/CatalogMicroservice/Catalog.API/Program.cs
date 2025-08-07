@@ -22,13 +22,12 @@ builder.Services.AddInfrastructureServices();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    containerBuilder.RegisterModule(new InfrastructureModule());
     containerBuilder.RegisterModule(new SharedInfrastructureModule());
 });
 
 // Custom exception handler
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-
-builder.Services.AddScoped<ISampleMongoRepository, SampleMongoRepository>();
 
 //Cors
 builder.Services.AddCors(options =>

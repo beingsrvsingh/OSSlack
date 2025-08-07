@@ -1,16 +1,10 @@
 ﻿using Catalog.Application;
-using Catalog.Application.Services;
-using Catalog.Domain.Core.Repository;
-using Catalog.Domain.Core.UOW;
 using Catalog.Infrastructure.Persistence.Context;
 using Catalog.Infrastructure.Repositories;
-using Catalog.Infrastructure.Repositories.UOW;
-using Catalog.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Model;
-using Shared.Infrastructure;
 using Shared.Utilities;
 using System.Reflection;
 
@@ -21,17 +15,19 @@ namespace Catalog.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var config = Configuration.LoadAppSettings();
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("The connection string 'DefaultConnection' cannot be null or empty.");
+            }
 
             services.AddDbContext<CatalogDbContext>(options =>
-                    options.UseSqlServer(config.GetConnectionString("DefaultConnection"),
+                    options.UseMySql(connectionString,
+                    new MySqlServerVersion(new Version(8, 0, 28)),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                     .MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)));
 
             services.AddApplicationServices();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ICatalogRepository, CatalogRepository>();
-            services.AddScoped<ICatalogService, CatalogService>();
 
             services.Configure<MongoDbAppSettings>(config.GetSection("MongoDb"));
             services.AddSingleton<SampleMongoRepository>();

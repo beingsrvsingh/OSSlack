@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalog.API.Controllers.v1
 {
     [AllowAnonymous]
-    public class CatalogController : BaseController
+    public class SampleMongoController : BaseController
     {
         private readonly ISampleMongoRepository sampleMongoRepository;
 
-        public CatalogController(ISampleMongoRepository sampleMongoRepository)
+        public SampleMongoController(ISampleMongoRepository sampleMongoRepository)
         {
             this.sampleMongoRepository = sampleMongoRepository;
         }

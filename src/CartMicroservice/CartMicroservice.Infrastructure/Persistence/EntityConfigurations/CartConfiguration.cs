@@ -30,7 +30,7 @@ namespace CartMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("surge_fee");
 
             builder.Property(c => c.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
             builder.Property(c => c.UpdatedAt)

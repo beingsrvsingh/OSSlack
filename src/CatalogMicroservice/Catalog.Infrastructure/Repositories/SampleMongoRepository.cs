@@ -1,6 +1,3 @@
-﻿using Catalog.Domain.Core.Repository;
-using Catalog.Domain.Entities;
-using Catalog.Infrastructure.Persistence.Context;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Entities;
 using Shared.Domain.Model;
@@ -9,16 +6,6 @@ using Shared.Infrastructure.Repositories;
 
 namespace Catalog.Infrastructure.Repositories
 {
-    public class CatalogRepository : Repository<CategoryMaster>, ICatalogRepository
-    {
-        private readonly CatalogDbContext dbContext;
-
-        public CatalogRepository(CatalogDbContext dbContext) : base(dbContext)
-        {
-            this.dbContext = dbContext;
-        }
-    }
-
     public interface ISampleMongoRepository : IMongoRepository<MongoModel> { }
 
     public class SampleMongoRepository : MongoRepository<MongoModel>, ISampleMongoRepository
@@ -31,5 +18,5 @@ namespace Catalog.Infrastructure.Repositories
     public class MongoModel : BaseMongoDocument
     {
         public string name { get; set; } = null!;
-    }    
+    }  
 }

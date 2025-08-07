@@ -16,19 +16,7 @@ namespace Catalog.Infrastructure.Repositories.UOW
         {
         }
 
-        private ICatalogRepository? catalogRepository;
-
-        public ICatalogRepository CatalogRepository
-        {
-            get
-            {
-                if (catalogRepository == null)
-                {
-                    catalogRepository = new CatalogRepository(_context);
-                }
-                return catalogRepository;
-            }
-        }
+        public ICategoryRepository CatalogRepository => throw new NotImplementedException();
 
         protected override AuditLog ConvertAuditEntry(AuditEntry entry)
         {

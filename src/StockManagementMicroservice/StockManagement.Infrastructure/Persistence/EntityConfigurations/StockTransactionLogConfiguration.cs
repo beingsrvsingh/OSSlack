@@ -31,7 +31,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(e => e.CreatedOn)
                    .HasColumnName("created_on")
-                   .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             // No navigation property for Stock to keep archival table lightweight
         }

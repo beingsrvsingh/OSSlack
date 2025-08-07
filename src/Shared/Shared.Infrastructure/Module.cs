@@ -1,9 +1,5 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Configuration;
-using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
-using Shared.Contracts.Interfaces;
-using Shared.Infrastructure.Http;
 using Shared.Infrastructure.Platform;
 using Shared.Infrastructure.Services;
 

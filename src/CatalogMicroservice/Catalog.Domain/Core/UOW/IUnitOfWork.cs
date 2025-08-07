@@ -5,6 +5,6 @@ namespace Catalog.Domain.Core.UOW
 {
     public interface IUnitOfWork : IBaseUnitOfWork, IDisposable
     {
-        ICatalogRepository CatalogRepository { get; }
+        ICategoryRepository CatalogRepository { get; }
     }
 }

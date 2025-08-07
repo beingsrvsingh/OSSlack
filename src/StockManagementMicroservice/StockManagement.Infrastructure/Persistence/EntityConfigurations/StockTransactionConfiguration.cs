@@ -32,7 +32,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(e => e.Timestamp)
                    .HasColumnName("timestamp")
-                   .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(e => e.Stock)
                    .WithMany()

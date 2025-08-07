@@ -21,7 +21,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("reserved_by");
             builder.Property(sr => sr.ReservedAt)
                 .HasColumnName("reserved_at")
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
             builder.Property(sr => sr.ExpiresAt).HasColumnName("expires_at");
 
             builder.HasOne(sr => sr.Stock)

@@ -29,7 +29,7 @@ public class SubCategoryMasterConfiguration : IEntityTypeConfiguration<SubCatego
             .HasColumnName("is_active");
 
         builder.Property(sc => sc.CreatedAt)
-            .HasDefaultValueSql("GETUTCDATE()")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
             .HasColumnName("created_at");
 
         builder.Property(sc => sc.UpdatedAt)

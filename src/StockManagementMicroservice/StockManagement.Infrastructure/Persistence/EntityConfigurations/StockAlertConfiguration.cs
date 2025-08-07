@@ -23,7 +23,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("status");
             builder.Property(sa => sa.CreatedAt)
                 .HasColumnName("created_at")
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(sa => sa.Stock)
                 .WithMany()

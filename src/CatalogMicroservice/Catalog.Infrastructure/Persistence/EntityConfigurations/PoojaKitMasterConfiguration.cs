@@ -31,7 +31,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_active");
 
             builder.Property(pk => pk.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
             builder.Property(pk => pk.UpdatedAt)
