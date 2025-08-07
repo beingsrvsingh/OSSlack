@@ -76,6 +76,13 @@ namespace Order.Domain.Entities
         [MaxLength(50)]
         public string? UpdatedBy { get; set; }
 
+        [MaxLength(50)]
+        public string? DeliveryPartnerUserId { get; set; } // ID of the assigned delivery person (could be user service reference)
+
+        [MaxLength(100)]
+        public string? DeliveryPartnerNameSnapshot { get; set; } // Optional, for snapshot/reporting purposes
+
+
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public virtual ICollection<OrderShippingAddress> ShippingAddresses { get; set; } = new List<OrderShippingAddress>();
     }

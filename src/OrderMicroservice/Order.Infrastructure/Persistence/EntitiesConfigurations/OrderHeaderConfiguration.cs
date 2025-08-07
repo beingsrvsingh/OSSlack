@@ -117,6 +117,14 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
             builder.Property(o => o.UpdatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");
+            
+            builder.Property(o => o.DeliveryPartnerUserId)
+                .HasMaxLength(50)
+                .HasColumnName("delivery_partner_user_id");
+
+            builder.Property(o => o.DeliveryPartnerNameSnapshot)
+                .HasMaxLength(50)
+                .HasColumnName("delivery_partner_name");
 
             // Relations
             builder.HasMany(o => o.OrderItems)
