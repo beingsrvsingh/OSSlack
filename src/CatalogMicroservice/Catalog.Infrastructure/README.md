@@ -10,3 +10,11 @@ EntityFrameworkCore\Update-database -context CatalogDbContext
 
 EntityFrameworkCore\Remove-Migration -context contextname
 
+
+find . -name "*.csproj";
+
+dotnet sln add ./src/CatalogMicroservice/*/*.csproj
+
+dotnet ef migrations add Initial-Create --output-dir Migrations --context CatalogDbContext --startup-project ../Catalog.API 
+
+dotnet ef database update --context CatalogDbContext --startup-project ../Catalog.API
