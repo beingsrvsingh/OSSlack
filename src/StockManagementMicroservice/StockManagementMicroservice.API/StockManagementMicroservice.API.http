@@ -1,0 +1,6 @@
+@StockManagementMicroservice.API_HostAddress = http://localhost:5166
+
+GET {{StockManagementMicroservice.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
