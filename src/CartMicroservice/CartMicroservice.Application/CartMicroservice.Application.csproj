@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="mapster" Version="7.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
+    <ProjectReference Include="..\CartMicroservice.Domain\CartMicroservice.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
