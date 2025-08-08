@@ -9,9 +9,11 @@
    <ItemGroup>
     <PackageReference Include="FluentValidation.Aspnetcore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="mapster" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
     <ProjectReference Include="..\Order.Domain\Order.Domain.csproj" />
   </ItemGroup>

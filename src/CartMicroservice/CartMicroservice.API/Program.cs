@@ -84,6 +84,6 @@ try
 }
 catch (Exception ex)
 {
-    loggerService.LogError(ex, "An error occurred in Astrologer-API-Program.");
+    loggerService.LogError(ex, "An error occurred in Cart-API-Program.");
     throw;
 }
