@@ -1,7 +1,7 @@
 find . -name "*.csproj";
 
-dotnet sln add ./src/AstrologerMicroservice/*/*.csproj
+dotnet sln add ./src/CartMicroservice/*/*.csproj
 
-dotnet ef migrations add Initial-Create --output-dir Migrations --context AstrologerDbContext --startup-project ../AstrologerMicroservice.API 
+dotnet ef migrations add Initial-Create --output-dir Migrations --context Cart --startup-project ../CartMicroservice.API 
 
-dotnet ef database update --context AstrologerDbContext --startup-project ../AstrologerMicroservice.API
+dotnet ef database update --context Cart --startup-project ../CartMicroservice.API

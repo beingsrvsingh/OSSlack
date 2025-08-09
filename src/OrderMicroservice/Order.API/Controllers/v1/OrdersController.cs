@@ -42,9 +42,9 @@ namespace Order.API.Controllers.v1
         [HttpGet("list-orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ListOrders([FromQuery] int? customerId = null)
+        public async Task<IActionResult> ListOrders([FromQuery] string? userId = null)
         {
-            var query = new ListOrdersQuery(customerId);
+            var query = new ListOrdersQuery(userId);
             var result = await Mediator.Send(query);
 
             if (!result.Succeeded)

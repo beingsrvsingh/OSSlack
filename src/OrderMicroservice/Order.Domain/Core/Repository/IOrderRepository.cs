@@ -9,7 +9,7 @@ namespace Order.Domain.Core.Repository
         Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId);
         Task<OrderShippingAddress?> GetShippingAddressAsync(int orderId);
         Task<IEnumerable<OrderItemCustomization>> GetCustomizationsByOrderItemIdAsync(int orderItemId);
-        Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(int userId);
+        Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId);
         Task AddOrderAsync(OrderHeader order);
     }
 }

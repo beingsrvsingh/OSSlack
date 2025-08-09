@@ -23,9 +23,9 @@ namespace Order.Application.Features.EventHandlers.Query
         {
             try
             {
-                var orders = request.CustomerId is null
+                var orders = request.userId is null
                     ? await _orderService.GetAllOrdersAsync()
-                    : await _orderService.GetOrdersByUserIdAsync((int)request.CustomerId);
+                    : await _orderService.GetOrdersByUserIdAsync(request.userId);
 
                 var orderDtos = orders.Adapt<IEnumerable<OrderDto>>();
                 return Result.Success(orderDtos);

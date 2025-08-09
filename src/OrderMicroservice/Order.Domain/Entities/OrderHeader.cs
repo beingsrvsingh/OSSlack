@@ -13,6 +13,9 @@ namespace Order.Domain.Entities
         public string OrderNumber { get; set; } = null!;  // Unique, human-friendly order reference
 
         [Required]
+        public required string UserId { get; set; }
+
+        [Required]
         public int CustomerId { get; set; }  // Reference to customer (could be user service)
 
         [Required]

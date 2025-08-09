@@ -96,11 +96,11 @@ namespace Order.Infrastructure.Services
             }
         }
 
-        public async Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(int customerId)
+        public async Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId)
         {
             try
             {
-                return await _orderRepository.GetOrdersByUserIdAsync(customerId);
+                return await _orderRepository.GetOrdersByUserIdAsync(userId);
             }
             catch (Exception ex)
             {

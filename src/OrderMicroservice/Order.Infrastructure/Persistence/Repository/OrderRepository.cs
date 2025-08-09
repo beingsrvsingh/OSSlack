@@ -50,12 +50,12 @@ namespace Order.Infrastructure.Persistence.Repository
             await _context.OrderHeaders.AddAsync(order);
         }
 
-        public async Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(int customerId)
+        public async Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId)
         {
             return await _context.Set<OrderHeader>()
                 .Include(o => o.OrderItems)
                 .Include(o => o.ShippingAddresses)
-                .Where(o => o.CustomerId == customerId)
+                .Where(o => o.UserId == userId)
                 .ToListAsync();
         }
     }

@@ -3,6 +3,6 @@ using Shared.Utilities.Response;
 
 namespace Order.Application.Features.Query
 {
-    public record ListOrdersQuery(int? CustomerId = null) : IRequest<Result>;
+    public record ListOrdersQuery(string? userId = null) : IRequest<Result>;
 
 }

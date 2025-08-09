@@ -11,6 +11,8 @@ namespace PaymentMicroservice.Domain.Entities
         [Required, MaxLength(50)]
         public string PaymentReference { get; set; } = null!; // Unique identifier for payment gateway
 
+        public required string UserId { get; set; }
+
         [Required]
         public int OrderId { get; set; } // Reference to order in Order MS
 

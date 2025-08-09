@@ -22,6 +22,10 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .IsRequired()
                 .HasColumnName("customer_id");
 
+            builder.Property(o => o.UserId)
+                .IsRequired()
+                .HasColumnName("user_id");
+
             builder.Property(o => o.Status)
                 .IsRequired()
                 .HasColumnName("status");

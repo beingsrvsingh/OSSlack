@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
+   <ItemGroup>
   <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
     <PackageReference Include="Autofac" Version="8.3.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.BaseApi\Shared.BaseApi.csproj" />
-    <ProjectReference Include="..\Payment.Infrastructure\Payment.Infrastructure.csproj" />
+    <ProjectReference Include="..\PaymentMicroservice.Infrastructure\PaymentMicroservice.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

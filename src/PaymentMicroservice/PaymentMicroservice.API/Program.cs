@@ -1,41 +1,89 @@
+using System.Text.Json.Serialization;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using JwtTokenAuthentication;
+using PaymentMicroservice.Infrastructure;
+using Shared.Application.Interfaces.Logging;
+using Shared.BaseApi.Extensions;
+using Shared.Infrastructure;
+using Shared.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Services.AddHttpContextAccessor();
+
+//Authentication and authorization        
+builder.Services.AddJwtTokenAuthentication();
+//Services
+builder.Services.AddInfrastructureServices();
+
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new InfrastructureModule());
+    containerBuilder.RegisterModule(new SharedInfrastructureModule());
+});
+
+// Custom exception handler
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("EnableCORS", builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGenerate();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var loggerService = app.Services.GetRequiredService<ILoggerService<Program>>();
+
+try
 {
-    app.MapOpenApi();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseExceptionHandler(options => { });
+
+    app.MapControllers();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        InfrastructureServiceRegistration.MigrateDatabase(scope.ServiceProvider);
+    }
+
+    app.Run();
+
 }
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
+catch (Exception ex)
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    loggerService.LogError(ex, "An error occurred in Order-API-Program.");
+    throw;
 }

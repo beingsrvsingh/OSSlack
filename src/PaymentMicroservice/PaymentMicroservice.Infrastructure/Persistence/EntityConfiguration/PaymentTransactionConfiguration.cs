@@ -17,6 +17,11 @@ namespace PaymentMicroservice.Infrastructure.Persistence.EntityConfiguration
                 .HasMaxLength(50)
                 .HasColumnName("payment_reference");
 
+            builder.Property(x => x.UserId)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("user_id");
+
             builder.Property(x => x.OrderId)
                 .IsRequired()
                 .HasColumnName("order_id");
