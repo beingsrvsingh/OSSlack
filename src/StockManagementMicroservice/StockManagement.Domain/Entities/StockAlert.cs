@@ -13,6 +13,8 @@ namespace StockManagement.Domain.Entities
 
         public int Threshold { get; set; }
 
+        public bool IsActive { get; set; }
+
         [MaxLength(100)]
         public string Status { get; set; } = "Pending"; // "Pending", "Resolved"
 

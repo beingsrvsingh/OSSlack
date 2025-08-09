@@ -14,7 +14,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
             builder.Property(e => e.Id)
                    .HasColumnName("id");
 
-            builder.Property(e => e.StockId)
+            builder.Property(e => e.StockTransactionLogId)
                    .IsRequired()
                    .HasColumnName("stock_id");
 

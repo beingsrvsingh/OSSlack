@@ -9,7 +9,7 @@ namespace StockManagement.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int StockId { get; set; }
+        public int StockTransactionLogId { get; set; }
 
         public int ChangeQuantity { get; set; }  // Positive or negative
 

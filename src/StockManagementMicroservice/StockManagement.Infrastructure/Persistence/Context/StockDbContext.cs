@@ -12,10 +12,14 @@ namespace StockManagement.Infrastructure.Persistence.Context
         }
 
         public DbSet<WarehouseMaster> Warehouses => Set<WarehouseMaster>();
+        public DbSet<WarehouseTransfer> WarehouseTransfers => Set<WarehouseTransfer>();
         public DbSet<StockMaster> Stocks => Set<StockMaster>();
+        public DbSet<StockTransaction> StockTransactions => Set<StockTransaction>();
         public DbSet<StockTransactionLog> StockTransactionLogs => Set<StockTransactionLog>();
         public DbSet<StockAlert> StockAlerts => Set<StockAlert>();
         public DbSet<StockReservation> StockReservations => Set<StockReservation>();
+        public DbSet<StockAdjustment> StockAdjustments => Set<StockAdjustment>();
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

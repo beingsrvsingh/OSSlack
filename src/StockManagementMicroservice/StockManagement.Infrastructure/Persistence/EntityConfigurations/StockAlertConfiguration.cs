@@ -16,6 +16,7 @@ namespace StockManagement.Infrastructure.Persistence.EntityConfigurations
             builder.Property(sa => sa.StockId).HasColumnName("stock_id");
             builder.Property(sa => sa.CurrentQuantity).HasColumnName("current_quantity");
             builder.Property(sa => sa.Threshold).HasColumnName("threshold");
+            builder.Property(sa => sa.IsActive).HasColumnName("is_active");
             builder.Property(sa => sa.Status)
                 .IsRequired()
                 .HasMaxLength(100)
