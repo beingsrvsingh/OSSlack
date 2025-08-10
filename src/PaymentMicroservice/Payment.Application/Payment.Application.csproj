@@ -15,7 +15,7 @@
 <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
-    <ProjectReference Include="..\PaymentMicroservice.Domain\PaymentMicroservice.Domain.csproj" />
+    <ProjectReference Include="..\Payment.Domain\Payment.Domain.csproj" />
 </ItemGroup>
 
 </Project>

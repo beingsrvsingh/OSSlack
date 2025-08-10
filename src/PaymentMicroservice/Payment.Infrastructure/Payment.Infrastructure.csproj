@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
-    <ProjectReference Include="..\PaymentMicroservice.Application\PaymentMicroservice.Application.csproj" />
+    <ProjectReference Include="..\Payment.Application\Payment.Application.csproj" />
   </ItemGroup>
 
 </Project>
