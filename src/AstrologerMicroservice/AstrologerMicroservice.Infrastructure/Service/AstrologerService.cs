@@ -20,7 +20,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Astrologer>?> GetAvailableAsync(DateTime date, string language, string expertise)
+        public async Task<IEnumerable<Astrologer>> GetAvailableAsync(DateTime date, string language, string expertise)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch available astrologers.");
-                return null; // Return null on error so handler can return failure Result
+                return Enumerable.Empty<Astrologer>(); // Return null on error so handler can return failure Result
             }
         }
 
