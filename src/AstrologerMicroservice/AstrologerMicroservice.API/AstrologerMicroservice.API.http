@@ -1,6 +1,0 @@
-@AstrologerMicroservice.API_HostAddress = http://localhost:5007
-
-GET {{AstrologerMicroservice.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

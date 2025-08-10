@@ -1,0 +1,6 @@
+@Astrologer.API_HostAddress = http://localhost:5007
+
+GET {{Astrologer.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

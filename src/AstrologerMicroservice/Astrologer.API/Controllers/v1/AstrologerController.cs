@@ -4,7 +4,7 @@ using AstrologerMicroservice.Domain.Entities.Enums;
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AstrologerMicroservice.API.Controllers.v1
+namespace Astrologer.API.Controllers.v1
 {
     public class AstrologerController : BaseController
     {

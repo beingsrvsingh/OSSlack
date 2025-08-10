@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.BaseApi\Shared.BaseApi.csproj" />
-    <ProjectReference Include="..\AstrologerMicroservice.Infrastructure\AstrologerMicroservice.Infrastructure.csproj" />
+    <ProjectReference Include="..\Astrologer.Infrastructure\Astrologer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

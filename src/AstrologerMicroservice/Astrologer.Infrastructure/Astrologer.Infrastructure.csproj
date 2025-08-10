@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.JwtTokenAuthentication\Shared.JwtTokenAuthentication.csproj" />
-    <ProjectReference Include="..\AstrologerMicroservice.Application\AstrologerMicroservice.Application.csproj" />
+    <ProjectReference Include="..\Astrologer.Application\Astrologer.Application.csproj" />
   </ItemGroup>
 
 </Project>
