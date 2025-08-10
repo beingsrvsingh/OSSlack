@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.BaseApi\Shared.BaseApi.csproj" />
-    <ProjectReference Include="..\CartMicroservice.Infrastructure\CartMicroservice.Infrastructure.csproj" />
+    <ProjectReference Include="..\Cart.Infrastructure\Cart.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
-    <ProjectReference Include="..\CartMicroservice.Domain\CartMicroservice.Domain.csproj" />
+    <ProjectReference Include="..\Cart.Domain\Cart.Domain.csproj" />
   </ItemGroup>
 
 </Project>

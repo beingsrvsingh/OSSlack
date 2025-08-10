@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.JwtTokenAuthentication\Shared.JwtTokenAuthentication.csproj" />
-    <ProjectReference Include="..\CartMicroservice.Application\CartMicroservice.Application.csproj" />
+    <ProjectReference Include="..\Cart.Application\Cart.Application.csproj" />
   </ItemGroup>
 
 </Project>
