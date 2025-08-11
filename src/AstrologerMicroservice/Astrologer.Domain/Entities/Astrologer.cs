@@ -13,6 +13,8 @@ namespace AstrologerMicroservice.Domain.Entities
         [Required, MaxLength(36)]
         public string UserId { get; set; } = null!;
 
+        public int? TempleId { get; set; }
+
         [MaxLength(200)]
         public string? DisplayName { get; set; }
 

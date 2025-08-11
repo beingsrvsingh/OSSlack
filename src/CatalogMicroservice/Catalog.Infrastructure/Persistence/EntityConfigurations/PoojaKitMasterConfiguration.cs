@@ -18,6 +18,10 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasColumnName("sub_category_master_id");
 
+            builder.Property(pk => pk.TempleId)
+                .IsRequired()
+                .HasColumnName("temple_id");
+
             builder.Property(pk => pk.Name)
                 .IsRequired()
                 .HasMaxLength(150)
@@ -51,6 +55,12 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                    .WithOne(l => l.PoojaKit)
                    .HasForeignKey(l => l.PoojaKitId)
                    .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.HasOne(pk => pk.PoojaMaster)
+                    .WithMany(p => p.PoojaKits)
+                    .HasForeignKey(pk => pk.PoojaMasterId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 

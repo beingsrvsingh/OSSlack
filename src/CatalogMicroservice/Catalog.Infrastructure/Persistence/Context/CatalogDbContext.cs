@@ -23,6 +23,10 @@ public partial class CatalogDbContext : DbContext
     public DbSet<PoojaKitLocalizedText> PoojaKitLocalizedTexts => Set<PoojaKitLocalizedText>();
     public DbSet<PoojaKitItemLocalizedText> PoojaKitItemTags => Set<PoojaKitItemLocalizedText>();
 
+    public DbSet<PoojaMaster> PoojaMasters => Set<PoojaMaster>();
+    public DbSet<PoojaLocalizedText> PoojaLocalizedTexts  => Set<PoojaLocalizedText>();
+    public DbSet<PoojaTag> PoojaTags  => Set<PoojaTag>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

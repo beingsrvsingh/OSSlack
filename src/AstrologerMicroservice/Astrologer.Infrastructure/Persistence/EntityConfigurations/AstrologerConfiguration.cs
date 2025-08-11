@@ -17,6 +17,9 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                             .IsRequired()
                             .HasMaxLength(36);
 
+                     builder.Property<int?>("temple_id").IsRequired(false);
+
+
                      builder.Property(a => a.DisplayName)
                             .HasMaxLength(200);
 

@@ -12,6 +12,11 @@ namespace Catalog.Domain.Entities
         [Required]
         public int SubCategoryMasterId { get; set; }
 
+        [Required]
+        public int PoojaMasterId { get; set; } 
+
+        public int? TempleId { get; set; }
+
         [Required, MaxLength(150)]
         public string Name { get; set; } = null!;
 
@@ -21,6 +26,8 @@ namespace Catalog.Domain.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        [ForeignKey("PoojaMasterId")]
+        public virtual PoojaMaster PoojaMaster { get; set; } = null!;
 
         [ForeignKey("SubCategoryMasterId")]
         public virtual SubCategoryMaster SubCategoryMaster { get; set; } = null!;

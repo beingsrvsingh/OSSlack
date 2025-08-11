@@ -1,0 +1,25 @@
+
+using System.ComponentModel.DataAnnotations;
+
+namespace Temple.Domain.Entities
+{
+    public partial class TemplePrasad
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public int TempleId { get; set; }
+
+        [Required]
+        public int PrasadMasterId { get; set; }  // FK to Catalog MS's PrasadMaster
+
+        public decimal Price { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+    }
+
+}

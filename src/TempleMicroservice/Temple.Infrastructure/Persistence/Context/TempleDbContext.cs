@@ -11,17 +11,13 @@ namespace Temple.Infrastructure.Persistence.Context
         { }
 
         public DbSet<TempleMaster> TempleMasters => Set<TempleMaster>();
-        public DbSet<ServicePackage> ServicePackages => Set<ServicePackage>();
-        public DbSet<ServiceCategory> ServiceCategories => Set<ServiceCategory>();
-        public DbSet<Schedule> Schedules => Set<Schedule>();
-        public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
-        public DbSet<Language> Languages => Set<Language>();
-        public DbSet<Expertise> Expertises => Set<Expertise>();
+        public DbSet<TempleSchedule> TempleSchedules => Set<TempleSchedule>();
+        public DbSet<TempleException> TempleExceptions => Set<TempleException>();
+        public DbSet<TemplePooja> TemplePoojas => Set<TemplePooja>();
+        public DbSet<TemplePrasad> Prasads => Set<TemplePrasad>();
+        public DbSet<TempleDonation> Donations => Set<TempleDonation>();
+        public DbSet<TempleAarti> Aartis => Set<TempleAarti>();
 
-        public DbSet<AstrologerLanguage> AstrologerLanguages => Set<AstrologerLanguage>();
-        public DbSet<TempleExpertise> TempleExpertises => Set<TempleExpertise>();
-        public DbSet<ServiceTagPackage> ServiceTagPackages => Set<ServiceTagPackage>();
-        public DbSet<ServiceTagPackageMaster> TagMasters => Set<ServiceTagPackageMaster>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

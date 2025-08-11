@@ -49,5 +49,10 @@ public class SubCategoryMasterConfiguration : IEntityTypeConfiguration<SubCatego
                .WithOne(l => l.SubCategory)
                .HasForeignKey(l => l.SubCategoryId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(s => s.PoojaMasters)
+                .WithOne(p => p.SubCategoryMaster)
+                .HasForeignKey(p => p.SubCategoryMasterId);
+
     }
 }

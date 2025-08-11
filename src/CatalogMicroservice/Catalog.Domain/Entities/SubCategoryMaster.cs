@@ -26,5 +26,7 @@ public partial class SubCategoryMaster
 
     public virtual ICollection<PoojaKitMaster> PoojaKits { get; set; } = new List<PoojaKitMaster>();
     public ICollection<SubCategoryLocalizedText> Localizations { get; set; } = new List<SubCategoryLocalizedText>();
+    public virtual ICollection<PoojaMaster> PoojaMasters { get; set; } = new List<PoojaMaster>();
+
 
 }
