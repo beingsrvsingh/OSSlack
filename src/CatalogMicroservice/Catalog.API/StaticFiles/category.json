@@ -1,0 +1,242 @@
+[
+  {
+    "Id": 1,
+    "Name": "Temple",
+    "Description": "Information and services related to temples",
+    "DisplayOrder": 1,
+    "ImageUrl": "https://example.com/images/categories/temple.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 1,
+        "CategoryId": 1,
+        "LanguageCode": "en",
+        "LocalizedName": "Temple",
+        "LocalizedDescription": "Information and services related to temples"
+      },
+      {
+        "Id": 2,
+        "CategoryId": 1,
+        "LanguageCode": "hi",
+        "LocalizedName": "मंदिर",
+        "LocalizedDescription": "मंदिरों से संबंधित जानकारी और सेवाएं"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Aarti",
+    "Description": "Sacred prayer rituals",
+    "DisplayOrder": 2,
+    "ImageUrl": "https://example.com/images/categories/aarti.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 3,
+        "CategoryId": 2,
+        "LanguageCode": "en",
+        "LocalizedName": "Aarti",
+        "LocalizedDescription": "Sacred prayer rituals"
+      },
+      {
+        "Id": 4,
+        "CategoryId": 2,
+        "LanguageCode": "hi",
+        "LocalizedName": "आरती",
+        "LocalizedDescription": "पवित्र प्रार्थना संस्कार"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "Name": "Pooja",
+    "Description": "Religious worship services and kits",
+    "DisplayOrder": 3,
+    "ImageUrl": "https://example.com/images/categories/pooja.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 5,
+        "CategoryId": 3,
+        "LanguageCode": "en",
+        "LocalizedName": "Pooja",
+        "LocalizedDescription": "Religious worship services and kits"
+      },
+      {
+        "Id": 6,
+        "CategoryId": 3,
+        "LanguageCode": "hi",
+        "LocalizedName": "पूजा",
+        "LocalizedDescription": "धार्मिक पूजा सेवाएं और किट"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "Name": "Consultations",
+    "Description": "Astrology and spiritual consultations",
+    "DisplayOrder": 4,
+    "ImageUrl": "https://example.com/images/categories/consultations.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 7,
+        "CategoryId": 4,
+        "LanguageCode": "en",
+        "LocalizedName": "Consultations",
+        "LocalizedDescription": "Astrology and spiritual consultations"
+      },
+      {
+        "Id": 8,
+        "CategoryId": 4,
+        "LanguageCode": "hi",
+        "LocalizedName": "परामर्श",
+        "LocalizedDescription": "ज्योतिष और आध्यात्मिक परामर्श"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "Name": "Kundli",
+    "Description": "Astrological birth charts and related services",
+    "DisplayOrder": 5,
+    "ImageUrl": "https://example.com/images/categories/kundli.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 9,
+        "CategoryId": 5,
+        "LanguageCode": "en",
+        "LocalizedName": "Kundli",
+        "LocalizedDescription": "Astrological birth charts and related services"
+      },
+      {
+        "Id": 10,
+        "CategoryId": 5,
+        "LanguageCode": "hi",
+        "LocalizedName": "कुंडली",
+        "LocalizedDescription": "जन्म कुंडली और संबंधित सेवाएं"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "Name": "Yantra",
+    "Description": "Mystical diagrams used for worship and meditation",
+    "DisplayOrder": 6,
+    "ImageUrl": "https://example.com/images/categories/yantra.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 11,
+        "CategoryId": 6,
+        "LanguageCode": "en",
+        "LocalizedName": "Yantra",
+        "LocalizedDescription": "Mystical diagrams used for worship and meditation"
+      },
+      {
+        "Id": 12,
+        "CategoryId": 6,
+        "LanguageCode": "hi",
+        "LocalizedName": "यंत्र",
+        "LocalizedDescription": "पूजा और ध्यान के लिए रहस्यमय आरेख"
+      }
+    ]
+  },
+  {
+    "Id": 7,
+    "Name": "Flowers",
+    "Description": "Fresh and sacred flowers for pooja and decoration",
+    "DisplayOrder": 7,
+    "ImageUrl": "https://example.com/images/categories/flowers.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 13,
+        "CategoryId": 7,
+        "LanguageCode": "en",
+        "LocalizedName": "Flowers",
+        "LocalizedDescription": "Fresh and sacred flowers for pooja and decoration"
+      },
+      {
+        "Id": 14,
+        "CategoryId": 7,
+        "LanguageCode": "hi",
+        "LocalizedName": "फूल",
+        "LocalizedDescription": "पूजा और सजावट के लिए ताज़े और पवित्र फूल"
+      }
+    ]
+  },
+  {
+    "Id": 8,
+    "Name": "Books",
+    "Description": "Religious and spiritual books",
+    "DisplayOrder": 8,
+    "ImageUrl": "https://example.com/images/categories/books.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 15,
+        "CategoryId": 8,
+        "LanguageCode": "en",
+        "LocalizedName": "Books",
+        "LocalizedDescription": "Religious and spiritual books"
+      },
+      {
+        "Id": 16,
+        "CategoryId": 8,
+        "LanguageCode": "hi",
+        "LocalizedName": "पुस्तकें",
+        "LocalizedDescription": "धार्मिक और आध्यात्मिक पुस्तकें"
+      }
+    ]
+  },
+  {
+    "Id": 9,
+    "Name": "Diyas",
+    "Description": "Traditional oil lamps used in festivals",
+    "DisplayOrder": 9,
+    "ImageUrl": "https://example.com/images/categories/diyas.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 17,
+        "CategoryId": 9,
+        "LanguageCode": "en",
+        "LocalizedName": "Diyas",
+        "LocalizedDescription": "Traditional oil lamps used in festivals"
+      },
+      {
+        "Id": 18,
+        "CategoryId": 9,
+        "LanguageCode": "hi",
+        "LocalizedName": "दिया",
+        "LocalizedDescription": "त्योहारों में उपयोग किए जाने वाले पारंपरिक तेल के दीये"
+      }
+    ]
+  },
+  {
+    "Id": 10,
+    "Name": "Sweets",
+    "Description": "Traditional and temple sweets offered during religious occasions",
+    "DisplayOrder": 10,
+    "ImageUrl": "https://example.com/images/categories/sweets.jpg",
+    "IsActive": true,
+    "Localizations": [
+      {
+        "Id": 19,
+        "CategoryId": 10,
+        "LanguageCode": "en",
+        "LocalizedName": "Sweets",
+        "LocalizedDescription": "Traditional and temple sweets offered during religious occasions"
+      },
+      {
+        "Id": 20,
+        "CategoryId": 10,
+        "LanguageCode": "hi",
+        "LocalizedName": "मिठाई",
+        "LocalizedDescription": "धार्मिक अवसरों पर प्रस्तुत पारंपरिक और मंदिर की मिठाइयाँ"
+      }
+    ]
+  }
+]

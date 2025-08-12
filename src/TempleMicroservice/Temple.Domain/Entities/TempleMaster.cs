@@ -28,5 +28,7 @@ namespace Temple.Domain.Entities
         public virtual ICollection<TempleAarti> Aartis { get; set; } = new List<TempleAarti>();
         public virtual ICollection<TempleSchedule> TempleSchedules { get; set; } = new List<TempleSchedule>();
         public virtual ICollection<TempleException> TempleExceptions { get; set; } = new List<TempleException>();
+        public ICollection<TempleLocalizedText> Localizations { get; set; } = new List<TempleLocalizedText>();
+
     }
 }

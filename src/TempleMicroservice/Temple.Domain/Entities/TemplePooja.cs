@@ -22,6 +22,8 @@ namespace Temple.Domain.Entities
 
         // Navigation property
         public virtual TempleMaster TempleMaster { get; set; } = null!;
+        public ICollection<TemplePoojaLocalizedText> Localizations { get; set; } = new List<TemplePoojaLocalizedText>();
+
     }
 
 }

@@ -1,0 +1,38 @@
+[
+  {
+    "Id": 1,
+    "SubCategoryMasterId": 5,
+    "Name": "Ganesh Pooja Kit - Basic",
+    "Description": "All essentials for Ganesh Chaturthi Pooja",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 2,
+    "SubCategoryMasterId": 1,
+    "Name": "Tirupati Prasad Kit",
+    "Description": "Includes laddu and prasad from Tirupati",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 3,
+    "SubCategoryMasterId": 6,
+    "Name": "Lakshmi Pooja Kit - Diwali",
+    "Description": "Items for Lakshmi Pooja during Diwali",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 4,
+    "SubCategoryMasterId": 1,
+    "Name": "Venkateswara Pooja Kit",
+    "Description": "Essential items for performing Shree Venkateswara Swamy Pooja at home",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  }
+]

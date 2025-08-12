@@ -1,0 +1,54 @@
+[
+  {
+    "Id": 101,
+    "TempleMasterId": 1,
+    "DayOfWeek": "Monday",
+    "OpeningTime": "06:00:00",
+    "ClosingTime": "21:00:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-10T08:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 201,
+        "TempleScheduleId": 101,
+        "LanguageCode": "en",
+        "LocalizedDayName": "Monday",
+        "Notes": "Regular timing"
+      },
+      {
+        "Id": 202,
+        "TempleScheduleId": 101,
+        "LanguageCode": "hi",
+        "LocalizedDayName": "सोमवार",
+        "Notes": "नियमित समय"
+      }
+    ]
+  },
+  {
+    "Id": 102,
+    "TempleMasterId": 1,
+    "DayOfWeek": "Tuesday",
+    "OpeningTime": "06:00:00",
+    "ClosingTime": "21:00:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-10T08:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 203,
+        "TempleScheduleId": 102,
+        "LanguageCode": "en",
+        "LocalizedDayName": "Tuesday",
+        "Notes": "Regular timing"
+      },
+      {
+        "Id": 204,
+        "TempleScheduleId": 102,
+        "LanguageCode": "hi",
+        "LocalizedDayName": "मंगलवार",
+        "Notes": "नियमित समय"
+      }
+    ]
+  }
+]

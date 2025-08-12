@@ -1,0 +1,106 @@
+[
+  {
+    "Id": 1,
+    "TempleId": 1,
+    "Name": "Morning Aarti",
+    "Description": "Daily morning aarti performed at 6 AM.",
+    "Time": "06:00:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 1,
+        "TempleAartiId": 1,
+        "LanguageCode": "en",
+        "LocalizedName": "Morning Aarti",
+        "LocalizedDescription": "Daily morning aarti performed at 6 AM."
+      },
+      {
+        "Id": 2,
+        "TempleAartiId": 1,
+        "LanguageCode": "hi",
+        "LocalizedName": "सुबह की आरती",
+        "LocalizedDescription": "प्रतिदिन सुबह 6 बजे की जाने वाली आरती।"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "TempleId": 1,
+    "Name": "Noon Aarti",
+    "Description": "Midday aarti for special blessings.",
+    "Time": "12:00:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 3,
+        "TempleAartiId": 2,
+        "LanguageCode": "en",
+        "LocalizedName": "Noon Aarti",
+        "LocalizedDescription": "Midday aarti for special blessings."
+      },
+      {
+        "Id": 4,
+        "TempleAartiId": 2,
+        "LanguageCode": "hi",
+        "LocalizedName": "दोपहर की आरती",
+        "LocalizedDescription": "विशेष आशीर्वाद के लिए दोपहर की आरती।"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "TempleId": 1,
+    "Name": "Evening Aarti",
+    "Description": "Aarti performed at sunset with lamps and chants.",
+    "Time": "18:30:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 5,
+        "TempleAartiId": 3,
+        "LanguageCode": "en",
+        "LocalizedName": "Evening Aarti",
+        "LocalizedDescription": "Aarti performed at sunset with lamps and chants."
+      },
+      {
+        "Id": 6,
+        "TempleAartiId": 3,
+        "LanguageCode": "hi",
+        "LocalizedName": "शाम की आरती",
+        "LocalizedDescription": "सूर्यास्त के समय दीपों और मंत्रों के साथ की जाने वाली आरती।"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "TempleId": 1,
+    "Name": "Shayan Aarti",
+    "Description": "Night aarti before the deity rests.",
+    "Time": "21:00:00",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 7,
+        "TempleAartiId": 4,
+        "LanguageCode": "en",
+        "LocalizedName": "Shayan Aarti",
+        "LocalizedDescription": "Night aarti before the deity rests."
+      },
+      {
+        "Id": 8,
+        "TempleAartiId": 4,
+        "LanguageCode": "hi",
+        "LocalizedName": "शयन आरती",
+        "LocalizedDescription": "देवता के विश्राम से पहले की जाने वाली रात्रि आरती।"
+      }
+    ]
+  }
+]

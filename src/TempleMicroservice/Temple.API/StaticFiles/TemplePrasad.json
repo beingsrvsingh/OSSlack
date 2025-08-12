@@ -1,0 +1,80 @@
+[
+  {
+    "Id": 101,
+    "TempleId": 1,
+    "Name": "Laddu",
+    "Description": "Sweet round laddus offered as prasad.",
+    "Price": 50.0,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 201,
+        "TemplePrasadId": 101,
+        "LanguageCode": "en",
+        "LocalizedName": "Laddu",
+        "LocalizedDescription": "Sweet round laddus offered as prasad."
+      },
+      {
+        "Id": 202,
+        "TemplePrasadId": 101,
+        "LanguageCode": "hi",
+        "LocalizedName": "लड्डू",
+        "LocalizedDescription": "मिठाई गोल लड्डू जो प्रसाद के रूप में दी जाती है।"
+      }
+    ]
+  },
+  {
+    "Id": 102,
+    "TempleId": 1,
+    "Name": "Modak",
+    "Description": "Sweet dumplings offered especially during Ganesh Chaturthi.",
+    "Price": 70.0,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 203,
+        "TemplePrasadId": 102,
+        "LanguageCode": "en",
+        "LocalizedName": "Modak",
+        "LocalizedDescription": "Sweet dumplings offered especially during Ganesh Chaturthi."
+      },
+      {
+        "Id": 204,
+        "TemplePrasadId": 102,
+        "LanguageCode": "hi",
+        "LocalizedName": "मोदक",
+        "LocalizedDescription": "विशेष रूप से गणेश चतुर्थी के दौरान दी जाने वाली मिठाई।"
+      }
+    ]
+  },
+  {
+    "Id": 103,
+    "TempleId": 1,
+    "Name": "Kheer",
+    "Description": "Traditional rice pudding served as prasad.",
+    "Price": 60.0,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 205,
+        "TemplePrasadId": 103,
+        "LanguageCode": "en",
+        "LocalizedName": "Kheer",
+        "LocalizedDescription": "Traditional rice pudding served as prasad."
+      },
+      {
+        "Id": 206,
+        "TemplePrasadId": 103,
+        "LanguageCode": "hi",
+        "LocalizedName": "खीर",
+        "LocalizedDescription": "पारंपरिक चावल की खीर जो प्रसाद के रूप में परोसी जाती है।"
+      }
+    ]
+  }
+]

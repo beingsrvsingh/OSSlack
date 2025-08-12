@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "TempleId": 1,
+    "PoojaMasterId": 301,
+    "Price": 1500.00,
+    "IsActive": true,
+    "CreatedAt": "2025-08-01T09:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 1,
+        "TemplePoojaId": 1,
+        "LanguageCode": "en",
+        "LocalizedName": "Ganesh Chaturthi Pooja",
+        "LocalizedDescription": "Special pooja during Ganesh Chaturthi festival"
+      },
+      {
+        "Id": 2,
+        "TemplePoojaId": 1,
+        "LanguageCode": "hi",
+        "LocalizedName": "गणेश चतुर्थी पूजा",
+        "LocalizedDescription": "गणेश चतुर्थी त्योहार के दौरान विशेष पूजा"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "TempleId": 1,
+    "PoojaMasterId": 302,
+    "Price": 1200.00,
+    "IsActive": true,
+    "CreatedAt": "2025-08-01T09:30:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 3,
+        "TemplePoojaId": 2,
+        "LanguageCode": "en",
+        "LocalizedName": "Lakshmi Pooja",
+        "LocalizedDescription": "Pooja dedicated to Goddess Lakshmi"
+      },
+      {
+        "Id": 4,
+        "TemplePoojaId": 2,
+        "LanguageCode": "hi",
+        "LocalizedName": "लक्ष्मी पूजा",
+        "LocalizedDescription": "देवी लक्ष्मी को समर्पित पूजा"
+      }
+    ]
+  }
+]

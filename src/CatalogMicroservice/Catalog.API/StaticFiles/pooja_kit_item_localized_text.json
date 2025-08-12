@@ -1,0 +1,128 @@
+[
+  {
+    "Id": 1,
+    "PoojaKitItemId": 1,
+    "LanguageCode": "en",
+    "LocalizedName": "Ganesh Idol",
+    "LocalizedDescription": "Eco-friendly clay Ganesh idol."
+  },
+  {
+    "Id": 2,
+    "PoojaKitItemId": 1,
+    "LanguageCode": "hi",
+    "LocalizedName": "गणेश मूर्ति",
+    "LocalizedDescription": "इको-फ्रेंडली मिट्टी की गणेश मूर्ति।"
+  },
+  {
+    "Id": 3,
+    "PoojaKitItemId": 2,
+    "LanguageCode": "en",
+    "LocalizedName": "Modak",
+    "LocalizedDescription": "Sweet dumplings for Ganesh offering."
+  },
+  {
+    "Id": 4,
+    "PoojaKitItemId": 2,
+    "LanguageCode": "hi",
+    "LocalizedName": "मोदक",
+    "LocalizedDescription": "गणेश को अर्पित करने के लिए मीठे पकवान।"
+  },
+  {
+    "Id": 5,
+    "PoojaKitItemId": 3,
+    "LanguageCode": "en",
+    "LocalizedName": "Kumkum",
+    "LocalizedDescription": "Red turmeric powder used in tilak."
+  },
+  {
+    "Id": 6,
+    "PoojaKitItemId": 3,
+    "LanguageCode": "hi",
+    "LocalizedName": "कुमकुम",
+    "LocalizedDescription": "तिलक के लिए प्रयोग किया जाने वाला लाल हल्दी पाउडर।"
+  },
+  {
+    "Id": 7,
+    "PoojaKitItemId": 4,
+    "LanguageCode": "en",
+    "LocalizedName": "Tirupati Laddu",
+    "LocalizedDescription": "Traditional sweet offered at Tirupati Temple."
+  },
+  {
+    "Id": 8,
+    "PoojaKitItemId": 4,
+    "LanguageCode": "hi",
+    "LocalizedName": "तिरुपति लड्डू",
+    "LocalizedDescription": "तिरुपति मंदिर में अर्पित पारंपरिक मिठाई।"
+  },
+  {
+    "Id": 9,
+    "PoojaKitItemId": 5,
+    "LanguageCode": "en",
+    "LocalizedName": "Diya",
+    "LocalizedDescription": "Clay lamp for Lakshmi Pooja."
+  },
+  {
+    "Id": 10,
+    "PoojaKitItemId": 5,
+    "LanguageCode": "hi",
+    "LocalizedName": "दीया",
+    "LocalizedDescription": "लक्ष्मी पूजा के लिए मिट्टी का दीया।"
+  },
+  {
+    "Id": 11,
+    "PoojaKitItemId": 6,
+    "LanguageCode": "en",
+    "LocalizedName": "Lakshmi Coin",
+    "LocalizedDescription": "Silver coin used in Lakshmi Pooja."
+  },
+  {
+    "Id": 12,
+    "PoojaKitItemId": 6,
+    "LanguageCode": "hi",
+    "LocalizedName": "लक्ष्मी सिक्का",
+    "LocalizedDescription": "लक्ष्मी पूजा में उपयोग किया जाने वाला चांदी का सिक्का।"
+  },
+  {
+    "Id": 13,
+    "PoojaKitItemId": 7,
+    "LanguageCode": "en",
+    "LocalizedName": "Venkateswara Idol",
+    "LocalizedDescription": "Brass idol of Lord Venkateswara."
+  },
+  {
+    "Id": 14,
+    "PoojaKitItemId": 7,
+    "LanguageCode": "hi",
+    "LocalizedName": "वेंकटेश्वर मूर्ति",
+    "LocalizedDescription": "भगवान वेंकटेश्वर की पीतल की मूर्ति।"
+  },
+  {
+    "Id": 15,
+    "PoojaKitItemId": 8,
+    "LanguageCode": "en",
+    "LocalizedName": "Incense Sticks",
+    "LocalizedDescription": "Used during Aarti for divine fragrance."
+  },
+  {
+    "Id": 16,
+    "PoojaKitItemId": 8,
+    "LanguageCode": "hi",
+    "LocalizedName": "अगरबत्ती",
+    "LocalizedDescription": "आरती के दौरान उपयोग की जाने वाली सुगंधित अगरबत्ती।"
+  },
+  {
+    "Id": 17,
+    "PoojaKitItemId": 9,
+    "LanguageCode": "en",
+    "LocalizedName": "Kumkum",
+    "LocalizedDescription": "Used in daily rituals and Pooja."
+  },
+  {
+    "Id": 18,
+    "PoojaKitItemId": 9,
+    "LanguageCode": "hi",
+    "LocalizedName": "कुमकुम",
+    "LocalizedDescription": "रोजाना की पूजा में प्रयोग किया जाने वाला कुमकुम।"
+  }
+]

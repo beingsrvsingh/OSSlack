@@ -1,0 +1,77 @@
+[
+  {
+    "Id": 1,
+    "Name": "Shri Venkateswara Temple",
+    "Description": "One of the richest and most visited temples in India.",
+    "ImageUrl": "https://example.com/images/temples/venkateswara.jpg",
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 1,
+        "TempleMasterId": 1,
+        "LanguageCode": "en",
+        "LocalizedName": "Shri Venkateswara Temple",
+        "LocalizedDescription": "One of the richest and most visited temples in India."
+      },
+      {
+        "Id": 2,
+        "TempleMasterId": 1,
+        "LanguageCode": "hi",
+        "LocalizedName": "श्री वेंकटेश्वर मंदिर",
+        "LocalizedDescription": "भारत के सबसे अमीर और सबसे अधिक देखे जाने वाले मंदिरों में से एक।"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Kashi Vishwanath Temple",
+    "Description": "One of the holiest temples dedicated to Lord Shiva located in Varanasi.",
+    "ImageUrl": "https://example.com/images/temples/kashi_vishwanath.jpg",
+    "IsActive": true,
+    "CreatedAt": "2025-07-01T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 3,
+        "TempleMasterId": 2,
+        "LanguageCode": "en",
+        "LocalizedName": "Kashi Vishwanath Temple",
+        "LocalizedDescription": "One of the holiest temples dedicated to Lord Shiva located in Varanasi."
+      },
+      {
+        "Id": 4,
+        "TempleMasterId": 2,
+        "LanguageCode": "hi",
+        "LocalizedName": "काशी विश्वनाथ मंदिर",
+        "LocalizedDescription": "वाराणसी में स्थित भगवान शिव को समर्पित सबसे पवित्र मंदिरों में से एक।"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "Name": "Jagannath Temple",
+    "Description": "Famous temple in Puri known for its annual Rath Yatra festival.",
+    "ImageUrl": "https://example.com/images/temples/jagannath.jpg",
+    "IsActive": true,
+    "CreatedAt": "2025-06-15T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 5,
+        "TempleMasterId": 3,
+        "LanguageCode": "en",
+        "LocalizedName": "Jagannath Temple",
+        "LocalizedDescription": "Famous temple in Puri known for its annual Rath Yatra festival."
+      },
+      {
+        "Id": 6,
+        "TempleMasterId": 3,
+        "LanguageCode": "hi",
+        "LocalizedName": "जगन्नाथ मंदिर",
+        "LocalizedDescription": "पुरी में प्रसिद्ध मंदिर जो वार्षिक रथ यात्रा उत्सव के लिए जाना जाता है।"
+      }
+    ]
+  }
+]

@@ -20,6 +20,8 @@ namespace Temple.Domain.Entities
         public string? Message { get; set; }
 
         public DateTime DonationDate { get; set; } = DateTime.UtcNow;
+        public ICollection<TempleDonationLocalizedText> Localizations { get; set; } = new List<TempleDonationLocalizedText>();
+
     }
 
 }

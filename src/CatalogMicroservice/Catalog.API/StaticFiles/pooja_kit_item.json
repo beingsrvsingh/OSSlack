@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 1,
+    "PoojaKitMasterId": 1,
+    "ItemName": "Ganesh Idol",
+    "Description": "Eco-friendly clay Ganesh idol",
+    "Quantity": 1,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 2,
+    "PoojaKitMasterId": 1,
+    "ItemName": "Modak",
+    "Description": "Sweet dumplings for offering",
+    "Quantity": 5,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 3,
+    "PoojaKitMasterId": 1,
+    "ItemName": "Kumkum",
+    "Description": "Red turmeric powder for tilak",
+    "Quantity": 1,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 4,
+    "PoojaKitMasterId": 2,
+    "ItemName": "Tirupati Laddu",
+    "Description": "Traditional sweet from Tirupati",
+    "Quantity": 2,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 5,
+    "PoojaKitMasterId": 3,
+    "ItemName": "Diya",
+    "Description": "Clay lamp for Lakshmi Aarti",
+    "Quantity": 2,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 6,
+    "PoojaKitMasterId": 3,
+    "ItemName": "Lakshmi Coin",
+    "Description": "Silver-plated coin of Goddess Lakshmi",
+    "Quantity": 1,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 7,
+    "PoojaKitMasterId": 4,
+    "ItemName": "Venkateswara Idol",
+    "Description": "Small brass idol of Lord Venkateswara",
+    "Quantity": 1,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 8,
+    "PoojaKitMasterId": 4,
+    "ItemName": "Incense Sticks",
+    "Description": "Aromatic sticks for Aarti",
+    "Quantity": 20,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  },
+  {
+    "Id": 9,
+    "PoojaKitMasterId": 4,
+    "ItemName": "Kumkum",
+    "Description": "Red turmeric powder used in rituals",
+    "Quantity": 1,
+    "IsActive": true,
+    "CreatedAt": "2025-08-11T00:00:00Z",
+    "UpdatedAt": null
+  }
+]

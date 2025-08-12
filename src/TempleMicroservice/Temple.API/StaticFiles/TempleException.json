@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 301,
+    "TempleMasterId": 1,
+    "Date": "2025-10-02",
+    "IsClosed": true,
+    "OpeningTime": null,
+    "ClosingTime": null,
+    "Reason": "Holiday for festival",
+    "CreatedAt": "2025-08-01T10:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 401,
+        "TempleExceptionId": 301,
+        "LanguageCode": "en",
+        "LocalizedReason": "Holiday for Gandhi Jayanti"
+      },
+      {
+        "Id": 402,
+        "TempleExceptionId": 301,
+        "LanguageCode": "hi",
+        "LocalizedReason": "गांधी जयंती के लिए छुट्टी"
+      }
+    ]
+  },
+  {
+    "Id": 302,
+    "TempleMasterId": 1,
+    "Date": "2025-12-25",
+    "IsClosed": false,
+    "OpeningTime": "08:00:00",
+    "ClosingTime": "17:00:00",
+    "Reason": "Shortened hours due to maintenance",
+    "CreatedAt": "2025-08-01T10:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": [
+      {
+        "Id": 403,
+        "TempleExceptionId": 302,
+        "LanguageCode": "en",
+        "LocalizedReason": "Maintenance work - short hours"
+      },
+      {
+        "Id": 404,
+        "TempleExceptionId": 302,
+        "LanguageCode": "hi",
+        "LocalizedReason": "रखरखाव कार्य - कम समय"
+      }
+    ]
+  }
+]
