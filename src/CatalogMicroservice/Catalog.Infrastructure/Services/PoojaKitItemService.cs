@@ -7,11 +7,11 @@ namespace Catalog.Infrastructure.Services
 {
     public class PoojaKitItemService : IPoojaKitItemService
     {
-        private readonly IPoojaKitItemMasterRepository _itemRepository;
+        private readonly IPoojaKitItemRepository _itemRepository;
         private readonly ILoggerService<PoojaKitItemService> _logger;
 
         public PoojaKitItemService(
-            IPoojaKitItemMasterRepository itemRepository,
+            IPoojaKitItemRepository itemRepository,
             ILoggerService<PoojaKitItemService> logger)
         {
             _itemRepository = itemRepository;

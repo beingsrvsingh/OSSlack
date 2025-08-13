@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AstrologerMicroservice.Domain.Entities.Enums;
+using Priest.Domain.Entities.Enums;
 
-namespace AstrologerMicroservice.Domain.Entities
-{    
-    public partial class Astrologer
+namespace Priest.Domain.Entities
+{
+    public partial class PriestMaster
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -29,12 +29,13 @@ namespace AstrologerMicroservice.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
-        public ConsultationMode ConsultationModes { get; set; } = ConsultationMode.None;
-        public virtual ICollection<AstrologerLanguage> AstrologerLanguages { get; set; } = new List<AstrologerLanguage>();
-        public virtual ICollection<AstrologerExpertise> AstrologerExpertises { get; set; } = new List<AstrologerExpertise>();
+        public virtual ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
+
+        public virtual ICollection<PriestExpertise> PriestExpertise { get; set; } = new List<PriestExpertise>();
+        public virtual ICollection<PriestLanguage> PriestLanguages { get; set; } = new List<PriestLanguage>();
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
-        public virtual ICollection<ServicePackage> ServicePackages { get; set; } = new List<ServicePackage>();
+        public virtual ICollection<ServicePackage> RitualServicePackages { get; set; } = new List<ServicePackage>();
     }
 
 }

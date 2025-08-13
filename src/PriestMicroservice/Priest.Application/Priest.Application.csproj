@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Utilities\Shared.Utilities.csproj" />
-    <ProjectReference Include="..\Temple.Domain\Temple.Domain.csproj" />
+    <ProjectReference Include="..\Priest.Domain\Priest.Domain.csproj" />
   </ItemGroup>
 
 </Project>

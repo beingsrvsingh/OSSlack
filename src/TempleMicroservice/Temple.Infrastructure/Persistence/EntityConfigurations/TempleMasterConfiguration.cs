@@ -12,6 +12,11 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
 
             builder.HasKey(t => t.Id);
 
+            builder.Property(t => t.LocationId)
+                .IsRequired()
+                .HasColumnName("location_id")
+                .HasMaxLength(100);
+
             builder.Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(200);

@@ -1,0 +1,154 @@
+[
+  {
+    "Id": 1,
+    "Name": "Sandalwood Incense Sticks",
+    "Description": "Premium hand-rolled sandalwood agarbatti for pooja rituals.",
+    "Price": 49.99,
+    "ImageUrl": "https://example.com/products/incense_sticks_sandalwood.jpg",
+    "SKU": "INC-SND-001",
+    "ProductType": "Product",
+    "IsNew": true,
+    "IsFeatured": true,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 400,
+    "SubCategoryNameSnapshot": "Incense Sticks",
+    "CategoryNameSnapshot": "Pooja Essentials",
+    "RegionPriceMaster": [
+      {
+        "Region": "IN",
+        "Price": 49.99,
+        "Currency": "INR"
+      },
+      {
+        "Region": "US",
+        "Price": 0.79,
+        "Currency": "USD"
+      }
+    ],
+    "VariantMasters": [
+      {
+        "VariantId": 1,
+        "VariantName": "Pack of 10",
+        "PriceAdjustment": 0
+      },
+      {
+        "VariantId": 2,
+        "VariantName": "Pack of 20",
+        "PriceAdjustment": 20
+      }
+    ],
+    "ProductAttributeMasters": [
+      {
+        "AttributeName": "Fragrance",
+        "AttributeValue": "Sandalwood"
+      },
+      {
+        "AttributeName": "Material",
+        "AttributeValue": "Herbal"
+      }
+    ],
+    "LocalizationMasters": [
+      {
+        "Language": "en",
+        "LocalizedName": "Sandalwood Incense",
+        "LocalizedDescription": "Premium incense for rituals."
+      },
+      {
+        "Language": "hi",
+        "LocalizedName": "चंदन अगरबत्ती",
+        "LocalizedDescription": "पूजा के लिए उच्च गुणवत्ता की अगरबत्ती।"
+      }
+    ],
+    "ProductTagMasters": [
+      {
+        "Tag": "Incense"
+      },
+      {
+        "Tag": "Sandalwood"
+      },
+      {
+        "Tag": "Pooja Item"
+      }
+    ],
+    "SEOInfoMaster": {
+      "MetaTitle": "Buy Sandalwood Incense Sticks Online - Premium Quality",
+      "MetaDescription": "Shop high-quality sandalwood incense sticks for spiritual rituals. Fast delivery and best prices.",
+      "Slug": "sandalwood-incense-sticks"
+    }
+  },
+  {
+    "Id": 2,
+    "Name": "Brass Oil Diya",
+    "Description": "Traditional brass diya for lighting during rituals.",
+    "Price": 129.0,
+    "ImageUrl": "https://example.com/products/brass_diya.jpg",
+    "SKU": "DIY-BRS-002",
+    "ProductType": "Product",
+    "IsNew": false,
+    "IsFeatured": true,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 401,
+    "SubCategoryNameSnapshot": "Diyas & Lamps",
+    "CategoryNameSnapshot": "Pooja Essentials"
+  },
+  {
+    "Id": 3,
+    "Name": "Ganesh Idol - Marble Finish",
+    "Description": "Decorative Ganesh idol for home and temple use.",
+    "Price": 599.99,
+    "ImageUrl": "https://example.com/products/ganesh_idol.jpg",
+    "SKU": "IDL-GAN-003",
+    "ProductType": "Product",
+    "IsNew": true,
+    "IsFeatured": false,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 700,
+    "SubCategoryNameSnapshot": "Idols",
+    "CategoryNameSnapshot": "Idols & Statues"
+  },
+  {
+    "Id": 4,
+    "Name": "Kumkum Packet",
+    "Description": "Holy red kumkum powder used in daily pooja.",
+    "Price": 15.0,
+    "ImageUrl": "https://example.com/products/kumkum_packet.jpg",
+    "SKU": "KUM-RED-004",
+    "ProductType": "Product",
+    "IsNew": false,
+    "IsFeatured": false,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 403,
+    "SubCategoryNameSnapshot": "Kumkum, Haldi, Chandan",
+    "CategoryNameSnapshot": "Pooja Essentials"
+  },
+  {
+    "Id": 5,
+    "Name": "Spiritual Book - Bhagavad Gita",
+    "Description": "Translated and interpreted version of the Gita.",
+    "Price": 199.0,
+    "ImageUrl": "https://example.com/products/bhagavad_gita.jpg",
+    "SKU": "BK-GITA-005",
+    "ProductType": "Book",
+    "IsNew": true,
+    "IsFeatured": true,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 600,
+    "SubCategoryNameSnapshot": "Spiritual Books",
+    "CategoryNameSnapshot": "Books & Scriptures"
+  },
+  {
+    "Id": 6,
+    "Name": "Decorative Bell",
+    "Description": "Brass hanging bell with a rich spiritual tone.",
+    "Price": 350.0,
+    "ImageUrl": "https://example.com/products/brass_bell.jpg",
+    "SKU": "DEC-BELL-006",
+    "ProductType": "Product",
+    "IsNew": false,
+    "IsFeatured": false,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "SubCategoryId": 701,
+    "SubCategoryNameSnapshot": "Decorative Items",
+    "CategoryNameSnapshot": "Idols & Statues"
+  }
+]
