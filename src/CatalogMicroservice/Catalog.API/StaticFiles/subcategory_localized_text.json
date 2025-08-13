@@ -1,0 +1,86 @@
+[
+  {
+    "Id": 1,
+    "SubCategoryId": 501,
+    "LanguageCode": "en",
+    "LocalizedName": "Ganesh Pooja Kit",
+    "LocalizedDescription": "Kit containing all items needed for Ganesh Pooja"
+  },
+  {
+    "Id": 2,
+    "SubCategoryId": 501,
+    "LanguageCode": "hi",
+    "LocalizedName": "गणेश पूजा किट",
+    "LocalizedDescription": "गणेश पूजा के लिए आवश्यक सभी वस्तुओं का किट"
+  },
+  {
+    "Id": 3,
+    "SubCategoryId": 502,
+    "LanguageCode": "en",
+    "LocalizedName": "Lakshmi Pooja Kit",
+    "LocalizedDescription": "Kit containing all items needed for Lakshmi Pooja"
+  },
+  {
+    "Id": 4,
+    "SubCategoryId": 502,
+    "LanguageCode": "hi",
+    "LocalizedName": "लक्ष्मी पूजा किट",
+    "LocalizedDescription": "लक्ष्मी पूजा के लिए आवश्यक सभी वस्तुओं का किट"
+  },
+  {
+    "Id": 5,
+    "SubCategoryId": 601,
+    "LanguageCode": "en",
+    "LocalizedName": "Incense Sticks",
+    "LocalizedDescription": "Incense sticks for pooja"
+  },
+  {
+    "Id": 6,
+    "SubCategoryId": 601,
+    "LanguageCode": "hi",
+    "LocalizedName": "अगरबत्ती",
+    "LocalizedDescription": "पूजा के लिए अगरबत्ती"
+  },
+  {
+    "Id": 7,
+    "SubCategoryId": 602,
+    "LanguageCode": "en",
+    "LocalizedName": "Diyas",
+    "LocalizedDescription": "Traditional oil lamps used in pooja"
+  },
+  {
+    "Id": 8,
+    "SubCategoryId": 602,
+    "LanguageCode": "hi",
+    "LocalizedName": "दिए",
+    "LocalizedDescription": "पूजा में उपयोग किए जाने वाले पारंपरिक तेल के दीपक"
+  },
+  {
+    "Id": 9,
+    "SubCategoryId": 603,
+    "LanguageCode": "en",
+    "LocalizedName": "Camphor",
+    "LocalizedDescription": "Camphor used during rituals"
+  },
+  {
+    "Id": 10,
+    "SubCategoryId": 603,
+    "LanguageCode": "hi",
+    "LocalizedName": "कपूर",
+    "LocalizedDescription": "रितुओं के दौरान उपयोग किया जाने वाला कपूर"
+  },
+  {
+    "Id": 11,
+    "SubCategoryId": 604,
+    "LanguageCode": "en",
+    "LocalizedName": "Decorative Items",
+    "LocalizedDescription": "Decorative items for pooja setup"
+  },
+  {
+    "Id": 12,
+    "SubCategoryId": 604,
+    "LanguageCode": "hi",
+    "LocalizedName": "सजावटी आइटम",
+    "LocalizedDescription": "पूजा सेटअप के लिए सजावटी वस्तुएं"
+  }
+]

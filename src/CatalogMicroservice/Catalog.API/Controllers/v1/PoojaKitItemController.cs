@@ -74,29 +74,5 @@ namespace Catalog.API.Controllers.v1
 
             return Ok(result);
         }
-
-        [HttpGet("poojakit-item/{itemId:int}/localizations")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLocalizedTexts(int itemId)
-        {
-            var result = await Mediator.Send(new GetPoojaKitItemLocalizedTextsQuery(itemId));
-            return Ok(result);
-        }
-
-        [HttpPost("poojakit-item/add-or-update-localization")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddOrUpdateLocalization([FromBody] AddOrUpdatePoojaKitItemLocalizedTextCommand request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await Mediator.Send(request);
-
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            return Ok(result);
-        }
     }
 }

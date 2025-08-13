@@ -3,6 +3,5 @@ using Shared.Utilities.Response;
 
 namespace Catalog.Application.Features.Commands
 {
-    public record DeletePoojaKitCommand(int Id) : IRequest<Result>;
-
+    public class SeedCatalogCommand : IRequest<Result>{};
 }

@@ -35,6 +35,9 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("category_id");
 
+                    b.Property<int>("CategoryId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("LanguageCode")
                         .IsRequired()
                         .HasMaxLength(5)
@@ -54,6 +57,8 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CategoryId1");
+
                     b.ToTable("category_localized_text", (string)null);
                 });
 
@@ -72,7 +77,9 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnName("description");
 
                     b.Property<int>("DisplayOrder")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
+                        .HasDefaultValue(0)
                         .HasColumnName("display_order");
 
                     b.Property<string>("ImageUrl")
@@ -97,41 +104,6 @@ namespace Catalog.Infrastructure.Migrations
                     b.ToTable("category_master", (string)null);
                 });
 
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemLocalizedText", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("LanguageCode")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("varchar(5)")
-                        .HasColumnName("language_code");
-
-                    b.Property<string>("LocalizedDescription")
-                        .HasColumnType("longtext")
-                        .HasColumnName("localized_description");
-
-                    b.Property<string>("LocalizedName")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("localized_name");
-
-                    b.Property<int>("PoojaKitId")
-                        .HasColumnType("int")
-                        .HasColumnName("pooja_kit_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PoojaKitId");
-
-                    b.ToTable("pooja_kit_item_localized_text", (string)null);
-                });
-
             modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemMaster", b =>
                 {
                     b.Property<int>("Id")
@@ -141,128 +113,36 @@ namespace Catalog.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("item_name");
-
-                    b.Property<int>("PoojaKitMasterId")
+                    b.Property<int>("KitSubcategoryId")
                         .HasColumnType("int")
-                        .HasColumnName("pooja_kit_master_id");
+                        .HasColumnName("kit_subcategory_id");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<int>("ProductSubcategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("product_subcategory_id");
 
                     b.Property<int>("Quantity")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1)
                         .HasColumnName("quantity");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PoojaKitMasterId");
-
-                    b.ToTable("pooja_kit_item_master", (string)null);
-                });
-
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitLocalizedText", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("LanguageCode")
+                    b.Property<string>("Unit")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("varchar(5)")
-                        .HasColumnName("language_code");
-
-                    b.Property<string>("LocalizedDescription")
-                        .HasColumnType("longtext")
-                        .HasColumnName("localized_description");
-
-                    b.Property<string>("LocalizedName")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("localized_name");
-
-                    b.Property<int>("PoojaKitId")
-                        .HasColumnType("int")
-                        .HasColumnName("pooja_kit_id");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("unit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PoojaKitId");
+                    b.HasIndex("KitSubcategoryId");
 
-                    b.ToTable("pooja_kit_localized_text", (string)null);
-                });
+                    b.HasIndex("ProductSubcategoryId");
 
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitMaster", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("SubCategoryMasterId")
-                        .HasColumnType("int")
-                        .HasColumnName("sub_category_master_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubCategoryMasterId");
-
-                    b.ToTable("pooja_kit_master", (string)null);
+                    b.ToTable("pooja_kit_item_Master", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryLocalizedText", b =>
@@ -293,9 +173,14 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("sub_category_id");
 
+                    b.Property<int>("SubCategoryId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SubCategoryId");
+
+                    b.HasIndex("SubCategoryId1");
 
                     b.ToTable("sub_category_localized_text", (string)null);
                 });
@@ -320,7 +205,8 @@ namespace Catalog.Infrastructure.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("description");
 
                     b.Property<bool>("IsActive")
@@ -335,6 +221,14 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
+                    b.Property<int?>("ParentSubcategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("parent_subcategory_id");
+
+                    b.Property<int>("SubcategoryType")
+                        .HasColumnType("int")
+                        .HasColumnName("subcategory_type");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
@@ -343,69 +237,58 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasIndex("CategoryMasterId");
 
+                    b.HasIndex("ParentSubcategoryId");
+
                     b.ToTable("sub_category_master", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.CategoryMaster", "Category")
+                    b.HasOne("Catalog.Domain.Entities.CategoryMaster", null)
                         .WithMany("Localizations")
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.CategoryMaster", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemLocalizedText", b =>
-                {
-                    b.HasOne("Catalog.Domain.Entities.PoojaKitItemMaster", "PoojaKitItem")
-                        .WithMany("Localizations")
-                        .HasForeignKey("PoojaKitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PoojaKitItem");
-                });
-
             modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemMaster", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.PoojaKitMaster", "PoojaKitMaster")
-                        .WithMany("PoojaKitItems")
-                        .HasForeignKey("PoojaKitMasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "KitSubcategory")
+                        .WithMany()
+                        .HasForeignKey("KitSubcategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("PoojaKitMaster");
-                });
-
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitLocalizedText", b =>
-                {
-                    b.HasOne("Catalog.Domain.Entities.PoojaKitMaster", "PoojaKit")
-                        .WithMany("Localizations")
-                        .HasForeignKey("PoojaKitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "ProductSubcategory")
+                        .WithMany()
+                        .HasForeignKey("ProductSubcategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("PoojaKit");
-                });
+                    b.Navigation("KitSubcategory");
 
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitMaster", b =>
-                {
-                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
-                        .WithMany("PoojaKits")
-                        .HasForeignKey("SubCategoryMasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SubCategoryMaster");
+                    b.Navigation("ProductSubcategory");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryLocalizedText", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategory")
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", null)
                         .WithMany("Localizations")
                         .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategory")
+                        .WithMany()
+                        .HasForeignKey("SubCategoryId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -417,10 +300,17 @@ namespace Catalog.Infrastructure.Migrations
                     b.HasOne("Catalog.Domain.Entities.CategoryMaster", "CategoryMaster")
                         .WithMany("SubCategoryMasters")
                         .HasForeignKey("CategoryMasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "ParentSubcategory")
+                        .WithMany("ChildSubcategories")
+                        .HasForeignKey("ParentSubcategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("CategoryMaster");
+
+                    b.Navigation("ParentSubcategory");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryMaster", b =>
@@ -430,23 +320,11 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("SubCategoryMasters");
                 });
 
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemMaster", b =>
-                {
-                    b.Navigation("Localizations");
-                });
-
-            modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitMaster", b =>
-                {
-                    b.Navigation("Localizations");
-
-                    b.Navigation("PoojaKitItems");
-                });
-
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryMaster", b =>
                 {
-                    b.Navigation("Localizations");
+                    b.Navigation("ChildSubcategories");
 
-                    b.Navigation("PoojaKits");
+                    b.Navigation("Localizations");
                 });
 #pragma warning restore 612, 618
         }

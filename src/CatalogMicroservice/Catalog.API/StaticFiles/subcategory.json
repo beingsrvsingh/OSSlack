@@ -1,387 +1,435 @@
 [
   {
-    "Id": 1,
+    "Id": 100,
     "CategoryMasterId": 1,
-    "Name": "Shree Venkateswara Temple",
-    "Description": "Famous temple in Tirupati, Andhra Pradesh",
+    "Name": "Aarti",
+    "Description": "Parent for temple Aarti types",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 1,
-        "SubCategoryId": 1,
-        "LanguageCode": "en",
-        "LocalizedName": "Shree Venkateswara Temple",
-        "LocalizedDescription": "Famous temple in Tirupati, Andhra Pradesh"
-      },
-      {
-        "Id": 2,
-        "SubCategoryId": 1,
-        "LanguageCode": "hi",
-        "LocalizedName": "श्री वेंकटेश्वर मंदिर",
-        "LocalizedDescription": "तिरुपति, आंध्र प्रदेश में प्रसिद्ध मंदिर"
-      }
-    ]
+    "Localizations": []
   },
   {
-    "Id": 2,
+    "Id": 101,
     "CategoryMasterId": 1,
-    "Name": "Golden Temple",
-    "Description": "Also known as Harmandir Sahib, located in Amritsar",
+    "Name": "Donation",
+    "Description": "Parent for temple donation types",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 3,
-        "SubCategoryId": 2,
-        "LanguageCode": "en",
-        "LocalizedName": "Golden Temple",
-        "LocalizedDescription": "Also known as Harmandir Sahib, located in Amritsar"
-      },
-      {
-        "Id": 4,
-        "SubCategoryId": 2,
-        "LanguageCode": "hi",
-        "LocalizedName": "गोल्डन टेम्पल",
-        "LocalizedDescription": "जिसे हरमंदिर साहिब के नाम से जाना जाता है, अमृतसर में स्थित"
-      }
-    ]
-  },
-
-  {
-    "Id": 3,
-    "CategoryMasterId": 2,
-    "Name": "Morning Aarti",
-    "Description": "Aarti performed early morning",
-    "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
-    "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 5,
-        "SubCategoryId": 3,
-        "LanguageCode": "en",
-        "LocalizedName": "Morning Aarti",
-        "LocalizedDescription": "Aarti performed early morning"
-      },
-      {
-        "Id": 6,
-        "SubCategoryId": 3,
-        "LanguageCode": "hi",
-        "LocalizedName": "सुबह की आरती",
-        "LocalizedDescription": "सुबह जल्दी की जाने वाली आरती"
-      }
-    ]
+    "Localizations": []
   },
   {
-    "Id": 4,
-    "CategoryMasterId": 2,
-    "Name": "Evening Aarti",
-    "Description": "Aarti performed in the evening",
+    "Id": 102,
+    "CategoryMasterId": 1,
+    "Name": "Prasad",
+    "Description": "Parent for temple prasad offerings",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 7,
-        "SubCategoryId": 4,
-        "LanguageCode": "en",
-        "LocalizedName": "Evening Aarti",
-        "LocalizedDescription": "Aarti performed in the evening"
-      },
-      {
-        "Id": 8,
-        "SubCategoryId": 4,
-        "LanguageCode": "hi",
-        "LocalizedName": "शाम की आरती",
-        "LocalizedDescription": "शाम को की जाने वाली आरती"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 5,
-    "CategoryMasterId": 3,
+    "Id": 103,
+    "CategoryMasterId": 1,
+    "Name": "Pooja",
+    "Description": "Parent for temple poojas",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 104,
+    "CategoryMasterId": 1,
+    "Name": "Bhajan/Kirtan",
+    "Description": "Parent for devotional music events",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 105,
+    "CategoryMasterId": 1,
+    "Name": "Bhandara",
+    "Description": "Parent for community meals",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 110,
+    "CategoryMasterId": 1,
+    "Name": "Mangala Aarti",
+    "Description": "Morning Aarti",
+    "IsActive": true,
+    "SubcategoryType": "Aarti",
+    "ParentSubcategoryId": 100,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 111,
+    "CategoryMasterId": 1,
+    "Name": "Sandhya Aarti",
+    "Description": "Evening Aarti",
+    "IsActive": true,
+    "SubcategoryType": "Aarti",
+    "ParentSubcategoryId": 100,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 120,
+    "CategoryMasterId": 1,
+    "Name": "General Donation",
+    "Description": "Open donation",
+    "IsActive": true,
+    "SubcategoryType": "Donation",
+    "ParentSubcategoryId": 101,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 121,
+    "CategoryMasterId": 1,
+    "Name": "Annadanam",
+    "Description": "Food donation",
+    "IsActive": true,
+    "SubcategoryType": "Donation",
+    "ParentSubcategoryId": 101,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 130,
+    "CategoryMasterId": 1,
+    "Name": "Prasad Box",
+    "Description": "Packaged prasad",
+    "IsActive": true,
+    "SubcategoryType": "Prasad",
+    "ParentSubcategoryId": 102,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 140,
+    "CategoryMasterId": 1,
+    "Name": "Rudra Abhishek",
+    "Description": "Temple Rudra Pooja",
+    "IsActive": true,
+    "SubcategoryType": "Pooja",
+    "ParentSubcategoryId": 103,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 141,
+    "CategoryMasterId": 1,
     "Name": "Ganesh Pooja",
-    "Description": "Pooja dedicated to Lord Ganesh",
+    "Description": "Temple Ganesh Pooja",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Pooja",
+    "ParentSubcategoryId": 103,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 9,
-        "SubCategoryId": 5,
-        "LanguageCode": "en",
-        "LocalizedName": "Ganesh Pooja",
-        "LocalizedDescription": "Pooja dedicated to Lord Ganesh"
-      },
-      {
-        "Id": 10,
-        "SubCategoryId": 5,
-        "LanguageCode": "hi",
-        "LocalizedName": "गणेश पूजा",
-        "LocalizedDescription": "भगवान गणेश को समर्पित पूजा"
-      }
-    ]
+    "Localizations": []
   },
   {
-    "Id": 6,
-    "CategoryMasterId": 3,
+    "Id": 150,
+    "CategoryMasterId": 1,
+    "Name": "Satsang Bhajan",
+    "Description": "Community bhajan",
+    "IsActive": true,
+    "SubcategoryType": "Bhajan",
+    "ParentSubcategoryId": 104,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 151,
+    "CategoryMasterId": 1,
+    "Name": "Kirtan Night",
+    "Description": "Kirtan by invited musicians",
+    "IsActive": true,
+    "SubcategoryType": "Bhajan",
+    "ParentSubcategoryId": 104,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 160,
+    "CategoryMasterId": 1,
+    "Name": "Sponsor Bhandara",
+    "Description": "User sponsors bhandara",
+    "IsActive": true,
+    "SubcategoryType": "Bhandara",
+    "ParentSubcategoryId": 105,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 161,
+    "CategoryMasterId": 1,
+    "Name": "Attend Bhandara",
+    "Description": "Participation info",
+    "IsActive": true,
+    "SubcategoryType": "Bhandara",
+    "ParentSubcategoryId": 105,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 200,
+    "CategoryMasterId": 2,
+    "Name": "Home Pooja",
+    "Description": "Pooja services for home",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 201,
+    "CategoryMasterId": 2,
+    "Name": "Ganesh Pooja",
+    "Description": "Home Ganesh Pooja",
+    "IsActive": true,
+    "SubcategoryType": "Pooja",
+    "ParentSubcategoryId": 200,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 202,
+    "CategoryMasterId": 2,
     "Name": "Lakshmi Pooja",
-    "Description": "Pooja for Goddess Lakshmi",
+    "Description": "Home Lakshmi Pooja",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Pooja",
+    "ParentSubcategoryId": 200,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 11,
-        "SubCategoryId": 6,
-        "LanguageCode": "en",
-        "LocalizedName": "Lakshmi Pooja",
-        "LocalizedDescription": "Pooja for Goddess Lakshmi"
-      },
-      {
-        "Id": 12,
-        "SubCategoryId": 6,
-        "LanguageCode": "hi",
-        "LocalizedName": "लक्ष्मी पूजा",
-        "LocalizedDescription": "देवी लक्ष्मी के लिए पूजा"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 7,
+    "Id": 210,
+    "CategoryMasterId": 2,
+    "Name": "Samagri Kits",
+    "Description": "Pooja material kits for home pooja",
+    "IsActive": true,
+    "SubcategoryType": "Kit",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 211,
+    "CategoryMasterId": 2,
+    "Name": "Ganesh Pooja Kit",
+    "Description": "Complete Ganesh Pooja Samagri Kit",
+    "IsActive": true,
+    "SubcategoryType": "Kit",
+    "ParentSubcategoryId": 210,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 220,
+    "CategoryMasterId": 2,
+    "Name": "Pooja Essentials",
+    "Description": "Items like idols, incense, books for home pooja",
+    "IsActive": true,
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 221,
+    "CategoryMasterId": 2,
+    "Name": "Idols",
+    "Description": "Idols for various deities",
+    "IsActive": true,
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": 220,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 222,
+    "CategoryMasterId": 2,
+    "Name": "Incense Sticks",
+    "Description": "Incense sticks for pooja",
+    "IsActive": true,
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": 220,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 300,
+    "CategoryMasterId": 3,
+    "Name": "Kundli Reading",
+    "Description": "Personalized horoscope reading",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 301,
+    "CategoryMasterId": 3,
+    "Name": "Marriage Matching",
+    "Description": "Compatibility check for marriages",
+    "IsActive": true,
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 400,
     "CategoryMasterId": 4,
-    "Name": "Astrology Consultation",
-    "Description": "Personal astrology reading",
+    "Name": "Idols",
+    "Description": "Deity idols for pooja",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 13,
-        "SubCategoryId": 7,
-        "LanguageCode": "en",
-        "LocalizedName": "Astrology Consultation",
-        "LocalizedDescription": "Personal astrology reading"
-      },
-      {
-        "Id": 14,
-        "SubCategoryId": 7,
-        "LanguageCode": "hi",
-        "LocalizedName": "ज्योतिष परामर्श",
-        "LocalizedDescription": "व्यक्तिगत ज्योतिष पढ़ाई"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 8,
+    "Id": 401,
+    "CategoryMasterId": 4,
+    "Name": "Books & Yantras",
+    "Description": "Spiritual books and yantras",
+    "IsActive": true,
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 402,
+    "CategoryMasterId": 4,
+    "Name": "Incense & Diyas",
+    "Description": "Incense sticks, diyas and lamps",
+    "IsActive": true,
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 500,
     "CategoryMasterId": 5,
-    "Name": "Birth Chart",
-    "Description": "Detailed natal chart",
+    "Name": "Ganesh Pooja Kit",
+    "Description": "Complete kit for Ganesh pooja",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Kit",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 15,
-        "SubCategoryId": 8,
-        "LanguageCode": "en",
-        "LocalizedName": "Birth Chart",
-        "LocalizedDescription": "Detailed natal chart"
-      },
-      {
-        "Id": 16,
-        "SubCategoryId": 8,
-        "LanguageCode": "hi",
-        "LocalizedName": "जन्म कुंडली",
-        "LocalizedDescription": "विस्तृत जन्म कुंडली"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 9,
+    "Id": 501,
+    "CategoryMasterId": 5,
+    "Name": "Lakshmi Pooja Kit",
+    "Description": "Complete kit for Lakshmi pooja",
+    "IsActive": true,
+    "SubcategoryType": "Kit",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
+    "UpdatedAt": null,
+    "Localizations": []
+  },
+  {
+    "Id": 600,
     "CategoryMasterId": 6,
-    "Name": "Sri Yantra",
-    "Description": "Powerful mystical diagram",
+    "Name": "Flowers & Garlands",
+    "Description": "Fresh flowers and decorative garlands",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 17,
-        "SubCategoryId": 9,
-        "LanguageCode": "en",
-        "LocalizedName": "Sri Yantra",
-        "LocalizedDescription": "Powerful mystical diagram"
-      },
-      {
-        "Id": 18,
-        "SubCategoryId": 9,
-        "LanguageCode": "hi",
-        "LocalizedName": "श्री यंत्र",
-        "LocalizedDescription": "शक्तिशाली रहस्यमय चित्र"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 10,
+    "Id": 700,
     "CategoryMasterId": 7,
-    "Name": "Marigold",
-    "Description": "Common flower for poojas",
+    "Name": "Pooja Thali",
+    "Description": "Decorative plates for pooja",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Product",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 19,
-        "SubCategoryId": 10,
-        "LanguageCode": "en",
-        "LocalizedName": "Marigold",
-        "LocalizedDescription": "Common flower for poojas"
-      },
-      {
-        "Id": 20,
-        "SubCategoryId": 10,
-        "LanguageCode": "hi",
-        "LocalizedName": "गेंदा",
-        "LocalizedDescription": "पूजा के लिए आम फूल"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 11,
+    "Id": 800,
     "CategoryMasterId": 8,
-    "Name": "Bhagavad Gita",
-    "Description": "Sacred Hindu scripture",
+    "Name": "Pooja Booking",
+    "Description": "Book priests and pooja services",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Service",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 21,
-        "SubCategoryId": 11,
-        "LanguageCode": "en",
-        "LocalizedName": "Bhagavad Gita",
-        "LocalizedDescription": "Sacred Hindu scripture"
-      },
-      {
-        "Id": 22,
-        "SubCategoryId": 11,
-        "LanguageCode": "hi",
-        "LocalizedName": "भगवद गीता",
-        "LocalizedDescription": "पवित्र हिंदू धर्मग्रंथ"
-      }
-    ]
+    "Localizations": []
   },
-
   {
-    "Id": 12,
+    "Id": 900,
     "CategoryMasterId": 9,
-    "Name": "Clay Diya",
-    "Description": "Traditional oil lamp made of clay",
+    "Name": "Festival Celebrations",
+    "Description": "Special event poojas and celebrations",
     "IsActive": true,
-    "CreatedAt": "2025-08-11T00:00:00Z",
+    "SubcategoryType": "Event",
+    "ParentSubcategoryId": null,
+    "CreatedAt": "2025-08-13T00:00:00Z",
     "UpdatedAt": null,
-    "Localizations": [
-      {
-        "Id": 23,
-        "SubCategoryId": 12,
-        "LanguageCode": "en",
-        "LocalizedName": "Clay Diya",
-        "LocalizedDescription": "Traditional oil lamp made of clay"
-      },
-      {
-        "Id": 24,
-        "SubCategoryId": 12,
-        "LanguageCode": "hi",
-        "LocalizedName": "मिट्टी का दिया",
-        "LocalizedDescription": "मिट्टी से बना पारंपरिक तेल दिया"
-      }
-    ]
-  },
-  [
-    {
-      "Id": 20,
-      "CategoryMasterId": 10,
-      "Name": "Modak",
-      "Description": "Traditional sweet dumplings offered especially during Ganesh Chaturthi",
-      "IsActive": true,
-      "CreatedAt": "2025-08-11T00:00:00Z",
-      "UpdatedAt": null,
-      "Localizations": [
-        {
-          "Id": 1,
-          "SubCategoryMasterId": 20,
-          "LanguageCode": "en",
-          "LocalizedName": "Modak",
-          "LocalizedDescription": "Traditional sweet dumplings offered especially during Ganesh Chaturthi"
-        },
-        {
-          "Id": 2,
-          "SubCategoryMasterId": 20,
-          "LanguageCode": "hi",
-          "LocalizedName": "मोदक",
-          "LocalizedDescription": "गणेश चतुर्थी के दौरान विशेष रूप से चढ़ाए जाने वाले पारंपरिक मिठाई"
-        }
-      ]
-    },
-    {
-      "Id": 21,
-      "CategoryMasterId": 10,
-      "Name": "Laddu",
-      "Description": "Sweet round balls made with various flours and sugar, common in many festivals",
-      "IsActive": true,
-      "CreatedAt": "2025-08-11T00:00:00Z",
-      "UpdatedAt": null,
-      "Localizations": [
-        {
-          "Id": 3,
-          "SubCategoryMasterId": 21,
-          "LanguageCode": "en",
-          "LocalizedName": "Laddu",
-          "LocalizedDescription": "Sweet round balls made with various flours and sugar, common in many festivals"
-        },
-        {
-          "Id": 4,
-          "SubCategoryMasterId": 21,
-          "LanguageCode": "hi",
-          "LocalizedName": "लड्डू",
-          "LocalizedDescription": "विभिन्न आटे और चीनी से बने मीठे गोलियां, कई त्योहारों में प्रचलित"
-        }
-      ]
-    },
-    {
-      "Id": 22,
-      "CategoryMasterId": 10,
-      "Name": "Peda",
-      "Description": "Soft milk-based sweet, often prepared during religious celebrations",
-      "IsActive": true,
-      "CreatedAt": "2025-08-11T00:00:00Z",
-      "UpdatedAt": null,
-      "Localizations": [
-        {
-          "Id": 5,
-          "SubCategoryMasterId": 22,
-          "LanguageCode": "en",
-          "LocalizedName": "Peda",
-          "LocalizedDescription": "Soft milk-based sweet, often prepared during religious celebrations"
-        },
-        {
-          "Id": 6,
-          "SubCategoryMasterId": 22,
-          "LanguageCode": "hi",
-          "LocalizedName": "पेडा",
-          "LocalizedDescription": "मुलायम दूध आधारित मिठाई, जो धार्मिक समारोहों में बनाई जाती है"
-        }
-      ]
-    }
-  ]
+    "Localizations": []
+  }
+
 ]

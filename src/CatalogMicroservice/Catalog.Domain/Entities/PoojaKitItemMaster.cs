@@ -9,22 +9,19 @@ namespace Catalog.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int PoojaKitMasterId { get; set; }
+        public int KitSubcategoryId { get; set; }
 
-        [Required, MaxLength(150)]
-        public string ItemName { get; set; } = null!;
+        [Required]
+        public int ProductSubcategoryId { get; set; }
 
-        public string? Description { get; set; }
+        [MaxLength(500)]
+        public string? Notes { get; set; }
 
-        public int Quantity { get; set; } = 1;
+        [ForeignKey(nameof(KitSubcategoryId))]
+        public SubCategoryMaster KitSubcategory { get; set; } = null!;
 
-        public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-
-        [ForeignKey("PoojaKitMasterId")]
-        public virtual PoojaKitMaster PoojaKitMaster { get; set; } = null!;
-        public ICollection<PoojaKitItemLocalizedText> Localizations { get; set; } = new List<PoojaKitItemLocalizedText>();
+        [ForeignKey(nameof(ProductSubcategoryId))]
+        public SubCategoryMaster ProductSubcategory { get; set; } = null!;
     }
+
 }

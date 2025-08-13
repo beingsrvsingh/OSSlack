@@ -19,7 +19,9 @@ public partial class CategoryMaster
     public string? ImageUrl { get; set; }
 
     public bool IsActive { get; set; } = true;
-    public virtual ICollection<SubCategoryMaster> SubCategoryMasters { get; set; } = new List<SubCategoryMaster>();
-    public ICollection<CategoryLocalizedText> Localizations { get; set; } = new List<CategoryLocalizedText>();
 
+    public virtual ICollection<SubCategoryMaster> SubCategoryMasters { get; set; } = new List<SubCategoryMaster>();
+
+    public virtual ICollection<CategoryLocalizedText> Localizations { get; set; } = new List<CategoryLocalizedText>();
 }
+

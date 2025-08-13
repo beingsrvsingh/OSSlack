@@ -13,36 +13,22 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id).HasColumnName("id");
-
-            builder.Property(c => c.Name)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("name");
-
-            builder.Property(c => c.Description)
-                .HasMaxLength(500)
-                .HasColumnName("description");
-
-            builder.Property(c => c.DisplayOrder)
-                .HasColumnName("display_order");
-
-            builder.Property(c => c.ImageUrl)
-                .HasMaxLength(300)
-                .HasColumnName("image_url");
-
-            builder.Property(c => c.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
+            builder.Property(c => c.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
+            builder.Property(c => c.Description).HasColumnName("description").HasMaxLength(500);
+            builder.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(300);
+            builder.Property(c => c.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+            builder.Property(c => c.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
 
             builder.HasMany(c => c.SubCategoryMasters)
-                   .WithOne(sc => sc.CategoryMaster)
-                   .HasForeignKey(sc => sc.CategoryMasterId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .WithOne(s => s.CategoryMaster)
+                   .HasForeignKey(s => s.CategoryMasterId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(c => c.Localizations)
-                   .WithOne(l => l.Category)
+                   .WithOne()
                    .HasForeignKey(l => l.CategoryId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 }

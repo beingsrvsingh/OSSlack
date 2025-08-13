@@ -8,44 +8,24 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<PoojaKitItemMaster> builder)
         {
-            builder.ToTable("pooja_kit_item_master");
+            builder.ToTable("pooja_kit_item_Master");
 
-            builder.HasKey(pki => pki.Id);
+            builder.HasKey(p => p.Id);
 
-            builder.Property(pki => pki.Id).HasColumnName("id");
+            builder.Property(p => p.Id).HasColumnName("id");
+            builder.Property(p => p.KitSubcategoryId).HasColumnName("kit_subcategory_id");
+            builder.Property(p => p.ProductSubcategoryId).HasColumnName("product_subcategory_id");
+            builder.Property(p => p.Notes).HasColumnName("notes").HasMaxLength(500);
 
-            builder.Property(pki => pki.PoojaKitMasterId)
-                .IsRequired()
-                .HasColumnName("pooja_kit_master_id");
+            builder.HasOne(p => p.KitSubcategory)
+                   .WithMany()
+                   .HasForeignKey(p => p.KitSubcategoryId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(pki => pki.ItemName)
-                .IsRequired()
-                .HasMaxLength(150)
-                .HasColumnName("item_name");
-
-            builder.Property(pki => pki.Description)
-                .HasColumnName("description");
-
-            builder.Property(pki => pki.Quantity)
-                .HasDefaultValue(1)
-                .HasColumnName("quantity");
-
-            builder.Property(pki => pki.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
-
-            builder.Property(pki => pki.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
-                .HasColumnName("created_at");
-
-            builder.Property(pki => pki.UpdatedAt)
-                .HasColumnName("updated_at");
-
-            builder.HasOne(pki => pki.PoojaKitMaster)
-                .WithMany(pk => pk.PoojaKitItems)
-                .HasForeignKey(pki => pki.PoojaKitMasterId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(p => p.ProductSubcategory)
+                   .WithMany()
+                   .HasForeignKey(p => p.ProductSubcategoryId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
-
 }

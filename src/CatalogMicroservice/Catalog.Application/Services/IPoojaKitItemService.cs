@@ -9,9 +9,6 @@ namespace Catalog.Application.Services
         Task<bool> CreateItemAsync(PoojaKitItemMaster item);
         Task<bool> UpdateItemAsync(PoojaKitItemMaster item);
         Task<bool> DeleteItemAsync(int id);
-
-        Task<IEnumerable<PoojaKitItemLocalizedText>> GetLocalizedTextsAsync(int itemId);
-        Task<bool> AddOrUpdateLocalizedTextAsync(PoojaKitItemLocalizedText localizedText);
     }
 
 }

@@ -15,30 +15,23 @@ namespace Catalog.Infrastructure.Repositories
             this._context = dbContext;
         }
 
-        public async Task<PoojaKitItemLocalizedText> AddLocalizationAsync(PoojaKitItemLocalizedText localization)
-        {
-            _context.PoojaKitItemTags.Add(localization);
-            await _context.SaveChangesAsync();
-            return localization;
-        }
-
-
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _context.PoojaKitItemTags.FindAsync(id);
+            var entity = await _context.PoojaKitItems.FirstOrDefaultAsync(x => x.Id == id);
             if (entity == null)
+            {
                 return false;
-
-            _context.PoojaKitItemTags.Remove(entity);
+            }
+            _context.PoojaKitItems.Remove(entity);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
-
-        public async Task<IEnumerable<PoojaKitItemLocalizedText>> GetLocalizationsAsync(int itemId)
+        public async Task<IEnumerable<PoojaKitItemMaster>> GetByKitItemIdAsync(int poojaKitItemId)
         {
-            return await _context.PoojaKitItemTags
-                                 .Where(x => x.PoojaKitId == itemId)
+            return await _context.PoojaKitItems
+                                 .Where(x => x.Id == poojaKitItemId)
                                  .ToListAsync();
         }
 
