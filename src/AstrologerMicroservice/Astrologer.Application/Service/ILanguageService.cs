@@ -5,10 +5,10 @@ namespace AstrologerMicroservice.Application.Service
 
     public interface ILanguageService
     {
-        Task<IEnumerable<Language>> GetAllAsync();
-        Task<Language?> GetByIdAsync(int id);
-        Task<Language> CreateAsync(Language language);
-        Task<bool> UpdateAsync(Language language);
+        Task<IEnumerable<LanguageMaster>> GetAllAsync();
+        Task<LanguageMaster?> GetByIdAsync(int id);
+        Task<LanguageMaster> CreateAsync(LanguageMaster language);
+        Task<bool> UpdateAsync(LanguageMaster language);
         Task<bool> DeleteAsync(int id);
     }
 }

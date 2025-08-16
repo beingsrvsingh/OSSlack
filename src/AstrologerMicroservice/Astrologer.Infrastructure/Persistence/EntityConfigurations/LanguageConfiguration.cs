@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Identity.Infrastructure.Persistence.EntityConfigurations
 {
-    public class LanguageEntityConfiguration : IEntityTypeConfiguration<Language>
+    public class LanguageEntityConfiguration : IEntityTypeConfiguration<LanguageMaster>
     {
-        public void Configure(EntityTypeBuilder<Language> builder)
+        public void Configure(EntityTypeBuilder<LanguageMaster> builder)
         {
             builder.ToTable("languages");
 

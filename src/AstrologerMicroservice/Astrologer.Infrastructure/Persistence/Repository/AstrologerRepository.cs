@@ -35,7 +35,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Astrologer>> SearchAsync(string? language = null, string? expertise = null, ConsultationMode? consultationMode = null, bool? isActive = true, int page = 1, int pageSize = 20)
+        public async Task<IEnumerable<Astrologer>> SearchAsync(string? language = null, string? expertise = null, ConsultationModeType? consultationMode = null, bool? isActive = true, int page = 1, int pageSize = 20)
         {
             var query = _context.Astrologers
             .Include(a => a.AstrologerLanguages)

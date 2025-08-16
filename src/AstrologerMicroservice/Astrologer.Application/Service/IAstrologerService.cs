@@ -17,6 +17,6 @@ namespace AstrologerMicroservice.Application.Service
         Task<bool> SetLanguagesAsync(int astrologerId, IEnumerable<int> languageIds);
         Task<bool> SetExpertisesAsync(int astrologerId, IEnumerable<int> expertiseIds);
 
-        Task<IEnumerable<Astrologer>> SearchAsync(string? language = null, string? expertise = null, ConsultationMode? consultationMode = null, bool? isActive = true, int page = 1, int pageSize = 20);
+        Task<IEnumerable<Astrologer>> SearchAsync(string? language = null, string? expertise = null, ConsultationModeType? consultationMode = null, bool? isActive = true, int page = 1, int pageSize = 20);
     }
 }

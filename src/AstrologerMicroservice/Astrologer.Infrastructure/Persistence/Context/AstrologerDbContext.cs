@@ -15,7 +15,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Context
         public DbSet<ServiceCategory> ServiceCategories => Set<ServiceCategory>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
-        public DbSet<Language> Languages => Set<Language>();
+        public DbSet<LanguageMaster> Languages => Set<LanguageMaster>();
         public DbSet<Expertise> Expertises => Set<Expertise>();
 
         public DbSet<AstrologerLanguage> AstrologerLanguages => Set<AstrologerLanguage>();

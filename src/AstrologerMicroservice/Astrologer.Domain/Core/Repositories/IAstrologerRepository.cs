@@ -14,7 +14,7 @@ namespace AstrologerMicroservice.Domain.Repositories
         Task<IEnumerable<Astrologer>> SearchAsync(
         string? language = null,
         string? expertise = null,
-        ConsultationMode? consultationMode = null,
+        ConsultationModeType? consultationMode = null,
         bool? isActive = true,
         int page = 1,
         int pageSize = 20);

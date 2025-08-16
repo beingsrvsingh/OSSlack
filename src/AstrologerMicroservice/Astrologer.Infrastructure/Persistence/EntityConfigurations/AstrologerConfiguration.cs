@@ -41,7 +41,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                             .IsRequired(false);
 
                      builder.Property(a => a.ConsultationModes)
-                            .HasDefaultValue(ConsultationMode.None);
+                            .HasDefaultValue(ConsultationModeType.None);
 
                      builder.HasMany(a => a.AstrologerLanguages)
                             .WithOne(al => al.Astrologer)

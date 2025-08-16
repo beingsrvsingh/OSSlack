@@ -1,23 +1,26 @@
 ﻿using Catalog.Application.Services;
 using Catalog.Domain.Core.Repository;
 using Catalog.Domain.Entities;
-using Shared.Infrastructure.Services;
+using Shared.Application.Interfaces.Logging;
 
 namespace Catalog.Infrastructure.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubCategoryRepository subCategoryRepository;
         private readonly ICategoryLocalizedTextRepository _localizedTextRepository;
-        private readonly LoggerService<CategoryService> _logger;
+        private readonly ILoggerService<CategoryService> _logger;
 
         public CategoryService(
             ICategoryRepository categoryRepository,
             ICategoryLocalizedTextRepository localizedTextRepository,
-            LoggerService<CategoryService> logger)
+            ISubCategoryRepository subCategoryRepository,
+            ILoggerService<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
             _localizedTextRepository = localizedTextRepository;
+            this.subCategoryRepository = subCategoryRepository;
             _logger = logger;
         }
 
@@ -30,6 +33,13 @@ namespace Catalog.Infrastructure.Services
         {
             return await _categoryRepository.GetByIdAsync(id);
         }
+
+        public async Task<List<SubCategoryMaster>> GetSubCategoriesByCategoryIdAsync(int id)
+        {
+            var result = await subCategoryRepository.GetAsync(s => s.CategoryMasterId == id);
+            return result.ToList();
+        }
+
 
         public async Task<bool> CreateCategoryAsync(CategoryMaster category)
         {

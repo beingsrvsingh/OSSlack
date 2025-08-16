@@ -89,7 +89,7 @@ namespace Shared.Infrastructure.Repositories
 
         public async virtual Task<bool> AnyAsync(Expression<Func<T, bool>> exp)
         {
-            return await this.dbSet.AnyAsync(exp);
+            return await this.dbSet.AsNoTracking().AnyAsync(exp);
         }
 
         public virtual async Task<T?> GetByIdAsync(string id)

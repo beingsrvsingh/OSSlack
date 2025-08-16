@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalog.Application.Services;
 using Catalog.Infrastructure;
 using Catalog.Infrastructure.Repositories;
 using JwtTokenAuthentication;

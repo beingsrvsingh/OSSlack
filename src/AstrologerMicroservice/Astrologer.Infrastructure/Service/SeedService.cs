@@ -57,7 +57,7 @@ namespace AstrologerMicroservice.Infrastructure.Services.Identity
                 var existingLanguages = await languageRepository.GetAllAsync();
                 if (existingLanguages.Any()) return true;
 
-                var seedLanguages = new List<Language>
+                var seedLanguages = new List<LanguageMaster>
                 {
                     new() { Name = "English" },
                     new() { Name = "Hindi" },

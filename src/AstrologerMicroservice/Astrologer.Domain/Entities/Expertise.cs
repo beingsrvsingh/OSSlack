@@ -8,6 +8,7 @@ namespace AstrologerMicroservice.Domain.Entities
 
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
+        public int DisplayOrder { get; set; }
         public virtual ICollection<AstrologerExpertise> AstrologerExpertises { get; set; } = new List<AstrologerExpertise>();
     }
 

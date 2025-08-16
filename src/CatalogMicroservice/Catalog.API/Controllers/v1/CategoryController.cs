@@ -98,6 +98,19 @@ namespace Catalog.API.Controllers.v1
 
             return Ok(result);
         }
+
+        [HttpGet("sub-category/{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubCategoryById(int id)
+        {
+            var result = await Mediator.Send(new GetSubCategoryByCategoryIdQuery(id));
+
+            if (!result.Succeeded)
+                return NotFound(result.Errors);
+
+            return Ok(result);
+        }
     }
 
 }

@@ -5,7 +5,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace AstrologerMicroservice.Infrastructure.Repositories
 {
-    public class LanguageRepository : Repository<Language>, ILanguageRepository
+    public class LanguageRepository : Repository<LanguageMaster>, ILanguageRepository
     {
         private readonly AstrologerDbContext dbContext;
 

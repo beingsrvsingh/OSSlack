@@ -8,7 +8,7 @@ namespace AstrologerMicroservice.Application.Features.Query
     {
         public string? Language { get; set; }
         public string? Expertise { get; set; }
-        public ConsultationMode? ConsultationMode { get; set; }
+        public ConsultationModeType? ConsultationMode { get; set; }
         public bool? IsActive { get; set; } = true;
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 20;

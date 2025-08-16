@@ -78,7 +78,7 @@ namespace Astrologer.API.Controllers.v1
         public async Task<IActionResult> SearchAstrologers(
             [FromQuery] string? language = null,
             [FromQuery] string? expertise = null,
-            [FromQuery] ConsultationMode? consultationMode = null,
+            [FromQuery] ConsultationModeType? consultationMode = null,
             [FromQuery] bool? isActive = true,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)

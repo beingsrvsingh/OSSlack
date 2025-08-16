@@ -3,5 +3,5 @@ using Shared.Domain.Repository;
 
 namespace AstrologerMicroservice.Domain.Core.Repository
 {
-    public interface ILanguageRepository : IRepository<Language> { }
+    public interface ILanguageRepository : IRepository<LanguageMaster> { }
 }
