@@ -5,6 +5,8 @@ namespace Product.Application.Services
     public interface IProductService
     {
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
+        Task<List<ProductMaster>> GetProductBySubCategoryIdAsync(int subCategoryId);
+        Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);
         Task<IEnumerable<ProductAttributeMaster>> GetAttributesAsync(int productId);

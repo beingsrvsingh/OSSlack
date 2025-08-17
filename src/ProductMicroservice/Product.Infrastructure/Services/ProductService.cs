@@ -158,6 +158,26 @@ namespace Product.Infrastructure.Services
                 return false;
             }
         }
+
+        public async Task<List<ProductMaster>> GetProductBySubCategoryIdAsync(int subCategoryId)
+        {
+            try
+            {
+                var result = await _productRepository.GetAsync(p => p.SubCategoryId == subCategoryId);
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in GetProductWithVariantsAsync: {ex.Message}", ex);
+                return new List<ProductMaster>();
+            }
+        }
+
+        public async Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName)
+        {
+            var result = await _productRepository.GetAsync(p => p.Name.Contains(prodName));
+            return result.ToList();
+        }
     }
 
 }

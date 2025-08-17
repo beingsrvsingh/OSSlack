@@ -111,6 +111,26 @@ namespace Product.API.Controllers.v1
             var result = await Mediator.Send(new GetProductSEOInfoQuery(productId));
             return Ok(result);
         }
+
+        [HttpGet("{subCategoryId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetProductBySubCategoryIdAsync(int subCategoryId)
+        {
+            var result = await Mediator.Send(new GetProductBySubCategoryId { SubCategoryId = subCategoryId });
+
+            return Ok(result);
+        }
+        
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetGetProductByProductNameAsync(string name)
+        {
+            var result = await Mediator.Send(new GetProductByProductName{ProductName = name});
+
+            return Ok(result);
+        }
     }
 
 }

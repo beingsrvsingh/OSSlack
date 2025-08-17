@@ -16,7 +16,19 @@ namespace Product.Infrastructure.Repositories.UOW
         {
         }
 
-        public IProductRepository ProductRepository => throw new NotImplementedException();
+        private IProductRepository? productRepository;
+
+        public IProductRepository ProductRepository
+        {
+            get
+            {
+                if (productRepository == null)
+                {
+                    productRepository = new ProductRepository(_context);
+                }
+                return productRepository;
+            }
+        }
 
         protected override AuditLog ConvertAuditEntry(AuditEntry entry)
         {
