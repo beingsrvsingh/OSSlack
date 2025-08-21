@@ -10,6 +10,9 @@ public partial class CategoryMaster
     [Required, MaxLength(100)]
     public string Name { get; set; } = null!;
 
+    [Required, MaxLength(100)]
+    public string CategoryType { get; set; } = null!;
+
     [MaxLength(500)]
     public string? Description { get; set; }
 

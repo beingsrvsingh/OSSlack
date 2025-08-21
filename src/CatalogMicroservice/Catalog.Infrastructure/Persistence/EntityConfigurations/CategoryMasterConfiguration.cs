@@ -14,6 +14,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(c => c.Id).HasColumnName("id");
             builder.Property(c => c.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
+            builder.Property(c => c.CategoryType).HasColumnName("category_type").IsRequired().HasMaxLength(100);
             builder.Property(c => c.Description).HasColumnName("description").HasMaxLength(500);
             builder.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(300);
             builder.Property(c => c.IsActive).HasColumnName("is_active").HasDefaultValue(true);

@@ -71,6 +71,12 @@ namespace Catalog.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("category_type");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)")
@@ -125,16 +131,6 @@ namespace Catalog.Infrastructure.Migrations
                     b.Property<int>("ProductSubcategoryId")
                         .HasColumnType("int")
                         .HasColumnName("product_subcategory_id");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
-
-                    b.Property<string>("Unit")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("unit");
 
                     b.HasKey("Id");
 

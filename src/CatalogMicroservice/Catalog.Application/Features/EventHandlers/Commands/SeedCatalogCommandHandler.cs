@@ -23,31 +23,30 @@ namespace Catalog.Application.Features.EventHandlers.Commands
         {
             var categories = new List<CategoryMaster>
             {
-                new CategoryMaster { Id = 1, Name = "Pooja Samagri", Description = "Worship essentials used in rituals", DisplayOrder = 1, IsActive = true },
-                new CategoryMaster { Id = 2, Name = "Pooja Vessels & Utensils", Description = "Traditional utensils used during pooja", DisplayOrder = 2, IsActive = true },
-                new CategoryMaster { Id = 3, Name = "Pooja Cloths & Decoration", Description = "Clothing and decorative items for pooja", DisplayOrder = 3, IsActive = true },
-                new CategoryMaster { Id = 4, Name = "Deities & Idols", Description = "Idols and photos for worship", DisplayOrder = 4, IsActive = true },
-                new CategoryMaster { Id = 5, Name = "Spiritual & Ritual Items", Description = "Spiritual accessories and tools", DisplayOrder = 5, IsActive = true },
-                new CategoryMaster { Id = 6, Name = "Pooja Kits / Combo Packs", Description = "Ready-made kits for various poojas", DisplayOrder = 6, IsActive = true },
-                new CategoryMaster { Id = 7, Name = "Holy Scriptures & Books", Description = "Religious books and pooja guides", DisplayOrder = 7, IsActive = true },
-                new CategoryMaster { Id = 8, Name = "Aroma & Fragrance Items", Description = "Fragrance products for spiritual ambiance", DisplayOrder = 8, IsActive = true },
-                new CategoryMaster { Id = 9, Name = "Pooja Mandir Accessories", Description = "Items used in or for mandirs", DisplayOrder = 9, IsActive = true },
-                new CategoryMaster { Id = 10, Name = "Miscellaneous", Description = "Other spiritual or pooja-related items", DisplayOrder = 10, IsActive = true },
-                new CategoryMaster { Id = 11, Name = "Pooja", Description = "All types of poojas and rituals conducted in homes", DisplayOrder = 1, IsActive = true },
-                new CategoryMaster { Id = 12, Name = "Astrology", Description = "Get insights and predictions based on astrological systems", DisplayOrder = 2, IsActive = true },
-                new CategoryMaster { Id = 13, Name = "Numerology", Description = "Discover your life path and destiny numbers with numerology", DisplayOrder = 3, IsActive = true },
-                new CategoryMaster { Id = 14, Name = "Tarot", Description = "Receive intuitive guidance through Tarot card readings", DisplayOrder = 4, IsActive = true },
-                new CategoryMaster { Id = 15, Name = "Palmistry", Description = "Interpret lines and mounts on your palm for future insights", DisplayOrder = 5, IsActive = true },
-                new CategoryMaster { Id = 16, Name = "Psychic", Description = "Connect with psychics for intuitive and spiritual readings", DisplayOrder = 6, IsActive = true },
-                new CategoryMaster { Id = 17, Name = "Healing", Description = "Spiritual and energy-based healing for mind, body, and soul", DisplayOrder = 7, IsActive = true },
-                new CategoryMaster { Id = 18, Name = "Vastu", Description = "Vastu consultation for home, office, and buildings", DisplayOrder = 8, IsActive = true },
-                new CategoryMaster { Id = 19, Name = "Consultation", Description = "Book personalized sessions with experts across domains", DisplayOrder = 9, IsActive = true },
-                new CategoryMaster { Id = 20, Name = "Rituals", Description = "Perform religious rituals and ceremonies for various needs", DisplayOrder = 10, IsActive = true },
-                new CategoryMaster { Id = 21, Name = "Kundli", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
-                new CategoryMaster { Id = 22, Name = "Priest", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
-                new CategoryMaster { Id = 23, Name = "Temple", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
-                new CategoryMaster { Id = 24, Name = "Bhajan & Katha Seva", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true }
-
+                new CategoryMaster { Id = 1, CategoryType = "product", Name = "Pooja Samagri", Description = "Worship essentials used in rituals", DisplayOrder = 1, IsActive = true },
+                new CategoryMaster { Id = 2, CategoryType = "product", Name = "Pooja Vessels & Utensils", Description = "Traditional utensils used during pooja", DisplayOrder = 2, IsActive = true },
+                new CategoryMaster { Id = 3, CategoryType = "product", Name = "Pooja Cloths & Decoration", Description = "Clothing and decorative items for pooja", DisplayOrder = 3, IsActive = true },
+                new CategoryMaster { Id = 4, CategoryType = "product", Name = "Deities & Idols", Description = "Idols and photos for worship", DisplayOrder = 4, IsActive = true },
+                new CategoryMaster { Id = 5, CategoryType = "product", Name = "Spiritual & Ritual Items", Description = "Spiritual accessories and tools", DisplayOrder = 5, IsActive = true },
+                new CategoryMaster { Id = 6, CategoryType = "product", Name = "Pooja Kits / Combo Packs", Description = "Ready-made kits for various poojas", DisplayOrder = 6, IsActive = true },
+                new CategoryMaster { Id = 7, CategoryType = "product", Name = "Holy Scriptures & Books", Description = "Religious books and pooja guides", DisplayOrder = 7, IsActive = true },
+                new CategoryMaster { Id = 8, CategoryType = "product", Name = "Aroma & Fragrance Items", Description = "Fragrance products for spiritual ambiance", DisplayOrder = 8, IsActive = true },
+                new CategoryMaster { Id = 9, CategoryType = "product", Name = "Pooja Mandir Accessories", Description = "Items used in or for mandirs", DisplayOrder = 9, IsActive = true },
+                new CategoryMaster { Id = 10, CategoryType = "product",  Name = "Miscellaneous", Description = "Other spiritual or pooja-related items", DisplayOrder = 10, IsActive = true },
+                new CategoryMaster { Id = 11, CategoryType = "pooja",  Name = "Pooja", Description = "All types of poojas and rituals conducted in homes", DisplayOrder = 1, IsActive = true },
+                new CategoryMaster { Id = 12, CategoryType = "astrologer",  Name = "Astrology", Description = "Get insights and predictions based on astrological systems", DisplayOrder = 2, IsActive = true },
+                new CategoryMaster { Id = 13, CategoryType = "astrologer",  Name = "Numerology", Description = "Discover your life path and destiny numbers with numerology", DisplayOrder = 3, IsActive = true },
+                new CategoryMaster { Id = 14, CategoryType = "astrologer",  Name = "Tarot", Description = "Receive intuitive guidance through Tarot card readings", DisplayOrder = 4, IsActive = true },
+                new CategoryMaster { Id = 15, CategoryType = "astrologer",  Name = "Palmistry", Description = "Interpret lines and mounts on your palm for future insights", DisplayOrder = 5, IsActive = true },
+                new CategoryMaster { Id = 16, CategoryType = "astrologer",  Name = "Psychic", Description = "Connect with psychics for intuitive and spiritual readings", DisplayOrder = 6, IsActive = true },
+                new CategoryMaster { Id = 17, CategoryType = "astrologer",  Name = "Healing", Description = "Spiritual and energy-based healing for mind, body, and soul", DisplayOrder = 7, IsActive = true },
+                new CategoryMaster { Id = 18, CategoryType = "astrologer",  Name = "Vastu", Description = "Vastu consultation for home, office, and buildings", DisplayOrder = 8, IsActive = true },
+                new CategoryMaster { Id = 19, CategoryType = "astrologer",  Name = "Consultation", Description = "Book personalized sessions with experts across domains", DisplayOrder = 9, IsActive = true },
+                new CategoryMaster { Id = 20, CategoryType = "priest",  Name = "Rituals", Description = "Perform religious rituals and ceremonies for various needs", DisplayOrder = 10, IsActive = true },
+                new CategoryMaster { Id = 21, CategoryType = "astrologer",  Name = "Kundli", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
+                new CategoryMaster { Id = 22, CategoryType = "priest",  Name = "Priest", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
+                new CategoryMaster { Id = 23, CategoryType = "temple",  Name = "Temple", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true },
+                new CategoryMaster { Id = 24, CategoryType = "kathavachak",  Name = "Bhajan & Katha Seva", Description = "Get your Kundli created, analyzed, and matched", DisplayOrder = 11, IsActive = true }
             };
 
             var subcategories = new List<SubCategoryMaster>
@@ -406,6 +405,10 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 new PoojaKitItemMaster { Id=6, KitSubcategoryId=502, ProductSubcategoryId=603},
                 new PoojaKitItemMaster { Id=7, KitSubcategoryId=502, ProductSubcategoryId=604, Notes = "Decorative item" }
             };
+
+            string newImageUrl = "https://www.pujasthan.com/wp-content/uploads/2023/08/Puja-Samagri-Online-3.png";
+
+            categories.ForEach(c => c.ImageUrl = newImageUrl);
 
             SeedCatalogDto seedCatalogDto = new SeedCatalogDto
             {

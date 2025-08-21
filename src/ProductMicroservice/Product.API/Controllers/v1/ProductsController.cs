@@ -112,12 +112,12 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("{subCategoryId:int}")]
+        [HttpGet("{scid:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetProductBySubCategoryIdAsync(int subCategoryId)
+        public async Task<IActionResult> GetProductBySubCategoryIdAsync(int scid)
         {
-            var result = await Mediator.Send(new GetProductBySubCategoryId { SubCategoryId = subCategoryId });
+            var result = await Mediator.Send(new GetProductBySubCategoryId { SubCategoryId = scid });
 
             return Ok(result);
         }

@@ -29,8 +29,8 @@ namespace Product.Application.Features.EventHandlers.Query
                 if (product is null)
                     return Result.Failure(new FailureResponse("NotFound", "Product not found"));
 
-                var dto = product.Adapt<ProductDto>();
-                return Result.Success(product);
+                var dto = ProductBySubCategoryResponseDto.FromEntityList(product);
+                return Result.Success(dto);
             }
             catch (Exception ex)
             {
