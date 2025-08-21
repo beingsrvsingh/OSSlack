@@ -7,17 +7,17 @@ using Shared.Application.Interfaces.Logging;
 
 namespace Product.Infrastructure.Services
 {
-    public class SeedCatalogService : ISeedCatalogService
+    public class SeedProductService : ISeedProductService
     {
-        private readonly ILoggerService<SeedCatalogService> logger;
+        private readonly ILoggerService<SeedProductService> logger;
         private readonly IUnitOfWork unitOfWork;
 
-        public SeedCatalogService(ILoggerService<SeedCatalogService> logger, IUnitOfWork unitOfWork)
+        public SeedProductService(ILoggerService<SeedProductService> logger, IUnitOfWork unitOfWork)
         {
             this.logger = logger;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<bool> SeedCatalogAsync(SeedCatalogDto seedCatalogDto)
+        public async Task<bool> SeedCatalogAsync(SeedProductDto seedCatalogDto)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Product.Infrastructure.Services
                         var category = cat.Adapt<ProductMaster>();
                         await unitOfWork.ProductRepository.AddAsync(category);
                     }
-                }
+                }                
 
                 await unitOfWork.SaveChangesAsync();
                 await unitOfWork.CommitTransactionAsync();

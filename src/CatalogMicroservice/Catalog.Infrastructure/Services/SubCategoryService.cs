@@ -10,14 +10,17 @@ namespace Catalog.Infrastructure.Services
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ISubCategoryLocalizedTextRepository _localizedTextRepository;
         private readonly ILoggerService<SubCategoryService> _logger;
+        private readonly ICatalogAttributeRepository attributeRepository;
 
         public SubCategoryService(
             ISubCategoryRepository subCategoryRepository,
             ISubCategoryLocalizedTextRepository localizedTextRepository,
+            ICatalogAttributeRepository attributeRepository,
             ILoggerService<SubCategoryService> logger)
         {
             _subCategoryRepository = subCategoryRepository;
             _localizedTextRepository = localizedTextRepository;
+            this.attributeRepository = attributeRepository;
             _logger = logger;
         }
 
@@ -49,13 +52,27 @@ namespace Catalog.Infrastructure.Services
 
         public async Task<bool> CreateSubCategoryAsync(SubCategoryMaster subCategory)
         {
+            using var transaction = await _subCategoryRepository.BeginTransactionAsync();
             try
             {
                 await _subCategoryRepository.AddAsync(subCategory);
+                if (subCategory.CatalogAttributes.Any())
+                {
+                    foreach (var attribute in subCategory.CatalogAttributes)
+                    {
+                        // Associate attribute with the newly created category
+                        attribute.SubCategoryMasterId = subCategory.Id;
+                        await attributeRepository.AddAsync(attribute);
+                    }
+                }
+
+                await transaction.CommitAsync();
+
                 return true;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError("Error creating subcategory", ex);
                 return false;
             }

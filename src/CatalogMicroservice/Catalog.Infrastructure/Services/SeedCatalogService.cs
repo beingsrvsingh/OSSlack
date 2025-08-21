@@ -33,6 +33,7 @@ namespace Catalog.Infrastructure.Services
                         await unitOfWork.CatalogRepository.AddAsync(category);
                     }
                 }
+                await unitOfWork.SaveChangesAsync();
 
                 // Seed Subcategories
                 foreach (var subcat in seedCatalogDto.SubCategoryMasters)
@@ -56,6 +57,19 @@ namespace Catalog.Infrastructure.Services
                     }
                 }
 
+                // Seed Catalog Attributes
+                foreach (var attr in seedCatalogDto.CatalogAttributes)
+                {
+                    var exists = await unitOfWork.CatalogAttributeRepository.AnyAsync(a =>
+                        a.Key == attr.Key && a.SubCategoryMasterId == attr.SubCategoryMasterId);
+
+                    if (!exists)
+                    {
+                        var catalogAttr = attr.Adapt<CatalogAttribute>();
+                        await unitOfWork.CatalogAttributeRepository.AddAsync(catalogAttr);
+                    }
+                }
+                
                 await unitOfWork.SaveChangesAsync();
                 await unitOfWork.CommitTransactionAsync();
 

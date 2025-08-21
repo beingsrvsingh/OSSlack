@@ -5,6 +5,7 @@ using Shared.Infrastructur.UoW;
 using Product.Infrastructure.Persistence.Context;
 using Product.Domain.Repository;
 using Product.Domain.Entities;
+using Product.Domain.Core.Repository;
 
 namespace Product.Infrastructure.Repositories.UOW
 {
@@ -17,7 +18,7 @@ namespace Product.Infrastructure.Repositories.UOW
         }
 
         private IProductRepository? productRepository;
-
+        private IProductAttributeRepository? productAttributeRepository;
         public IProductRepository ProductRepository
         {
             get
@@ -27,6 +28,18 @@ namespace Product.Infrastructure.Repositories.UOW
                     productRepository = new ProductRepository(_context);
                 }
                 return productRepository;
+            }
+        }         
+
+        public IProductAttributeRepository ProductAttributeRepository
+        {
+            get
+            {
+                if (productAttributeRepository == null)
+                {
+                    productAttributeRepository = new ProductAttributeRepository(_context);
+                }
+                return productAttributeRepository;
             }
         }
 

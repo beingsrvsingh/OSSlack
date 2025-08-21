@@ -71,11 +71,6 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(v => v.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.ProductAttributeMasters)
-                .WithOne(a => a.ProductMaster)
-                .HasForeignKey(a => a.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasMany(p => p.LocalizationMasters)
                 .WithOne(l => l.ProductMaster)
                 .HasForeignKey(l => l.ProductId)
@@ -89,6 +84,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.HasOne(p => p.SEOInfoMaster)
                 .WithOne(s => s.ProductMaster)
                 .HasForeignKey<ProductSEOInfoMaster>(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.AttributeValues)
+                .WithOne(s => s.ProductMaster)
+                .HasForeignKey(t => t.ProductMasterId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

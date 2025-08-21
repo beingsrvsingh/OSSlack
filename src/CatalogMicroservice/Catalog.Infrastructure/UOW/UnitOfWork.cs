@@ -21,12 +21,16 @@ namespace Catalog.Infrastructure.Repositories.UOW
         private ICategoryRepository? categoryRepository;
         private ISubCategoryRepository? subCategoryRepository;
         private IPoojaKitItemRepository? poojaKitItemRepository;
+        private ICatalogAttributeRepository? catalogAttributeRepository;
+        private ICatalogAttributeAllowedValueRepository? catalogAttributeAllowedValueRepository;
 
         public ICategoryRepository CatalogRepository => categoryRepository ?? new CategoryRepository(_catalogDbContext);
 
         public ISubCategoryRepository SubCategoryRepository => subCategoryRepository ?? new SubCategoryRepository(_catalogDbContext);
 
         public IPoojaKitItemRepository PoojaKitItemRepository => poojaKitItemRepository ?? new PoojaKitItemRepository(_catalogDbContext);
+        public ICatalogAttributeRepository CatalogAttributeRepository => catalogAttributeRepository ?? new CatalogAttributeRepository(_catalogDbContext);
+        public ICatalogAttributeAllowedValueRepository CatalogAttributeAllowedValueRepository => catalogAttributeAllowedValueRepository ?? new CatalogAttributeAllowedValueRepository(_catalogDbContext);
 
         protected override AuditLog ConvertAuditEntry(AuditEntry entry)
         {

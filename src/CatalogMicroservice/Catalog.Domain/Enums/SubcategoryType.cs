@@ -12,14 +12,16 @@ namespace Catalog.Domain.Enums
         Prasad = 5,
         Bhajan = 6,
         Bhandara = 7,
-        Astrology = 8,
+        Priest = 8,
+        Temple = 9,
+        Astrology = 10,
 
         // For product categories
-        Product = 10,
-        Kit = 11,
+        Product = 11,
+        Kit = 12,
 
         // Special classifications
-        KitGroup = 20,
+        KitGroup = 30,
     }
 
 }

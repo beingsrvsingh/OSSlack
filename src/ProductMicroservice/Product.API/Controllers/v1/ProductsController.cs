@@ -80,14 +80,6 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("{productId:int}/attributes")]
-        [ProducesResponseType(typeof(IEnumerable<ProductAttributeMaster>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAttributes(int productId)
-        {
-            var result = await Mediator.Send(new GetProductAttributesQuery(productId));
-            return Ok(result);
-        }
-
         [HttpGet("{productId:int}/localized-info")]
         [ProducesResponseType(typeof(IEnumerable<LocalizedProductInfoMaster>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLocalizedInfo(int productId)
@@ -121,16 +113,17 @@ namespace Product.API.Controllers.v1
 
             return Ok(result);
         }
-        
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> GetGetProductByProductNameAsync(string name)
         {
-            var result = await Mediator.Send(new GetProductByProductName{ProductName = name});
+            var result = await Mediator.Send(new GetProductByProductName { ProductName = name });
 
             return Ok(result);
         }
+
     }
 
 }

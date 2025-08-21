@@ -34,7 +34,7 @@ public partial class SubCategoryMaster
     public virtual SubCategoryMaster? ParentSubcategory { get; set; }
 
     public virtual ICollection<SubCategoryMaster> ChildSubcategories { get; set; } = new List<SubCategoryMaster>();
-
+    public virtual ICollection<CatalogAttribute> CatalogAttributes { get; set; } = new List<CatalogAttribute>();
     public virtual ICollection<SubCategoryLocalizedText> Localizations { get; set; } = new List<SubCategoryLocalizedText>();
 }
 

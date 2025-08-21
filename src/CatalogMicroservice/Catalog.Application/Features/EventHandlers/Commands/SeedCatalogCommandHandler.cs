@@ -5,6 +5,7 @@ using Catalog.Domain.Entities;
 using Catalog.Domain.Enums;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
 namespace Catalog.Application.Features.EventHandlers.Commands
@@ -52,20 +53,20 @@ namespace Catalog.Application.Features.EventHandlers.Commands
             var subcategories = new List<SubCategoryMaster>
             {
                 // 1. Pooja Samagri
-                new SubCategoryMaster { Id = 101, CategoryMasterId = 1, Name = "Kumkum (Vermilion)", IsActive = true },
-                new SubCategoryMaster { Id = 102, CategoryMasterId = 1, Name = "Haldi (Turmeric)", IsActive = true },
-                new SubCategoryMaster { Id = 103, CategoryMasterId = 1, Name = "Chandan (Sandalwood)", IsActive = true },
-                new SubCategoryMaster { Id = 104, CategoryMasterId = 1, Name = "Vibhuti / Bhasma", IsActive = true },
-                new SubCategoryMaster { Id = 105, CategoryMasterId = 1, Name = "Sindoor / Sacred Ash", IsActive = true },
-                new SubCategoryMaster { Id = 106, CategoryMasterId = 1, Name = "Camphor (Kapoor)", IsActive = true },
-                new SubCategoryMaster { Id = 107, CategoryMasterId = 1, Name = "Incense Sticks (Agarbatti)", IsActive = true },
-                new SubCategoryMaster { Id = 108, CategoryMasterId = 1, Name = "Dhoop Sticks / Cones", IsActive = true },
-                new SubCategoryMaster { Id = 109, CategoryMasterId = 1, Name = "Ghee / Oil for Lamps", IsActive = true },
-                new SubCategoryMaster { Id = 110, CategoryMasterId = 1, Name = "Panchamrit Items", IsActive = true },
-                new SubCategoryMaster { Id = 111, CategoryMasterId = 1, Name = "Betel Leaves & Nuts", IsActive = true },
-                new SubCategoryMaster { Id = 112, CategoryMasterId = 1, Name = "Dry Fruits", IsActive = true },
-                new SubCategoryMaster { Id = 113, CategoryMasterId = 1, Name = "Flowers & Garlands", IsActive = true },
-                new SubCategoryMaster { Id = 114, CategoryMasterId = 1, Name = "Fruits for Offering", IsActive = true },
+                new SubCategoryMaster { Id = 101, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Kumkum (Vermilion)", IsActive = true },
+                new SubCategoryMaster { Id = 102, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Haldi (Turmeric)", IsActive = true },
+                new SubCategoryMaster { Id = 103, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Chandan (Sandalwood)", IsActive = true },
+                new SubCategoryMaster { Id = 104, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Vibhuti / Bhasma", IsActive = true },
+                new SubCategoryMaster { Id = 105, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Sindoor / Sacred Ash", IsActive = true },
+                new SubCategoryMaster { Id = 106, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Camphor (Kapoor)", IsActive = true },
+                new SubCategoryMaster { Id = 107, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Incense Sticks (Agarbatti)", IsActive = true },
+                new SubCategoryMaster { Id = 108, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Dhoop Sticks / Cones", IsActive = true },
+                new SubCategoryMaster { Id = 109, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Ghee / Oil for Lamps", IsActive = true },
+                new SubCategoryMaster { Id = 110, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Panchamrit Items", IsActive = true },
+                new SubCategoryMaster { Id = 111, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Betel Leaves & Nuts", IsActive = true },
+                new SubCategoryMaster { Id = 112, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Dry Fruits", IsActive = true },
+                new SubCategoryMaster { Id = 113, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Flowers & Garlands", IsActive = true },
+                new SubCategoryMaster { Id = 114, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Fruits for Offering", IsActive = true },
 
                 // 2. Pooja Vessels & Utensils
                 new SubCategoryMaster { Id = 201, CategoryMasterId = 2, Name = "Kalash", IsActive = true },
@@ -368,19 +369,19 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 new SubCategoryMaster { Id = 2112, CategoryMasterId = 21, Name = "Printed Kundli Booklets / PDFs", Description = "Physical or digital kundli copies", IsActive = true },
 
                 // Priest (CategoryMasterId = 22)
-                new SubCategoryMaster { Id = 2201, CategoryMasterId = 22, Name = "North Indian Pandit", Description = "Book experienced North Indian pandits for rituals and ceremonies", IsActive = true },
-                new SubCategoryMaster { Id = 2202, CategoryMasterId = 22, Name = "South Indian Pandit", Description = "Hire South Indian priests for traditional ceremonies", IsActive = true },
-                new SubCategoryMaster { Id = 2203, CategoryMasterId = 22, Name = "Telugu / Kannada / Tamil Priest", Description = "Language-specific priest services", IsActive = true },
-                new SubCategoryMaster { Id = 2204, CategoryMasterId = 22, Name = "Purohit for Griha Pravesh", Description = "Priest services for housewarming rituals", IsActive = true },
-                new SubCategoryMaster { Id = 2205, CategoryMasterId = 22, Name = "Priest for Marriage Ceremony", Description = "Book priests for Hindu weddings", IsActive = true },
-                new SubCategoryMaster { Id = 2206, CategoryMasterId = 22, Name = "Priest for Antim Sanskar", Description = "Last rites priest services", IsActive = true },
+                new SubCategoryMaster { Id = 2201, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "North Indian Pandit", Description = "Book experienced North Indian pandits for rituals and ceremonies", IsActive = true },
+                new SubCategoryMaster { Id = 2202, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "South Indian Pandit", Description = "Hire South Indian priests for traditional ceremonies", IsActive = true },
+                new SubCategoryMaster { Id = 2203, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "Telugu / Kannada / Tamil Priest", Description = "Language-specific priest services", IsActive = true },
+                new SubCategoryMaster { Id = 2204, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "Purohit for Griha Pravesh", Description = "Priest services for housewarming rituals", IsActive = true },
+                new SubCategoryMaster { Id = 2205, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "Priest for Marriage Ceremony", Description = "Book priests for Hindu weddings", IsActive = true },
+                new SubCategoryMaster { Id = 2206, CategoryMasterId = 22, SubcategoryType = SubcategoryType.Priest, Name = "Priest for Antim Sanskar", Description = "Last rites priest services", IsActive = true },
 
                 // Temple (CategoryMasterId = 22)
-                new SubCategoryMaster { Id = 2301, CategoryMasterId = 23, Name = "Temple Darshan Booking", Description = "Book priority darshan slots at temples", IsActive = true },
-                new SubCategoryMaster { Id = 2302, CategoryMasterId = 23, Name = "Online Temple Puja", Description = "Remote puja performed at temples", IsActive = true },
-                new SubCategoryMaster { Id = 2303, CategoryMasterId = 23, Name = "Archana / Abhishekam Services", Description = "Book rituals in temple on your behalf", IsActive = true },
-                new SubCategoryMaster { Id = 2304, CategoryMasterId = 23, Name = "Temple Prasadam Delivery", Description = "Get temple prasadam delivered to your home", IsActive = true },
-                new SubCategoryMaster { Id = 2305, CategoryMasterId = 23, Name = "Donation to Temples", Description = "Make donations to listed temples", IsActive = true },
+                new SubCategoryMaster { Id = 2301, SubcategoryType = SubcategoryType.Temple, CategoryMasterId = 23, Name = "Temple Darshan Booking", Description = "Book priority darshan slots at temples", IsActive = true },
+                new SubCategoryMaster { Id = 2302, SubcategoryType = SubcategoryType.Temple, CategoryMasterId = 23, Name = "Online Temple Puja", Description = "Remote puja performed at temples", IsActive = true },
+                new SubCategoryMaster { Id = 2303, SubcategoryType = SubcategoryType.Temple, CategoryMasterId = 23, Name = "Archana / Abhishekam Services", Description = "Book rituals in temple on your behalf", IsActive = true },
+                new SubCategoryMaster { Id = 2304, SubcategoryType = SubcategoryType.Temple, CategoryMasterId = 23, Name = "Temple Prasadam Delivery", Description = "Get temple prasadam delivered to your home", IsActive = true },
+                new SubCategoryMaster { Id = 2305, SubcategoryType = SubcategoryType.Temple, CategoryMasterId = 23, Name = "Donation to Temples", Description = "Make donations to listed temples", IsActive = true },
 
                 // KathaVachak, Satsang, jagran (CategoryMasterId = 23)
                 new SubCategoryMaster { Id = 2401, CategoryMasterId = 24, Name = "Bhajan Mandali Booking", Description = "Book a devotional bhajan group for events", IsActive = true },
@@ -406,6 +407,97 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 new PoojaKitItemMaster { Id=7, KitSubcategoryId=502, ProductSubcategoryId=604, Notes = "Decorative item" }
             };
 
+            var catalogAttributes = new List<CatalogAttribute>
+            {
+                new CatalogAttribute
+                {
+                    Id = 101,
+                    Key = "color",
+                    Label = "Color",
+                    DataType = AttributeDataType.Enum, // Assuming an enum data type for fixed values
+                    IsCustom = false,
+                    IsRequired = true,
+                    SortOrder = 1,
+                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Product).Id, // example category ref
+                    AllowedValues = new List<CatalogAttributeAllowedValue>
+                    {
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 101,
+                            Value = "Red",
+                            SortOrder = 1,
+                            CreatedAt = DateTime.UtcNow,
+                        },
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 102,
+                            Value = "Blue",
+                            SortOrder = 2,
+                            CreatedAt = DateTime.UtcNow,
+                        },
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 103,
+                            Value = "Green",
+                            SortOrder = 3,
+                            CreatedAt = DateTime.UtcNow,
+                        }
+                    },
+                    CreatedAt = DateTime.UtcNow
+                },
+
+                new CatalogAttribute
+                {
+                    Id = 102,
+                    Key = "size",
+                    Label = "Size",
+                    DataType = AttributeDataType.Enum,
+                    IsCustom = false,
+                    IsRequired = true,
+                    SortOrder = 2,
+                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Priest).Id,
+                    AllowedValues = new List<CatalogAttributeAllowedValue>
+                    {
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 104,
+                            Value = "S",
+                            SortOrder = 1,
+                            CreatedAt = DateTime.UtcNow,
+                        },
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 105,
+                            Value = "M",
+                            SortOrder = 2,
+                            CreatedAt = DateTime.UtcNow,
+                        },
+                        new CatalogAttributeAllowedValue
+                        {
+                            //Id = 106,
+                            Value = "L",
+                            SortOrder = 3,
+                            CreatedAt = DateTime.UtcNow,
+                        }
+                    },
+                    CreatedAt = DateTime.UtcNow
+                },
+
+                new CatalogAttribute
+                {
+                    Id = 103,
+                    Key = "material",
+                    Label = "Material",
+                    DataType = AttributeDataType.String,
+                    IsCustom = false,
+                    IsRequired = false,
+                    SortOrder = 3,
+                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Temple).Id,
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+
+
             string newImageUrl = "https://www.pujasthan.com/wp-content/uploads/2023/08/Puja-Samagri-Online-3.png";
 
             categories.ForEach(c => c.ImageUrl = newImageUrl);
@@ -415,6 +507,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 CategoryMasters = categories,
                 SubCategoryMasters = subcategories,
                 PoojaKitItems = poojaKitItems,
+                CatalogAttributes = catalogAttributes
             };
 
             bool isSeedCompleted = await seedCatalogService.SeedCatalogAsync(seedCatalogDto);

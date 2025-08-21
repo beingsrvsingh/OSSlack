@@ -36,13 +36,6 @@ namespace Product.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ProductAttributeMaster>> GetAttributesAsync(int productId)
-        {
-            return await _context.ProductAttributeMasters
-                .Where(a => a.ProductId == productId)
-                .ToListAsync();
-        }
-
         public async Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId)
         {
             return await _context.LocalizedProductInfoMasters

@@ -55,19 +55,6 @@ namespace Product.Infrastructure.Services
             }
         }
 
-        public async Task<IEnumerable<ProductAttributeMaster>> GetAttributesAsync(int productId)
-        {
-            try
-            {
-                return await _productRepository.GetAttributesAsync(productId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in GetAttributesAsync: {ex.Message}", ex);
-                return Enumerable.Empty<ProductAttributeMaster>();
-            }
-        }
-
         public async Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId)
         {
             try
@@ -142,6 +129,7 @@ namespace Product.Infrastructure.Services
             try
             {
                 var product = await _productRepository.GetByIdAsync(productId);
+
                 if (product == null)
                 {
                     _logger.LogWarning($"Product with ID {productId} not found.");
@@ -177,6 +165,11 @@ namespace Product.Infrastructure.Services
         {
             var result = await _productRepository.GetAsync(p => p.Name.Contains(prodName));
             return result.ToList();
+        }
+
+        public Task<ProductMaster?> GetProductWithAttributesAsync(int productId)
+        {
+            throw new NotImplementedException();
         }
     }
 

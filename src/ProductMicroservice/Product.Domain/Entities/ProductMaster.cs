@@ -28,9 +28,10 @@ namespace Product.Domain.Entities
 
         public virtual ICollection<ProductRegionPriceMaster> RegionPriceMaster { get; set; } = new List<ProductRegionPriceMaster>();
         public virtual ICollection<ProductVariantMaster> VariantMasters { get; set; } = new List<ProductVariantMaster>();
-        public virtual ICollection<ProductAttributeMaster> ProductAttributeMasters { get; set; } = new List<ProductAttributeMaster>();
         public virtual ICollection<LocalizedProductInfoMaster> LocalizationMasters { get; set; } = new List<LocalizedProductInfoMaster>();
         public virtual ICollection<ProductTagMaster> ProductTagMasters { get; set; } = new List<ProductTagMaster>();
         public virtual ProductSEOInfoMaster? SEOInfoMaster { get; set; }
+        public virtual ICollection<ProductAttributeValue> AttributeValues { get; set; } = new List<ProductAttributeValue>();
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Catalog.Domain.Entities;
+﻿using Catalog.Application.Contracts;
+using Catalog.Domain.Entities;
 
 namespace Catalog.Application.Services
 {
@@ -13,5 +14,7 @@ namespace Catalog.Application.Services
 
         Task<IEnumerable<CategoryLocalizedText>> GetLocalizedTextsAsync(int categoryId);
         Task<bool> AddOrUpdateLocalizedTextAsync(CategoryLocalizedText localizedText);
+        Task<IEnumerable<CatalogAttributeDto>> GetAttributesByCategoryIdAsync(int categoryId);
+
     }
 }

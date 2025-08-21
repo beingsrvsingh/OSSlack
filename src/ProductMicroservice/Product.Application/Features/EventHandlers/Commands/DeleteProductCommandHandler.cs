@@ -24,6 +24,7 @@ namespace Product.Application.Features.EventHandlers.Commands
             try
             {
                 var success = await _productService.DeleteProductAsync(request.ProductId);
+                
                 return success
                     ? Result.Success()
                     : Result.Failure(new FailureResponse("Failed", "Failed to delete product"));

@@ -54,7 +54,10 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
 
             if (consultationMode.HasValue)
             {
-                query = query.Where(a => a.ConsultationModes == consultationMode.Value);
+                if (consultationMode.HasValue)
+                {
+                    query = query.Where(a => a.ConsultationModes.Any(cm => cm.ConsultationModeMaster.Mode == consultationMode.Value.ToString()));
+                }
             }
 
             if (isActive.HasValue)

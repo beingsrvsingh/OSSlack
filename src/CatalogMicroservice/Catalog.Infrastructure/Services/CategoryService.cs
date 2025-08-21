@@ -1,4 +1,5 @@
-﻿using Catalog.Application.Services;
+﻿using Catalog.Application.Contracts;
+using Catalog.Application.Services;
 using Catalog.Domain.Core.Repository;
 using Catalog.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
@@ -9,6 +10,7 @@ namespace Catalog.Infrastructure.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ISubCategoryRepository subCategoryRepository;
+        private readonly ICatalogAttributeRepository attributeRepository;
         private readonly ICategoryLocalizedTextRepository _localizedTextRepository;
         private readonly ILoggerService<CategoryService> _logger;
 
@@ -16,11 +18,13 @@ namespace Catalog.Infrastructure.Services
             ICategoryRepository categoryRepository,
             ICategoryLocalizedTextRepository localizedTextRepository,
             ISubCategoryRepository subCategoryRepository,
+            ICatalogAttributeRepository attributeRepository,
             ILoggerService<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
             _localizedTextRepository = localizedTextRepository;
             this.subCategoryRepository = subCategoryRepository;
+            this.attributeRepository = attributeRepository;
             _logger = logger;
         }
 
@@ -42,15 +46,16 @@ namespace Catalog.Infrastructure.Services
 
 
         public async Task<bool> CreateCategoryAsync(CategoryMaster category)
-        {
+        {            
             try
             {
                 await _categoryRepository.AddAsync(category);
+                await _categoryRepository.SaveChangesAsync();                            
                 return true;
             }
             catch (Exception ex)
-            {
-                _logger.LogError("Failed to create category", ex);
+            {                
+                _logger.LogError(ex, "Failed to create category with attributes");
                 return false;
             }
         }
@@ -112,6 +117,23 @@ namespace Catalog.Infrastructure.Services
                 _logger.LogError("Failed to add/update localized text for category", ex);
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<CatalogAttributeDto>> GetAttributesByCategoryIdAsync(int categoryId)
+        {
+            var attributes = await attributeRepository
+                .GetAttributesByCategoryIdAsync(categoryId);
+
+            return attributes.Select(attr => new CatalogAttributeDto
+            {
+                Id = attr.Id,
+                Key = attr.Key,
+                Label = attr.Label,
+                DataType = attr.DataType.ToString(),
+                IsCustom = attr.IsCustom,
+                IsRequired = attr.IsRequired,
+                SortOrder = attr.SortOrder
+            });
         }
     }
 }

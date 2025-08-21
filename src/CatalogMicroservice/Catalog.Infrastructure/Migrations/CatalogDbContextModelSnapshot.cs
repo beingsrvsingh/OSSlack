@@ -22,6 +22,108 @@ namespace Catalog.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    b.Property<int>("DataType")
+                        .HasColumnType("int")
+                        .HasColumnName("data_type");
+
+                    b.Property<bool>("IsCustom")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_custom");
+
+                    b.Property<bool>("IsRequired")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_required");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("key");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("label");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<int>("SubCategoryMasterId")
+                        .HasColumnType("int")
+                        .HasColumnName("sub_category_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubCategoryMasterId");
+
+                    b.ToTable("catalog_attribute", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeAllowedValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CatalogAttributeId")
+                        .HasColumnType("int")
+                        .HasColumnName("catalog_attribute_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CatalogAttributeId");
+
+                    b.ToTable("catalog_attribute_allowed_value", (string)null);
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
                 {
                     b.Property<int>("Id")
@@ -238,6 +340,28 @@ namespace Catalog.Infrastructure.Migrations
                     b.ToTable("sub_category_master", (string)null);
                 });
 
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
+                {
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
+                        .WithMany("CatalogAttributes")
+                        .HasForeignKey("SubCategoryMasterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubCategoryMaster");
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeAllowedValue", b =>
+                {
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttribute", "CatalogAttribute")
+                        .WithMany("AllowedValues")
+                        .HasForeignKey("CatalogAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CatalogAttribute");
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
                 {
                     b.HasOne("Catalog.Domain.Entities.CategoryMaster", null)
@@ -309,6 +433,11 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("ParentSubcategory");
                 });
 
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
+                {
+                    b.Navigation("AllowedValues");
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryMaster", b =>
                 {
                     b.Navigation("Localizations");
@@ -318,6 +447,8 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryMaster", b =>
                 {
+                    b.Navigation("CatalogAttributes");
+
                     b.Navigation("ChildSubcategories");
 
                     b.Navigation("Localizations");

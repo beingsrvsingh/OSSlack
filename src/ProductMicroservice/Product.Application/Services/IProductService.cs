@@ -9,7 +9,6 @@ namespace Product.Application.Services
         Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);
-        Task<IEnumerable<ProductAttributeMaster>> GetAttributesAsync(int productId);
         Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId);
         Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId);
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
@@ -17,6 +16,7 @@ namespace Product.Application.Services
         Task<bool> AddProductAsync(ProductMaster product);
         Task<bool> UpdateProductAsync(ProductMaster product);
         Task<bool> DeleteProductAsync(int productId);
+        Task<ProductMaster?> GetProductWithAttributesAsync(int productId);
     }
 
 }

@@ -4,16 +4,17 @@ using Product.Application.Features.Commands;
 using Product.Application.Services;
 using Product.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
 namespace Product.Application.Features.EventHandlers.Commands
 {
-    public class SeedCatalogCommandHandler : IRequestHandler<SeedCatalogCommand, Result>
+    public class SeedProductCommandHandler : IRequestHandler<SeedCatalogCommand, Result>
     {
-        private readonly ILoggerService<SeedCatalogCommandHandler> logger;
-        private readonly ISeedCatalogService seedCatalogService;
+        private readonly ILoggerService<SeedProductCommandHandler> logger;
+        private readonly ISeedProductService seedCatalogService;
 
-        public SeedCatalogCommandHandler(ILoggerService<SeedCatalogCommandHandler> logger, ISeedCatalogService seedCatalogService)
+        public SeedProductCommandHandler(ILoggerService<SeedProductCommandHandler> logger, ISeedProductService seedCatalogService)
         {
             this.logger = logger;
             this.seedCatalogService = seedCatalogService;
@@ -23,7 +24,27 @@ namespace Product.Application.Features.EventHandlers.Commands
             var products = new List<ProductMaster>
             {
                 // SubCategory 101 - Kumkum (Vermilion)
-                new() { Name = "Premium Kumkum", Price = 25.99m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri", IsNew = true },
+                new() { Name = "Premium Kumkum", Price = 25.99m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri", IsNew = true, AttributeValues =  new List<ProductAttributeValue>
+            {
+                new()
+                {
+                    ProductMasterId = 101,
+                    AttributeKey = "color",
+                    AttributeLabel = "Color",
+                    AttributeDataType = (int)AttributeDataType.String,
+                    Value = "Red",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    ProductMasterId = 102,
+                    AttributeKey = "weight",
+                    AttributeLabel = "Weight (grams)",
+                    AttributeDataType = (int)AttributeDataType.Decimal,
+                    Value = "100",
+                    CreatedAt = DateTime.UtcNow
+                }
+            } },
                 new() { Name = "Natural Red Kumkum", Price = 15.50m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri" },
 
                 // SubCategory 102 - Haldi (Turmeric)
@@ -164,7 +185,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                 product.CreatedAt = DateTime.UtcNow;
             }
 
-            SeedCatalogDto seedCatalogDto = new SeedCatalogDto
+            SeedProductDto seedCatalogDto = new SeedProductDto
             {
                 ProductMasters = products
             };

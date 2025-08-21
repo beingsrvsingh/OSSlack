@@ -7,6 +7,8 @@ namespace Catalog.Domain.Core.UOW
     {
         ICategoryRepository CatalogRepository { get; }
         ISubCategoryRepository SubCategoryRepository { get; }
-        IPoojaKitItemRepository PoojaKitItemRepository{ get; }
+        IPoojaKitItemRepository PoojaKitItemRepository { get; }
+        ICatalogAttributeRepository CatalogAttributeRepository { get; }
+        ICatalogAttributeAllowedValueRepository CatalogAttributeAllowedValueRepository{ get; }
     }
 }

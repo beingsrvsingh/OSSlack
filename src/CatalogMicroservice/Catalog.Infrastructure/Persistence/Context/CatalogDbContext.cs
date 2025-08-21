@@ -17,6 +17,8 @@ public partial class CatalogDbContext : DbContext
     public DbSet<SubCategoryMaster> SubCategories => Set<SubCategoryMaster>();
     public DbSet<SubCategoryLocalizedText> SubCategoryLocalizedTexts => Set<SubCategoryLocalizedText>();
     public DbSet<PoojaKitItemMaster> PoojaKitItems => Set<PoojaKitItemMaster>();
+    public DbSet<CatalogAttribute> CatalogAttributes => Set<CatalogAttribute>();
+    public DbSet<CatalogAttributeAllowedValue> CatalogAttributeAllowedValues => Set<CatalogAttributeAllowedValue>();
 
     public object SubCategoryMasters { get; set; }
 
