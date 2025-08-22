@@ -19,7 +19,7 @@ public partial class CatalogDbContext : DbContext
     public DbSet<PoojaKitItemMaster> PoojaKitItems => Set<PoojaKitItemMaster>();
     public DbSet<CatalogAttribute> CatalogAttributes => Set<CatalogAttribute>();
     public DbSet<CatalogAttributeAllowedValue> CatalogAttributeAllowedValues => Set<CatalogAttributeAllowedValue>();
-
+    public DbSet<CatalogAttributeIcon> CatalogAttributeIcons => Set<CatalogAttributeIcon>();
     public object SubCategoryMasters { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

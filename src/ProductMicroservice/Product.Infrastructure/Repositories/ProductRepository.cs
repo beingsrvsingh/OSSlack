@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
@@ -55,6 +56,17 @@ namespace Product.Infrastructure.Repositories
             return await _context.ProductSEOInfoMasters
                 .FirstOrDefaultAsync(s => s.ProductId == productId);
         }
+
+        public async Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate,Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null)
+        {
+            IQueryable<ProductMaster> query = _context.ProductMasters;
+
+            if (include != null)
+                query = include(query);
+
+            return await query.Where(predicate).ToListAsync();
+        }
+
     }
 
 }

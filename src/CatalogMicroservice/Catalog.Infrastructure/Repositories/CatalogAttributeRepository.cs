@@ -19,6 +19,7 @@ namespace Catalog.Infrastructure.Repositories
         {
             return await dbContext.CatalogAttributes
                 .Include(attr => attr.AllowedValues)
+                .Include(attr => attr.CatalogAttributeIcon)
                 .Where(attr => attr.SubCategoryMasterId == categoryId)
                 .OrderBy(attr => attr.SortOrder)
                 .ToListAsync();

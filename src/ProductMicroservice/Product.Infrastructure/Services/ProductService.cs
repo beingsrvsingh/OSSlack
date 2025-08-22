@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Product.Application.Services;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
@@ -151,12 +152,15 @@ namespace Product.Infrastructure.Services
         {
             try
             {
-                var result = await _productRepository.GetAsync(p => p.SubCategoryId == subCategoryId);
+                var result = await _productRepository.GetAsync(
+                    p => p.SubCategoryId == subCategoryId,
+                    include: query => query.Include(p => p.AttributeValues)); // <-- eager loading
+
                 return result.ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetProductWithVariantsAsync: {ex.Message}", ex);
+                _logger.LogError($"Error in GetProductBySubCategoryIdAsync: {ex.Message}", ex);
                 return new List<ProductMaster>();
             }
         }

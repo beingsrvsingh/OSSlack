@@ -53,7 +53,71 @@ namespace Catalog.Application.Features.EventHandlers.Commands
             var subcategories = new List<SubCategoryMaster>
             {
                 // 1. Pooja Samagri
-                new SubCategoryMaster { Id = 101, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Kumkum (Vermilion)", IsActive = true },
+                new SubCategoryMaster { Id = 101, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Kumkum (Vermilion)", IsActive = true,
+                CatalogAttributes = new List<CatalogAttribute>()
+                {
+                    new CatalogAttribute
+                    {
+                        Id = 201,
+                        Key = "color",
+                        Label = "Color",
+                        DataType = AttributeDataType.Enum,
+                        IsCustom = false,
+                        IsRequired = true,
+                        SortOrder = 1,
+                        AllowedValues = new List<CatalogAttributeAllowedValue>
+                        {
+                            new CatalogAttributeAllowedValue { Value = "Red", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Yellow", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Orange", SortOrder = 3, CreatedAt = DateTime.UtcNow }
+                        },
+                        CatalogAttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "palette",
+                            IconCodePoint = 0xe40a, // Material icon for "palette"
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new CatalogAttribute
+                    {
+                        Id = 202,
+                        Key = "weight",
+                        Label = "Weight",
+                        DataType = AttributeDataType.String,
+                        IsCustom = false,
+                        IsRequired = false,
+                        SortOrder = 2,
+                        CatalogAttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "scale", // Or "balance", depending on available icons
+                            IconCodePoint = 0xf5de, // Example Material Design Icon (if using MDI fonts)
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new CatalogAttribute
+                    {
+                        Id = 203,
+                        Key = "brand",
+                        Label = "Brand",
+                        DataType = AttributeDataType.Enum,
+                        IsCustom = false,
+                        IsRequired = false,
+                        SortOrder = 3,
+                        AllowedValues = new List<CatalogAttributeAllowedValue>
+                        {
+                            new CatalogAttributeAllowedValue { Value = "UnPooja", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                        },
+                        CatalogAttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "category",
+                            IconCodePoint = 0xe574,
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    }            
+                } },
                 new SubCategoryMaster { Id = 102, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Haldi (Turmeric)", IsActive = true },
                 new SubCategoryMaster { Id = 103, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Chandan (Sandalwood)", IsActive = true },
                 new SubCategoryMaster { Id = 104, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Vibhuti / Bhasma", IsActive = true },
@@ -406,110 +470,6 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 new PoojaKitItemMaster { Id=6, KitSubcategoryId=502, ProductSubcategoryId=603},
                 new PoojaKitItemMaster { Id=7, KitSubcategoryId=502, ProductSubcategoryId=604, Notes = "Decorative item" }
             };
-
-            var catalogAttributes = new List<CatalogAttribute>
-            {
-                new CatalogAttribute
-                {
-                    Id = 101,
-                    Key = "color",
-                    Label = "Color",
-                    DataType = AttributeDataType.Enum, // Assuming an enum data type for fixed values
-                    IsCustom = false,
-                    IsRequired = true,
-                    SortOrder = 1,
-                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Product).Id, // example category ref
-                    AllowedValues = new List<CatalogAttributeAllowedValue>
-                    {
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 101,
-                            Value = "Red",
-                            SortOrder = 1,
-                            CreatedAt = DateTime.UtcNow,
-                        },
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 102,
-                            Value = "Blue",
-                            SortOrder = 2,
-                            CreatedAt = DateTime.UtcNow,
-                        },
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 103,
-                            Value = "Green",
-                            SortOrder = 3,
-                            CreatedAt = DateTime.UtcNow,
-                        }
-                    },
-                    CreatedAt = DateTime.UtcNow
-                },
-
-                new CatalogAttribute
-                {
-                    Id = 102,
-                    Key = "size",
-                    Label = "Size",
-                    DataType = AttributeDataType.Enum,
-                    IsCustom = false,
-                    IsRequired = true,
-                    SortOrder = 2,
-                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Priest).Id,
-                    AllowedValues = new List<CatalogAttributeAllowedValue>
-                    {
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 104,
-                            Value = "S",
-                            SortOrder = 1,
-                            CreatedAt = DateTime.UtcNow,
-                        },
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 105,
-                            Value = "M",
-                            SortOrder = 2,
-                            CreatedAt = DateTime.UtcNow,
-                        },
-                        new CatalogAttributeAllowedValue
-                        {
-                            //Id = 106,
-                            Value = "L",
-                            SortOrder = 3,
-                            CreatedAt = DateTime.UtcNow,
-                        }
-                    },
-                    CreatedAt = DateTime.UtcNow,
-                    CatalogAttributeIcon = new CatalogAttributeIcon
-                    {
-                        IconName = "palette",
-                        IconCodePoint = 0xe40a,
-                        IconFontFamily = "MaterialIcons"
-                    },
-                },
-
-                new CatalogAttribute
-                {
-                    Id = 103,
-                    Key = "material",
-                    Label = "Material",
-                    DataType = AttributeDataType.String,
-                    IsCustom = false,
-                    IsRequired = false,
-                    SortOrder = 3,
-                    SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Temple).Id,
-                    CreatedAt = DateTime.UtcNow,
-                    CatalogAttributeIcon = new CatalogAttributeIcon
-                    {
-                        IconName = "layers",
-                        IconCodePoint = 0xe53b,
-                        IconFontFamily = "MaterialIcons"
-                    }
-                }
-            };
-
-
             string newImageUrl = "https://www.pujasthan.com/wp-content/uploads/2023/08/Puja-Samagri-Online-3.png";
 
             categories.ForEach(c => c.ImageUrl = newImageUrl);
@@ -518,8 +478,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
             {
                 CategoryMasters = categories,
                 SubCategoryMasters = subcategories,
-                PoojaKitItems = poojaKitItems,
-                CatalogAttributes = catalogAttributes
+                PoojaKitItems = poojaKitItems
             };
 
             bool isSeedCompleted = await seedCatalogService.SeedCatalogAsync(seedCatalogDto);

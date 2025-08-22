@@ -132,7 +132,21 @@ namespace Catalog.Infrastructure.Services
                 DataType = attr.DataType.ToString(),
                 IsCustom = attr.IsCustom,
                 IsRequired = attr.IsRequired,
-                SortOrder = attr.SortOrder
+                SortOrder = attr.SortOrder,
+                AllowedValues = attr.AllowedValues?
+                .OrderBy(v => v.SortOrder)
+                .Select(v => new CatalogAttributeAllowedValueDto
+                {
+                    Id = v.Id,
+                    Value = v.Value,
+                    SortOrder = v.SortOrder
+                }).ToList(),
+                Icon = new CatalogAttributeIconDto
+                {
+                    IconCodePoint = attr.CatalogAttributeIcon?.IconCodePoint,
+                    IconFontFamily = attr.CatalogAttributeIcon?.IconFontFamily,
+                    IconName = attr.CatalogAttributeIcon?.IconName,
+                },
             });
         }
     }

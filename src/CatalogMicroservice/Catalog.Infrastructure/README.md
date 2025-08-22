@@ -10,6 +10,21 @@ EntityFrameworkCore\Update-database -context CatalogDbContext
 
 EntityFrameworkCore\Remove-Migration -context contextname
 
+-- Disable foreign key checks temporarily to allow truncation of related tables
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE catalogdb.catalog_attribute_allowed_value;
+TRUNCATE TABLE catalogdb.catalog_attribute;
+TRUNCATE TABLE catalogdb.sub_category_localized_text;
+TRUNCATE TABLE catalogdb.sub_category_master;
+TRUNCATE TABLE catalogdb.category_localized_text;
+TRUNCATE TABLE catalogdb.category_master;
+TRUNCATE TABLE catalogdb.pooja_kit_item_master;
+TRUNCATE TABLE catalogdb.catalog_attribute_icon;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
 
 find . -name "*.csproj";
 

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Product.Domain.Entities;
 using Shared.Domain.Repository;
 
@@ -11,5 +12,6 @@ namespace Product.Domain.Repository
         Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId);
         Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId);
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
+        Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null);
     }
 }

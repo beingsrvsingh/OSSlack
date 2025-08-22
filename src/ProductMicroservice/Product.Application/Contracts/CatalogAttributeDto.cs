@@ -1,5 +1,5 @@
 
-namespace Catalog.Application.Contracts
+namespace Product.Application.Contracts
 {
     public class CatalogAttributeDto
     {
@@ -10,9 +10,25 @@ namespace Catalog.Application.Contracts
         public bool IsCustom { get; set; }
         public bool IsRequired { get; set; }
         public int SortOrder { get; set; }
-        public CatalogAttributeIconDto? Icon { get; set; }
-        public List<CatalogAttributeAllowedValueDto>? AllowedValues { get; set; }
 
+        public CatalogAttributeIconDto? Icon { get; set; }
+
+        public List<CatalogAttributeAllowedValueDto>? AllowedValues { get; set; }
+    }
+
+    public class CatalogAttributeIconDto
+    {
+        public int Id { get; set; }
+        public string IconName { get; set; } = null!;
+        public int IconCodePoint { get; set; }
+        public string IconFontFamily { get; set; } = null!;
+    }
+
+    public class CatalogAttributeAllowedValueDto
+    {
+        public int Id { get; set; }
+        public string Value { get; set; } = null!;
+        public int SortOrder { get; set; }
     }
 
 }

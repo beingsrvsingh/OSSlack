@@ -6,7 +6,6 @@ namespace Catalog.Application.Contracts
     {
         public IList<CategoryMaster> CategoryMasters { get; set; } = new List<CategoryMaster>();
         public IList<SubCategoryMaster> SubCategoryMasters { get; set; } = new List<SubCategoryMaster>();
-        public IList<CatalogAttribute> CatalogAttributes { get; set; } = new List<CatalogAttribute>();
         public IList<PoojaKitItemMaster> PoojaKitItems { get; set; } = new List<PoojaKitItemMaster>();
     }
 }

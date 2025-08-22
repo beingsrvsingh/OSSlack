@@ -112,7 +112,7 @@ namespace Catalog.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("category/{id:int}/attributes")]
+        [HttpGet("{id:int}/attributes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAttributesByCategoryId(int id)

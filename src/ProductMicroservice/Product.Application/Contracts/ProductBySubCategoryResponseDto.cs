@@ -10,7 +10,7 @@ namespace Product.Application.Contracts
         public string Pid { get; set; } = null!;
 
         [JsonPropertyName("cid")]
-        public string Cid { get; set; } = null!;
+        public string Cid { get; set; } = string.Empty;
 
         [JsonPropertyName("scid")]
         public string Scid { get; set; } = null!;
@@ -18,72 +18,62 @@ namespace Product.Application.Contracts
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
 
-        [JsonPropertyName("description")]
-        public string? Description { get; set; }
-
         [JsonPropertyName("url")]
         public string? Url { get; set; }
-
-        [JsonPropertyName("location")]
-        public string? Location { get; set; }
 
         [JsonPropertyName("cost")]
         public double Cost { get; set; }
 
-        [JsonPropertyName("reviews")]
-        public int Reviews { get; set; } = 0;
-
         [JsonPropertyName("rating")]
         public double Rating { get; set; } = 0;
 
-        [JsonPropertyName("discount")]
-        public string? Discount { get; set; }
-
-        [JsonPropertyName("samagricost")]
-        public double? Samagricost { get; set; }
-
-        [JsonPropertyName("isselected")]
-        public bool? IsSelected { get; set; }
-
-        [JsonPropertyName("limit")]
-        public int? Limit { get; set; }
+        [JsonPropertyName("reviews")]
+        public int Reviews { get; set; } = 0;
 
         [JsonPropertyName("categorytype")]
         public string? CategoryType { get; set; }
+        [JsonPropertyName("quantity")]
+        public int Quantity { get; set; } = 1;
+        [JsonPropertyName("limit")]
+        public int Limit { get; set; } = 1;
 
-        [JsonPropertyName("includes")]
-        public List<string>? Includes { get; set; }
+        [JsonPropertyName("attributes")]
+        public List<ProductAttributeDto>? Attributes { get; set; }
 
-        [JsonPropertyName("preparationtime")]
-        public string? PreparationTime { get; set; }
-
-        public static ProductBySubCategoryResponseDto FromEntity(ProductMaster entity)
+        public static ProductBySubCategoryResponseDto FromEntity(ProductMaster entity, List<CatalogAttributeDto> catalogAttributes)
         {
             return new ProductBySubCategoryResponseDto
             {
                 Pid = entity.Id.ToString(),
-                Cid = "", // Set this based on your logic or include in entity
+                Cid = "", // Set based on your logic
                 Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
-                Description = entity.Description,
                 Url = entity.ImageUrl,
-                Location = null, // Add if you have location info in entity
                 Cost = (double)entity.Price,
-                Reviews = 0,  // If you have reviews count, map here
-                Rating = 0,   // If rating exists, map here
-                Discount = null, // Map if you have
-                Samagricost = null,
-                IsSelected = null,
-                Limit = null,
+                Rating = 0,  // Map if rating exists
+                Reviews = 0, // Map if reviews count exists
                 CategoryType = entity.CategoryNameSnapshot,
-                Includes = null, // Map if available
-                PreparationTime = null, // Map if available
+                Quantity = 1,
+                Limit = 1,
+                Attributes = entity.AttributeValues?.Select(attrVal =>
+                {
+                    var definition = catalogAttributes.FirstOrDefault(a => a.Key == attrVal.AttributeKey);
+                    return new ProductAttributeDto
+                    {
+                        Key = attrVal.AttributeKey ?? "",
+                        Label = attrVal.AttributeLabel ?? attrVal.AttributeKey ?? "",
+                        Value = attrVal.Value,
+                        DataType = definition?.DataType ?? "String",
+                        Icon = definition?.Icon,
+                        AllowedValues = definition?.AllowedValues
+                    };
+                }).ToList()
             };
         }
 
-        public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products)
+        public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, List<CatalogAttributeDto> catalogAttributes)
         {
-            return products.Select(p => FromEntity(p)).ToList();
+            return products.Select(p => FromEntity(p, catalogAttributes)).ToList();
         }
 
     }

@@ -23,8 +23,7 @@ namespace Catalog.Domain.Entities
         public bool IsRequired { get; set; } = false;
 
         public int SortOrder { get; set; } = 0;
-
-         // 🔗 Optional icon relationship
+         
         public int? CatalogAttributeIconId { get; set; }
 
         [ForeignKey(nameof(CatalogAttributeIconId))]

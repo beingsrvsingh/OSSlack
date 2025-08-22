@@ -44,6 +44,15 @@ namespace Product.Application.Features.EventHandlers.Commands
                         AttributeDataType = (int)AttributeDataType.Decimal,
                         Value = "100",
                         CreatedAt = DateTime.UtcNow
+                    },
+                    new()
+                    {
+                        ProductMasterId = 102,
+                        AttributeKey = "material",
+                        AttributeLabel = "Material",
+                        AttributeDataType = (int)AttributeDataType.Decimal,
+                        Value = "Natural",
+                        CreatedAt = DateTime.UtcNow
                     }
                 } },
                 new() { Name = "Natural Red Kumkum", Price = 15.50m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri" },

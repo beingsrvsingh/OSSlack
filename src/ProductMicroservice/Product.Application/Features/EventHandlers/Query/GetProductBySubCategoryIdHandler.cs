@@ -12,31 +12,39 @@ namespace Product.Application.Features.EventHandlers.Query
     {
         private readonly ILoggerService<GetLocalizedInfoQueryHandler> _logger;
         private readonly IProductService _productService;
+        private readonly ICatalogService catalogService;
 
         public GetProductBySubCategoryIdHandler(
             ILoggerService<GetLocalizedInfoQueryHandler> logger,
-            IProductService productService)
+            IProductService productService,
+            ICatalogService catalogService)
         {
             _logger = logger;
             _productService = productService;
+            this.catalogService = catalogService;
         }
 
         public async Task<Result> Handle(GetProductBySubCategoryId request, CancellationToken cancellationToken)
         {
             try
             {
-                var product = await _productService.GetProductBySubCategoryIdAsync(request.SubCategoryId);
-                if (product is null)
-                    return Result.Failure(new FailureResponse("NotFound", "Product not found"));
+                var products = await _productService.GetProductBySubCategoryIdAsync(request.SubCategoryId);
 
-                var dto = ProductBySubCategoryResponseDto.FromEntityList(product);
-                return Result.Success(dto);
+                if (products == null || !products.Any())
+                    return Result.Failure(new FailureResponse("NotFound", "No products found"));
+
+                var attributes = await catalogService.GetAttributesBySubCategoryIdAsync(request.SubCategoryId);
+
+                var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes);
+
+                return Result.Success(dtoList);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception in GetLocalizedInfoQueryHandler", ex);
-                return Result.Failure(new FailureResponse("NOT FOUND", "No Records Found."));
+                _logger.LogError(ex, "Exception in GetProductBySubCategoryId handler");
+                return Result.Failure(new FailureResponse("Error", "An error occurred while processing the request."));
             }
         }
+
     }
 }
