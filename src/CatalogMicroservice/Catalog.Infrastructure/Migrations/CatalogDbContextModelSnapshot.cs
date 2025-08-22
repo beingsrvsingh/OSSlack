@@ -31,6 +31,10 @@ namespace Catalog.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CatalogAttributeIconId")
+                        .HasColumnType("int")
+                        .HasColumnName("catalog_attribute_icon_id");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
@@ -81,6 +85,8 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CatalogAttributeIconId");
+
                     b.HasIndex("SubCategoryMasterId");
 
                     b.ToTable("catalog_attribute", (string)null);
@@ -122,6 +128,34 @@ namespace Catalog.Infrastructure.Migrations
                     b.HasIndex("CatalogAttributeId");
 
                     b.ToTable("catalog_attribute_allowed_value", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeIcon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("IconCodePoint")
+                        .HasColumnType("int")
+                        .HasColumnName("icon_code_point");
+
+                    b.Property<string>("IconFontFamily")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("icon_font_family");
+
+                    b.Property<string>("IconName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("icon_name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("catalog_attribute_icon", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
@@ -342,11 +376,18 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
                 {
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeIcon", "CatalogAttributeIcon")
+                        .WithMany()
+                        .HasForeignKey("CatalogAttributeIconId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
                         .WithMany("CatalogAttributes")
                         .HasForeignKey("SubCategoryMasterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CatalogAttributeIcon");
 
                     b.Navigation("SubCategoryMaster");
                 });

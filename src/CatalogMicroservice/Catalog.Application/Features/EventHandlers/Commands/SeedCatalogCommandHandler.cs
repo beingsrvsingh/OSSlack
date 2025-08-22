@@ -480,7 +480,13 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                             CreatedAt = DateTime.UtcNow,
                         }
                     },
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    CatalogAttributeIcon = new CatalogAttributeIcon
+                    {
+                        IconName = "palette",
+                        IconCodePoint = 0xe40a,
+                        IconFontFamily = "MaterialIcons"
+                    },
                 },
 
                 new CatalogAttribute
@@ -493,7 +499,13 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     IsRequired = false,
                     SortOrder = 3,
                     SubCategoryMasterId = subcategories.First(c => c.SubcategoryType == SubcategoryType.Temple).Id,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    CatalogAttributeIcon = new CatalogAttributeIcon
+                    {
+                        IconName = "layers",
+                        IconCodePoint = 0xe53b,
+                        IconFontFamily = "MaterialIcons"
+                    }
                 }
             };
 

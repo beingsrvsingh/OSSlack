@@ -45,6 +45,15 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasColumnName("sub_category_id");
 
+            builder.Property(ca => ca.CatalogAttributeIconId)
+                .HasColumnName("catalog_attribute_icon_id")
+                .IsRequired(false);    
+
+            builder.HasOne(ca => ca.CatalogAttributeIcon)
+                .WithMany() // No navigation property on CatalogAttributeIcon
+                .HasForeignKey(ca => ca.CatalogAttributeIconId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(ca => ca.SubCategoryMaster)
                 .WithMany(c => c.CatalogAttributes)
                 .HasForeignKey(ca => ca.SubCategoryMasterId)

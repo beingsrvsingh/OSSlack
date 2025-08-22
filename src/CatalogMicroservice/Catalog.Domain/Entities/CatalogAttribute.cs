@@ -23,7 +23,13 @@ namespace Catalog.Domain.Entities
         public bool IsRequired { get; set; } = false;
 
         public int SortOrder { get; set; } = 0;
-        
+
+         // 🔗 Optional icon relationship
+        public int? CatalogAttributeIconId { get; set; }
+
+        [ForeignKey(nameof(CatalogAttributeIconId))]
+        public virtual CatalogAttributeIcon? CatalogAttributeIcon { get; set; }
+
         public int SubCategoryMasterId { get; set; }
 
         // FK to Category
@@ -36,5 +42,5 @@ namespace Catalog.Domain.Entities
         // Audit fields
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-    }
+    }    
 }

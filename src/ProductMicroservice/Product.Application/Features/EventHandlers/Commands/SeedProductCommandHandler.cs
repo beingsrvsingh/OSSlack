@@ -24,27 +24,28 @@ namespace Product.Application.Features.EventHandlers.Commands
             var products = new List<ProductMaster>
             {
                 // SubCategory 101 - Kumkum (Vermilion)
-                new() { Name = "Premium Kumkum", Price = 25.99m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri", IsNew = true, AttributeValues =  new List<ProductAttributeValue>
-            {
-                new()
+                new() { Name = "Premium Kumkum", Price = 25.99m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri", IsNew = true,
+                AttributeValues =  new List<ProductAttributeValue>
                 {
-                    ProductMasterId = 101,
-                    AttributeKey = "color",
-                    AttributeLabel = "Color",
-                    AttributeDataType = (int)AttributeDataType.String,
-                    Value = "Red",
-                    CreatedAt = DateTime.UtcNow
-                },
-                new()
-                {
-                    ProductMasterId = 102,
-                    AttributeKey = "weight",
-                    AttributeLabel = "Weight (grams)",
-                    AttributeDataType = (int)AttributeDataType.Decimal,
-                    Value = "100",
-                    CreatedAt = DateTime.UtcNow
-                }
-            } },
+                    new()
+                    {
+                        ProductMasterId = 101,
+                        AttributeKey = "color",
+                        AttributeLabel = "Color",
+                        AttributeDataType = (int)AttributeDataType.String,
+                        Value = "Red",
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new()
+                    {
+                        ProductMasterId = 102,
+                        AttributeKey = "weight",
+                        AttributeLabel = "Weight (grams)",
+                        AttributeDataType = (int)AttributeDataType.Decimal,
+                        Value = "100",
+                        CreatedAt = DateTime.UtcNow
+                    }
+                } },
                 new() { Name = "Natural Red Kumkum", Price = 15.50m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri" },
 
                 // SubCategory 102 - Haldi (Turmeric)
