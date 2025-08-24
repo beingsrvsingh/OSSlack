@@ -25,10 +25,7 @@ namespace Address.Application.Features.EventHandlers.Commands
             {
                 new AddressEntity
                 {
-                    Id = 1,
                     Uid = Guid.NewGuid(),
-                    OwnerId = 1001,
-                    OwnerType = AddressOwnerType.User,
                     Name = "Saurav Sinha",
                     Label = "Home",
                     AddressLine1 = "Gate No.7 7005 - A FirstFloor",
@@ -38,44 +35,20 @@ namespace Address.Application.Features.EventHandlers.Commands
                     Country = "India",
                     Pincode = "110066",
                     Landmark = "Near Main Market",
-                    PhoneNumber = "981806003",
-                    AddressTypeId = 1, // Home
-                    IsDefault = true,
-                    IsActive = true,
-                    Latitude = 28.5561,
-                    Longitude = 77.2436,
-                    TimeZone = "Asia/Kolkata",
-                    CreatedBy = 1,
-                    UpdatedBy = 1,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    PhoneNumber = "981806003"
                 },
                 new AddressEntity
                 {
-                    Id = 2,
                     Uid = Guid.NewGuid(),
-                    OwnerId = 1002,
-                    OwnerType = AddressOwnerType.User,
                     Name = "Jaksh Sinha",
                     Label = "Work",
                     AddressLine1 = "Gate No.9007 - A Fourth",
                     AddressLine2 = "East of Kailash",
                     City = "Lajpat Nagar",
                     State = "Delhi",
-                    Country = "India",
                     Pincode = "110055",
                     Landmark = "Near Metro Station",
-                    PhoneNumber = "801806995",
-                    AddressTypeId = 2, // Work
-                    IsDefault = false,
-                    IsActive = true,
-                    Latitude = 28.5671,
-                    Longitude = 77.2612,
-                    TimeZone = "Asia/Kolkata",
-                    CreatedBy = 2,
-                    UpdatedBy = 2,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    PhoneNumber = "801806995"
                 }
             };
 
@@ -98,11 +71,11 @@ namespace Address.Application.Features.EventHandlers.Commands
 
             if (!success)
             {
-                _logger.LogWarning("Seeding astrologer experties failed.");
-                return Result.Failure(new FailureResponse("SeedingFailed", "Failed to seed astrologer experties."));
+                _logger.LogWarning("Seeding address failed.");
+                return Result.Failure(new FailureResponse("SeedingFailed", "Failed to seed address."));
             }
 
-            return Result.Success("Astrologer experties seeded successfully.");
+            return Result.Success("Address seeded successfully.");
         }
     }
 }

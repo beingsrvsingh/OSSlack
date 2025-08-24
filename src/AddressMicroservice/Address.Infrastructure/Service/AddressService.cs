@@ -64,7 +64,9 @@ namespace Address.Infrastructure.Service
             try
             {
                 var address = request.Adapt<AddressEntity>();
-                return await _repository.AddAsync(address);
+                await _repository.AddAsync(address);
+                await _repository.SaveChangesAsync();
+                return address;
             }
             catch (Exception ex)
             {
@@ -110,18 +112,47 @@ namespace Address.Infrastructure.Service
         {
             try
             {
-                var existing = await _repository.GetByIdAsync(id);
-                if (existing == null)
+                var address = await _repository.GetByIdAsync(id);
+                if (address == null)
                 {
                     return false;
                 }
-                await _repository.DeleteAsync(existing);
+                address.IsActive = false;
+                address.UpdatedAt = DateTime.UtcNow;
+
                 await _repository.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete address: {id}");
+                return false;
+            }
+        }
+
+        public async Task<bool> MarkAddressAsDefaultAsync(int addressId)
+        {
+            try
+            {
+                var address = await _repository.GetByIdAsync(addressId);
+                if (address == null)
+                    return false;
+
+                var others = await _repository.GetAllByOwnerAsync(address.OwnerId, address.OwnerType);
+                foreach (var other in others)
+                {
+                    other.IsDefault = false;
+                }
+
+                address.IsDefault = true;
+                address.UpdatedAt = DateTime.UtcNow;
+
+                await _repository.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to mark address {addressId} as default");
                 return false;
             }
         }

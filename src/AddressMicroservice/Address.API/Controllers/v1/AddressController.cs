@@ -24,7 +24,7 @@ namespace Address.API.Controllers.v1
             if (!result.Succeeded)
                 return Conflict(result);
 
-            return Created(string.Empty, new { Message = "Address created successfully." });
+            return Created(string.Empty, result);
         }
 
         [HttpGet("{id:int}")]
@@ -92,8 +92,23 @@ namespace Address.API.Controllers.v1
             if (!result.Succeeded)
                 return NotFound(result);
 
-            return Ok(new { Message = "Address deleted successfully." });
+            return Ok(result);
         }
+
+        [HttpPut("address/{id}/mark-default")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> MarkAsDefault(int id)
+        {
+            var result = await Mediator.Send(new MarkAddressAsDefaultCommand { AddressId = id });
+
+            if (!result.Succeeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
     }
 
 }
