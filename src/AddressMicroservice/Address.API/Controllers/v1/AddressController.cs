@@ -22,7 +22,7 @@ namespace Address.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return Conflict(result.Errors);
+                return Conflict(result);
 
             return Created(string.Empty, new { Message = "Address created successfully." });
         }
@@ -35,9 +35,9 @@ namespace Address.API.Controllers.v1
             var result = await Mediator.Send(new GetAddressByIdQuery { Id = id });
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpGet("owner/{ownerId:int}/{ownerType}")]
@@ -50,7 +50,19 @@ namespace Address.API.Controllers.v1
                 OwnerType = ownerType
             });
 
-            return Ok(result.Data);
+            return Ok(result);
+        }
+
+        [HttpGet("owner/{ownerId:int}")]
+        [ProducesResponseType(typeof(IEnumerable<AddressDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetByOwner(int ownerId)
+        {
+            var result = await Mediator.Send(new GetAddressesByOwnerQuery
+            {
+                OwnerId = ownerId
+            });
+
+            return Ok(result);
         }
 
         [HttpPut("update/{id:int}")]
@@ -65,9 +77,9 @@ namespace Address.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpDelete("delete/{id:int}")]
@@ -78,7 +90,7 @@ namespace Address.API.Controllers.v1
             var result = await Mediator.Send(new DeleteAddressCommand { Id = id });
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(new { Message = "Address deleted successfully." });
         }

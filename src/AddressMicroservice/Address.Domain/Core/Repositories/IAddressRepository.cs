@@ -6,6 +6,7 @@ namespace Address.Domain.Core.Repositories
 {
     public interface IAddressRepository : IRepository<AddressEntity>
     {
-        Task<IEnumerable<AddressEntity>> GetByOwnerAsync(int ownerId, AddressOwnerType ownerType);
+        Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(int ownerId, AddressOwnerType ownerType);
+        Task<AddressEntity?> GetByOwnerAsync(int ownerId);
     }
 }

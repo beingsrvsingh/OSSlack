@@ -15,11 +15,21 @@ namespace Address.Infrastructure.Persistence.Repository
             this._context = dbContext;
         }
 
-        public async Task<IEnumerable<AddressEntity>> GetByOwnerAsync(int ownerId, AddressOwnerType ownerType)
+        public async Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(int ownerId, AddressOwnerType ownerType)
         {
             return await _context.Addresses
             .Where(a => a.OwnerId == ownerId && a.OwnerType == ownerType)
             .ToListAsync();
         }
+
+        public async Task<AddressEntity?> GetByOwnerAsync(int ownerId)
+        {
+            return await _context.Addresses
+                .FirstOrDefaultAsync(a =>
+                    a.OwnerId == ownerId &&
+                    a.IsDefault &&
+                    a.IsActive);
+        }
+
     }
 }

@@ -20,7 +20,7 @@ namespace Address.Application.Features.EventHandlers.Query
         {
             var entities = await _service.GetAllByOwnerAsync(request.OwnerId, request.OwnerType);
 
-            var dtos = entities.Adapt<List<AddressResponseDto>>();
+            var dtos = AddressResponseDto.ToResponseDtoList(entities);
 
             return Result.Success(dtos);
         }

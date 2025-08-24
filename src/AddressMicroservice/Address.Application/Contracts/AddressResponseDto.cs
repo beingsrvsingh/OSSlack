@@ -1,3 +1,4 @@
+using Address.Domain.Entities;
 using Address.Domain.Enums;
 
 namespace Address.Application.Contracts
@@ -20,7 +21,7 @@ namespace Address.Application.Contracts
 
         public string Country { get; set; } = "India";
 
-        public string Pincode { get; set; } = null!;
+        public String Pincode { get; set; } = null!;
 
         public string? Landmark { get; set; }
 
@@ -29,6 +30,30 @@ namespace Address.Application.Contracts
         public string AddressType { get; set; } = AddressOwnerType.Home.ToString();
 
         public bool IsDefault { get; set; }
-    }
 
+        public static AddressResponseDto ToResponseDto(AddressEntity entity)
+        {
+            return new AddressResponseDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Label = entity.Label,
+                AddressLine1 = entity.AddressLine1,
+                AddressLine2 = entity.AddressLine2,
+                City = entity.City,
+                State = entity.State,
+                Country = entity.Country,
+                Pincode = entity.Pincode,
+                Landmark = entity.Landmark,
+                PhoneNumber = entity.PhoneNumber,
+                AddressType = entity.AddressType?.Name ?? "Other",
+                IsDefault = entity.IsDefault
+            };
+        }
+
+        public static List<AddressResponseDto> ToResponseDtoList(IEnumerable<AddressEntity> entities)
+        {
+            return entities.Select(ToResponseDto).ToList();
+        }
+    }    
 }

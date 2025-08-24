@@ -7,6 +7,7 @@ namespace Address.Application.Service
 {
     public interface IAddressService
     {
+        Task<AddressEntity?> GetByOwnerAsync(int ownerId);
         Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(int ownerId, AddressOwnerType ownerType);
         Task<AddressEntity?> GetByIdAsync(int id);
         Task<AddressEntity> CreateAsync(CreateAddressCommand request);
