@@ -152,6 +152,7 @@ namespace Order.Infrastructure.Services
             {
                 OrderSummaryDto = new OrderSummaryDto
                 {
+                    OrderNumber = order.OrderNumber,
                     Name = order.OrderItems.FirstOrDefault()?.ProductName ?? "Unknown",
                     OrderDate = order.OrderDate,
                     OrderTotal = order.TotalAmount,
@@ -185,7 +186,7 @@ namespace Order.Infrastructure.Services
                     PostalCode = shippingInfo?.PostalCode,
                     Country = shippingInfo?.Country ?? "",
                     PhoneNumber = shippingInfo?.PhoneNumber ?? "",
-                    Email = shippingInfo?.Email ?? ""
+                    Landmark = shippingInfo?.Landmark ?? ""
                 }
             };
 

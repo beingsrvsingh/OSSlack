@@ -4,6 +4,7 @@ using Order.Application.Contracts;
 using Order.Application.Features.Query;
 using Order.Application.Services;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Cryptography;
 using Shared.Utilities.Response;
 
 namespace Order.Application.Features.EventHandlers.Query
@@ -23,7 +24,14 @@ namespace Order.Application.Features.EventHandlers.Query
         {
             try
             {
-                var order = await _orderService.GetOrderDetailsAsync(request.OrderId);
+                var decryptedString = Cryptography.DecryptString(request.OrderId);
+
+                if (!int.TryParse(decryptedString, out int orderId))
+                {
+                    return Result.Failure(new FailureResponse("NotFound", "Order not found"));
+                }
+                
+                var order = await _orderService.GetOrderDetailsAsync(orderId);
                 if (order is null)
                     return Result.Failure(new FailureResponse("NotFound", "Order not found"));
                 

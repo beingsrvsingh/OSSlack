@@ -27,7 +27,7 @@ namespace Order.Application.Features.EventHandlers.Query
                     ? await _orderService.GetAllOrdersAsync()
                     : await _orderService.GetOrdersByUserIdAsync(request.userId);
 
-                var orderDtos = orders.Adapt<IEnumerable<OrderDto>>();
+                var orderDtos = OrderDto.ToResponseDtoList(orders);
                 return Result.Success(orderDtos);
             }
             catch (Exception ex)

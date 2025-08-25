@@ -18,20 +18,20 @@ namespace Order.API.Controllers.v1
             if (!result.Succeeded)
                 return NotFound(new { Message = "Order not found." });
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpGet("summary/{orderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetOrderDetails(int orderId)
+        public async Task<IActionResult> GetOrderDetails(string orderId)
         {
             var result = await Mediator.Send(new GetOrderDetailQuery(orderId));
 
             if (!result.Succeeded)
                 return NotFound(new { Message = "Order not found." });
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // POST api/order
@@ -63,7 +63,7 @@ namespace Order.API.Controllers.v1
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // Update Order

@@ -31,7 +31,7 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
             builder.Property(a => a.Pincode).HasColumnName("pincode").IsRequired();
 
             builder.Property(a => a.Landmark).HasColumnName("landmark");
-            builder.Property(a => a.PhoneNumber).HasColumnName("phone_number");
+            builder.Property(a => a.PhoneNumber).IsRequired().HasColumnName("phone_number");
 
             builder.Property(a => a.AddressTypeId)
                 .HasColumnName("address_type")

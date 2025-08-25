@@ -19,7 +19,6 @@ namespace Order.Infrastructure.Persistence.Repository
         {
             return await _context.OrderHeaders
                 .Include(o => o.OrderItems)
-                    .ThenInclude(i => i.Customizations)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 

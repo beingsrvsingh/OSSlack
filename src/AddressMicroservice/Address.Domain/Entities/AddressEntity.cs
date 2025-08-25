@@ -40,7 +40,8 @@ namespace Address.Domain.Entities
 
         public string? Landmark { get; set; }
 
-        public string? PhoneNumber { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; } = null!;
 
         // Foreign key to AddressType
         public int AddressTypeId { get; set; }
