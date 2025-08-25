@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaymentMicroservice.Domain.Entities
 {
@@ -10,9 +11,9 @@ namespace PaymentMicroservice.Domain.Entities
 
         [Required]
         public int PaymentTransactionId { get; set; }
-
-        [Required]
-        public PaymentTransaction PaymentTransaction { get; set; } = null!;
+        
+        [ForeignKey(nameof(PaymentTransactionId))]
+        public virtual PaymentTransaction PaymentTransaction { get; set; } = null!;
 
         [Required]
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;

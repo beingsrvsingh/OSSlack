@@ -1,10 +1,12 @@
 using PaymentMicroservice.Domain.Entities;
+using Shared.Application.Contracts;
 
 namespace PaymentMicroservice.Application.Services
 {
     public interface IPaymentService
     {
         Task<PaymentTransaction?> GetPaymentTransactionByIdAsync(int id);
+        Task<PaymentInfoDto?> GetPaymentTransactionByOrderIdAsync(int orderId);
         Task<IEnumerable<PaymentTransaction>> GetPaymentsByUserIdAsync(string userId);
         Task<IEnumerable<PaymentTransactionLog>> GetTransactionLogsAsync(int paymentTransactionId);
         Task<IEnumerable<RefundTransaction>> GetRefundsByTransactionIdAsync(int paymentTransactionId);

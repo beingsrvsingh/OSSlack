@@ -20,7 +20,6 @@ namespace Order.Infrastructure.Persistence.Repository
             return await _context.OrderHeaders
                 .Include(o => o.OrderItems)
                     .ThenInclude(i => i.Customizations)
-                .Include(o => o.ShippingAddresses)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
@@ -30,12 +29,6 @@ namespace Order.Infrastructure.Persistence.Repository
                 .Where(i => i.OrderHeaderId == orderId)
                 .Include(i => i.Customizations)
                 .ToListAsync();
-        }
-
-        public async Task<OrderShippingAddress?> GetShippingAddressAsync(int orderId)
-        {
-            return await _context.OrderShippingAddresses
-                .FirstOrDefaultAsync(s => s.OrderId == orderId);
         }
 
         public async Task<IEnumerable<OrderItemCustomization>> GetCustomizationsByOrderItemIdAsync(int orderItemId)
@@ -52,12 +45,19 @@ namespace Order.Infrastructure.Persistence.Repository
 
         public async Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId)
         {
-            return await _context.Set<OrderHeader>()
+            return await _context.OrderHeaders
                 .Include(o => o.OrderItems)
-                .Include(o => o.ShippingAddresses)
                 .Where(o => o.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task<OrderHeader?> GetOrderDetailsAsync(int orderId)
+        {
+            return await _context.OrderHeaders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
     }
 
 }

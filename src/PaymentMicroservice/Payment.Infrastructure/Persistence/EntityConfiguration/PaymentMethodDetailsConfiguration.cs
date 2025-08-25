@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PaymentMicroservice.Domain.Entities;
@@ -33,10 +32,19 @@ namespace PaymentMicroservice.Infrastructure.Persistence.EntityConfiguration
                 .HasMaxLength(50)
                 .HasColumnName("bank_name");
 
+            builder.Property(x => x.UpiId)
+                .HasMaxLength(50)
+                .HasColumnName("upi_id");
+
+            builder.Property(x => x.CardType)
+                .HasMaxLength(50)
+                .HasColumnName("card_type");
+
+            // One-to-one relationship with PaymentTransaction
             builder.HasOne(x => x.PaymentTransaction)
-                .WithOne()
-                .HasForeignKey<PaymentMethodDetails>(x => x.PaymentTransactionId);
+                .WithOne(p => p.PaymentMethodDetails) // <- navigation from PaymentTransaction
+                .HasForeignKey<PaymentMethodDetails>(x => x.PaymentTransactionId)
+                .OnDelete(DeleteBehavior.Cascade); // optional: adjust as needed
         }
     }
-
 }

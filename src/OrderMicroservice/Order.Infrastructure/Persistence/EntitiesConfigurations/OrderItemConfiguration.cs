@@ -21,6 +21,15 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .IsRequired()
                 .HasColumnName("product_id");
 
+            builder.Property(e => e.ProductType)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasColumnName("product_type");
+
+            builder.Property(e => e.ProductUrl)
+                .HasMaxLength(300)
+                .HasColumnName("product_url");
+
             builder.Property(e => e.ProductName)
                 .IsRequired()
                 .HasMaxLength(150)

@@ -40,6 +40,19 @@ namespace Address.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("shipping/{addressId:int}")]
+        [ProducesResponseType(typeof(AddressDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAddressForShippingById(int addressId)
+        {
+            var result = await Mediator.Send(new GetAddressForShippingByIdQuery { Id = addressId });
+
+            if (!result.Succeeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
         [HttpGet("owner/{ownerId:int}/{ownerType}")]
         [ProducesResponseType(typeof(IEnumerable<AddressDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllByOwner(int ownerId, AddressOwnerType ownerType)

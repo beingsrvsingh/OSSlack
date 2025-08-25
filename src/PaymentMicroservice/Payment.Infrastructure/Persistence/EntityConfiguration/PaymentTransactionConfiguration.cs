@@ -55,13 +55,24 @@ namespace PaymentMicroservice.Infrastructure.Persistence.EntityConfiguration
             builder.Property(x => x.CompletedAt)
                 .HasColumnName("completed_at");
 
+            // One-to-many: TransactionLogs
             builder.HasMany(x => x.TransactionLogs)
                 .WithOne(x => x.PaymentTransaction)
-                .HasForeignKey(x => x.PaymentTransactionId);
+                .HasForeignKey(x => x.PaymentTransactionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // One-to-many: Refunds
             builder.HasMany(x => x.Refunds)
                 .WithOne(x => x.PaymentTransaction)
-                .HasForeignKey(x => x.PaymentTransactionId);
+                .HasForeignKey(x => x.PaymentTransactionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-one: PaymentMethodDetails
+            builder.HasOne(x => x.PaymentMethodDetails)
+                .WithOne(x => x.PaymentTransaction)
+                .HasForeignKey<PaymentMethodDetails>(x => x.PaymentTransactionId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 }

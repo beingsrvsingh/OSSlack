@@ -1,7 +1,6 @@
 using Address.Application.Contracts;
 using Address.Application.Features.Query;
 using Address.Application.Service;
-using Mapster;
 using MediatR;
 using Shared.Utilities.Response;
 

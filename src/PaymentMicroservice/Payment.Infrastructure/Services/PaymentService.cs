@@ -1,6 +1,7 @@
 using PaymentMicroservice.Application.Services;
 using PaymentMicroservice.Domain.Core.Repository;
 using PaymentMicroservice.Domain.Entities;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
 namespace PaymentMicroservice.Infrastructure.Services
@@ -21,6 +22,50 @@ namespace PaymentMicroservice.Infrastructure.Services
             try
             {
                 return await _repository.GetPaymentTransactionByIdAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in GetPaymentTransactionByIdAsync", ex);
+                return null;
+            }
+        }
+
+       public async Task<PaymentInfoDto?> GetPaymentTransactionByOrderIdAsync(int orderId)
+        {
+            try
+            {
+                var payment = await _repository.GetPaymentTransactionByOrderIdAsync(orderId);
+
+                if (payment == null)
+                    return null;
+
+                var methodDetails = payment.PaymentMethodDetails;
+
+                return new PaymentInfoDto
+                {
+                    Mode = payment.PaymentMethod.ToString(),
+
+                    // CardType fallback order: CardType enum -> UpiId -> WalletId -> null
+                    CardType = methodDetails != null
+                    ? (methodDetails.CardType?.ToString()
+                    ?? methodDetails.UpiId
+                    ?? methodDetails.WalletId)
+                    : null,
+
+                    // Name fallback order: BankName -> CardHolderName -> null
+                    Name = methodDetails?.BankName ?? methodDetails?.CardHolderName,
+
+                    // CardNumber fallback order: MaskedCardNumber -> UpiId -> WalletId -> null
+                    CardNumber = methodDetails != null
+                    ? (methodDetails.MaskedCardNumber
+                    ?? methodDetails.UpiId
+                    ?? methodDetails.WalletId)
+                    : null,
+
+                    Status = payment.Status.ToString()
+                };
+
+
             }
             catch (Exception ex)
             {
@@ -172,7 +217,7 @@ namespace PaymentMicroservice.Infrastructure.Services
                 _logger.LogError("Error in DeletePaymentTransactionAsync", ex);
                 return false;
             }
-        }
+        }        
     }
 
 }

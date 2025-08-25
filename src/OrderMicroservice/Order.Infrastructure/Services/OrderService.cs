@@ -1,7 +1,11 @@
+using System.Security.Cryptography;
+using Order.Application.Contracts;
 using Order.Application.Services;
 using Order.Domain.Core.Repository;
 using Order.Domain.Entities;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Cryptography;
 
 namespace Order.Infrastructure.Services
 {
@@ -9,11 +13,16 @@ namespace Order.Infrastructure.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly ILoggerService<OrderService> _logger;
+        private readonly IPaymentService paymentService;
+        private readonly IAddressService addressService;
 
-        public OrderService(IOrderRepository orderRepository, ILoggerService<OrderService> logger)
+        public OrderService(IOrderRepository orderRepository, ILoggerService<OrderService> logger,
+        IPaymentService paymentService, IAddressService addressService)
         {
             _orderRepository = orderRepository;
             _logger = logger;
+            this.paymentService = paymentService;
+            this.addressService = addressService;
         }
 
         public async Task<OrderHeader?> GetOrderByIdAsync(int orderId)
@@ -39,19 +48,6 @@ namespace Order.Infrastructure.Services
             {
                 _logger.LogError("Error fetching order items", ex);
                 return Enumerable.Empty<OrderItem>();
-            }
-        }
-
-        public async Task<OrderShippingAddress?> GetShippingAddressAsync(int orderId)
-        {
-            try
-            {
-                return await _orderRepository.GetShippingAddressAsync(orderId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error fetching shipping address", ex);
-                return null;
             }
         }
 
@@ -141,6 +137,61 @@ namespace Order.Infrastructure.Services
                 return false;
             }
         }
+
+        public async Task<OrderDetailDto?> GetOrderDetailsAsync(int orderId)
+        {
+            var order = await _orderRepository.GetOrderDetailsAsync(orderId);
+            if(order == null) return null;
+            var payment = await paymentService.GetPaymentInfoByIdAsync(orderId);
+            var shippingInfo = await addressService.GetAddressInfoByIdAsync(order.AddressId);
+
+            if (order == null)
+                return null;
+
+            var dto = new OrderDetailDto
+            {
+                OrderSummaryDto = new OrderSummaryDto
+                {
+                    Name = order.OrderItems.FirstOrDefault()?.ProductName ?? "Unknown",
+                    OrderDate = order.OrderDate,
+                    OrderTotal = order.TotalAmount,
+                    ConvenienceFee = 0,
+                    Url = order.OrderItems.FirstOrDefault()?.ProductUrl ?? string.Empty
+                },
+                PaymentInfo = new PaymentInfoDto
+                {
+                    Mode = payment!.Mode, 
+                    CardType = payment.CardType,
+                    Name = payment.Name,
+                    Status = payment.Status,
+                    CardNumber = payment.CardNumber
+                },
+                BillDetails = new BillDetailsDto
+                {
+                    Cost = order.OrderItems.Sum(i => i.UnitPrice * i.Quantity),
+                    Discount = order.DiscountAmount,
+                    ItemTotal = order.TotalAmount - order.ShippingFee, // Simplified example
+                    HandlingCharge = 0, // If you track handling charges, add here
+                    DeliveryCharge = order.ShippingFee,
+                    Total = order.TotalAmount
+                },
+                ShippingInfoDto = new ShippingInfoDto
+                {
+                    RecipientName = shippingInfo?.RecipientName ?? "",
+                    AddressLine1 = shippingInfo?.AddressLine1 ?? "",
+                    AddressLine2 = shippingInfo?.AddressLine2 ?? "",
+                    City = shippingInfo?.City ?? "",
+                    State = shippingInfo?.State ?? "",
+                    PostalCode = shippingInfo?.PostalCode,
+                    Country = shippingInfo?.Country ?? "",
+                    PhoneNumber = shippingInfo?.PhoneNumber ?? "",
+                    Email = shippingInfo?.Email ?? ""
+                }
+            };
+
+            return dto;
+        }
+
     }
 
 }

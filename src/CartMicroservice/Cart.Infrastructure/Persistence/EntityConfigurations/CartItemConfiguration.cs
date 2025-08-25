@@ -22,7 +22,7 @@ namespace CartMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasColumnName("product_id");
             
-            builder.Property(ci => ci.ProductType)
+            builder.Property(ci => ci.ProviderType)
                 .IsRequired()
                 .HasColumnName("product_type");
 

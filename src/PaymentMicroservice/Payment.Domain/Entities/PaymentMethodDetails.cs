@@ -1,5 +1,6 @@
-
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Payment.Domain.Enums;
 
 namespace PaymentMicroservice.Domain.Entities
 {
@@ -11,21 +12,24 @@ namespace PaymentMicroservice.Domain.Entities
         [Required]
         public int PaymentTransactionId { get; set; }
 
-        public PaymentTransaction PaymentTransaction { get; set; } = null!;
+        [ForeignKey(nameof(PaymentTransactionId))]
+        public virtual PaymentTransaction PaymentTransaction { get; set; } = null!;
 
         [MaxLength(100)]
         public string? CardHolderName { get; set; }
 
         [MaxLength(20)]
-        public string? MaskedCardNumber { get; set; } // e.g., **** **** **** 1234
+        public string? MaskedCardNumber { get; set; }
 
         [MaxLength(50)]
-        public string? WalletId { get; set; } // If payment by wallet
+        public string? WalletId { get; set; }
 
         [MaxLength(50)]
-        public string? BankName { get; set; } // If net banking
+        public string? BankName { get; set; }
 
-        // Add more fields as needed based on payment method
+        [MaxLength(100)]
+        public string? UpiId { get; set; } // NEW: for UPI payments
+
+        public CardType? CardType { get; set; } // Optional enum field (Visa, MasterCard, etc.)
     }
-
 }

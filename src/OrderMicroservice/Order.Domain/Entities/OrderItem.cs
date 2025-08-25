@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Shared.Domain;
 
 namespace Order.Domain.Entities
 {
@@ -13,6 +14,13 @@ namespace Order.Domain.Entities
 
         [Required]
         public int ProductId { get; set; }  // Reference to product microservice
+
+        [Required]
+        [MaxLength(20)]
+        public ProviderType ProductType { get; set; } // Product, Service, Kit
+        
+        [MaxLength(300)]
+        public string? ProductUrl { get; set; }
 
         [Required, MaxLength(150)]
         public string ProductName { get; set; } = null!;

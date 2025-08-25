@@ -16,6 +16,9 @@ namespace Order.Domain.Entities
         public required string UserId { get; set; }
 
         [Required]
+        public required int AddressId { get; set; }
+
+        [Required]
         public int CustomerId { get; set; }  // Reference to customer (could be user service)
 
         [Required]
@@ -85,8 +88,7 @@ namespace Order.Domain.Entities
         [MaxLength(100)]
         public string? DeliveryPartnerNameSnapshot { get; set; } // Optional, for snapshot/reporting purposes
 
-
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public virtual ICollection<OrderShippingAddress> ShippingAddresses { get; set; } = new List<OrderShippingAddress>();
+
     }
 }

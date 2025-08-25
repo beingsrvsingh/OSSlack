@@ -21,9 +21,23 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return Conflict(result.Errors);
+                return Conflict(result);
 
             return Created(string.Empty, new { Message = "Payment transaction created successfully." });
+        }
+
+        // GET: Get Payment Summary
+        [HttpGet("summary/{orderId:int}")]
+        [ProducesResponseType(typeof(IEnumerable<PaymentTransactionLogDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPaymentTransactionByOrderIdAsync([FromRoute] int orderId)
+        {
+            var result = await Mediator.Send(new GetPaymentsByOrderIdQuery(orderId));
+
+            if (!result.Succeeded)
+                return NotFound(result);
+
+            return Ok(result);
         }
 
         // GET: Get Payment Logs
@@ -35,9 +49,9 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(new GetTransactionLogsQuery(transactionId));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // GET: Get Payments by UserId
@@ -48,9 +62,9 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(new GetPaymentsByUserIdQuery(userId));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // POST: Create Refund
@@ -62,7 +76,7 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(result);
 
             return Created(string.Empty, new { Message = "Refund created successfully." });
         }
@@ -76,7 +90,7 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(result);
 
             return Ok(new { Message = "Payment transaction updated successfully." });
         }
@@ -90,7 +104,7 @@ namespace PaymentMicroservice.API.Controllers.v1
             var result = await Mediator.Send(new DeletePaymentTransactionCommand(transactionId));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(new { Message = "Payment transaction deleted successfully." });
         }

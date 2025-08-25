@@ -6,6 +6,7 @@ namespace PaymentMicroservice.Domain.Core.Repository
     public interface IPaymentRepository : IRepository<PaymentTransaction>
     {
         Task<PaymentTransaction?> GetPaymentTransactionByIdAsync(int id);
+        Task<PaymentTransaction?> GetPaymentTransactionByOrderIdAsync(int orderId);
         Task<IEnumerable<PaymentTransaction>> GetPaymentsByUserIdAsync(string userId);
 
         Task<IEnumerable<PaymentTransactionLog>> GetTransactionLogsAsync(int paymentTransactionId);

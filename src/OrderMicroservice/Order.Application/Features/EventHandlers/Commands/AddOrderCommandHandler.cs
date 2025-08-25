@@ -23,7 +23,7 @@ namespace Order.Application.Features.EventHandlers.Commands
         {
             try
             {
-                var orderEntity = request.Order.Adapt<OrderHeader>();
+                var orderEntity = request.Adapt<OrderHeader>();
                 var success = await _orderService.AddOrderAsync(orderEntity);
                 return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to add order"));
             }

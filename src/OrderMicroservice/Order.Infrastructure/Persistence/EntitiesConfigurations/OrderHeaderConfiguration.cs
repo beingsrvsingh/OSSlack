@@ -22,6 +22,10 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .IsRequired()
                 .HasColumnName("customer_id");
 
+            builder.Property(o => o.AddressId)
+                .IsRequired()
+                .HasColumnName("address_id");
+
             builder.Property(o => o.UserId)
                 .IsRequired()
                 .HasColumnName("user_id");
@@ -136,10 +140,6 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .HasForeignKey(oi => oi.OrderHeaderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(o => o.ShippingAddresses)
-                .WithOne(sa => sa.OrderHeader)
-                .HasForeignKey(sa => sa.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

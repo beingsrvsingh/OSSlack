@@ -21,6 +21,19 @@ namespace Order.API.Controllers.v1
             return Ok(result.Data);
         }
 
+        [HttpGet("summary/{orderId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrderDetails(int orderId)
+        {
+            var result = await Mediator.Send(new GetOrderDetailQuery(orderId));
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Order not found." });
+
+            return Ok(result.Data);
+        }
+
         // POST api/order
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

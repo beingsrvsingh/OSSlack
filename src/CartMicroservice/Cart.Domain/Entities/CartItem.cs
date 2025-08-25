@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Shared.Domain;
 
 namespace CartMicroservice.Domain.Entities
 {
@@ -15,10 +17,9 @@ namespace CartMicroservice.Domain.Entities
 
         public int? SubCategoryId { get; set; } // sub_category_id
 
-
         [Required]
         [MaxLength(20)]
-        public string ProductType { get; set; } = "Product"; // Product, Service, Kit
+        public ProviderType ProviderType { get; set; } // Product, Service, Kit
 
         [MaxLength(150)]
         public string ItemNameSnapshot { get; set; } = null!;
@@ -62,7 +63,8 @@ namespace CartMicroservice.Domain.Entities
 
         public DateTime? UpdatedAt { get; set; } // updated_at
 
-        public Cart Cart { get; set; } = null!;
+        [ForeignKey(nameof(CartId))]
+        public virtual Cart Cart { get; set; } = null!;
     }
 
 }

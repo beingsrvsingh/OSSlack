@@ -10,7 +10,6 @@ namespace Order.Infrastructure.Persistence.Context
 
         public DbSet<OrderHeader> OrderHeaders => Set<OrderHeader>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-        public DbSet<OrderShippingAddress> OrderShippingAddresses => Set<OrderShippingAddress>();
         public DbSet<OrderItemCustomization> OrderItemCustomizations => Set<OrderItemCustomization>();
 
         protected override void OnModelCreating(ModelBuilder builder)

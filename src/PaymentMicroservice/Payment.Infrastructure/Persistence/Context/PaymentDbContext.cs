@@ -10,7 +10,7 @@ namespace PaymentMicroservice.Infrastructure.Persistence.Context
         {
         }
 
-        public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
+        public DbSet<PaymentTransaction> PaymentTransactions  => Set<PaymentTransaction>();
         public DbSet<PaymentTransactionLog> PaymentTransactionLogs => Set<PaymentTransactionLog>();
         public DbSet<RefundTransaction> RefundTransactions => Set<RefundTransaction>();
         public DbSet<PaymentMethodDetails> PaymentMethodDetails => Set<PaymentMethodDetails>();

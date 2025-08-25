@@ -7,6 +7,8 @@ using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
+using Order.Application.Services;
+using Order.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +47,19 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 {
     opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddHttpClient<IPaymentService, PaymentService>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Payment-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/payment/");
+});
+
+builder.Services.AddHttpClient<IAddressService, AddressService>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Address-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/address/");
+});
+
 
 // Add services to the container.
 builder.Services.AddControllers();

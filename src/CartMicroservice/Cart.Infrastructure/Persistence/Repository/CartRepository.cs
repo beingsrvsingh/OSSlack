@@ -34,7 +34,7 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
             var existingItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.CartId == item.CartId
                                         && ci.ProductId == item.ProductId
-                                        && ci.ProductType == item.ProductType
+                                        && ci.ProviderType == item.ProviderType
                                         && !ci.IsDeleted);
 
             if (existingItem != null)
