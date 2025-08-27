@@ -15,6 +15,14 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.Id)
                 .HasColumnName("id");
 
+            builder.Property(p => p.CategoryId)
+                .IsRequired()
+                .HasColumnName("category_id");
+
+            builder.Property(p => p.SubCategoryId)
+                .IsRequired()
+                .HasColumnName("subcategory_id");
+
             builder.Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(150)
@@ -28,9 +36,9 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnType("decimal(18,2)")
                 .HasColumnName("price");
 
-            builder.Property(p => p.ImageUrl)
+            builder.Property(p => p.ThumbnailUrl)
                 .HasMaxLength(300)
-                .HasColumnName("image_url");
+                .HasColumnName("thumbnail_url");
 
             builder.Property(p => p.SKU)
                 .HasMaxLength(50)
@@ -52,13 +60,23 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");
 
-            builder.Property(p => p.SubCategoryNameSnapshot)
-                .HasMaxLength(100)
-                .HasColumnName("sub_category_name_snapshot");
+            builder.Property(p => p.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("updated_at");
+
+            builder.Property(p => p.Rating)
+                .HasColumnName("rating_snap");
+
+            builder.Property(p => p.Reviews)
+                .HasColumnName("reviews_snap");
 
             builder.Property(p => p.CategoryNameSnapshot)
                 .HasMaxLength(100)
-                .HasColumnName("category_name_snapshot");
+                .HasColumnName("cat_snap");
+
+            builder.Property(p => p.SubCategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("subcat_snap");
 
             // Relationships
             builder.HasMany(p => p.RegionPriceMaster)
@@ -89,6 +107,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.HasMany(p => p.AttributeValues)
                 .WithOne(s => s.ProductMaster)
                 .HasForeignKey(t => t.ProductMasterId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            builder.HasMany(p => p.Images)
+                .WithOne(img => img.Product)
+                .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

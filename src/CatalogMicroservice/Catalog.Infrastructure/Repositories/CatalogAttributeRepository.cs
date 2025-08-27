@@ -23,11 +23,7 @@ namespace Catalog.Infrastructure.Repositories
                 FROM catalog_attribute ca
                 WHERE (ca.category_id = {0} OR ca.sub_category_id = {1})";
 
-            if (summaryOnly)
-            {
-                sql += " AND ca.is_summary = true";
-            }
-            else
+            if (!summaryOnly)
             {
                 sql += " AND ca.is_summary = false";
             }

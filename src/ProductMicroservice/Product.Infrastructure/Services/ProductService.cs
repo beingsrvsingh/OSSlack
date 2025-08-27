@@ -154,7 +154,7 @@ namespace Product.Infrastructure.Services
             {
                 var result = await _productRepository.GetAsync(
                     p => p.SubCategoryId == subCategoryId,
-                    include: query => query.Include(p => p.AttributeValues)); // <-- eager loading
+                    include: query => query.Include(p => p.Images).Include(p => p.AttributeValues)); // <-- eager loading
 
                 return result.ToList();
             }
@@ -180,7 +180,7 @@ namespace Product.Infrastructure.Services
         {
             return await _productRepository.GetSingleAsync(
                 p => p.Id == productId,
-                include: query => query.Include(p => p.AttributeValues));
+                include: query => query.Include(p => p.Images).Include(p => p.AttributeValues));
         }
     }
 

@@ -11,7 +11,7 @@ namespace Product.Domain.Entities
         public string? Description { get; set; }
         public decimal Price { get; set; }
         [MaxLength(300)]
-        public string? ImageUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
         [MaxLength(50)]
         public string? SKU { get; set; }
         [MaxLength(50)]
@@ -20,6 +20,9 @@ namespace Product.Domain.Entities
         public bool IsFeatured { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public int CategoryId { get; set; }
+        public int Rating { get; set; }
+        public int Reviews { get; set; }
         public int SubCategoryId { get; set; }
         [MaxLength(100)]
         public string? SubCategoryNameSnapshot { get; set; }
@@ -32,6 +35,7 @@ namespace Product.Domain.Entities
         public virtual ICollection<ProductTagMaster> ProductTagMasters { get; set; } = new List<ProductTagMaster>();
         public virtual ProductSEOInfoMaster? SEOInfoMaster { get; set; }
         public virtual ICollection<ProductAttributeValue> AttributeValues { get; set; } = new List<ProductAttributeValue>();
+        public virtual ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
     }
 }

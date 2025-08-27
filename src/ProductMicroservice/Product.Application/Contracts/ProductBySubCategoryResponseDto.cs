@@ -11,8 +11,7 @@ namespace Product.Application.Contracts
 
         public static ProductSummaryResponseDto FromGroupedAttributeEntity(
         ProductMaster entity,
-        IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups,
-        bool isSummary = true)
+        IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups)
         {
             // Flatten and index by key
             var attributeDict = catalogAttributeGroups
@@ -26,7 +25,6 @@ namespace Product.Application.Contracts
             {
                 GroupName = group.GroupName,
                 Attributes = group.Attributes
-                    .Where(attr => attributeValues.Any(val => val.AttributeKey == attr.Key))
                     .Select(attr =>
                     {
                         var attrVal = attributeValues.First(val => val.AttributeKey == attr.Key);
@@ -49,23 +47,27 @@ namespace Product.Application.Contracts
             return new ProductSummaryResponseDto
             {
                 Pid = entity.Id.ToString(),
-                Cid = "", // populate if available
+                Cid = entity.CategoryId.ToString(),
                 Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
-                Url = entity.ImageUrl,
+                ThumbnailUrl = entity.ThumbnailUrl,
                 Cost = (double)entity.Price,
                 Rating = 0,
                 Reviews = 0,
                 CategoryType = entity.CategoryNameSnapshot,
                 Quantity = 1,
                 Limit = 1,
+                Images = entity.Images.Select(img => new ProductImageDto
+                {
+                    ImageUrl = img.ImageUrl
+                }).ToList(),
                 Attributes = groupedAttributes
             };
         }
 
         public static List<ProductSummaryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups, bool isSummary = false)
         {
-            return products.Select(p => FromGroupedAttributeEntity(p, catalogAttributeGroups, isSummary)).ToList();
+            return products.Select(p => FromGroupedAttributeEntity(p, catalogAttributeGroups)).ToList();
         }
     }
 
@@ -95,16 +97,20 @@ namespace Product.Application.Contracts
             return new ProductBySubCategoryResponseDto
             {
                 Pid = entity.Id.ToString(),
-                Cid = "", // Populate if available
+                Cid = entity.CategoryId.ToString(),
                 Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
-                Url = entity.ImageUrl,
+                ThumbnailUrl = entity.ThumbnailUrl,
                 Cost = (double)entity.Price,
                 Rating = 0,  // Map if rating exists
                 Reviews = 0, // Map if reviews exist
                 CategoryType = entity.CategoryNameSnapshot,
                 Quantity = 1,
                 Limit = 1,
+                Images = entity.Images.Select(img => new ProductImageDto
+                {
+                    ImageUrl = img.ImageUrl
+                }).ToList(),
                 Attributes = attributeValues.Select(attrVal =>
                 {
                     attributeDict.TryGetValue(attrVal.AttributeKey ?? "", out var definition);
@@ -142,8 +148,8 @@ namespace Product.Application.Contracts
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
 
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        [JsonPropertyName("thumbnail_url")]
+        public string? ThumbnailUrl { get; set; }
 
         [JsonPropertyName("cost")]
         public double Cost { get; set; }
@@ -160,5 +166,7 @@ namespace Product.Application.Contracts
         public int Quantity { get; set; } = 1;
         [JsonPropertyName("limit")]
         public int Limit { get; set; } = 1;
+        [JsonPropertyName("images")]
+        public List<ProductImageDto> Images { get; set; } = new();
     }
 }
