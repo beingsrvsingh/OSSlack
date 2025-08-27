@@ -3,14 +3,7 @@ using Shared.Utilities.Response;
 
 namespace Catalog.Application.Features.Query
 {
-    public class GetAttributesByCategoryIdQuery : IRequest<Result>
-    {
-        public int CategoryId { get; }
+    public record GetAttributesByCategoryIdQuery(int CategoryId, int SubCategoryId, bool IsSummary = false) : IRequest<Result>;
 
-        public GetAttributesByCategoryIdQuery(int categoryId)
-        {
-            CategoryId = categoryId;
-        }
-    }
 
 }

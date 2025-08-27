@@ -4,42 +4,48 @@ using Shared.Domain.Enums;
 
 namespace Catalog.Domain.Entities
 {
-    public class CatalogAttribute
+    public partial class CatalogAttribute
     {
         [Key]
         public int Id { get; set; }
 
         [Required, MaxLength(100)]
-        public string Key { get; set; } = null!;  // unique key for internal use
+        public string Key { get; set; } = null!;
+
+        public int? CategoryMasterId { get; set; }
+        public int? SubCategoryMasterId { get; set; }
+        public int AttributeDataTypeId { get; set; }
 
         [Required, MaxLength(200)]
-        public string Label { get; set; } = null!;  // Display name
-
-        [Required]
-        public AttributeDataType DataType { get; set; }
+        public string Label { get; set; } = null!;
+        
+        // <<-- FK to group master
+        public int? AttributeGroupId { get; set; }
 
         public bool IsCustom { get; set; } = false;
-
         public bool IsRequired { get; set; } = false;
+        public bool IsFilterable { get; set; } = false;
+        public bool IsSummary { get; set; } = false;
 
         public int SortOrder { get; set; } = 0;
-         
-        public int? CatalogAttributeIconId { get; set; }
+        public int? AttributeIconId { get; set; }
 
-        [ForeignKey(nameof(CatalogAttributeIconId))]
-        public virtual CatalogAttributeIcon? CatalogAttributeIcon { get; set; }
+        [ForeignKey(nameof(AttributeIconId))]
+        public virtual CatalogAttributeIcon? AttributeIcon { get; set; }
 
-        public int SubCategoryMasterId { get; set; }
-
-        // FK to Category
         [ForeignKey(nameof(SubCategoryMasterId))]
-        public virtual SubCategoryMaster SubCategoryMaster { get; set; } = null!;
+        public virtual SubCategoryMaster? SubCategoryMaster { get; set; }
 
-        // For Enum type: Navigation to allowed values
+        [ForeignKey(nameof(AttributeDataTypeId))]
+        public virtual AttributeDataTypeMaster AttributeDataType { get; set; } = null!;
+
+        [ForeignKey(nameof(AttributeGroupId))]
+        public virtual CatalogAttributeGroupMaster? AttributeGroup { get; set; }
+
         public virtual ICollection<CatalogAttributeAllowedValue> AllowedValues { get; set; } = new List<CatalogAttributeAllowedValue>();
 
-        // Audit fields
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-    }    
+    }
+
 }

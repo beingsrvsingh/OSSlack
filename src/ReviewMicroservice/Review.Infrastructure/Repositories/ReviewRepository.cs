@@ -43,7 +43,7 @@ namespace Review.Infrastructure.Repositories
 
             var totalCount = await query.CountAsync();
 
-            var items = await query
+            var items = await query.Include(f=>f.Feedbacks).Include(r => r.Medias).Take(3)
                 .OrderByDescending(r => r.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)

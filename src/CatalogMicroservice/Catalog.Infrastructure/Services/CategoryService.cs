@@ -46,15 +46,15 @@ namespace Catalog.Infrastructure.Services
 
 
         public async Task<bool> CreateCategoryAsync(CategoryMaster category)
-        {            
+        {
             try
             {
                 await _categoryRepository.AddAsync(category);
-                await _categoryRepository.SaveChangesAsync();                            
+                await _categoryRepository.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
-            {                
+            {
                 _logger.LogError(ex, "Failed to create category with attributes");
                 return false;
             }
@@ -119,35 +119,55 @@ namespace Catalog.Infrastructure.Services
             }
         }
 
-        public async Task<IEnumerable<CatalogAttributeDto>> GetAttributesByCategoryIdAsync(int categoryId)
+        public async Task<IEnumerable<CatalogAttributeGroupDto>> GetGroupedAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false)
         {
-            var attributes = await attributeRepository
-                .GetAttributesByCategoryIdAsync(categoryId);
-
-            return attributes.Select(attr => new CatalogAttributeDto
             {
-                Id = attr.Id,
-                Key = attr.Key,
-                Label = attr.Label,
-                DataType = attr.DataType.ToString(),
-                IsCustom = attr.IsCustom,
-                IsRequired = attr.IsRequired,
-                SortOrder = attr.SortOrder,
-                AllowedValues = attr.AllowedValues?
-                .OrderBy(v => v.SortOrder)
-                .Select(v => new CatalogAttributeAllowedValueDto
-                {
-                    Id = v.Id,
-                    Value = v.Value,
-                    SortOrder = v.SortOrder
-                }).ToList(),
-                Icon = new CatalogAttributeIconDto
-                {
-                    IconCodePoint = attr.CatalogAttributeIcon?.IconCodePoint,
-                    IconFontFamily = attr.CatalogAttributeIcon?.IconFontFamily,
-                    IconName = attr.CatalogAttributeIcon?.IconName,
-                },
-            });
+                var attributes = await attributeRepository
+                    .GetAttributesByCategoryOrSubCategoryAsync(categoryId, subCategoryId, summaryOnly);
+
+                var grouped = attributes
+                    .GroupBy(attr => attr.AttributeGroup?.DisplayName ?? "Basic Details")
+                    .Select(g => new CatalogAttributeGroupDto
+                    {
+                        GroupName = g.Key,
+                        Attributes = g.Select(attr => new CatalogAttributeDto
+                        {
+                            Id = attr.Id,
+                            Key = attr.Key,
+                            Label = attr.Label,
+                            DataType = attr.AttributeDataType?.Name ?? "String",
+                            IsCustom = attr.IsCustom,
+                            IsRequired = attr.IsRequired,
+                            IsFilterable = attr.IsFilterable,
+                            IsSummary = attr.IsSummary,
+                            SortOrder = attr.SortOrder,
+                            AllowedValues = attr.AllowedValues != null
+                                ? attr.AllowedValues
+                                    .OrderBy(v => v.SortOrder)
+                                    .Select(v => new CatalogAttributeAllowedValueDto
+                                    {
+                                        Id = v.Id,
+                                        Value = v.Value,
+                                        SortOrder = v.SortOrder
+                                    })
+                                    .ToList()
+                                : new List<CatalogAttributeAllowedValueDto>(),
+                            Icon = attr.AttributeIcon != null
+                                ? new CatalogAttributeIconDto
+                                {
+                                    IconCodePoint = attr.AttributeIcon.IconCodePoint,
+                                    IconFontFamily = attr.AttributeIcon.IconFontFamily,
+                                    IconName = attr.AttributeIcon.IconName,
+                                }
+                                : null
+                        }).OrderBy(a => a.SortOrder).ToList()
+                    })
+                    .OrderBy(g => g.GroupName) // optional: order groups alphabetically
+                    .ToList();
+
+                return grouped;
+            }
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<CatalogAttributeIcon> builder)
         {
-            builder.ToTable("catalog_attribute_icon");
+            builder.ToTable("attribute_icon");
 
             builder.HasKey(cai => cai.Id);
             builder.Property(cai => cai.Id)

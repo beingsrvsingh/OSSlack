@@ -33,6 +33,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.HasOne(l => l.Category)
                 .WithMany(c => c.Localizations)
                 .HasForeignKey(l => l.CategoryId)
+                .HasPrincipalKey(e => e.Id)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

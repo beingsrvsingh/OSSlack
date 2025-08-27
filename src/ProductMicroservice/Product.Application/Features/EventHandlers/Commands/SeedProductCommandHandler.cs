@@ -24,37 +24,115 @@ namespace Product.Application.Features.EventHandlers.Commands
             var products = new List<ProductMaster>
             {
                 // SubCategory 101 - Kumkum (Vermilion)
-                new() { Name = "Premium Kumkum", Price = 25.99m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri", IsNew = true,
-                AttributeValues =  new List<ProductAttributeValue>
+                new ProductMaster
                 {
-                    new()
+                    Id = 1,  // Updated product id here
+                    Name = "iPhone 15 Pro",
+                    Price = 1299.99m,
+                    SubCategoryId = 101,
+                    SubCategoryNameSnapshot = "Smartphones",
+                    CategoryNameSnapshot = "Electronics",
+                    IsNew = true,
+                    CreatedAt = DateTime.UtcNow,
+                    AttributeValues = new List<ProductAttributeValue>
                     {
-                        ProductMasterId = 101,
-                        AttributeKey = "color",
-                        AttributeLabel = "Color",
-                        AttributeDataType = (int)AttributeDataType.String,
-                        Value = "Red",
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new()
-                    {
-                        ProductMasterId = 102,
-                        AttributeKey = "weight",
-                        AttributeLabel = "Weight (grams)",
-                        AttributeDataType = (int)AttributeDataType.Decimal,
-                        Value = "100",
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new()
-                    {
-                        ProductMasterId = 102,
-                        AttributeKey = "material",
-                        AttributeLabel = "Material",
-                        AttributeDataType = (int)AttributeDataType.Decimal,
-                        Value = "Natural",
-                        CreatedAt = DateTime.UtcNow
+                        // Basic Info Group (CatalogAttributeGroupId = 1)
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 1, // example CatalogAttribute ID for brand
+                            CatalogAttributeGroupId = 1,
+                            AttributeKey = "brand",
+                            AttributeLabel = "Brand",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "Apple",
+                            CreatedAt = DateTime.UtcNow
+                        },
+
+                        // Variant Info Group (CatalogAttributeGroupId = 3)
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 2, // example CatalogAttribute ID for color
+                            CatalogAttributeGroupId = 3,
+                            AttributeKey = "color",
+                            AttributeLabel = "Color",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "Black",
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 2,
+                            CatalogAttributeGroupId = 3,
+                            AttributeKey = "color",
+                            AttributeLabel = "Color",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "Silver",
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 2,
+                            CatalogAttributeGroupId = 3,
+                            AttributeKey = "color",
+                            AttributeLabel = "Color",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "Gold",
+                            CreatedAt = DateTime.UtcNow
+                        },
+
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 3, // example CatalogAttribute ID for storage
+                            CatalogAttributeGroupId = 3,
+                            AttributeKey = "storage",
+                            AttributeLabel = "Storage Capacity",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "256GB",
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 3,
+                            CatalogAttributeGroupId = 3,
+                            AttributeKey = "storage",
+                            AttributeLabel = "Storage Capacity",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "512GB",
+                            CreatedAt = DateTime.UtcNow
+                        },
+
+                        // Technical Specs Group (CatalogAttributeGroupId = 2)
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 4, // example CatalogAttribute ID for ram
+                            CatalogAttributeGroupId = 2,
+                            AttributeKey = "ram",
+                            AttributeLabel = "RAM",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "8GB",
+                            CreatedAt = DateTime.UtcNow
+                        },
+                        new()
+                        {
+                            ProductMasterId = 1,
+                            CatalogAttributeId = 5, // example CatalogAttribute ID for screen_size
+                            CatalogAttributeGroupId = 2,
+                            AttributeKey = "screen_size",
+                            AttributeLabel = "Screen Size",
+                            AttributeDataTypeId = (int)AttributeDataType.String,
+                            Value = "6.1 inch",
+                            CreatedAt = DateTime.UtcNow
+                        }
                     }
-                } },
+                },
+
                 new() { Name = "Natural Red Kumkum", Price = 15.50m, SubCategoryId = 101, SubCategoryNameSnapshot = "Kumkum (Vermilion)", CategoryNameSnapshot = "Puja Samagri" },
 
                 // SubCategory 102 - Haldi (Turmeric)

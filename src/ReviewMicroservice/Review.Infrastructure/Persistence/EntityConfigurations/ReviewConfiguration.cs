@@ -25,6 +25,11 @@ namespace Review.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(450)
                 .HasColumnName("user_id");
 
+            builder.Property(r => r.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(450)
+                .HasColumnName("created_by");
+
             builder.Property(r => r.Rating)
                 .IsRequired()
                 .HasColumnName("rating");

@@ -14,8 +14,9 @@ namespace Catalog.Domain.Entities
         [ForeignKey(nameof(CatalogAttributeId))]
         public CatalogAttribute CatalogAttribute { get; set; } = null!;
 
+        // e.g. "Red", "Blue", "Small", "Large"
         [Required, MaxLength(100)]
-        public string Value { get; set; } = null!;  // e.g. "Red", "Blue", "Small", "Large"
+        public string Value { get; set; } = null!;
 
         public int SortOrder { get; set; } = 0;
 

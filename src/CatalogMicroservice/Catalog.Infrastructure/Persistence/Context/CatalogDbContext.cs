@@ -4,10 +4,8 @@ using System.Reflection;
 
 namespace Catalog.Infrastructure.Persistence.Context;
 
-public partial class CatalogDbContext : DbContext
+public partial class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
 {
-    public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
-        : base(options) { }
 
     // Category
     public DbSet<CategoryMaster> Categories => Set<CategoryMaster>();
@@ -20,11 +18,36 @@ public partial class CatalogDbContext : DbContext
     public DbSet<CatalogAttribute> CatalogAttributes => Set<CatalogAttribute>();
     public DbSet<CatalogAttributeAllowedValue> CatalogAttributeAllowedValues => Set<CatalogAttributeAllowedValue>();
     public DbSet<CatalogAttributeIcon> CatalogAttributeIcons => Set<CatalogAttributeIcon>();
-    public object SubCategoryMasters { get; set; }
+    public DbSet<CatalogAttributeGroupMaster> CatalogAttributeGroupMasters => Set<CatalogAttributeGroupMaster>();
+    public DbSet<CategoryAttributeGroupMapping> CategoryAttributeGroupMappings => Set<CategoryAttributeGroupMapping>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Entity<AttributeDataTypeMaster>().HasData(
+        new AttributeDataTypeMaster { Id = 1, Name = "String" },
+        new AttributeDataTypeMaster { Id = 2, Name = "Integer" },
+        new AttributeDataTypeMaster { Id = 3, Name = "Decimal" },
+        new AttributeDataTypeMaster { Id = 4, Name = "Boolean" },
+        new AttributeDataTypeMaster { Id = 5, Name = "Date" },
+        new AttributeDataTypeMaster { Id = 6, Name = "Time" },
+        new AttributeDataTypeMaster { Id = 7, Name = "DateTime" },
+        new AttributeDataTypeMaster { Id = 8, Name = "Multiselect" },
+        new AttributeDataTypeMaster { Id = 9, Name = "Dropdown" });
+
+        builder.Entity<CatalogAttributeGroupMaster>().HasData(
+        new CatalogAttributeGroupMaster { Id = 1, GroupKey = "basic_info", DisplayName = "Basic Information", SortOrder = 1, IsActive = true },
+        new CatalogAttributeGroupMaster { Id = 2, GroupKey = "technical_specs", DisplayName = "Technical Specifications", SortOrder = 2, IsActive = true },
+        new CatalogAttributeGroupMaster { Id = 3, GroupKey = "variant_info", DisplayName = "Variant Details", SortOrder = 3, IsActive = true });
+
+        builder.Entity<CategoryAttributeGroupMapping>().HasData(
+        new CategoryAttributeGroupMapping { Id = 1, CategoryMasterId = 1, AttributeGroupId = 1, SortOrder = 1 }, // Basic Info
+        new CategoryAttributeGroupMapping { Id = 2, CategoryMasterId = 1, AttributeGroupId = 2, SortOrder = 2 }, // Technical Specs
+        new CategoryAttributeGroupMapping { Id = 3, CategoryMasterId = 1, AttributeGroupId = 3, SortOrder = 3 }  // Variant Info
+        );
+
+
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

@@ -8,6 +8,7 @@ using Review.Domain.Core.Repository;
 using Review.Domain.Entities;
 using Review.Domain.Enum;
 using Review.Domain.Repository;
+using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 
 using ReviewEntity = Review.Domain.Entities.Review;
@@ -21,6 +22,7 @@ namespace Review.Infrastructure.Services
         private readonly IReviewReportReasonRepository _reviewReportReasonRepository;
         private readonly IReviewFeedbackRepository _reviewFeedbackRepository;
         private readonly IReviewMediaRepository _mediaRepository;
+        private readonly IUserProvider userProvider;
         private readonly ILoggerService<ReviewService> _logger;
 
         public ReviewService(
@@ -29,7 +31,8 @@ namespace Review.Infrastructure.Services
             IReviewReportRepository reportRepository,
             IReviewReportReasonRepository reviewReportReasonRepository,
             IReviewFeedbackRepository reviewFeedbackRepository,
-            IReviewMediaRepository mediaRepository
+            IReviewMediaRepository mediaRepository,
+            IUserProvider userProvider
             )
         {
             _reviewRepository = reviewRepository;
@@ -37,6 +40,7 @@ namespace Review.Infrastructure.Services
             _reviewReportReasonRepository = reviewReportReasonRepository;
             _reviewFeedbackRepository = reviewFeedbackRepository;
             this._mediaRepository = mediaRepository;
+            this.userProvider = userProvider;
             _logger = logger;
         }
 
@@ -318,7 +322,7 @@ namespace Review.Infrastructure.Services
                 if (pagedReviews.TotalCount == 0)
                     return (new List<ReviewDto>(), 0);
 
-                var dtos = pagedReviews.Items.Adapt<List<ReviewDto>>();
+                var dtos = ReviewDto.ToResponseDtoList(pagedReviews.Items, userProvider.UserId ?? "user123");
                 return (dtos, pagedReviews.TotalCount);
             }
             catch (Exception ex)

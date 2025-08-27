@@ -112,12 +112,12 @@ namespace Catalog.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("{id:int}/attributes")]
+        [HttpGet("attributes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAttributesByCategoryId(int id)
+        public async Task<IActionResult> GetAttributesByCategoryId([FromQuery] GetAttributesByCategoryIdQuery query)
         {
-            var result = await Mediator.Send(new GetAttributesByCategoryIdQuery(id));
+            var result = await Mediator.Send(query);
 
             if (!result.Succeeded)
                 return NotFound(result.Errors);

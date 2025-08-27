@@ -23,7 +23,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
         {
             try
             {
-                var attributes = await _categoryService.GetAttributesByCategoryIdAsync(request.CategoryId);
+                var attributes = await _categoryService.GetGroupedAttributesAsync(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
                 if (attributes == null || !attributes.Any())
                 {

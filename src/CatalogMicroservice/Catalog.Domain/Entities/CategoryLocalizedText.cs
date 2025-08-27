@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Catalog.Domain.Entities
 {
@@ -7,7 +8,7 @@ namespace Catalog.Domain.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }
 
         [Required, MaxLength(5)]
@@ -18,7 +19,7 @@ namespace Catalog.Domain.Entities
 
         public string? LocalizedDescription { get; set; }
 
-        public CategoryMaster Category { get; set; } = null!;
+        public virtual CategoryMaster Category { get; set; } = null!;
     }
 
 }

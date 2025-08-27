@@ -104,17 +104,27 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("{scid:int}")]
+        [HttpGet("products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetProductBySubCategoryIdAsync(int scid)
+        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductsWithAttributesQuery query)
         {
-            var result = await Mediator.Send(new GetProductBySubCategoryId { SubCategoryId = scid });
-
+            var result = await Mediator.Send(query);
             return Ok(result);
         }
 
-        [HttpGet]
+
+        [HttpGet("product")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductQuery query)
+        {
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+
+        [HttpGet("{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> GetGetProductByProductNameAsync(string name)

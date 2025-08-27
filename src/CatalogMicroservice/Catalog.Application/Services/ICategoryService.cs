@@ -14,7 +14,7 @@ namespace Catalog.Application.Services
 
         Task<IEnumerable<CategoryLocalizedText>> GetLocalizedTextsAsync(int categoryId);
         Task<bool> AddOrUpdateLocalizedTextAsync(CategoryLocalizedText localizedText);
-        Task<IEnumerable<CatalogAttributeDto>> GetAttributesByCategoryIdAsync(int categoryId);
+        Task<IEnumerable<CatalogAttributeGroupDto>> GetGroupedAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false);
 
     }
 }

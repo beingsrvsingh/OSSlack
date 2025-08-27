@@ -17,15 +17,18 @@ namespace Product.Domain.Entities
         [Required]
         public int CatalogAttributeId { get; set; }
 
-        // Optional: Denormalize attribute metadata to avoid extra API calls
-        public string? AttributeKey { get; set; }  // e.g. "color"
-        public string? AttributeLabel { get; set; } // e.g. "Color"
-        public int? AttributeDataType { get; set; } // e.g. enum int value for AttributeDataType enum
-
         [Required]
-        public string Value { get; set; } = null!; // Store value as string, interpret based on CatalogAttribute.DataType
+        public string Value { get; set; } = null!;
 
-        // Audit fields
+        // Optional denormalized metadata
+        public string? AttributeKey { get; set; }
+        public string? AttributeLabel { get; set; }
+        public int? AttributeDataTypeId { get; set; }
+
+        // For sorting/grouping UI
+        public int? CatalogAttributeGroupId { get; set; } 
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
+
 }

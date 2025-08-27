@@ -13,5 +13,6 @@ namespace Product.Domain.Repository
         Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId);
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
         Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null);
+        Task<ProductMaster?> GetSingleAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null);
     }
 }

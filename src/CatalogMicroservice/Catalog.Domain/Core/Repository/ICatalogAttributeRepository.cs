@@ -5,7 +5,7 @@ namespace Catalog.Domain.Core.Repository
 {
     public interface ICatalogAttributeRepository : IRepository<CatalogAttribute>
     {
-        Task<List<CatalogAttribute>> GetAttributesByCategoryIdAsync(int categoryId);
+        Task<List<CatalogAttribute>> GetAttributesByCategoryOrSubCategoryAsync(int categoryId, int subCategoryId, bool summaryOnly = false);
     }
 
 }

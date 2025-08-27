@@ -1,4 +1,3 @@
-using Mapster;
 using MediatR;
 using Product.Application.Contracts;
 using Product.Application.Features.Query;
@@ -8,14 +7,14 @@ using Shared.Utilities.Response;
 
 namespace Product.Application.Features.EventHandlers.Query
 {
-    public class GetProductBySubCategoryIdHandler : IRequestHandler<GetProductBySubCategoryId, Result>
+    public class GetProductQueryHandler : IRequestHandler<GetProductQuery, Result>
     {
-        private readonly ILoggerService<GetLocalizedInfoQueryHandler> _logger;
+        private readonly ILoggerService<GetProductQueryHandler> _logger;
         private readonly IProductService _productService;
         private readonly ICatalogService catalogService;
 
-        public GetProductBySubCategoryIdHandler(
-            ILoggerService<GetLocalizedInfoQueryHandler> logger,
+        public GetProductQueryHandler(
+            ILoggerService<GetProductQueryHandler> logger,
             IProductService productService,
             ICatalogService catalogService)
         {
@@ -24,18 +23,18 @@ namespace Product.Application.Features.EventHandlers.Query
             this.catalogService = catalogService;
         }
 
-        public async Task<Result> Handle(GetProductBySubCategoryId request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetProductQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var products = await _productService.GetProductBySubCategoryIdAsync(request.SubCategoryId);
+                var product = await _productService.GetProductWithAttributesAsync(request.productId);
 
-                if (products == null || !products.Any())
+                if (product == null)
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
-                var attributes = await catalogService.GetAttributesBySubCategoryIdAsync(request.SubCategoryId);
+                var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
-                var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes);
+                var dtoList = ProductSummaryResponseDto.FromGroupedAttributeEntity(product, attributes);
 
                 return Result.Success(dtoList);
             }
@@ -45,6 +44,5 @@ namespace Product.Application.Features.EventHandlers.Query
                 return Result.Failure(new FailureResponse("Error", "An error occurred while processing the request."));
             }
         }
-
     }
 }

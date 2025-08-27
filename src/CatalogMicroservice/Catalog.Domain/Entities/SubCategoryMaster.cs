@@ -26,8 +26,7 @@ public partial class SubCategoryMaster
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
-
-    [ForeignKey(nameof(CategoryMasterId))]
+    
     public virtual CategoryMaster CategoryMaster { get; set; } = null!;
 
     [ForeignKey(nameof(ParentSubcategoryId))]

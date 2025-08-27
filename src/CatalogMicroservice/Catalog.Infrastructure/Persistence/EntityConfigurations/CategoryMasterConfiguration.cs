@@ -26,9 +26,9 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(c => c.Localizations)
-                   .WithOne()
-                   .HasForeignKey(l => l.CategoryId)
-                   .OnDelete(DeleteBehavior.Cascade);            
+           .WithOne(l => l.Category)
+           .HasForeignKey(l => l.CategoryId)
+           .OnDelete(DeleteBehavior.Cascade);       
         }
     }
 

@@ -31,12 +31,6 @@ namespace Review.Application.Features.Commands.CommandHandlers
                 return Result.Failure(new FailureResponse("NotFound", "Review not found"));
             }
 
-            if (review.UserId != request.RequestingUserId)
-            {
-                _logger.LogWarning("Unauthorized deletion attempt by user {UserId} for review {ReviewId}", request.RequestingUserId, request.ReviewId);
-                return Result.Failure(new FailureResponse("Unauthorized", "Cannot delete another user's review"));
-            }
-
             var hasDeleted = await _reviewService.DeleteAsync(review);
             if (!hasDeleted)
                 return Result.Failure(new FailureResponse("DeleteFailed", "Unable to delete the review."));

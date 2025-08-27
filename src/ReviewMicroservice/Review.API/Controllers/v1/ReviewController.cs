@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Review.Application.Contracts;
 using Review.Application.Features.Commands;
+using Review.Application.Features.Commands.CommandHandlers;
 using Review.Application.Features.Queries;
 using Shared.Utilities.Response;
 
 public class ReviewController : BaseController
 {
-    [HttpGet("product/{ProductId}")]
+    [HttpGet("summary/{ProductId}")]
     [ProducesResponseType(typeof(List<ReviewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetReviewsByProduct([FromRoute] GetReviewsByProductQuery query, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -30,7 +31,7 @@ public class ReviewController : BaseController
         return result.Succeeded
             ? Ok(result)
             : BadRequest(result);
-    }    
+    }
 
     [HttpGet("{ReviewId}")]
     [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]

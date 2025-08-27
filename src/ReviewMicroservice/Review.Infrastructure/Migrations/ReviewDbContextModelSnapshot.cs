@@ -100,6 +100,12 @@ namespace Review.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)")
+                        .HasColumnName("created_by");
+
                     b.Property<int>("HelpfulCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")

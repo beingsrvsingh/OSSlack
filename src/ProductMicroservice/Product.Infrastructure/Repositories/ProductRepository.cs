@@ -18,54 +18,65 @@ namespace Product.Infrastructure.Repositories
 
         public async Task<ProductMaster?> GetProductWithVariantsAsync(int productId)
         {
-            return await _context.ProductMasters
+            return await _context.ProductMasters.AsNoTracking()
                 .Include(p => p.VariantMasters) // Assuming navigation property
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
         public async Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId)
         {
-            return await _context.ProductRegionPriceMasters
+            return await _context.ProductRegionPriceMasters.AsNoTracking()
                 .Where(p => p.ProductId == productId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId)
         {
-            return await _context.ProductVariantMasters
+            return await _context.ProductVariantMasters.AsNoTracking()
                 .Where(v => v.ProductId == productId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId)
         {
-            return await _context.LocalizedProductInfoMasters
+            return await _context.LocalizedProductInfoMasters.AsNoTracking()
                 .Where(l => l.ProductId == productId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId)
         {
-            return await _context.ProductTagMasters
+            return await _context.ProductTagMasters.AsNoTracking()
                 .Where(t => t.ProductId == productId)
                 .ToListAsync();
         }
 
         public async Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId)
         {
-            return await _context.ProductSEOInfoMasters
+            return await _context.ProductSEOInfoMasters.AsNoTracking()
                 .FirstOrDefaultAsync(s => s.ProductId == productId);
         }
 
-        public async Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate,Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null)
+        public async Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null)
         {
             IQueryable<ProductMaster> query = _context.ProductMasters;
 
             if (include != null)
                 query = include(query);
 
-            return await query.Where(predicate).ToListAsync();
+            return await query.AsNoTracking().Where(predicate).ToListAsync();
         }
+
+        public async Task<ProductMaster?> GetSingleAsync(Expression<Func<ProductMaster, bool>> predicate,Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null)
+        {
+            IQueryable<ProductMaster> query = _context.ProductMasters;
+
+            if (include != null)
+                query = include(query);
+
+            return await query.AsNoTracking().FirstOrDefaultAsync(predicate);
+        }
+
 
     }
 

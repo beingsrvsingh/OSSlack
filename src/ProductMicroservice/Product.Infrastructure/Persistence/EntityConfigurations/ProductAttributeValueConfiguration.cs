@@ -1,11 +1,9 @@
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Product.Domain.Entities;
 
 namespace Product.Infrastructure.Persistence.EntityConfigurations
 {
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Product.Domain.Entities;
-
     public class ProductAttributeValueConfiguration : IEntityTypeConfiguration<ProductAttributeValue>
     {
         public void Configure(EntityTypeBuilder<ProductAttributeValue> builder)
@@ -37,8 +35,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("attribute_label")
                 .HasMaxLength(200);
 
-            builder.Property(pav => pav.AttributeDataType)
-                .HasColumnName("attribute_data_type");
+            builder.Property(pav => pav.AttributeDataTypeId)
+                .HasColumnName("attribute_datatype_id");
+
+            builder.Property(pav => pav.CatalogAttributeGroupId)
+                .HasColumnName("attribute_group_id");
 
             builder.Property(pav => pav.Value)
                 .HasColumnName("value")
@@ -48,6 +49,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         }
+
     }
 
 }

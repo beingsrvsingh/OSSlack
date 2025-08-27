@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Catalog.Domain.Entities
 {
-    public class SubCategoryLocalizedText
+    public partial class SubCategoryLocalizedText
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [ForeignKey(nameof(SubCategory))]
         public int SubCategoryId { get; set; }
 
         [Required, MaxLength(5)]
@@ -18,7 +19,7 @@ namespace Catalog.Domain.Entities
 
         public string? LocalizedDescription { get; set; }
 
-        public SubCategoryMaster SubCategory { get; set; } = null!;
+        public virtual SubCategoryMaster SubCategory { get; set; } = null!;
     }
 
 }

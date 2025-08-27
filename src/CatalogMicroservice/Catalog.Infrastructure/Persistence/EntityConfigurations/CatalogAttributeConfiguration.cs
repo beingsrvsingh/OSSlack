@@ -25,9 +25,25 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(200)
                 .HasColumnName("label");
 
-            builder.Property(ca => ca.DataType)
+            builder.Property(ca => ca.AttributeDataTypeId)
                 .IsRequired()
-                .HasColumnName("data_type");
+                .HasColumnName("attribute_datatype_id");
+
+            builder.Property(ca => ca.AttributeGroupId)
+                .HasColumnName("attribute_group_id")
+                .IsRequired(false);
+
+            builder.Property(ca => ca.CategoryMasterId)
+                .HasColumnName("category_id")
+                .IsRequired(false);
+
+            builder.Property(ca => ca.SubCategoryMasterId)
+                .HasColumnName("sub_category_id")
+                .IsRequired(false);
+
+            builder.Property(ca => ca.AttributeIconId)
+                .HasColumnName("attribute_icon_id")
+                .IsRequired(false);
 
             builder.Property(ca => ca.IsCustom)
                 .HasColumnName("is_custom")
@@ -37,32 +53,17 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_required")
                 .HasDefaultValue(false);
 
+            builder.Property(ca => ca.IsFilterable)
+                .HasColumnName("is_filterable")
+                .HasDefaultValue(false);
+
+            builder.Property(ca => ca.IsSummary)
+                .HasColumnName("is_summary")
+                .HasDefaultValue(false);
+
             builder.Property(ca => ca.SortOrder)
                 .HasColumnName("sort_order")
                 .HasDefaultValue(0);
-
-            builder.Property(ca => ca.SubCategoryMasterId)
-                .IsRequired()
-                .HasColumnName("sub_category_id");
-
-            builder.Property(ca => ca.CatalogAttributeIconId)
-                .HasColumnName("catalog_attribute_icon_id")
-                .IsRequired(false);    
-
-            builder.HasOne(ca => ca.CatalogAttributeIcon)
-                .WithMany() // No navigation property on CatalogAttributeIcon
-                .HasForeignKey(ca => ca.CatalogAttributeIconId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(ca => ca.SubCategoryMaster)
-                .WithMany(c => c.CatalogAttributes)
-                .HasForeignKey(ca => ca.SubCategoryMasterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(ca => ca.AllowedValues)
-                .WithOne(av => av.CatalogAttribute)
-                .HasForeignKey(av => av.CatalogAttributeId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(ca => ca.CreatedAt)
                 .HasColumnName("created_at")
@@ -71,7 +72,35 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.Property(ca => ca.UpdatedAt)
                 .HasColumnName("updated_at")
                 .IsRequired(false);
+
+            // Relationships
+
+            builder.HasOne(ca => ca.AttributeIcon)
+                .WithMany() // No navigation property on CatalogAttributeIcon
+                .HasForeignKey(ca => ca.AttributeIconId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(ca => ca.SubCategoryMaster)
+                .WithMany(sc => sc.CatalogAttributes)
+                .HasForeignKey(ca => ca.SubCategoryMasterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(ca => ca.AttributeGroup)
+                .WithMany()
+                .HasForeignKey(ca => ca.AttributeGroupId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.HasOne(ca => ca.AttributeDataType)
+                .WithMany(ad => ad.CatalogAttributes)
+                .HasForeignKey(ca => ca.AttributeDataTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(ca => ca.AllowedValues)
+                .WithOne(av => av.CatalogAttribute)
+                .HasForeignKey(av => av.CatalogAttributeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 
 }

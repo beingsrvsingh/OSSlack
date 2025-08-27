@@ -58,66 +58,135 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                 {
                     new CatalogAttribute
                     {
-                        Id = 201,
-                        Key = "color",
-                        Label = "Color",
-                        DataType = AttributeDataType.Enum,
+                        Id = 1,
+                        Key = "brand",
+                        Label = "Brand",
+                        AttributeDataTypeId = (int)(AttributeDataType)9, // Assuming 9 = string
                         IsCustom = false,
                         IsRequired = true,
                         SortOrder = 1,
+                        CategoryMasterId = 1,  // Assuming 2 is electronics category
+                        AttributeGroupId = 1, // e.g. Basic Info group
                         AllowedValues = new List<CatalogAttributeAllowedValue>
                         {
-                            new CatalogAttributeAllowedValue { Value = "Red", SortOrder = 1, CreatedAt = DateTime.UtcNow },
-                            new CatalogAttributeAllowedValue { Value = "Yellow", SortOrder = 2, CreatedAt = DateTime.UtcNow },
-                            new CatalogAttributeAllowedValue { Value = "Orange", SortOrder = 3, CreatedAt = DateTime.UtcNow }
+                            new CatalogAttributeAllowedValue { Value = "Apple", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Samsung", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "OnePlus", SortOrder = 3, CreatedAt = DateTime.UtcNow },
                         },
-                        CatalogAttributeIcon = new CatalogAttributeIcon
+                        AttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "brand",
+                            IconCodePoint = 0xe049,  // just example icon code
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new CatalogAttribute
+                    {
+                        Id = 2,
+                        Key = "color",
+                        Label = "Color",
+                        AttributeDataTypeId = (int)(AttributeDataType)9,
+                        IsCustom = false,
+                        IsRequired = true,
+                        SortOrder = 2,
+                        CategoryMasterId = 1,
+                        AttributeGroupId = 1,
+                        AllowedValues = new List<CatalogAttributeAllowedValue>
+                        {
+                            new CatalogAttributeAllowedValue { Value = "Black", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "White", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Red", SortOrder = 3, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Gold", SortOrder = 4, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "Silver", SortOrder = 5, CreatedAt = DateTime.UtcNow }
+                        },
+                        AttributeIcon = new CatalogAttributeIcon
                         {
                             IconName = "palette",
-                            IconCodePoint = 0xe40a, // Material icon for "palette"
+                            IconCodePoint = 0xe40a,
                             IconFontFamily = "MaterialIcons"
                         },
                         CreatedAt = DateTime.UtcNow
                     },
                     new CatalogAttribute
                     {
-                        Id = 202,
-                        Key = "weight",
-                        Label = "Weight",
-                        DataType = AttributeDataType.String,
+                        Id = 3,
+                        Key = "storage",
+                        Label = "Storage Capacity",
+                        AttributeDataTypeId = (int)(AttributeDataType)9,
                         IsCustom = false,
-                        IsRequired = false,
-                        SortOrder = 2,
-                        CatalogAttributeIcon = new CatalogAttributeIcon
-                        {
-                            IconName = "scale", // Or "balance", depending on available icons
-                            IconCodePoint = 0xf5de, // Example Material Design Icon (if using MDI fonts)
-                            IconFontFamily = "MaterialIcons"
-                        },
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new CatalogAttribute
-                    {
-                        Id = 203,
-                        Key = "brand",
-                        Label = "Brand",
-                        DataType = AttributeDataType.Enum,
-                        IsCustom = false,
-                        IsRequired = false,
+                        IsRequired = true,
                         SortOrder = 3,
+                        CategoryMasterId = 1,
+                        AttributeGroupId = 2,  // e.g. Technical Specs group
                         AllowedValues = new List<CatalogAttributeAllowedValue>
                         {
-                            new CatalogAttributeAllowedValue { Value = "UnPooja", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "64GB", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "128GB", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "256GB", SortOrder = 3, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "512GB", SortOrder = 4, CreatedAt = DateTime.UtcNow }
                         },
-                        CatalogAttributeIcon = new CatalogAttributeIcon
+                        AttributeIcon = new CatalogAttributeIcon
                         {
-                            IconName = "category",
-                            IconCodePoint = 0xe574,
+                            IconName = "storage",
+                            IconCodePoint = 0xe1a5, // example icon code
                             IconFontFamily = "MaterialIcons"
                         },
                         CreatedAt = DateTime.UtcNow
-                    }            
-                } },
+                    },
+                    new CatalogAttribute
+                    {
+                        Id = 4,
+                        Key = "ram",
+                        Label = "RAM",
+                        AttributeDataTypeId = (int)(AttributeDataType)9,
+                        IsCustom = false,
+                        IsRequired = true,
+                        SortOrder = 4,
+                        CategoryMasterId = 1,
+                        AttributeGroupId = 2,
+                        AllowedValues = new List<CatalogAttributeAllowedValue>
+                        {
+                            new CatalogAttributeAllowedValue { Value = "4GB", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "6GB", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "8GB", SortOrder = 3, CreatedAt = DateTime.UtcNow }
+                        },
+                        AttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "memory",
+                            IconCodePoint = 0xe322,
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    },
+                    new CatalogAttribute
+                    {
+                        Id = 5,
+                        Key = "screen_size",
+                        Label = "Screen Size",
+                        AttributeDataTypeId = (int)(AttributeDataType)9,
+                        IsCustom = false,
+                        IsRequired = false,
+                        SortOrder = 5,
+                        CategoryMasterId = 1,
+                        AttributeGroupId = 2,
+                        AllowedValues = new List<CatalogAttributeAllowedValue>
+                        {
+                            new CatalogAttributeAllowedValue { Value = "5.4 inch", SortOrder = 1, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "6.1 inch", SortOrder = 2, CreatedAt = DateTime.UtcNow },
+                            new CatalogAttributeAllowedValue { Value = "6.7 inch", SortOrder = 3, CreatedAt = DateTime.UtcNow }
+                        },
+                        AttributeIcon = new CatalogAttributeIcon
+                        {
+                            IconName = "smartphone",
+                            IconCodePoint = 0xe32f,
+                            IconFontFamily = "MaterialIcons"
+                        },
+                        CreatedAt = DateTime.UtcNow
+                    }
+                },
+
+            },
                 new SubCategoryMaster { Id = 102, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Haldi (Turmeric)", IsActive = true },
                 new SubCategoryMaster { Id = 103, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Chandan (Sandalwood)", IsActive = true },
                 new SubCategoryMaster { Id = 104, SubcategoryType = SubcategoryType.Product, CategoryMasterId = 1, Name = "Vibhuti / Bhasma", IsActive = true },

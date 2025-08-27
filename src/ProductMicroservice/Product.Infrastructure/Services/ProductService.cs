@@ -171,9 +171,16 @@ namespace Product.Infrastructure.Services
             return result.ToList();
         }
 
-        public Task<ProductMaster?> GetProductWithAttributesAsync(int productId)
+        public async Task<ProductMaster?> GetProductByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _productRepository.GetByIdAsync(id);
+        }
+
+        public async Task<ProductMaster?> GetProductWithAttributesAsync(int productId)
+        {
+            return await _productRepository.GetSingleAsync(
+                p => p.Id == productId,
+                include: query => query.Include(p => p.AttributeValues));
         }
     }
 

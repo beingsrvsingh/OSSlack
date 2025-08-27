@@ -1,6 +1,6 @@
 
 namespace Product.Application.Contracts
-{
+{    
     public class CatalogAttributeDto
     {
         public int Id { get; set; }

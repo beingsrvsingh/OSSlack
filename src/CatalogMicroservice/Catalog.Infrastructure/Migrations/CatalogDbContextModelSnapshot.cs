@@ -22,6 +22,73 @@ namespace Catalog.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Catalog.Domain.Entities.AttributeDataTypeMaster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("attribute_datatype", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "String"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Integer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Decimal"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Boolean"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Date"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Time"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "DateTime"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Multiselect"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Dropdown"
+                        });
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
                 {
                     b.Property<int>("Id")
@@ -31,9 +98,21 @@ namespace Catalog.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CatalogAttributeIconId")
+                    b.Property<int>("AttributeDataTypeId")
                         .HasColumnType("int")
-                        .HasColumnName("catalog_attribute_icon_id");
+                        .HasColumnName("attribute_datatype_id");
+
+                    b.Property<int?>("AttributeGroupId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_group_id");
+
+                    b.Property<int?>("AttributeIconId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_icon_id");
+
+                    b.Property<int?>("CategoryMasterId")
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -41,21 +120,29 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
-                    b.Property<int>("DataType")
-                        .HasColumnType("int")
-                        .HasColumnName("data_type");
-
                     b.Property<bool>("IsCustom")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_custom");
 
+                    b.Property<bool>("IsFilterable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_filterable");
+
                     b.Property<bool>("IsRequired")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_required");
+
+                    b.Property<bool>("IsSummary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_summary");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -75,7 +162,7 @@ namespace Catalog.Infrastructure.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("sort_order");
 
-                    b.Property<int>("SubCategoryMasterId")
+                    b.Property<int?>("SubCategoryMasterId")
                         .HasColumnType("int")
                         .HasColumnName("sub_category_id");
 
@@ -85,7 +172,11 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatalogAttributeIconId");
+                    b.HasIndex("AttributeDataTypeId");
+
+                    b.HasIndex("AttributeGroupId");
+
+                    b.HasIndex("AttributeIconId");
 
                     b.HasIndex("SubCategoryMasterId");
 
@@ -103,7 +194,7 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.Property<int>("CatalogAttributeId")
                         .HasColumnType("int")
-                        .HasColumnName("catalog_attribute_id");
+                        .HasColumnName("attribute_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -127,7 +218,66 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasIndex("CatalogAttributeId");
 
-                    b.ToTable("catalog_attribute_allowed_value", (string)null);
+                    b.ToTable("attribute_allowed_value", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeGroupMaster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("GroupKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("attribute_group", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Basic Information",
+                            GroupKey = "basic_info",
+                            IsActive = true,
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DisplayName = "Technical Specifications",
+                            GroupKey = "technical_specs",
+                            IsActive = true,
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DisplayName = "Variant Details",
+                            GroupKey = "variant_info",
+                            IsActive = true,
+                            SortOrder = 3
+                        });
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeIcon", b =>
@@ -155,7 +305,64 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("catalog_attribute_icon", (string)null);
+                    b.ToTable("attribute_icon", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CategoryAttributeGroupMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeGroupId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_group_id");
+
+                    b.Property<int?>("CategoryMasterId")
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<int?>("SubCategoryMasterId")
+                        .HasColumnType("int")
+                        .HasColumnName("sub_category_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeGroupId");
+
+                    b.ToTable("attribute_group_mapping", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AttributeGroupId = 1,
+                            CategoryMasterId = 1,
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AttributeGroupId = 2,
+                            CategoryMasterId = 1,
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AttributeGroupId = 3,
+                            CategoryMasterId = 1,
+                            SortOrder = 3
+                        });
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
@@ -170,9 +377,6 @@ namespace Catalog.Infrastructure.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int")
                         .HasColumnName("category_id");
-
-                    b.Property<int>("CategoryId1")
-                        .HasColumnType("int");
 
                     b.Property<string>("LanguageCode")
                         .IsRequired()
@@ -192,8 +396,6 @@ namespace Catalog.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CategoryId1");
 
                     b.ToTable("category_localized_text", (string)null);
                 });
@@ -305,14 +507,9 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("sub_category_id");
 
-                    b.Property<int>("SubCategoryId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SubCategoryId");
-
-                    b.HasIndex("SubCategoryId1");
 
                     b.ToTable("sub_category_localized_text", (string)null);
                 });
@@ -328,7 +525,7 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.Property<int>("CategoryMasterId")
                         .HasColumnType("int")
-                        .HasColumnName("category_master_id");
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -376,18 +573,32 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeIcon", "CatalogAttributeIcon")
+                    b.HasOne("Catalog.Domain.Entities.AttributeDataTypeMaster", "AttributeDataType")
+                        .WithMany("CatalogAttributes")
+                        .HasForeignKey("AttributeDataTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeGroupMaster", "AttributeGroup")
                         .WithMany()
-                        .HasForeignKey("CatalogAttributeIconId")
+                        .HasForeignKey("AttributeGroupId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeIcon", "AttributeIcon")
+                        .WithMany()
+                        .HasForeignKey("AttributeIconId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
                         .WithMany("CatalogAttributes")
                         .HasForeignKey("SubCategoryMasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("CatalogAttributeIcon");
+                    b.Navigation("AttributeDataType");
+
+                    b.Navigation("AttributeGroup");
+
+                    b.Navigation("AttributeIcon");
 
                     b.Navigation("SubCategoryMaster");
                 });
@@ -403,17 +614,22 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("CatalogAttribute");
                 });
 
-            modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
+            modelBuilder.Entity("Catalog.Domain.Entities.CategoryAttributeGroupMapping", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.CategoryMaster", null)
-                        .WithMany("Localizations")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeGroupMaster", "AttributeGroup")
+                        .WithMany()
+                        .HasForeignKey("AttributeGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("AttributeGroup");
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CategoryLocalizedText", b =>
+                {
                     b.HasOne("Catalog.Domain.Entities.CategoryMaster", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId1")
+                        .WithMany("Localizations")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -441,15 +657,9 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryLocalizedText", b =>
                 {
-                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", null)
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategory")
                         .WithMany("Localizations")
                         .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategory")
-                        .WithMany()
-                        .HasForeignKey("SubCategoryId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -472,6 +682,11 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("CategoryMaster");
 
                     b.Navigation("ParentSubcategory");
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.AttributeDataTypeMaster", b =>
+                {
+                    b.Navigation("CatalogAttributes");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>

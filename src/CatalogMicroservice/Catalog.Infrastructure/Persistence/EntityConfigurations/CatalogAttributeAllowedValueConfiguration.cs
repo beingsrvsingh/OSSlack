@@ -9,7 +9,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<CatalogAttributeAllowedValue> builder)
         {
-            builder.ToTable("catalog_attribute_allowed_value");
+            builder.ToTable("attribute_allowed_value");
 
             builder.HasKey(av => av.Id);
             builder.Property(av => av.Id)
@@ -17,7 +17,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(av => av.CatalogAttributeId)
                 .IsRequired()
-                .HasColumnName("catalog_attribute_id");
+                .HasColumnName("attribute_id");
 
             builder.HasOne(av => av.CatalogAttribute)
                 .WithMany(ca => ca.AllowedValues)

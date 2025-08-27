@@ -1,4 +1,5 @@
 using MediatR;
+using Review.Application.Contracts;
 using Review.Application.Features.Queries;
 using Review.Application.Services;
 using Shared.Application.Interfaces.Logging;
