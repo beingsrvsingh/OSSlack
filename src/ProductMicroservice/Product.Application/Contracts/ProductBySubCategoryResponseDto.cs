@@ -76,9 +76,10 @@ namespace Product.Application.Contracts
         [JsonPropertyName("attributes")]
         public List<ProductAttributeDto>? Attributes { get; set; }
 
-        public static ProductBySubCategoryResponseDto FromEntity(ProductMaster entity,
-        IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups,
-        bool isSummary = false)
+        public static ProductBySubCategoryResponseDto FromEntity(
+    ProductMaster entity,
+    IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups,
+    bool isSummary = false)
         {
             var attributeDict = catalogAttributeGroups
                 .SelectMany(g => g.Attributes)
@@ -86,13 +87,34 @@ namespace Product.Application.Contracts
 
             var attributeValues = entity.AttributeValues ?? new List<ProductAttributeValue>();
 
-            // Conditionally filter attribute values if not summary
             if (!isSummary)
             {
                 attributeValues = attributeValues
                     .Where(attrVal => attrVal.AttributeKey != null && attributeDict.ContainsKey(attrVal.AttributeKey))
                     .ToList();
             }
+
+            // Group by attribute key
+            var groupedAttributeValues = attributeValues
+                .Where(val => !string.IsNullOrEmpty(val.AttributeKey))
+                .GroupBy(val => val.AttributeKey!)
+                .ToList();
+
+            var attributes = groupedAttributeValues.Select(g =>
+            {
+                var firstVal = g.First();
+                attributeDict.TryGetValue(g.Key, out var definition);
+
+                return new ProductAttributeDto
+                {
+                    Key = firstVal.AttributeKey!,
+                    Label = firstVal.AttributeLabel ?? firstVal.AttributeKey!,
+                    Values = g.Select(v => v.Value).ToList(),
+                    DataType = definition?.DataType ?? "String",
+                    Icon = definition?.Icon,
+                    AllowedValues = definition?.AllowedValues
+                };
+            }).ToList();
 
             return new ProductBySubCategoryResponseDto
             {
@@ -102,8 +124,8 @@ namespace Product.Application.Contracts
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
                 Cost = (double)entity.Price,
-                Rating = 0,  // Map if rating exists
-                Reviews = 0, // Map if reviews exist
+                Rating = 0,  // Replace with actual if available
+                Reviews = 0, // Replace with actual if available
                 CategoryType = entity.CategoryNameSnapshot,
                 Quantity = 1,
                 Limit = 1,
@@ -111,21 +133,10 @@ namespace Product.Application.Contracts
                 {
                     ImageUrl = img.ImageUrl
                 }).ToList(),
-                Attributes = attributeValues.Select(attrVal =>
-                {
-                    attributeDict.TryGetValue(attrVal.AttributeKey ?? "", out var definition);
-                    return new ProductAttributeDto
-                    {
-                        Key = attrVal.AttributeKey ?? "",
-                        Label = attrVal.AttributeLabel ?? attrVal.AttributeKey ?? "",
-                        Value = attrVal.Value,
-                        DataType = definition?.DataType ?? "String",
-                        Icon = definition?.Icon,
-                        AllowedValues = definition?.AllowedValues
-                    };
-                }).ToList()
+                Attributes = attributes
             };
         }
+
 
         public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups, bool isSummary = false)
         {
