@@ -6,8 +6,9 @@ namespace Product.Application.Contracts
         public string Key { get; set; } = null!;
         public string Label { get; set; } = null!;
         public string Value { get; set; } = null!;
-         // e.g. "String", "Enum", etc.
+        // e.g. "String", "Enum", etc.
         public string DataType { get; set; } = null!;
+        public List<string> Values { get; set; } = new();
 
         // From CatalogAttribute (optional but useful for UI)
         public CatalogAttributeIconDto? Icon { get; set; }

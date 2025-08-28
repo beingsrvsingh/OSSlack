@@ -18,16 +18,20 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(c => c.GroupKey)
                 .IsRequired()
+                .HasColumnName("group_key")
                 .HasMaxLength(100);
 
             builder.Property(c => c.DisplayName)
                 .IsRequired()
+                .HasColumnName("display_name")
                 .HasMaxLength(200);
 
             builder.Property(c => c.SortOrder)
+                .HasColumnName("sort_order")
                 .HasDefaultValue(0);
 
             builder.Property(c => c.IsActive)
+                .HasColumnName("is_Active")
                 .HasDefaultValue(true);
         }
     }
