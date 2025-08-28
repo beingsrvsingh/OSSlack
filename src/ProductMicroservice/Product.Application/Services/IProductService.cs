@@ -1,3 +1,4 @@
+using Product.Application.Contracts;
 using Product.Domain.Entities;
 
 namespace Product.Application.Services
@@ -17,6 +18,12 @@ namespace Product.Application.Services
         Task<bool> UpdateProductAsync(ProductMaster product);
         Task<bool> DeleteProductAsync(int productId);
         Task<ProductMaster?> GetProductWithAttributesAsync(int productId);
+
+        Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
+        List<int>attributeIds, int pageNumber,
+        int pageSize,
+        string? sortBy = null,
+        bool sortDescending = false);
     }
 
 }

@@ -8,6 +8,17 @@ namespace Product.API.Controllers.v1
 {
     public class ProductController : BaseController
     {
+
+        [HttpGet("{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetGetProductByProductNameAsync(string name)
+        {
+            var result = await Mediator.Send(new GetProductByProductName { ProductName = name });
+
+            return Ok(result);
+        }
+
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -123,15 +134,20 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
-
-        [HttpGet("{name}")]
+        [HttpPost("filtered-products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetGetProductByProductNameAsync(string name)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFilteredProductsAsync([FromBody] GetFilteredProductsQuery query)
         {
-            var result = await Mediator.Send(new GetProductByProductName { ProductName = name });
+            var result = await Mediator.Send(query);
 
-            return Ok(result);
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
         }
 
     }

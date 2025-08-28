@@ -33,7 +33,7 @@ namespace Product.Application.Features.EventHandlers.Query
                 if (products == null || !products.Any())
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
-                var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+                var attributes = await catalogService.GetGroupedAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
                 var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
 

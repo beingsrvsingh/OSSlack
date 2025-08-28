@@ -36,7 +36,7 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -49,7 +49,7 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(new DeleteCategoryCommand(id));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -70,7 +70,7 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(new GetCategoryByIdQuery(id));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -94,7 +94,7 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(request);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -107,7 +107,7 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(new GetSubCategoryByCategoryIdQuery(id));
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -120,11 +120,36 @@ namespace Catalog.API.Controllers.v1
             var result = await Mediator.Send(query);
 
             if (!result.Succeeded)
-                return NotFound(result.Errors);
+                return NotFound(result);
 
             return Ok(result);
         }
 
+        [HttpGet("group-attributes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetGroupedAttributesByCategoryId([FromQuery] GetGroupedAttributesByCategoryIdQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("filterable-attributes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetFilterableAttributes([FromQuery] GetFilterableAttributesQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!(result.Succeeded && result.Data != null))
+                return NotFound(result);
+
+            return Ok(result);
+        }
     }
 
 }

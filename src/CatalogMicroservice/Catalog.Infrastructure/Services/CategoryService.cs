@@ -119,55 +119,129 @@ namespace Catalog.Infrastructure.Services
             }
         }
 
-        public async Task<IEnumerable<CatalogAttributeGroupDto>> GetGroupedAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false)
+        public async Task<IEnumerable<CatalogAttributeDto>> GetAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false)
         {
+            var attributes = await attributeRepository
+                .GetAttributesByCategoryOrSubCategoryAsync(categoryId, subCategoryId, summaryOnly);
+
+            var dtos = attributes.Select(attr => new CatalogAttributeDto
             {
-                var attributes = await attributeRepository
-                    .GetAttributesByCategoryOrSubCategoryAsync(categoryId, subCategoryId, summaryOnly);
-
-                var grouped = attributes
-                    .GroupBy(attr => attr.AttributeGroup?.DisplayName ?? "Basic Details")
-                    .Select(g => new CatalogAttributeGroupDto
-                    {
-                        GroupName = g.Key,
-                        Attributes = g.Select(attr => new CatalogAttributeDto
-                        {
-                            Id = attr.Id,
-                            Key = attr.Key,
-                            Label = attr.Label,
-                            DataType = attr.AttributeDataType?.Name ?? "String",
-                            IsCustom = attr.IsCustom,
-                            IsRequired = attr.IsRequired,
-                            IsFilterable = attr.IsFilterable,
-                            IsSummary = attr.IsSummary,
-                            SortOrder = attr.SortOrder,
-                            AllowedValues = attr.AllowedValues != null
-                                ? attr.AllowedValues
-                                    .OrderBy(v => v.SortOrder)
-                                    .Select(v => new CatalogAttributeAllowedValueDto
-                                    {
-                                        Id = v.Id,
-                                        Value = v.Value,
-                                        SortOrder = v.SortOrder
-                                    })
-                                    .ToList()
-                                : new List<CatalogAttributeAllowedValueDto>(),
-                            Icon = attr.AttributeIcon != null
-                                ? new CatalogAttributeIconDto
+                Id = attr.Id,
+                Key = attr.Key,
+                Label = attr.Label,
+                DataType = attr.AttributeDataType?.Name ?? "String",
+                IsCustom = attr.IsCustom,
+                IsRequired = attr.IsRequired,
+                IsFilterable = attr.IsFilterable,
+                IsSummary = attr.IsSummary,
+                SortOrder = attr.SortOrder,
+                AllowedValues = attr.AllowedValues != null
+                            ? attr.AllowedValues
+                                .OrderBy(v => v.SortOrder)
+                                .Select(v => new CatalogAttributeAllowedValueDto
                                 {
-                                    IconCodePoint = attr.AttributeIcon.IconCodePoint,
-                                    IconFontFamily = attr.AttributeIcon.IconFontFamily,
-                                    IconName = attr.AttributeIcon.IconName,
-                                }
-                                : null
-                        }).OrderBy(a => a.SortOrder).ToList()
-                    })
-                    .OrderBy(g => g.GroupName) // optional: order groups alphabetically
-                    .ToList();
+                                    Id = v.Id,
+                                    Value = v.Value,
+                                    SortOrder = v.SortOrder
+                                })
+                                .ToList()
+                            : new List<CatalogAttributeAllowedValueDto>(),
+                Icon = attr.AttributeIcon != null
+                            ? new CatalogAttributeIconDto
+                            {
+                                IconCodePoint = attr.AttributeIcon.IconCodePoint,
+                                IconFontFamily = attr.AttributeIcon.IconFontFamily,
+                                IconName = attr.AttributeIcon.IconName,
+                            }
+                            : null
+            }).OrderBy(a => a.SortOrder).ToList();
 
-                return grouped;
-            }
+            return dtos;
 
         }
+
+        public async Task<IEnumerable<CatalogAttributeGroupDto>> GetGroupedAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false)
+        {
+            var attributes = await attributeRepository
+                .GetAttributesByCategoryOrSubCategoryAsync(categoryId, subCategoryId, summaryOnly);
+
+            var grouped = attributes
+                .GroupBy(attr => attr.AttributeGroup?.DisplayName ?? "Basic Details")
+                .Select(g => new CatalogAttributeGroupDto
+                {
+                    GroupName = g.Key,
+                    Attributes = g.Select(attr => new CatalogAttributeDto
+                    {
+                        Id = attr.Id,
+                        Key = attr.Key,
+                        Label = attr.Label,
+                        DataType = attr.AttributeDataType?.Name ?? "String",
+                        IsCustom = attr.IsCustom,
+                        IsRequired = attr.IsRequired,
+                        IsFilterable = attr.IsFilterable,
+                        IsSummary = attr.IsSummary,
+                        SortOrder = attr.SortOrder,
+                        AllowedValues = attr.AllowedValues != null
+                            ? attr.AllowedValues
+                                .OrderBy(v => v.SortOrder)
+                                .Select(v => new CatalogAttributeAllowedValueDto
+                                {
+                                    Id = v.Id,
+                                    Value = v.Value,
+                                    SortOrder = v.SortOrder
+                                })
+                                .ToList()
+                            : new List<CatalogAttributeAllowedValueDto>(),
+                        Icon = attr.AttributeIcon != null
+                            ? new CatalogAttributeIconDto
+                            {
+                                IconCodePoint = attr.AttributeIcon.IconCodePoint,
+                                IconFontFamily = attr.AttributeIcon.IconFontFamily,
+                                IconName = attr.AttributeIcon.IconName,
+                            }
+                            : null
+                    }).OrderBy(a => a.SortOrder).ToList()
+                })
+                .OrderBy(g => g.GroupName)
+                .ToList();
+
+            return grouped;
+
+        }
+
+        public async Task<List<FilterableAttributeDto>> GetFilterableAttributes(int categoryId, int subCategoryId)
+        {
+            try
+            {
+                var groupedAttributes = await attributeRepository.GetFilterableAttributes(categoryId, subCategoryId);
+
+                var attributes = groupedAttributes
+                    .GroupBy(r => r.Id)
+                    .Select(g => new FilterableAttributeDto
+                    {
+                        Id = g.Key,
+                        Key = g.First().Key,
+                        Label = g.First().Label,
+                        CategoryMasterId = g.First().CategoryMasterId,
+                        SubCategoryMasterId = g.First().SubCategoryMasterId,
+                        AllowedValues = g
+                            .Where(x => !string.IsNullOrEmpty(x.AllowedValue))
+                            .OrderBy(x => x.AllowedValueSortOrder)
+                            .Select(x => x.AllowedValue!)
+                            .ToList()
+                    })
+                    .ToList();
+
+                return attributes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching filterable attributes for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
+                    categoryId, subCategoryId);
+
+                return new List<FilterableAttributeDto>();
+            }
+        }
+
     }
 }

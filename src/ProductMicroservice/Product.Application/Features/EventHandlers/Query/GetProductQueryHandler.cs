@@ -32,9 +32,9 @@ namespace Product.Application.Features.EventHandlers.Query
                 if (product == null)
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
-                var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+                var attributes = await catalogService.GetGroupedAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
-                var dtoList = ProductSummaryResponseDto.FromGroupedAttributeEntity(product, attributes);
+                var dtoList = ProductSummaryResponseDto.FromSummaryEntity(product, attributes);
 
                 return Result.Success(dtoList);
             }

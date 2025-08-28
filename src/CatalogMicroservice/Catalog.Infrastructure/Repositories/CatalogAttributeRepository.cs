@@ -42,6 +42,35 @@ namespace Catalog.Infrastructure.Repositories
             return attributes;
         }
 
+        public async Task<List<CatalogAttributeRaw>> GetFilterableAttributes(int categoryId, int subCategoryId)
+        {
+            var categoryMasterIdParam = new MySqlParameter("@CategoryMasterId", (object)categoryId);
+            var subCategoryMasterIdParam = new MySqlParameter("@SubCategoryMasterId", (object)subCategoryId);
+
+            var rawResults = await dbContext.RawAttributeValues
+                            .FromSqlRaw(@"
+                                SELECT
+                                    attr.id AS Id,
+                                    attr.key AS `Key`,
+                                    attr.category_id AS CategoryMasterId,
+                                    attr.sub_category_id AS SubCategoryMasterId,
+                                    attr.label AS Label,
+                                    av.value AS AllowedValue,
+                                    av.sort_order AS AllowedValueSortOrder,
+                                    attr.sort_order AS AttributeSortOrder 
+                                FROM catalog_attribute attr
+                                INNER JOIN attribute_allowed_value av ON av.attribute_id = attr.id
+                                WHERE 
+                                    (@CategoryMasterId IS NOT NULL AND attr.category_id = @CategoryMasterId)
+                                    OR
+                                    (@SubCategoryMasterId IS NOT NULL AND attr.sub_category_id = @SubCategoryMasterId)
+                                ORDER BY attr.sort_order, av.sort_order",
+                                categoryMasterIdParam, subCategoryMasterIdParam)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            return rawResults;
+        }
 
     }
 }

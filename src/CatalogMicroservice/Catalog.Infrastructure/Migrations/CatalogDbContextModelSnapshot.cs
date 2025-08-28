@@ -232,22 +232,26 @@ namespace Catalog.Infrastructure.Migrations
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("display_name");
 
                     b.Property<string>("GroupKey")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("group_key");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_Active");
 
                     b.Property<int>("SortOrder")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
 
                     b.HasKey("Id");
 
@@ -306,6 +310,39 @@ namespace Catalog.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("attribute_icon", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeRaw", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AllowedValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("AllowedValueSortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("SubCategoryMasterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RawAttributeValues");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryAttributeGroupMapping", b =>

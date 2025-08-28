@@ -14,5 +14,9 @@ namespace Product.Domain.Repository
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
         Task<List<ProductMaster>> GetAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null);
         Task<ProductMaster?> GetSingleAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null);
+        Task<List<ProductFilterRawResult>> GetFilteredProductsRawAsync(List<int>attributeIds, int pageNumber,
+        int pageSize,
+        string? sortBy = null,
+        bool sortDescending = false);
     }
 }

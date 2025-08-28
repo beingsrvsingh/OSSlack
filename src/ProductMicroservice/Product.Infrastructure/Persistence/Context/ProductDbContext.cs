@@ -19,6 +19,7 @@ namespace Product.Infrastructure.Persistence.Context
         public DbSet<ProductSEOInfoMaster> ProductSEOInfoMasters { get; set; } = null!;
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; } = null!;
         public DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public DbSet<ProductFilterRawResult> ProductFilterRawResults => Set<ProductFilterRawResult>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

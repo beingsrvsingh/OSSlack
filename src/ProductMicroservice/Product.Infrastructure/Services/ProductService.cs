@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Product.Application.Contracts;
 using Product.Application.Services;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
@@ -154,7 +155,7 @@ namespace Product.Infrastructure.Services
             {
                 var result = await _productRepository.GetAsync(
                     p => p.SubCategoryId == subCategoryId,
-                    include: query => query.Include(p => p.Images).Include(p => p.AttributeValues)); // <-- eager loading
+                    include: query => query.Include(p => p.Images).Include(p => p.AttributeValues));
 
                 return result.ToList();
             }
@@ -182,6 +183,24 @@ namespace Product.Infrastructure.Services
                 p => p.Id == productId,
                 include: query => query.Include(p => p.Images).Include(p => p.AttributeValues));
         }
+
+        public async Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
+        List<int>attributeIds, int pageNumber,
+        int pageSize,
+        string? sortBy = null,
+        bool sortDescending = false)
+        {
+            try
+            {
+                return await _productRepository.GetFilteredProductsRawAsync(attributeIds, pageNumber, pageSize, sortBy, sortDescending);                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting filtered products for category {AttributeIds}.", string.Join(',', attributeIds));
+                return new List<ProductFilterRawResult>();
+            }
+        }
+
     }
 
 }

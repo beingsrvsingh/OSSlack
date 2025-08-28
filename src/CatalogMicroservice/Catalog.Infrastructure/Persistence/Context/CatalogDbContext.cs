@@ -20,6 +20,7 @@ public partial class CatalogDbContext(DbContextOptions<CatalogDbContext> options
     public DbSet<CatalogAttributeIcon> CatalogAttributeIcons => Set<CatalogAttributeIcon>();
     public DbSet<CatalogAttributeGroupMaster> CatalogAttributeGroupMasters => Set<CatalogAttributeGroupMaster>();
     public DbSet<CategoryAttributeGroupMapping> CategoryAttributeGroupMappings => Set<CategoryAttributeGroupMapping>();
+    public DbSet<CatalogAttributeRaw> RawAttributeValues => Set<CatalogAttributeRaw>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
