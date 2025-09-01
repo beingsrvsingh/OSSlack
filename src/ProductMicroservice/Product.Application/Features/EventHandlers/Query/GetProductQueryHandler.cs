@@ -12,15 +12,18 @@ namespace Product.Application.Features.EventHandlers.Query
         private readonly ILoggerService<GetProductQueryHandler> _logger;
         private readonly IProductService _productService;
         private readonly ICatalogService catalogService;
+        private readonly IReviewService reviewService;
 
         public GetProductQueryHandler(
             ILoggerService<GetProductQueryHandler> logger,
             IProductService productService,
-            ICatalogService catalogService)
+            ICatalogService catalogService,
+            IReviewService reviewService)
         {
             _logger = logger;
             _productService = productService;
             this.catalogService = catalogService;
+            this.reviewService = reviewService;
         }
 
         public async Task<Result> Handle(GetProductQuery request, CancellationToken cancellationToken)
@@ -33,6 +36,10 @@ namespace Product.Application.Features.EventHandlers.Query
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
                 var attributes = await catalogService.GetGroupedAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+
+                var review = await reviewService.GetProductReviewSummaryAsync(product.Id);
+                product.Reviews = review.TotalReviews;
+                product.Rating = (int)review.AverageRating;
 
                 var dtoList = ProductSummaryResponseDto.FromSummaryEntity(product, attributes);
 

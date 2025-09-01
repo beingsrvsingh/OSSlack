@@ -1,5 +1,5 @@
 
-namespace Review.Application.Contracts
+namespace Product.Application.Contracts
 {
     public class ReviewSummaryDto
     {

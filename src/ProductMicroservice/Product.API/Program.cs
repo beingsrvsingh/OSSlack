@@ -60,6 +60,12 @@ builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
+builder.Services.AddHttpClient<IReviewService, ReviewService>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Review-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
 var app = builder.Build();
 
 var loggerService = app.Services.GetRequiredService<ILoggerService<Program>>();

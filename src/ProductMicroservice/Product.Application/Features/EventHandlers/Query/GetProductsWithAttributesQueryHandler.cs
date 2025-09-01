@@ -13,15 +13,18 @@ namespace Product.Application.Features.EventHandlers.Query
         private readonly ILoggerService<GetLocalizedInfoQueryHandler> _logger;
         private readonly IProductService _productService;
         private readonly ICatalogService catalogService;
+        private readonly IReviewService reviewService;
 
         public GetProductsWithAttributesQueryHandler(
             ILoggerService<GetLocalizedInfoQueryHandler> logger,
             IProductService productService,
-            ICatalogService catalogService)
+            ICatalogService catalogService,
+            IReviewService reviewService)
         {
             _logger = logger;
             _productService = productService;
             this.catalogService = catalogService;
+            this.reviewService = reviewService;
         }
 
         public async Task<Result> Handle(GetProductsWithAttributesQuery request, CancellationToken cancellationToken)
@@ -34,6 +37,13 @@ namespace Product.Application.Features.EventHandlers.Query
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
                 var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+
+                for (int i = 0; i < products.Count; i++)
+                {
+                    var review = await reviewService.GetProductReviewSummaryAsync(products[i].Id);
+                    products[i].Reviews = review.TotalReviews;
+                    products[i].Rating = (int)review.AverageRating;
+                }
 
                 var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
 

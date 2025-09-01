@@ -2,7 +2,7 @@ namespace Review.Domain.Enum
 {
     public enum ReviewStatus
     {
-        Active,
+        Active = 1,
         Deleted,
         Moderated,
         Flagged
