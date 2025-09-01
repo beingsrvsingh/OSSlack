@@ -5,12 +5,16 @@ select * from reviewdb.review_reports;
 
 -- Insert a Review
 INSERT INTO reviewdb.reviews (
-    Id, Product_Id, User_Id, user_name, Rating, Title, `Comment`, Helpful_Count, Unhelpful_Count,
+    Id, Product_Id, User_Id, created_by, Rating, Title, `Comment`, Helpful_Count, Unhelpful_Count,
     Created_At, Updated_At, `Status`, Moderation_Comment, moderated_by_user_id, Moderated_At
 )
 VALUES 
 (
-    1, 101, 'user123', 'Neeraj Pandey', 5, 'Great product!', 'I loved using this. Highly recommend.',
+    1, 1, 'user123', 'Saurav Sinha', 5, 'Great product!', 'I loved using this. Highly recommend.',
+    3, 1, NOW(), NULL, 1, NULL, NULL, NULL
+);,
+(
+    1, 2, 'user123', 'Neeraj Pandey', 5, 'Great product!', 'I loved using this. Highly recommend.',
     3, 1, NOW(), NULL, 1, NULL, NULL, NULL
 );
 

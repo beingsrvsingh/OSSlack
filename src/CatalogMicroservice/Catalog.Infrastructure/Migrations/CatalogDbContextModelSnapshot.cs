@@ -314,19 +314,19 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeRaw", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("AllowedValue")
                         .HasColumnType("longtext");
 
                     b.Property<int?>("AllowedValueSortOrder")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryMasterId")
+                    b.Property<int>("AttributeSortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryMasterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Key")
@@ -337,12 +337,12 @@ namespace Catalog.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("SubCategoryMasterId")
+                    b.Property<int>("SubCategoryMasterId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.ToTable((string)null);
 
-                    b.ToTable("RawAttributeValues");
+                    b.ToView(null, (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryAttributeGroupMapping", b =>

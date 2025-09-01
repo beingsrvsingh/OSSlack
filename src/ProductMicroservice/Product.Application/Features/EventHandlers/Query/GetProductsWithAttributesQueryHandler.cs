@@ -30,10 +30,10 @@ namespace Product.Application.Features.EventHandlers.Query
             {
                 var products = await _productService.GetProductBySubCategoryIdAsync(request.SubCategoryId);
 
-                if (products == null || !products.Any())
+                if (products == null || products.Count == 0)
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
-                var attributes = await catalogService.GetGroupedAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+                var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
                 var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
 

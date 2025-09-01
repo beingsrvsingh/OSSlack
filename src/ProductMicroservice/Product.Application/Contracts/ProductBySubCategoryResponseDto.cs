@@ -87,66 +87,9 @@ namespace Product.Application.Contracts
         [JsonPropertyName("attributes")]
         public List<ProductAttributeDto>? Attributes { get; set; }
 
-        public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups, bool isSummary = false)
+        public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, IEnumerable<CatalogAttributeDto> catalogAttributeGroups, bool isSummary = false)
         {
             return products.Select(p => FromEntity(p, catalogAttributeGroups, isSummary)).ToList();
-        }
-
-        public static ProductBySubCategoryResponseDto FromEntity(
-        ProductMaster entity,
-        IEnumerable<CatalogAttributeGroupDto> catalogAttributeGroups,
-        bool isSummary = false)
-        {
-            var attributeDict = catalogAttributeGroups
-                .SelectMany(g => g.Attributes)
-                .ToDictionary(attr => attr.Key, attr => attr);
-
-            var attributeValues = entity.AttributeValues ?? new List<ProductAttributeValue>();
-
-            if (!isSummary)
-            {
-                attributeValues = attributeValues
-                    .Where(attrVal => attrVal.AttributeKey != null && attributeDict.ContainsKey(attrVal.AttributeKey))
-                    .ToList();
-            }
-
-            // Group by attribute key
-            var groupedAttributeValues = attributeValues
-                .Where(val => !string.IsNullOrEmpty(val.AttributeKey))
-                .GroupBy(val => val.AttributeKey!)
-                .ToList();
-
-            var attributes = groupedAttributeValues.Select(g =>
-            {
-                var firstVal = g.First();
-                attributeDict.TryGetValue(g.Key, out var definition);
-
-                return new ProductAttributeDto
-                {
-                    Key = firstVal.AttributeKey!,
-                    Label = firstVal.AttributeLabel ?? firstVal.AttributeKey!,
-                    Values = g.Select(v => v.Value).ToList(),
-                    DataType = definition?.DataType ?? "String",
-                    Icon = definition?.Icon,
-                    AllowedValues = definition?.AllowedValues
-                };
-            }).ToList();
-
-            return new ProductBySubCategoryResponseDto
-            {
-                Pid = entity.Id.ToString(),
-                Cid = entity.CategoryId.ToString(),
-                Scid = entity.SubCategoryId.ToString(),
-                Name = entity.Name,
-                ThumbnailUrl = entity.ThumbnailUrl,
-                Cost = (double)entity.Price,
-                Rating = 0,
-                Reviews = 0,
-                CategoryType = entity.CategoryNameSnapshot,
-                Quantity = 1,
-                Limit = 1,
-                Attributes = attributes
-            };
         }
 
         public static ProductBySubCategoryResponseDto FromEntity(

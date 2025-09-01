@@ -47,6 +47,10 @@ public partial class CatalogDbContext(DbContextOptions<CatalogDbContext> options
         new CategoryAttributeGroupMapping { Id = 3, CategoryMasterId = 1, AttributeGroupId = 3, SortOrder = 3 }  // Variant Info
         );
 
+        // Optional, but avoids EF assuming a table
+        builder.Entity<CatalogAttributeRaw>()
+        .HasNoKey()
+        .ToView(null);
 
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

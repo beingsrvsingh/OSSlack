@@ -16,7 +16,7 @@ public partial class Review
     public int UnhelpfulCount { get; set; }
 
     public DateTime CreatedAt { get; set; }
-    public string CreatedBy { get; set; } = "Anonymous";
+    public string CreatedBy { get; set; } = "Annonymous";
     public DateTime? UpdatedAt { get; set; }
 
     // Current moderation status (summary)
