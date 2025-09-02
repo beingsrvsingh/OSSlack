@@ -33,6 +33,8 @@ namespace Review.Application.Services
 
         Task<ReviewSummaryDto> GetProductReviewSummaryAsync(GetProductReviewSummaryQuery query);
 
+        Task<List<ReviewSummaryDto>> GetProductReviewSummariesAsync(List<int> productIds);
+
         Task<(List<ReportedReviewDto> Items, int TotalCount)> GetReportedReviewsAsync(int page, int pageSize);
 
         Task<(List<ReviewDto> Items, int TotalCount)> GetReviewsByProductAsync(GetReviewsByProductQuery query);

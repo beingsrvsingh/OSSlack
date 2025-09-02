@@ -10,6 +10,7 @@ namespace Review.Domain.Repository
         Task<ReviewEntity?> GetByUserAndProductAsync(string userId, int productId);
         Task<ReviewEntity?> GetReviewWithDetailsAsync(int reviewId);
         Task<List<ReviewEntity>> GetActiveReviewsByProductIdAsync(int productId);
+        Task<List<ReviewEntity>> GetActiveReviewsByProductIdsAsync(List<int> productIds);
         Task<PaginatedResult<ReviewEntity>> GetPaginatedByProductIdAsync(int productId, int page, int pageSize);
          Task<PaginatedResult<ReviewEntity>> GetPaginatedByUserIdAsync(string userId, int page, int pageSize);
     }

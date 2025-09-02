@@ -45,5 +45,32 @@ namespace Product.Infrastructure.Services
                 return new ReviewSummaryDto();
             }
         }
+
+        public async Task<List<ReviewSummaryDto>> GetProductReviewSummariesAsync(List<int> pids)
+        {
+            try
+            {
+                var url = "Review/product/summaries";                
+
+                var response = await _httpClient.PostAsJsonAsync(url, new { pids });
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadFromJsonAsync<Result<List<ReviewSummaryDto>>>();
+
+                if (result != null && result.Succeeded)
+                {
+                    return result.Data ?? [];
+                }
+
+                return [];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calling Review MS for ProductIds: {@ProductIds}", pids);
+                return [];
+            }
+        }
+
     }
 }

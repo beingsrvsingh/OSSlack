@@ -5,10 +5,16 @@ namespace Catalog.Application.Contracts
     {
         public int Id { get; set; }
         public string Key { get; set; } = null!;
-        public int? CategoryMasterId { get; set; }
-        public int? SubCategoryMasterId { get; set; }
         public string Label { get; set; } = null!;
         public List<string> AllowedValues { get; set; } = new();
     }
+
+    public class FilterAttributeGroupDto
+    {
+        public int Cid { get; set; }
+        public int Scid { get; set; }
+        public List<FilterableAttributeDto> Attributes { get; set; } = new();
+    }
+
 
 }

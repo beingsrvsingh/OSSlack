@@ -38,12 +38,30 @@ namespace Product.Application.Features.EventHandlers.Query
 
                 var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
-                for (int i = 0; i < products.Count; i++)
+                // Get all product IDs
+                var productIds = products.Select(p => p.Id).ToList();
+
+                // Fetch all review summaries in one call
+                var reviewSummaries = await reviewService.GetProductReviewSummariesAsync(productIds);
+
+                // Create a lookup for quick access
+                var summaryLookup = reviewSummaries.ToDictionary(r => r.ProductId);
+
+                // Map summaries back to products
+                foreach (var product in products)
                 {
-                    var review = await reviewService.GetProductReviewSummaryAsync(products[i].Id);
-                    products[i].Reviews = review.TotalReviews;
-                    products[i].Rating = (int)review.AverageRating;
+                    if (summaryLookup.TryGetValue(product.Id, out var summary))
+                    {
+                        product.Reviews = summary.TotalReviews;
+                        product.Rating = (int)summary.AverageRating;
+                    }
+                    else
+                    {
+                        product.Reviews = 0;
+                        product.Rating = 0;
+                    }
                 }
+
 
                 var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
 

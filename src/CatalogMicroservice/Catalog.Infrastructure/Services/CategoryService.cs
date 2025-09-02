@@ -209,37 +209,46 @@ namespace Catalog.Infrastructure.Services
 
         }
 
-        public async Task<List<FilterableAttributeDto>> GetFilterableAttributes(int categoryId, int subCategoryId)
+        public async Task<FilterAttributeGroupDto> GetFilterableAttributes(int categoryId, int subCategoryId)
         {
             try
             {
                 var groupedAttributes = await attributeRepository.GetFilterableAttributes(categoryId, subCategoryId);
 
-                var attributes = groupedAttributes
-                    .GroupBy(r => r.Id)
-                    .Select(g => new FilterableAttributeDto
-                    {
-                        Id = g.Key,
-                        Key = g.First().Key,
-                        Label = g.First().Label,
-                        CategoryMasterId = g.First().CategoryMasterId,
-                        SubCategoryMasterId = g.First().SubCategoryMasterId,
-                        AllowedValues = g
-                            .Where(x => !string.IsNullOrEmpty(x.AllowedValue))
-                            .OrderBy(x => x.AllowedValueSortOrder)
-                            .Select(x => x.AllowedValue!)
-                            .ToList()
-                    })
-                    .ToList();
+                var first = groupedAttributes.FirstOrDefault();
 
-                return attributes;
+                var attributeGroup = new FilterAttributeGroupDto
+                {
+                    Cid = first?.CategoryMasterId ?? 0,
+                    Scid = first?.SubCategoryMasterId ?? 0,
+                    Attributes = groupedAttributes
+                        .GroupBy(r => r.Id)
+                        .Select(g =>
+                        {
+                            var item = g.First();
+                            return new FilterableAttributeDto
+                            {
+                                Id = g.Key,
+                                Key = item.Key,
+                                Label = item.Label,
+                                AllowedValues = g
+                                    .Where(x => !string.IsNullOrEmpty(x.AllowedValue))
+                                    .OrderBy(x => x.AllowedValueSortOrder)
+                                    .Select(x => x.AllowedValue!)
+                                    .ToList()
+                            };
+                        })
+                        .ToList()
+                };
+
+                return attributeGroup;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching filterable attributes for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
                     categoryId, subCategoryId);
 
-                return new List<FilterableAttributeDto>();
+                return new FilterAttributeGroupDto();
             }
         }
 

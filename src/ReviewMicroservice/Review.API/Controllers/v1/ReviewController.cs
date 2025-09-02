@@ -33,6 +33,17 @@ public class ReviewController : BaseController
             : BadRequest(result);
     }
 
+    [HttpPost("product/summaries")]
+    [ProducesResponseType(typeof(List<ReviewSummaryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetReviewSummaries([FromBody] GetProductReviewSummariesQuery query)
+    {
+        var result = await Mediator.Send(query);
+        return result.Succeeded
+            ? Ok(result)
+            : BadRequest(result);
+    }
+
     [HttpGet("{ReviewId}")]
     [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]

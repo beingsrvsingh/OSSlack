@@ -313,6 +313,66 @@ namespace Review.Infrastructure.Services
             }
         }
 
+        public async Task<List<ReviewSummaryDto>> GetProductReviewSummariesAsync(List<int> productIds)
+        {
+            var summaries = new List<ReviewSummaryDto>();
+
+            try
+            {
+                var reviews = await _reviewRepository.GetActiveReviewsByProductIdsAsync(productIds);
+
+                var reviewsByProduct = reviews
+                    .GroupBy(r => r.ProductId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                foreach (var productId in productIds)
+                {
+                    if (reviewsByProduct.TryGetValue(productId, out var productReviews))
+                    {
+                        var totalReviews = productReviews.Count;
+                        var averageRating = totalReviews == 0 ? 0 : productReviews.Average(r => r.Rating);
+                        var ratingsBreakdown = productReviews
+                            .GroupBy(r => r.Rating)
+                            .ToDictionary(g => g.Key, g => g.Count());
+
+                        summaries.Add(new ReviewSummaryDto
+                        {
+                            ProductId = productId,
+                            TotalReviews = totalReviews,
+                            AverageRating = averageRating,
+                            RatingsBreakdown = ratingsBreakdown
+                        });
+                    }
+                    else
+                    {
+                        // No reviews for this product
+                        summaries.Add(new ReviewSummaryDto
+                        {
+                            ProductId = productId,
+                            TotalReviews = 0,
+                            AverageRating = 0,
+                            RatingsBreakdown = new Dictionary<int, int>()
+                        });
+                    }
+                }
+
+                return summaries;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting review summaries for products");
+
+                // Return default summaries for all products in case of failure
+                return productIds.Select(id => new ReviewSummaryDto
+                {
+                    ProductId = id,
+                    TotalReviews = 0,
+                    AverageRating = 0,
+                    RatingsBreakdown = new Dictionary<int, int>()
+                }).ToList();
+            }
+        }
+
         public async Task<(List<ReviewDto> Items, int TotalCount)> GetReviewsByProductAsync(GetReviewsByProductQuery query)
         {
             try

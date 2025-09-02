@@ -37,6 +37,14 @@ namespace Review.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<ReviewEntity>> GetActiveReviewsByProductIdsAsync(List<int> productIds)
+        {
+            return await this.dbContext.Reviews
+                .Where(r => productIds.Contains(r.ProductId) && r.Status == ReviewStatus.Active)
+                .ToListAsync();
+        }
+
+
         public async Task<PaginatedResult<ReviewEntity>> GetPaginatedByProductIdAsync(int productId, int page, int pageSize)
         {
             var query = this.dbContext.Reviews.Where(r => r.ProductId == productId);

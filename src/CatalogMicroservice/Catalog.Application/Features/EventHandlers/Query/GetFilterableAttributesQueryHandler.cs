@@ -24,7 +24,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
 
             var attributes = await _service.GetFilterableAttributes(request.CategoryId, request.SubCategoryId);
 
-            if (attributes == null || attributes.Count == 0)
+            if (attributes == null && attributes.Attributes.Count == 0)
             {
                 _logger.LogWarning("No filterable attributes found for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
                     request.CategoryId, request.SubCategoryId);
@@ -32,7 +32,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
                 return Result.Success(new List<object>());
             }
 
-            _logger.LogInfo("Successfully fetched {Count} filterable attributes.", attributes.Count);
+            _logger.LogInfo("Successfully fetched {Count} filterable attributes.", attributes.Attributes.Count);
             return Result.Success(attributes);
         }
 
