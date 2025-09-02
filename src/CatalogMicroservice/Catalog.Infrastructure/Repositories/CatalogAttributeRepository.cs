@@ -55,6 +55,7 @@ namespace Catalog.Infrastructure.Repositories
                                     attr.category_id AS CategoryMasterId,
                                     attr.sub_category_id AS SubCategoryMasterId,
                                     attr.label AS Label,
+                                    av.id as AllowedValueId,
                                     av.value AS AllowedValue,
                                     av.sort_order AS AllowedValueSortOrder,
                                     attr.sort_order AS AttributeSortOrder 

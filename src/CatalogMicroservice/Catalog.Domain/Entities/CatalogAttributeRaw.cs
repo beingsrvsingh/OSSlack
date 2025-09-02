@@ -8,6 +8,7 @@ namespace Catalog.Domain.Entities
         public int CategoryMasterId { get; set; }
         public int SubCategoryMasterId { get; set; }
         public string Label { get; set; } = null!;
+        public int? AllowedValueId { get; set; }
         public string? AllowedValue { get; set; }
         public int? AllowedValueSortOrder { get; set; }
         public int AttributeSortOrder { get; set; }

@@ -234,7 +234,12 @@ namespace Catalog.Infrastructure.Services
                                 AllowedValues = g
                                     .Where(x => !string.IsNullOrEmpty(x.AllowedValue))
                                     .OrderBy(x => x.AllowedValueSortOrder)
-                                    .Select(x => x.AllowedValue!)
+                                    .Select(v => new CatalogAttributeAllowedValueDto
+                                    {
+                                        Id = v.AllowedValueId ?? 0,
+                                        Value = v.AllowedValue ?? "",
+                                        SortOrder = v.AllowedValueSortOrder ?? 0
+                                    })
                                     .ToList()
                             };
                         })
