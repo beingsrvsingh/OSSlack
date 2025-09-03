@@ -34,6 +34,19 @@ namespace Order.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("trending-products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTrendingProductsByCid([FromQuery]GetHighlightTrendingProductQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Order not found." });
+
+            return Ok(result);
+        }
+
         // POST api/order
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

@@ -66,6 +66,19 @@ namespace Product.API.Controllers.v1
             return Ok(new { Message = "Product deleted successfully." });
         }
 
+        [HttpPost("byIdAndCategoryId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProducts(GetProductsByIdAndCategoryIdQuery productIds)
+        {
+            var result = await Mediator.Send(productIds);
+
+            if (!result.Succeeded)
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
         [HttpGet("{productId:int}/with-variants")]
         [ProducesResponseType(typeof(ProductMaster), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProductWithVariants(int productId)

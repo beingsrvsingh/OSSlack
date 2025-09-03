@@ -6,6 +6,7 @@ namespace Product.Domain.Repository
 {
     public interface IProductRepository : IRepository<ProductMaster>
     {
+        Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int cid);
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);

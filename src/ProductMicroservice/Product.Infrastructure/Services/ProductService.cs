@@ -202,6 +202,20 @@ namespace Product.Infrastructure.Services
             }
         }
 
+        public async Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> ids, int cid)
+        {
+            try
+            {
+                var result = await _productRepository.GetProductsByIdAndCategoryIdAsync(ids, cid);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting products for productId {ProductIds}.", string.Join(',', ids));
+                return [];
+            }
+        }
+
     }
 
 }

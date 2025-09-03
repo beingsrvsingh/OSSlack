@@ -14,6 +14,7 @@ namespace Product.Application.Services
         Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId);
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
         Task<ProductMaster?> GetProductByIdAsync(int id);
+        Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int cid);
         Task<bool> AddProductAsync(ProductMaster product);
         Task<bool> UpdateProductAsync(ProductMaster product);
         Task<bool> DeleteProductAsync(int productId);

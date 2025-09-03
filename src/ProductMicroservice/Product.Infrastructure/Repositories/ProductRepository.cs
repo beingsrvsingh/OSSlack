@@ -78,6 +78,11 @@ namespace Product.Infrastructure.Repositories
             return await query.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
 
+        public async Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int cid)
+        {
+            return await _context.ProductMasters.Where(p => pids.Contains(p.Id) && p.CategoryId == cid).ToListAsync();
+        }
+
         public async Task<List<ProductFilterRawResult>> GetFilteredProductsRawAsync(
         List<int> attributeIds,
         int pageNumber,
