@@ -77,6 +77,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 1, // example CatalogAttribute ID for brand
                             CatalogAttributeGroupId = 1,
+                            CatalogAttributeValueId = 1,
                             AttributeKey = "brand",
                             AttributeLabel = "Brand",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -90,6 +91,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 2, // example CatalogAttribute ID for color
                             CatalogAttributeGroupId = 3,
+                            CatalogAttributeValueId = 4,
                             AttributeKey = "color",
                             AttributeLabel = "Color",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -101,6 +103,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 2,
                             CatalogAttributeGroupId = 3,
+                            CatalogAttributeValueId = 8,
                             AttributeKey = "color",
                             AttributeLabel = "Color",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -112,6 +115,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 2,
                             CatalogAttributeGroupId = 3,
+                            CatalogAttributeValueId = 7,
                             AttributeKey = "color",
                             AttributeLabel = "Color",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -124,6 +128,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 3, // example CatalogAttribute ID for storage
                             CatalogAttributeGroupId = 3,
+                            CatalogAttributeValueId = 11,
                             AttributeKey = "storage",
                             AttributeLabel = "Storage Capacity",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -135,6 +140,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 3,
                             CatalogAttributeGroupId = 3,
+                            CatalogAttributeValueId = 12,
                             AttributeKey = "storage",
                             AttributeLabel = "Storage Capacity",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -148,6 +154,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 4, // example CatalogAttribute ID for ram
                             CatalogAttributeGroupId = 2,
+                            CatalogAttributeValueId = 15,
                             AttributeKey = "ram",
                             AttributeLabel = "RAM",
                             AttributeDataTypeId = (int)AttributeDataType.String,
@@ -159,6 +166,7 @@ namespace Product.Application.Features.EventHandlers.Commands
                             ProductMasterId = 1,
                             CatalogAttributeId = 5, // example CatalogAttribute ID for screen_size
                             CatalogAttributeGroupId = 2,
+                            CatalogAttributeValueId = 17,
                             AttributeKey = "screen_size",
                             AttributeLabel = "Screen Size",
                             AttributeDataTypeId = (int)AttributeDataType.String,

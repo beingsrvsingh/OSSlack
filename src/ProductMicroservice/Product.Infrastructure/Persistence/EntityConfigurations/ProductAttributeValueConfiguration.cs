@@ -27,6 +27,10 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("catalog_attribute_id")
                 .IsRequired();
 
+             builder.Property(pav => pav.CatalogAttributeValueId)
+                .HasColumnName("cat_attr_val_id")
+                .IsRequired();
+
             builder.Property(pav => pav.AttributeKey)
                 .HasColumnName("attribute_key")
                 .HasMaxLength(100);

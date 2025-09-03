@@ -115,16 +115,6 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("products")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductsWithAttributesQuery query)
-        {
-            var result = await Mediator.Send(query);
-            return Ok(result);
-        }
-
-
         [HttpGet("product")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -133,6 +123,15 @@ namespace Product.API.Controllers.v1
             var result = await Mediator.Send(query);
             return Ok(result);
         }
+
+        [HttpGet("products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductsWithAttributesQuery query)
+        {
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }        
 
         [HttpPost("filtered-products")]
         [ProducesResponseType(StatusCodes.Status200OK)]

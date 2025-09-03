@@ -13,15 +13,18 @@ namespace Product.Application.Features.EventHandlers.Query
         private readonly ILoggerService<GetFilteredProductsQueryHandler> _logger;
         private readonly IProductService _productService;
         private readonly ICatalogService catalogService;
+        private readonly IReviewService reviewService;
 
         public GetFilteredProductsQueryHandler(
             ILoggerService<GetFilteredProductsQueryHandler> logger,
             IProductService productService,
-            ICatalogService catalogService)
+            ICatalogService catalogService,
+            IReviewService reviewService)
         {
             _logger = logger;
             _productService = productService;
             this.catalogService = catalogService;
+            this.reviewService = reviewService;
         }
 
         public async Task<Result> Handle(GetFilteredProductsQuery request, CancellationToken cancellationToken)
@@ -44,18 +47,31 @@ namespace Product.Application.Features.EventHandlers.Query
                 Convert.ToInt32(request.SubCategoryId)
             );
 
+            var productIds = response.Select(p => p.Id).Distinct().ToList();
+
+            var reviewSummaries = await reviewService.GetProductReviewSummariesAsync(productIds);
+            var summaryLookup = reviewSummaries.ToDictionary(r => r.ProductId);
+
             var grouped = response
                 .GroupBy(r => r.Id)
                 .Select(group =>
                 {
+                    var first = group.First();
+
+                    // Lookup review summary, if missing, use defaults
+                    summaryLookup.TryGetValue(group.Key, out var summary);
+
                     var entity = new ProductMaster
                     {
                         Id = group.Key,
-                        Name = group.First().Name,
-                        ThumbnailUrl = group.First().ThumbnailUrl,
-                        Price = (decimal)group.First().Price,
-                        CategoryId = group.First().CategoryId,
-                        SubCategoryId = group.First().SubCategoryId,
+                        Name = first.Name,
+                        ThumbnailUrl = first.ThumbnailUrl,
+                        Price = (decimal)first.Price,
+                        CategoryId = first.CategoryId,
+                        SubCategoryId = first.SubCategoryId,
+                        Reviews = summary?.TotalReviews ?? 0,
+                        Rating = (int)(summary?.AverageRating ?? 0),
+                        CategoryNameSnapshot = first.CategoryName,
                         AttributeValues = group
                             .Where(g => !string.IsNullOrEmpty(g.AttributeKey))
                             .Select(g => new ProductAttributeValue
@@ -71,6 +87,7 @@ namespace Product.Application.Features.EventHandlers.Query
                 .ToList();
 
             return Result.Success(grouped);
+
         }
 
 

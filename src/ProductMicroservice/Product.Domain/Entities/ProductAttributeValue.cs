@@ -18,6 +18,9 @@ namespace Product.Domain.Entities
         public int CatalogAttributeId { get; set; }
 
         [Required]
+        public int CatalogAttributeValueId { get; set; }
+
+        [Required]
         public string Value { get; set; } = null!;
 
         // Optional denormalized metadata

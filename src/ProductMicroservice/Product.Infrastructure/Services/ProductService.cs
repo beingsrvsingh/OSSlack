@@ -192,7 +192,8 @@ namespace Product.Infrastructure.Services
         {
             try
             {
-                return await _productRepository.GetFilteredProductsRawAsync(attributeIds, pageNumber, pageSize, sortBy, sortDescending);                
+                var result = await _productRepository.GetFilteredProductsRawAsync(attributeIds, pageNumber, pageSize, sortBy, sortDescending);                
+                return result;
             }
             catch (Exception ex)
             {
