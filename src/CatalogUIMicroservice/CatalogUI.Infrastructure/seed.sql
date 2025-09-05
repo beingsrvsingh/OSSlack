@@ -12,7 +12,8 @@ VALUES (
         'type', 'section',
         'title', 'Shop by Category',
         'component', 'category_grid',
-        'dataEndpoint', '/api/categories',
+        'dataEndpoint', 'categories',
+        "microservice": "catalog"
         'display', JSON_OBJECT(
             'columns', 3,
             'style', 'card'
@@ -42,7 +43,8 @@ VALUES (
         'type', 'grid',
         'title', 'Trending Products',
         'component', 'product_carousel',
-        'dataEndpoint', '/api/products/trending',
+        'dataEndpoint', 'products/trending',
+        "microservice": "product"
         'display', JSON_OBJECT(
             'autoplay', true,
             'cardStyle', 'compact'
@@ -72,7 +74,8 @@ VALUES (
         'type', 'horizontal',
         'title', 'Featured',
         'component', 'banner_slider',
-        'dataEndpoint', '/api/banners/featured',
+        'dataEndpoint', 'banners/featured',
+        "microservice": "product"
         'display', JSON_OBJECT(
             'autoplay', true,
             'interval', 5,
@@ -103,7 +106,8 @@ VALUES (
         'type', 'grid',
         'title', 'New Arrivals',
         'component', 'product_grid',
-        'dataEndpoint', '/api/products/new',
+        'dataEndpoint', 'products/new',
+        "microservice": "product"
         'display', JSON_OBJECT(
             'columns', 2,
             'style', 'modern'
@@ -133,7 +137,8 @@ VALUES (
         'type', 'section',
         'title', 'Recommended For You',
         'component', 'product_list',
-        'dataEndpoint', '/api/products/recommended',
+        'dataEndpoint', 'products/recommended',
+        "microservice": "product"
         'display', JSON_OBJECT(
             'style', 'list',
             'showRatings', true
