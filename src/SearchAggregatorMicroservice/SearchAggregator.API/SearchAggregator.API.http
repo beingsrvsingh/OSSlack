@@ -1,0 +1,6 @@
+@SearchAggregator.API_HostAddress = http://localhost:5008
+
+GET {{SearchAggregator.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

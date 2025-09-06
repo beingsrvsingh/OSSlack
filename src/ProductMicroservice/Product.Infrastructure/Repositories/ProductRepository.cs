@@ -1,10 +1,10 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
 using Product.Infrastructure.Persistence.Context;
 using Shared.Infrastructure.Repositories;
+using System.Linq.Expressions;
 
 namespace Product.Infrastructure.Repositories
 {
@@ -132,6 +132,47 @@ namespace Product.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<(List<ProductSearchRaw>, int)> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            string normalizedQuery = query.Trim();
+
+            // Wrap query in double quotes for phrase search in BOOLEAN MODE
+            string booleanQuery = $"\"{normalizedQuery}\"";
+
+            int skip = (page - 1) * pageSize;
+
+            var sql = $@"
+                        SELECT Id, Name, Description, thumbnail_url AS ThumbnailUrl, Price,
+                        cat_snap AS CatSnap, subcat_snap AS SubcatSnap,category_id AS CategoryId,
+                        subcategory_id AS SubcategoryId,
+                        MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
+                        MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
+                        MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore
+                        FROM product_master
+                        WHERE 
+                        MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)
+                        OR MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                        OR MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                        ORDER BY NameScore DESC, CatScore DESC, SubcatScore DESC
+                        LIMIT {{1}} OFFSET {{2}};";
+
+            var products = await _context.ProductSearchRaws
+                .FromSqlRaw(sql, booleanQuery, pageSize, skip)
+                .ToListAsync(cancellationToken);
+
+            var countSql = @"
+                            SELECT COUNT(*) FROM product_master
+                            WHERE 
+                            MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(cat_snap) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(subcat_snap) AGAINST ({0} IN BOOLEAN MODE)";
+
+            var totalCount = await _context.ProductMasters
+                .FromSqlRaw(countSql, booleanQuery)
+                .CountAsync(cancellationToken);
+
+            return (products, totalCount);
+        }
     }
 
 }

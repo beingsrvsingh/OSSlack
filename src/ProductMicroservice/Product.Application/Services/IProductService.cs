@@ -1,5 +1,5 @@
-using Product.Application.Contracts;
 using Product.Domain.Entities;
+using Shared.Application.Contracts;
 
 namespace Product.Application.Services
 {
@@ -25,6 +25,8 @@ namespace Product.Application.Services
         int pageSize,
         string? sortBy = null,
         bool sortDescending = false);
+
+        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 
 }

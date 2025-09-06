@@ -19,5 +19,7 @@ namespace Product.Domain.Repository
         int pageSize,
         string? sortBy = null,
         bool sortDescending = false);
+        Task<(List<ProductSearchRaw>, int)> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+
     }
 }

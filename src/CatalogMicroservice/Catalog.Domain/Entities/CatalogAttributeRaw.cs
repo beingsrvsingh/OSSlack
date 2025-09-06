@@ -1,6 +1,9 @@
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Catalog.Domain.Entities
 {
+    [Keyless]
     public class CatalogAttributeRaw
     {
         public int Id { get; set; }

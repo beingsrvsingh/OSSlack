@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Product.Application.Contracts;
 using Product.Application.Services;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
 namespace Product.Infrastructure.Services
@@ -185,14 +185,14 @@ namespace Product.Infrastructure.Services
         }
 
         public async Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
-        List<int>attributeIds, int pageNumber,
+        List<int> attributeIds, int pageNumber,
         int pageSize,
         string? sortBy = null,
         bool sortDescending = false)
         {
             try
             {
-                var result = await _productRepository.GetFilteredProductsRawAsync(attributeIds, pageNumber, pageSize, sortBy, sortDescending);                
+                var result = await _productRepository.GetFilteredProductsRawAsync(attributeIds, pageNumber, pageSize, sortBy, sortDescending);
                 return result;
             }
             catch (Exception ex)
@@ -213,6 +213,67 @@ namespace Product.Infrastructure.Services
             {
                 _logger.LogError(ex, "Error occurred while getting products for productId {ProductIds}.", string.Join(',', ids));
                 return [];
+            }
+        }
+
+        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var (products, totalCount) = await _productRepository.SearchAsync(query, page, pageSize, cancellationToken);
+
+                var resultDtos = products.Select(p => new SearchItemDto
+                {
+                    Id = p.Id.ToString(),
+                    Name = p.Name,
+                    Description = p.Description ?? "",
+                    Price = (double)(p.Price ?? 0),
+                    ThumbnailUrl = p.ThumbnailUrl ?? "",
+                    Score = p.Score,
+                    MatchType = p.MatchType ?? "Partial",
+                    CategoryId = p.CategoryId,
+                    SubcategoryId = p.SubcategoryId
+                }).ToList();
+
+                var normalizedQuery = query.Trim();
+
+                bool isCatOrSubcatExact = products.Any(p =>
+                    string.Equals(p.CatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(p.SubcatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                bool isNameExact = products.Any(p =>
+                    string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                string matchType = isCatOrSubcatExact || isNameExact ? "Exact" : "Partial";
+
+                bool enableFilters = isCatOrSubcatExact || products.Any(p =>
+                (p.CatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (p.SubcatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
+
+                return new SearchResultDto
+                {
+                    Results = resultDtos,
+                    TotalCount = totalCount,
+                    HasMoreResults = page * pageSize < totalCount,
+                    Score = products.FirstOrDefault()?.Score ?? 0,
+                    MatchType = matchType,
+                    EnableFilters = enableFilters,
+                    Source = "Product"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
+                return new SearchResultDto
+                {
+                    Results = new List<SearchItemDto>(),
+                    TotalCount = 0,
+                    HasMoreResults = false,
+                    Score = 0,
+                    MatchType = "Partial",
+                    EnableFilters = false,
+                    Source = "Product"
+                };
             }
         }
 

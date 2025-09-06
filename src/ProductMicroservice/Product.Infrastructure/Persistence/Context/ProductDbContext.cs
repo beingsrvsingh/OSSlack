@@ -20,11 +20,15 @@ namespace Product.Infrastructure.Persistence.Context
         public DbSet<ProductAttributeValue> ProductAttributeValues { get; set; } = null!;
         public DbSet<ProductImage> ProductImages { get; set; } = null!;
         public DbSet<ProductFilterRawResult> ProductFilterRawResults => Set<ProductFilterRawResult>();
+        public DbSet<ProductSearchRaw> ProductSearchRaws => Set<ProductSearchRaw>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ProductFilterRawResult>()
+            .HasNoKey()
+            .ToView(null);
+            modelBuilder.Entity<ProductSearchRaw>()
             .HasNoKey()
             .ToView(null);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
