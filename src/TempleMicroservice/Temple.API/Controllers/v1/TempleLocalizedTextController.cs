@@ -1,50 +1,45 @@
-using BaseApi;
+﻿using BaseApi;
 using Microsoft.AspNetCore.Mvc;
 using Temple.Application.Features.Commands;
 using Temple.Application.Features.Queries;
 
 namespace Temple.API.Controllers.v1
 {
-    public class TempleController : BaseController
+    public class TempleLocalizedTextController : BaseController
     {
-        // GET api/TempleMaster/{id}
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTempleMasterByIdAsync(int id)
+        public async Task<IActionResult> GetTempleLocalizedTextByIdAsync(int id)
         {
-            var result = await Mediator.Send(new GetTempleByIdQuery(id));
-
+            var result = await Mediator.Send(new GetTempleLocalizedTextByIdQuery(id));
             if (!result.Succeeded)
                 return NotFound(result);
 
             return Ok(result);
         }
 
-        // POST api/TempleMaster/create
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateTempleMaster([FromBody] CreateTempleMasterCommand request)
+        public async Task<IActionResult> CreateTempleLocalizedText([FromBody] CreateTempleLocalizedTextCommand request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var result = await Mediator.Send(request);
-
             if (!result.Succeeded)
                 return Conflict(result);
 
-            return Created(string.Empty, new { Message = "Temple master created successfully." });
+            return Created(string.Empty, new { Message = "Temple localized text created successfully." });
         }
 
-        // PUT api/TempleMaster/update/{id}
         [HttpPut("update/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateTempleMaster(int id, [FromBody] UpdateTempleMasterCommand request)
+        public async Task<IActionResult> UpdateTempleLocalizedText(int id, [FromBody] UpdateTempleLocalizedTextCommand request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -53,25 +48,22 @@ namespace Temple.API.Controllers.v1
                 return BadRequest("Id in route does not match Id in request body.");
 
             var result = await Mediator.Send(request);
-
             if (!result.Succeeded)
                 return Conflict(result);
 
-            return Ok(new { Message = "Temple master updated successfully." });
+            return Ok(new { Message = "Temple localized text updated successfully." });
         }
 
-        // DELETE api/TempleMaster/delete/{id}
         [HttpDelete("delete/{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> DeleteTempleMaster(int id)
+        public async Task<IActionResult> DeleteTempleLocalizedText(int id)
         {
-            var result = await Mediator.Send(new DeleteTempleMasterCommand(id));
-
+            var result = await Mediator.Send(new DeleteTempleLocalizedTextCommand(id));
             if (!result.Succeeded)
                 return Conflict(result);
 
-            return Ok(new { Message = "Temple master deleted successfully." });
+            return Ok(new { Message = "Temple localized text deleted successfully." });
         }
     }
 }

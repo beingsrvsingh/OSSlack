@@ -23,6 +23,19 @@ namespace Temple.Infrastructure.Persistence.Repository
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-        }        
+        }
+
+        public async Task<TempleMaster?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.TempleMasters
+                .Include(t => t.TemplePoojas)
+                .Include(t => t.Donations)
+                .Include(t => t.Prasads)
+                .Include(t => t.Aartis)
+                .Include(t => t.TempleSchedules)
+                .Include(t => t.TempleExceptions)
+                .Include(t => t.Localizations)
+                .FirstOrDefaultAsync(t => t.Id == id);
+        }
     }
 }
