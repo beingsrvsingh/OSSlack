@@ -20,8 +20,8 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(36);
 
-            builder.Property(k => k.DisplayName)
-                .HasColumnName("display_name")
+            builder.Property(k => k.Name)
+                .HasColumnName("name")
                 .HasMaxLength(200);
 
             builder.Property(k => k.ProfilePictureUrl)
@@ -51,39 +51,39 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
 
             // Navigation properties
 
-            builder.HasMany(k => k.Categories)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+            builder.HasMany(k => k.Expertises)
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.Languages)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.Topics)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.SessionModes)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.Schedules)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.TimeSlots)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.Media)
-                .WithOne()
-                .HasForeignKey("kathavachak_id")
+                .WithOne(e => e.Kathavachak)
+                .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

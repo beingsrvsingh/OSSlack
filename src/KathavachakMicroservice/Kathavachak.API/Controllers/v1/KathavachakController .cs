@@ -2,6 +2,7 @@
 using Kathavachak.Application.Features.Commands;
 using Kathavachak.Application.Features.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Utilities.Response;
 
 namespace Kathavachak.API.Controllers.v1
 {
@@ -74,6 +75,31 @@ namespace Kathavachak.API.Controllers.v1
             var result = await Mediator.Send(new GetAllKathavachakMastersQuery());
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Search products by query with pagination
+        /// </summary>
+        /// <param name="query">Search keyword</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Page size (default 10)</param>
+        /// <returns>Paginated list of product search results</returns>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
+        {
+            if (string.IsNullOrWhiteSpace(query.Query))
+                return BadRequest("Query parameter is required.");
+
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 

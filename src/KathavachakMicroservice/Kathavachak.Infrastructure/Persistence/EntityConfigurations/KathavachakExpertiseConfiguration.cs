@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
 {
-    public class KathavachakCategoryConfiguration : IEntityTypeConfiguration<KathavachakCategory>
+    public class KathavachakExpertiseConfiguration : IEntityTypeConfiguration<KathavachakExpertise>
     {
-        public void Configure(EntityTypeBuilder<KathavachakCategory> builder)
+        public void Configure(EntityTypeBuilder<KathavachakExpertise> builder)
         {
-            builder.ToTable("kathavachak_category");
+            builder.ToTable("kathavachak_experties");
 
             builder.HasKey(c => c.Id);
 
@@ -27,6 +27,14 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                .HasColumnName("subcat_id")
                .IsRequired();
 
+            builder.Property(c => c.ProficiencyLevel)
+                .HasColumnName("proficiency_level")
+                .IsRequired();
+
+            builder.Property(c => c.YearsOfExperience)
+                .HasColumnName("yrs_of_exp")
+                .IsRequired();
+
             builder.Property(p => p.CategoryNameSnapshot)
                 .HasMaxLength(100)
                 .HasColumnName("cat_snap");
@@ -36,7 +44,7 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("subcat_snap");
 
             builder.HasOne(c => c.Kathavachak)
-                 .WithMany(k => k.Categories)
+                 .WithMany(k => k.Expertises)
                  .HasForeignKey(c => c.KathavachakId)
                  .OnDelete(DeleteBehavior.Cascade);
         }

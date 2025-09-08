@@ -11,7 +11,7 @@ namespace Kathavachak.Domain.Entities
         public string UserId { get; set; } = null!;
 
         [MaxLength(200)]
-        public string? DisplayName { get; set; }
+        public string? Name { get; set; }
 
         [MaxLength(500)]
         public string? ProfilePictureUrl { get; set; }
@@ -26,7 +26,7 @@ namespace Kathavachak.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation
-        public ICollection<KathavachakCategory> Categories { get; set; } = new List<KathavachakCategory>();
+        public ICollection<KathavachakExpertise> Expertises { get; set; } = new List<KathavachakExpertise>();
         public ICollection<KathavachakLanguage> Languages { get; set; } = new List<KathavachakLanguage>();
         public ICollection<KathavachakTopic> Topics { get; set; } = new List<KathavachakTopic>();
         public ICollection<KathavachakSessionMode> SessionModes { get; set; } = new List<KathavachakSessionMode>();

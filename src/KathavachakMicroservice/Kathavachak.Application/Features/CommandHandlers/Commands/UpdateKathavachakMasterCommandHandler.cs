@@ -28,7 +28,7 @@ namespace Kathavachak.Application.Features.CommandHandlers.Commands
                     return Result.Failure(new FailureResponse("NOT_FOUND", "Kathavachak not found."));
 
                 // Map updated fields
-                existing.DisplayName = request.DisplayName;
+                existing.Name = request.DisplayName;
                 existing.ProfilePictureUrl = request.ProfilePictureUrl;
                 existing.IsActive = request.IsActive;
                 existing.UpdatedAt = DateTime.UtcNow;

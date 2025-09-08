@@ -1,29 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Shared.Domain.Entities.Base;
 
 namespace Product.Domain.Entities
 {
-    public class ProductSearchRaw
+    public class ProductSearchRaw : BaseSearchRaw
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public string? ThumbnailUrl { get; set; }
-        public decimal? Price { get; set; }
-
-        public int CategoryId { get; set; }
-        public int SubcategoryId { get; set; }
-        public string? CatSnap { get; set; }
-        public string? SubcatSnap { get; set; }
-
-        public float? NameScore { get; set; }
-        public float? CatScore { get; set; }
-        public float? SubcatScore { get; set; }
-
-        [NotMapped]
-        public float Score => (NameScore ?? 0) + (CatScore ?? 0) + (SubcatScore ?? 0);
-
-        [NotMapped]
-        public string? MatchType { get; set; }
     }
 }

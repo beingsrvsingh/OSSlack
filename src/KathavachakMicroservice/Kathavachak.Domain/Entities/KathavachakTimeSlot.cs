@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kathavachak.Domain.Entities
 {
@@ -16,7 +17,8 @@ namespace Kathavachak.Domain.Entities
 
         public bool IsBooked { get; set; }
 
-        public KathavachakMaster Kathavachak { get; set; } = null!;
+        [ForeignKey(nameof(KathavachakId))]
+        public virtual KathavachakMaster Kathavachak { get; set; } = null!;
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kathavachak.Domain.Entities
 {
@@ -8,11 +9,13 @@ namespace Kathavachak.Domain.Entities
         public int Id { get; set; }
 
         public int KathavachakId { get; set; }
+        public int LanguageId { get; set; }
 
-        [Required, MaxLength(10)]
-        public string LanguageCode { get; set; } = null!;
+        [ForeignKey(nameof(KathavachakId))]
+        public virtual KathavachakMaster Kathavachak { get; set; } = null!;
 
-        public KathavachakMaster Kathavachak { get; set; } = null!;
+        [ForeignKey(nameof(LanguageId))]
+        public virtual LanguageMaster Language { get; set; } = null!;
     }
 
 }

@@ -142,18 +142,30 @@ namespace Product.Infrastructure.Repositories
             int skip = (page - 1) * pageSize;
 
             var sql = $@"
-                        SELECT Id, Name, Description, thumbnail_url AS ThumbnailUrl, Price,
-                        cat_snap AS CatSnap, subcat_snap AS SubcatSnap,category_id AS CategoryId,
-                        subcategory_id AS SubcategoryId,
-                        MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
-                        MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
-                        MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore
+                        SELECT 
+                            Id, 
+                            Name, 
+                            Description, 
+                            thumbnail_url AS ThumbnailUrl, 
+                            Price,
+                            cat_snap AS CatSnap, 
+                            subcat_snap AS SubcatSnap,
+                            category_id AS CategoryId,
+                            subcategory_id AS SubcategoryId,
+                            MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
+                            MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
+                            MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
+                            (
+                                MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
+                                MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
+                                MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
+                            ) AS TotalScore
                         FROM product_master
                         WHERE 
-                        MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)
-                        OR MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                        OR MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                        ORDER BY NameScore DESC, CatScore DESC, SubcatScore DESC
+                            MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)
+                            OR MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                            OR MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                        ORDER BY TotalScore DESC
                         LIMIT {{1}} OFFSET {{2}};";
 
             var products = await _context.ProductSearchRaws

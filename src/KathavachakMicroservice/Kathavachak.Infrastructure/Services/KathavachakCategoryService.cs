@@ -16,7 +16,7 @@ namespace Kathavachak.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<KathavachakCategory>> GetAllAsync()
+        public async Task<IEnumerable<KathavachakExpertise>> GetAllAsync()
         {
             try
             {
@@ -25,11 +25,11 @@ namespace Kathavachak.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Error in GetAllAsync: {ex.Message}", ex);
-                return Enumerable.Empty<KathavachakCategory>();
+                return Enumerable.Empty<KathavachakExpertise>();
             }
         }
 
-        public async Task<KathavachakCategory?> GetByIdAsync(int id)
+        public async Task<KathavachakExpertise?> GetByIdAsync(int id)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Kathavachak.Infrastructure.Services
             }
         }
 
-        public async Task<bool> CreateAsync(KathavachakCategory entity)
+        public async Task<bool> CreateAsync(KathavachakExpertise entity)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Kathavachak.Infrastructure.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(KathavachakCategory entity)
+        public async Task<bool> UpdateAsync(KathavachakExpertise entity)
         {
             try
             {

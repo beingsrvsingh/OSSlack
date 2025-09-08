@@ -25,7 +25,7 @@ namespace Kathavachak.Application.Features.CommandHandlers.Commands
         {
             try
             {
-                var entity = request.Adapt<KathavachakCategory>();
+                var entity = request.Adapt<KathavachakExpertise>();
                 var success = await _service.CreateAsync(entity);
                 return success ? Result.Success("Category added.") : Result.Failure(new FailureResponse("CREATE_FAILED", "Unable to add category."));
             }

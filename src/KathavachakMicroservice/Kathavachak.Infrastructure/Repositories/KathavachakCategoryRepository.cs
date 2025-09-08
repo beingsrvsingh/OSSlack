@@ -5,7 +5,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace Kathavachak.Infrastructure.Repositories
 {
-    public class KathavachakCategoryRepository : Repository<KathavachakCategory>, IKathavachakCategoryRepository
+    public class KathavachakCategoryRepository : Repository<KathavachakExpertise>, IKathavachakCategoryRepository
     {
         private readonly KathavachakDbContext _context;
 
