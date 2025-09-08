@@ -10,17 +10,44 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
         {
             builder.ToTable("astrologer_expertises");
 
-            builder.HasKey(ae => new { ae.AstrologerId, ae.ExpertiseId });
+            // Primary Key
+            builder.HasKey(ae => ae.Id);
+            builder.Property(ae => ae.Id).HasColumnName("id");
 
+            // Foreign Keys
+            builder.Property(ae => ae.AstrologerId).HasColumnName("astrologer_id");
+            builder.Property(ae => ae.CategoryId).HasColumnName("category_id");
+            builder.Property(ae => ae.SubCategoryId).HasColumnName("sub_category_id");
+
+            // Expertise Info
+            builder.Property(ae => ae.YearsOfExperience).HasColumnName("years_of_experience");
+            builder.Property(ae => ae.ProficiencyLevel).HasColumnName("proficiency_level");
+
+            // Package Info
+            builder.Property(ae => ae.Name).HasColumnName("name").HasMaxLength(100);
+            builder.Property(ae => ae.Description).HasColumnName("description");
+            builder.Property(ae => ae.Price).HasColumnName("price");
+            builder.Property(ae => ae.Duration).HasColumnName("duration");
+            builder.Property(ae => ae.IsActive).HasColumnName("is_active");
+
+            // Snapshots
+            builder.Property(ae => ae.SubCategoryNameSnapshot)
+                   .HasColumnName("sub_cat_name_snap")
+                   .HasMaxLength(100);
+            builder.Property(ae => ae.CategoryNameSnapshot)
+                   .HasColumnName("category_name_snap")
+                   .HasMaxLength(100);
+
+            // Relationships
             builder.HasOne(ae => ae.Astrologer)
                    .WithMany(a => a.AstrologerExpertises)
                    .HasForeignKey(ae => ae.AstrologerId)
                    .HasConstraintName("fk_astrologer_expertise_astrologer_id");
 
-            builder.HasOne(ae => ae.Expertise)
-                   .WithMany(e => e.AstrologerExpertises)
-                   .HasForeignKey(ae => ae.ExpertiseId)
-                   .HasConstraintName("fk_astrologer_expertise_expertise_id");
+            builder.HasMany(ae => ae.ConsultationModes)
+                   .WithOne()
+                   .HasForeignKey("astrologer_expertise_id")
+                   .HasConstraintName("fk_astrologer_consultation_mode_expertise_id");
         }
     }
 

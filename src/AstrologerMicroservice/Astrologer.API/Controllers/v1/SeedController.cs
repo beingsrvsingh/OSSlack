@@ -25,25 +25,5 @@ namespace AstrologerMicroservice.API.Controllers.v1
 
             return StatusCode(StatusCodes.Status500InternalServerError, result);
         }
-
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpPost("seed-astrologer-experties")]
-        public async Task<IActionResult> SeedAstrologerExperties()
-        {
-            // new Expertise { Id = 1, Name = "Kundli" },
-            // new Expertise { Id = 2, Name = "Pooja" },
-            // new Expertise { Id = 3, Name = "Consultation" },
-            // new Expertise { Id = 4, Name = "Matchmaking" }
-            var result = await Mediator.Send(new SeedAstrologerExpertiesCommand());
-
-            if (result.Succeeded)
-            {
-                return Created(string.Empty, result.Data);
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError, result);
-        }
     }
 }

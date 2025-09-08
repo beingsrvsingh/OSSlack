@@ -16,25 +16,34 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasColumnName("id");
 
             builder.Property(s => s.AstrologerId)
-                   .HasColumnName("astrologer_id");
+                   .HasColumnName("astrologer_id")
+                   .IsRequired();
 
             builder.Property(s => s.Day)
-                   .HasColumnName("day_of_week");
+                   .HasColumnName("day_of_week")
+                   .IsRequired();
 
             builder.Property(s => s.StartTime)
-                   .HasColumnName("start_time");
+                   .HasColumnName("start_time")
+                   .IsRequired();
 
             builder.Property(s => s.EndTime)
-                   .HasColumnName("end_time");
+                   .HasColumnName("end_time")
+                   .IsRequired();
+
+            builder.Property(s => s.IsAvailable)
+                   .HasColumnName("is_available")
+                   .IsRequired()
+                   .HasDefaultValue(true);
 
             builder.HasIndex(s => new { s.AstrologerId, s.Day })
-                   .HasDatabaseName("ix_schedules_astrologer_day");
+                   .HasDatabaseName("ix_schedules_astrologer_day")
+                   .IsUnique();
 
             builder.HasOne(s => s.Astrologer)
                    .WithMany(a => a.Schedules)
-                   .HasForeignKey(s => s.AstrologerId);
+                   .HasForeignKey(s => s.AstrologerId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
-
 }

@@ -1,16 +1,15 @@
+﻿using AstrologerMicroservice.Domain.Entities;
+using Shared.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AstrologerMicroservice.Domain.Entities
+namespace Kathavachak.Domain.Entities
 {
-    public partial class TimeSlot
+    public class AstrologerAttributeValue : BaseAttributeValue
     {
+        [Key]
         public int Id { get; set; }
         public int AstrologerId { get; set; }
-
-        public DateTime StartUtc { get; set; }
-        public DateTime EndUtc { get; set; }
-
-        public bool IsBooked { get; set; }
 
         [ForeignKey(nameof(AstrologerId))]
         public virtual AstrologerEntity Astrologer { get; set; } = null!;

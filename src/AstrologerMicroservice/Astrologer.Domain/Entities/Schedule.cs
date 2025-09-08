@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace AstrologerMicroservice.Domain.Entities
 {
     public partial class Schedule
@@ -14,7 +16,8 @@ namespace AstrologerMicroservice.Domain.Entities
 
         public bool IsAvailable { get; set; } = true;
 
-        public virtual Astrologer Astrologer { get; set; } = null!;
+        [ForeignKey(nameof(AstrologerId))]
+        public virtual AstrologerEntity Astrologer { get; set; } = null!;
     }
 
 }

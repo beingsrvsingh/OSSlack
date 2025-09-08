@@ -26,6 +26,7 @@ namespace Kathavachak.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation
+        public ICollection<KathavachakAttributeValue> KathavachakAttributeValues { get; set; } = new List<KathavachakAttributeValue>();
         public ICollection<KathavachakExpertise> Expertises { get; set; } = new List<KathavachakExpertise>();
         public ICollection<KathavachakLanguage> Languages { get; set; } = new List<KathavachakLanguage>();
         public ICollection<KathavachakTopic> Topics { get; set; } = new List<KathavachakTopic>();

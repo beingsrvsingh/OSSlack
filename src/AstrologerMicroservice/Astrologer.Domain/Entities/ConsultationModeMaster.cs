@@ -6,7 +6,7 @@ namespace AstrologerMicroservice.Domain.Entities
         public int Id { get; set; }
         public string Mode { get; set; } = String.Empty;
         public int DisplayOrder { get; set; }
-        public virtual ICollection<AstrologerConsultationMode> ConsultationModes { get; set; } = new List<AstrologerConsultationMode>();
+        public ICollection<AstrologerConsultationMode> AstrologerConsultationModes { get; set; } = new List<AstrologerConsultationMode>();
 
     }
 }

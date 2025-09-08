@@ -1,9 +1,9 @@
 using AstrologerMicroservice.Application.Features.Commands;
 using AstrologerMicroservice.Application.Service;
 using AstrologerMicroservice.Domain.Entities;
-using AstrologerMicroservice.Domain.Entities.Enums;
 using AstrologerMicroservice.Domain.Repositories;
 using Mapster;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
 namespace AstrologerMicroservice.Infrastructure.Service
@@ -20,7 +20,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Astrologer>> GetAvailableAsync(DateTime date, string language, string expertise)
+        public async Task<IEnumerable<AstrologerEntity>> GetAvailableAsync(DateTime date, string language, string expertise)
         {
             try
             {
@@ -29,11 +29,11 @@ namespace AstrologerMicroservice.Infrastructure.Service
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch available astrologers.");
-                return Enumerable.Empty<Astrologer>(); // Return null on error so handler can return failure Result
+                return Enumerable.Empty<AstrologerEntity>();
             }
         }
 
-        public async Task<Astrologer?> GetByIdAsync(int astrologerId)
+        public async Task<AstrologerEntity?> GetByIdAsync(int astrologerId)
         {
             _logger.LogInfo($"Getting astrologer by Id: {astrologerId}");
             try
@@ -50,7 +50,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<Astrologer?> GetByUserIdAsync(string userId)
+        public async Task<AstrologerEntity?> GetByUserIdAsync(string userId)
         {
             _logger.LogInfo($"Getting astrologer by UserId: {userId}");
             try
@@ -67,7 +67,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<IEnumerable<Astrologer>> GetAllAsync(int page = 1, int pageSize = 20)
+        public async Task<IEnumerable<AstrologerEntity>> GetAllAsync(int page = 1, int pageSize = 20)
         {
             _logger.LogInfo($"Getting all astrologers - Page: {page}, PageSize: {pageSize}");
             try
@@ -96,7 +96,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 }
 
                 // Create new astrologer
-                var astrologer = command.Adapt<Astrologer>();
+                var astrologer = command.Adapt<AstrologerEntity>();
 
                 astrologer.AstrologerLanguages.Clear();
                 foreach (var languageEnum in command.Languages)
@@ -108,13 +108,13 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 }
 
                 astrologer.AstrologerExpertises.Clear();
-                foreach (var expertise in command.Expertise)
-                {
-                    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
-                    {
-                        ExpertiseId = (int)expertise
-                    });
-                }
+                //foreach (var expertise in command.Expertise)
+                //{
+                //    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
+                //    {
+                //        ExpertiseId = (int)expertise
+                //    });
+                //}
 
                 await _repository.AddAsync(astrologer);
                 await _repository.SaveChangesAsync();
@@ -158,13 +158,13 @@ namespace AstrologerMicroservice.Infrastructure.Service
 
                 // Clear existing expertises and insert new ones
                 astrologer.AstrologerExpertises.Clear();
-                foreach (var expEnum in command.Expertise)
-                {
-                    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
-                    {
-                        ExpertiseId = (int)expEnum
-                    });
-                }
+                //foreach (var expEnum in command.Expertise)
+                //{
+                //    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
+                //    {
+                //        ExpertiseId = (int)expEnum
+                //    });
+                //}
 
                 await _repository.UpdateAsync(astrologer);
                 await _repository.SaveChangesAsync();
@@ -203,47 +203,64 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<bool> SetLanguagesAsync(int astrologerId, IEnumerable<int> languageIds)
+        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
-            _logger.LogInfo($"Setting languages for astrologer Id: {astrologerId}");
             try
             {
-                await _repository.SetLanguagesAsync(astrologerId, languageIds);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error setting languages for astrologer Id {astrologerId}", ex);
-                throw;
-            }
-        }
+                var (products, totalCount) = await _repository.SearchAsync(query, page, pageSize, cancellationToken);
 
-        public async Task<bool> SetExpertisesAsync(int astrologerId, IEnumerable<int> expertiseIds)
-        {
-            _logger.LogInfo($"Setting expertises for astrologer Id: {astrologerId}");
-            try
-            {
-                await _repository.SetExpertisesAsync(astrologerId, expertiseIds);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error setting expertises for astrologer Id {astrologerId}", ex);
-                throw;
-            }
-        }
+                var resultDtos = products.Select(p => new SearchItemDto
+                {
+                    Id = p.Id.ToString(),
+                    Name = p.Name,
+                    Description = p.Description ?? "",
+                    Price = (double)(p.Price ?? 0),
+                    ThumbnailUrl = p.ThumbnailUrl ?? "",
+                    Score = p.Score,
+                    MatchType = p.MatchType ?? "Partial",
+                    CategoryId = p.CategoryId,
+                    SubcategoryId = p.SubcategoryId
+                }).ToList();
 
-        public async Task<IEnumerable<Astrologer>> SearchAsync(string? language = null, string? expertise = null, ConsultationModeType? consultationMode = null, bool? isActive = true, int page = 1, int pageSize = 20)
-        {
-            _logger.LogInfo($"Searching astrologers with language: {language}, expertise: {expertise}, consultationMode: {consultationMode}, isActive: {isActive}, page: {page}, pageSize: {pageSize}");
-            try
-            {
-                return await _repository.SearchAsync(language, expertise, consultationMode, isActive, page, pageSize);
+                var normalizedQuery = query.Trim();
+
+                bool isCatOrSubcatExact = products.Any(p =>
+                    string.Equals(p.CatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(p.SubcatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                bool isNameExact = products.Any(p =>
+                    string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                string matchType = isCatOrSubcatExact || isNameExact ? "Exact" : "Partial";
+
+                bool enableFilters = isCatOrSubcatExact || products.Any(p =>
+                (p.CatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (p.SubcatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
+
+                return new SearchResultDto
+                {
+                    Results = resultDtos,
+                    TotalCount = totalCount,
+                    HasMoreResults = page * pageSize < totalCount,
+                    Score = products.FirstOrDefault()?.Score ?? 0,
+                    MatchType = matchType,
+                    EnableFilters = enableFilters,
+                    Source = "Product"
+                };
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error searching astrologers", ex);
-                throw;
+                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
+                return new SearchResultDto
+                {
+                    Results = new List<SearchItemDto>(),
+                    TotalCount = 0,
+                    HasMoreResults = false,
+                    Score = 0,
+                    MatchType = "Partial",
+                    EnableFilters = false,
+                    Source = "Product"
+                };
             }
         }
     }

@@ -3,6 +3,7 @@ using AstrologerMicroservice.Application.Features.Query;
 using AstrologerMicroservice.Domain.Entities.Enums;
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Utilities.Response;
 
 namespace Astrologer.API.Controllers.v1
 {
@@ -72,30 +73,29 @@ namespace Astrologer.API.Controllers.v1
             return Ok(result.Data);
         }
 
-        // Search Astrologers (example with optional query params)
+        /// <summary>
+        /// Search products by query with pagination
+        /// </summary>
+        /// <param name="query">Search keyword</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Page size (default 10)</param>
+        /// <returns>Paginated list of product search results</returns>
         [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> SearchAstrologers(
-            [FromQuery] string? language = null,
-            [FromQuery] string? expertise = null,
-            [FromQuery] ConsultationModeType? consultationMode = null,
-            [FromQuery] bool? isActive = true,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 20)
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
         {
-            var query = new GetSearchAstrologersQuery
-            {
-                Language = language,
-                Expertise = expertise,
-                ConsultationMode = consultationMode,
-                IsActive = isActive,
-                Page = page,
-                PageSize = pageSize
-            };
+            if (string.IsNullOrWhiteSpace(query.Query))
+                return BadRequest("Query parameter is required.");
 
             var result = await Mediator.Send(query);
 
-            return Ok(result.Data);
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 }

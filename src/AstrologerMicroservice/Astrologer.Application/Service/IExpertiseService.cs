@@ -4,10 +4,10 @@ namespace AstrologerMicroservice.Application.Service
 {
     public interface IExpertiseService
     {
-        Task<IEnumerable<Expertise>> GetAllAsync();
-        Task<Expertise?> GetByIdAsync(int id);
-        Task<Expertise> CreateAsync(Expertise expertise);
-        Task<bool> UpdateAsync(Expertise expertise);
+        Task<IEnumerable<AstrologerExpertise>> GetAllAsync();
+        Task<AstrologerExpertise?> GetByIdAsync(int id);
+        Task<AstrologerExpertise> CreateAsync(AstrologerExpertise expertise);
+        Task<bool> UpdateAsync(AstrologerExpertise expertise);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -17,38 +17,7 @@ namespace AstrologerMicroservice.Infrastructure.Services.Identity
             _logger = logger;
             this.languageRepository = languageRepository;
             this.expertiesRepository = expertiesRepository;
-        }
-
-        public async Task<bool> SeedAstrologerExpertiesAsync()
-        {
-            try
-            {
-                var existingExpertise = await expertiesRepository.GetAllAsync();
-                if (existingExpertise.Any()) return true;
-
-                var seedExpertise = new List<Expertise>
-                {
-                    new() { Name = "Kundli" },
-                    new() { Name = "Pooja" },
-                    new() { Name = "Consultation" },
-                    new() { Name = "Matchmaking" },
-                    new() { Name = "Mind Reading" }
-                };
-
-                foreach (var expertise in seedExpertise)
-                {
-                    await expertiesRepository.AddAsync(expertise);
-                }
-
-                await expertiesRepository.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to seed astrologer experties");
-                return false;
-            }
-        }
+        }        
 
         public async Task<bool> SeedAstrologerLanguagesAsync()
         {

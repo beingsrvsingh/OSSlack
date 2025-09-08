@@ -1,5 +1,6 @@
 using System.Reflection;
 using AstrologerMicroservice.Domain.Entities;
+using Kathavachak.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -10,22 +11,23 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Context
         public AstrologerDbContext(DbContextOptions<AstrologerDbContext> options) : base(options)
         { }
 
-        public DbSet<Astrologer> Astrologers => Set<Astrologer>();
-        public DbSet<ServicePackage> ServicePackages => Set<ServicePackage>();
-        public DbSet<ServiceCategory> ServiceCategories => Set<ServiceCategory>();
+        public DbSet<AstrologerEntity> Astrologers => Set<AstrologerEntity>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
         public DbSet<LanguageMaster> Languages => Set<LanguageMaster>();
-        public DbSet<Expertise> Expertises => Set<Expertise>();
+        public DbSet<AstrologerExpertise> Expertises => Set<AstrologerExpertise>();
 
         public DbSet<AstrologerLanguage> AstrologerLanguages => Set<AstrologerLanguage>();
         public DbSet<AstrologerExpertise> AstrologerExpertises => Set<AstrologerExpertise>();
-        public DbSet<ServiceTagPackage> ServiceTagPackages => Set<ServiceTagPackage>();
-        public DbSet<ServiceTagPackageMaster> TagMasters => Set<ServiceTagPackageMaster>();
+        public DbSet<AstrologerAttributeValue> AstrologerAttributeValues => Set<AstrologerAttributeValue>();
+        public DbSet<AstrologerSearchRaw> AstrologerSearchRaws => Set<AstrologerSearchRaw>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<AstrologerSearchRaw>()
+            .HasNoKey()
+            .ToView(null);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

@@ -9,6 +9,7 @@ namespace Kathavachak.Domain.Entities
         [Key]
         public int Id { get; set; }
         public int KathavachakId { get; set; }
+
         [ForeignKey(nameof(KathavachakId))]
         public virtual KathavachakMaster Kathavachak { get; set; } = null!;
     }

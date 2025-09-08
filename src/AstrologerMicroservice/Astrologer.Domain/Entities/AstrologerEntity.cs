@@ -1,10 +1,10 @@
+using Kathavachak.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AstrologerMicroservice.Domain.Entities.Enums;
 
 namespace AstrologerMicroservice.Domain.Entities
 {    
-    public partial class Astrologer
+    public partial class AstrologerEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -29,12 +29,12 @@ namespace AstrologerMicroservice.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
-        public ICollection<AstrologerConsultationMode> ConsultationModes { get; set; } = new List<AstrologerConsultationMode>();
+        public ICollection<AstrologerAttributeValue> AstrologerAttributeValues { get; set; } = new List<AstrologerAttributeValue>();
+
         public virtual ICollection<AstrologerLanguage> AstrologerLanguages { get; set; } = new List<AstrologerLanguage>();
         public virtual ICollection<AstrologerExpertise> AstrologerExpertises { get; set; } = new List<AstrologerExpertise>();
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
-        public virtual ICollection<ServicePackage> ServicePackages { get; set; } = new List<ServicePackage>();
     }
 
 }

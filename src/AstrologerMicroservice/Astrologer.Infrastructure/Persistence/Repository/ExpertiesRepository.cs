@@ -5,7 +5,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace AstrologerMicroservice.Infrastructure.Repositories
 {
-    public class ExpertiesRepository : Repository<Expertise>, IExpertiesRepository
+    public class ExpertiesRepository : Repository<AstrologerExpertise>, IExpertiesRepository
     {
         private readonly AstrologerDbContext dbContext;
 

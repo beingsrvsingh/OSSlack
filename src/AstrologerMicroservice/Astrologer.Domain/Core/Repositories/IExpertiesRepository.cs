@@ -3,5 +3,5 @@ using Shared.Domain.Repository;
 
 namespace AstrologerMicroservice.Domain.Core.Repository
 {
-    public interface IExpertiesRepository : IRepository<Expertise> { }
+    public interface IExpertiesRepository : IRepository<AstrologerExpertise> { }
 }
