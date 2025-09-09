@@ -14,10 +14,10 @@ namespace AstrologerMicroservice.Domain.Entities
         public string UserId { get; set; } = null!;
 
         [MaxLength(200)]
-        public string? DisplayName { get; set; }
+        public string? Name { get; set; }
 
         [MaxLength(500)]
-        public string? ProfilePictureUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
 
         [Column(TypeName = "decimal(3,2)")]
         public decimal AverageRating { get; set; } = 0m;

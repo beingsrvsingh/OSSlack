@@ -27,7 +27,7 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(500);
 
             builder.Property(d => d.DonationDate)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         }
     }
 

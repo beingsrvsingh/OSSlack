@@ -26,7 +26,7 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValue(true);
 
             builder.Property(tp => tp.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         }
     }
 

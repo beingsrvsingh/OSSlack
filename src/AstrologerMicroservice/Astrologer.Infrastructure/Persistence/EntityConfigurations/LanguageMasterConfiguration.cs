@@ -8,7 +8,7 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<LanguageMaster> builder)
         {
-            builder.ToTable("languaage_master");
+            builder.ToTable("language_master");
 
             builder.HasKey(l => l.Id);
 

@@ -54,8 +54,8 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
                         SELECT 
                             a.id AS Id,
                             a.name AS Name,
-                            a.profile_description AS Description,
-                            a.profile_image_url AS ThumbnailUrl,
+                            ae.description AS Description,
+                            a.thumbnail_url AS ThumbnailUrl,
                             ae.price AS Price,
 
                             ae.category_name_snap AS CatSnap,
@@ -75,7 +75,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
                                 MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
                             ) AS TotalScore
 
-                        FROM astrologer_entity a
+                        FROM astrologers a
                         LEFT JOIN astrologer_expertises ae ON a.id = ae.astrologer_id
                         WHERE 
                             ae.is_active = TRUE AND
@@ -95,11 +95,13 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
 
 
             var countSql = @"
-                            SELECT COUNT(*) FROM product_master
+                            SELECT COUNT(*) FROM astrologers a
+                            LEFT JOIN astrologer_expertises ae ON a.id = ae.astrologer_id
                             WHERE 
-                            MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(cat_snap) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(subcat_snap) AGAINST ({0} IN BOOLEAN MODE)";
+                            MATCH(a.name) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(ae.name) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(ae.category_name_snap) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(ae.sub_cat_name_snap) AGAINST ({0} IN BOOLEAN MODE)";
 
             var totalCount = await _context.AstrologerSearchRaws
                 .FromSqlRaw(countSql, booleanQuery)

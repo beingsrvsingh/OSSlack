@@ -12,10 +12,10 @@ namespace AstrologerMicroservice.Domain.Entities
         public int ConsultationModeMasterId { get; set; }
         public string? ConsultationMode { get; set; }
 
-        [ForeignKey(nameof(AstrologerExpertise))]
+        [ForeignKey(nameof(ExpertiseId))]
         public AstrologerExpertise Expertise { get; set; } = null!;
 
-        [ForeignKey(nameof(ConsultationModeMaster))]
+        [ForeignKey(nameof(ConsultationModeMasterId))]
         public virtual ConsultationModeMaster ConsultationModeMaster { get; set; } = null!;
     }
 }

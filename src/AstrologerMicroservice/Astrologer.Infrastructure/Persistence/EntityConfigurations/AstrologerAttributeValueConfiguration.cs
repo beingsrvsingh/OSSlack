@@ -48,7 +48,7 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(aav => aav.CreatedAt)
                    .HasColumnName("created_at")
-                   .HasDefaultValueSql("GETUTCDATE()")
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                    .IsRequired();
 
             builder.HasOne(aav => aav.Astrologer)

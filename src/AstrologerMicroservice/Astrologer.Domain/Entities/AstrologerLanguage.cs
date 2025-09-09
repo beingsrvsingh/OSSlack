@@ -11,6 +11,8 @@ namespace AstrologerMicroservice.Domain.Entities
         public int AstrologerId { get; set; }
         public int LanguageId { get; set; }
 
+        public string? LanguageName { get; set; }
+
         [ForeignKey(nameof(AstrologerId))]
         public AstrologerEntity Astrologer { get; set; } = null!;
 

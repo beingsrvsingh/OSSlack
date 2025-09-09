@@ -20,7 +20,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired();
 
             builder.Property(x => x.ConsultationModeMasterId)
-                .HasColumnName("consultation_mode_master_id")
+                .HasColumnName("consultation_mode_id")
                 .IsRequired();
 
             builder.Property(x => x.ConsultationMode)
