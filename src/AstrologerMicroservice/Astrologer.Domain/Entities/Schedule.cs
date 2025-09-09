@@ -18,6 +18,8 @@ namespace AstrologerMicroservice.Domain.Entities
 
         [ForeignKey(nameof(AstrologerId))]
         public virtual AstrologerEntity Astrologer { get; set; } = null!;
+
+        public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
     }
 
 }

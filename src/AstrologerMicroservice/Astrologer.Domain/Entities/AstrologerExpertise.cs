@@ -36,6 +36,7 @@ namespace AstrologerMicroservice.Domain.Entities
         [ForeignKey(nameof(AstrologerId))]
         public virtual AstrologerEntity Astrologer { get; set; } = null!;
 
+        public virtual ICollection<AstrologerAttributeValue> AstrologerAttributeValues { get; set; } = new List<AstrologerAttributeValue>();
         public ICollection<AstrologerConsultationMode> ConsultationModes { get; set; } = new List<AstrologerConsultationMode>();
 
     }

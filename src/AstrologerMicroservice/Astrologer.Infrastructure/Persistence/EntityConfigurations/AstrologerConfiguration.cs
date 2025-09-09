@@ -68,12 +68,6 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(al => al.AstrologerId)
                    .HasConstraintName("fk_astrologer_schedules_astrologer_id")
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(a => a.TimeSlots)
-                   .WithOne(ae => ae.Astrologer)
-                   .HasForeignKey(ae => ae.AstrologerId)
-                   .HasConstraintName("fk_astrologer_timeslots_astrologer_id")
-                   .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

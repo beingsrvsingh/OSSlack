@@ -44,10 +44,16 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(ae => ae.AstrologerId)
                    .HasConstraintName("fk_astrologer_expertise_astrologer_id");
 
-            builder.HasMany(ae => ae.ConsultationModes)
-                   .WithOne()
-                   .HasForeignKey("astrologer_expertise_id")
+            builder.HasMany(pe => pe.ConsultationModes)
+                   .WithOne(cm => cm.Expertise)
+                   .HasForeignKey(cm => cm.ExpertiseId)
                    .HasConstraintName("fk_astrologer_consultation_mode_expertise_id");
+
+            builder.HasMany(pe => pe.AstrologerAttributeValues)
+                   .WithOne(av => av.AstrologerExpertise)
+                   .HasForeignKey(av => av.ExpertiseId)
+                   .HasConstraintName("fk_astrologer_attribute_value_expertise_id")
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

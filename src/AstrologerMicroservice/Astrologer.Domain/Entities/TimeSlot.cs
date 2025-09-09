@@ -5,15 +5,15 @@ namespace AstrologerMicroservice.Domain.Entities
     public partial class TimeSlot
     {
         public int Id { get; set; }
-        public int AstrologerId { get; set; }
+        public int ScheduleId { get; set; }
 
         public DateTime StartUtc { get; set; }
         public DateTime EndUtc { get; set; }
 
         public bool IsBooked { get; set; }
 
-        [ForeignKey(nameof(AstrologerId))]
-        public virtual AstrologerEntity Astrologer { get; set; } = null!;
+        [ForeignKey(nameof(ScheduleId))]
+        public virtual Schedule Schedule { get; set; } = null!;
     }
 
 }

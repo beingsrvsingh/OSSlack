@@ -16,8 +16,8 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasColumnName("id")
                    .ValueGeneratedOnAdd();
 
-            builder.Property(ts => ts.AstrologerId)
-                   .HasColumnName("astrologer_id")
+            builder.Property(ts => ts.ScheduleId)
+                   .HasColumnName("schedule_id")
                    .IsRequired();
 
             builder.Property(ts => ts.StartUtc)
@@ -33,13 +33,14 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .IsRequired()
                    .HasDefaultValue(false);
 
-            builder.HasOne(ts => ts.Astrologer)
-                   .WithMany(a => a.TimeSlots)
-                   .HasForeignKey(ts => ts.AstrologerId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(ts => ts.Schedule)
+               .WithMany(s => s.TimeSlots)
+               .HasForeignKey(ts => ts.ScheduleId)
+               .HasConstraintName("fk_time_slots_schedule_id")
+               .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(ts => ts.AstrologerId)
-                   .HasDatabaseName("ix_time_slots_astrologer_id");
+            builder.HasIndex(ts => ts.ScheduleId)
+                   .HasDatabaseName("ix_time_slots_schedule_id");            
         }
     }
 

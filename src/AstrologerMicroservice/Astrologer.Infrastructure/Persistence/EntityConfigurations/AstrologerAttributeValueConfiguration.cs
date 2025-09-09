@@ -1,4 +1,4 @@
-﻿using Kathavachak.Domain.Entities;
+﻿using AstrologerMicroservice.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,8 +16,8 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                    .HasColumnName("id")
                    .ValueGeneratedOnAdd();
 
-            builder.Property(aav => aav.AstrologerId)
-                   .HasColumnName("astrologer_id")
+            builder.Property(aav => aav.ExpertiseId)
+                   .HasColumnName("expertise_id")
                    .IsRequired();
 
             builder.Property(aav => aav.CatalogAttributeId)
@@ -51,13 +51,13 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                    .IsRequired();
 
-            builder.HasOne(aav => aav.Astrologer)
+            builder.HasOne(aav => aav.AstrologerExpertise)
                    .WithMany(a => a.AstrologerAttributeValues)
-                   .HasForeignKey(aav => aav.AstrologerId)
+                   .HasForeignKey(aav => aav.ExpertiseId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             // Optional: Add indexes if necessary, e.g. on AstrologerId + CatalogAttributeId
-            builder.HasIndex(aav => new { aav.AstrologerId, aav.CatalogAttributeId })
+            builder.HasIndex(aav => new { aav.ExpertiseId, aav.CatalogAttributeId })
                    .HasDatabaseName("ix_astrologer_attribute_values_astrologer_catalogattribute");
         }
     }

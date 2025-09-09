@@ -1,6 +1,5 @@
 using System.Reflection;
 using AstrologerMicroservice.Domain.Entities;
-using Kathavachak.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 
