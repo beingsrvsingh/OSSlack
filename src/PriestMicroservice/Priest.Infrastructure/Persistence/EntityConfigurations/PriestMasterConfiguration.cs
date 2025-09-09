@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 
 namespace Priest.Infrastructure.Persistence.EntityConfigurations
 {
@@ -8,7 +8,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<PriestMaster> builder)
         {
-            builder.ToTable("priest_master");
+            builder.ToTable("priests");
 
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Id)
@@ -20,12 +20,16 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(36)
                 .IsRequired();
 
-            builder.Property(p => p.DisplayName)
-                .HasColumnName("display_name")
+            builder.Property(p => p.TempleId)
+                .HasColumnName("temple_id")
+                .HasMaxLength(36);
+
+            builder.Property(p => p.Name)
+                .HasColumnName("name")
                 .HasMaxLength(200);
 
-            builder.Property(p => p.ProfilePictureUrl)
-                .HasColumnName("profile_picture_url")
+            builder.Property(p => p.ThumbnailUrl)
+                .HasColumnName("thumbnail_url")
                 .HasMaxLength(500);
 
             builder.Property(p => p.AverageRating)
@@ -43,24 +47,14 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(p => p.CreatedAt)
                 .HasColumnName("created_at")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.Property(p => p.UpdatedAt)
                 .HasColumnName("updated_at");
 
             builder.HasMany(p => p.PriestLanguages).WithOne(l => l.Priest).HasForeignKey(l => l.PriestId).OnDelete(DeleteBehavior.Cascade);;
-            builder.HasMany(p => p.PriestExpertise).WithOne(e => e.Priest).HasForeignKey(e => e.PriestId).OnDelete(DeleteBehavior.Cascade);;
-            builder.HasMany(p => p.ConsultationModes).WithOne(c => c.Priest).HasForeignKey(c => c.PriestId).OnDelete(DeleteBehavior.Cascade);;
-
-            builder.HasMany(p => p.Schedules)
-                .WithOne(s => s.Priest)
-                .HasForeignKey(s => s.PriestId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(p => p.RitualServicePackages)
-                .WithOne(sp => sp.Priest)
-                .HasForeignKey(sp => sp.PriestId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(p => p.PriestExpertise).WithOne(e => e.Priest).HasForeignKey(e => e.PriestId).OnDelete(DeleteBehavior.Cascade);;            
+            builder.HasMany(p => p.Schedules).WithOne(s => s.Priest).HasForeignKey(s => s.PriestId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

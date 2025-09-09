@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Priest.Domain.Entities
+namespace PriestMicroservice.Domain.Entities
 {
     public class PriestLanguage
     {
@@ -11,11 +11,15 @@ namespace Priest.Domain.Entities
         [Required]
         public int PriestId { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Language { get; set; } = null!;
+        public int LanguageId { get; set; }
+
+        public string? LanguageName { get; set; }
 
         [ForeignKey(nameof(PriestId))]
-        public virtual PriestMaster Priest { get; set; } = null!;
+        public PriestMaster Priest { get; set; } = null!;
+
+        [ForeignKey(nameof(LanguageId))]
+        public virtual LanguageMaster Language { get; set; } = null!;
     }
 
 }

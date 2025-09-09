@@ -1,7 +1,7 @@
 ﻿using Priest.Application.Features.Commands;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -25,7 +25,7 @@ namespace Priest.Infrastructure.Services
                 var expertise = new PriestExpertise
                 {
                     PriestId = command.PriestId,
-                    ExpertiseArea = command.ExpertiseArea
+                    Name = command.ExpertiseArea.ToString()
                 };
 
                 await _repository.AddAsync(expertise);
@@ -46,7 +46,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure("Priest expertise not found.");
 
-                existing.ExpertiseArea = command.ExpertiseArea;
+                existing.Name = command.ExpertiseArea.ToString();
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Priest expertise updated successfully.");

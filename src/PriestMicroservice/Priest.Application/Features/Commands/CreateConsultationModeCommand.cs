@@ -6,7 +6,8 @@ namespace Priest.Application.Features.Commands
 {
     public class CreateConsultationModeCommand : IRequest<Result>
     {
-        public int PriestId { get; set; }
+        public int ExpertieseId { get; set; }
+        public int ConsultationModeMasterId { get; set; }
         public ConsultationModeType Mode { get; set; }
     }
 }

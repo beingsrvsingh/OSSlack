@@ -1,7 +1,7 @@
 ﻿using Priest.Application.Features.Commands;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -25,7 +25,7 @@ namespace Priest.Infrastructure.Services
                 var language = new PriestLanguage
                 {
                     PriestId = command.PriestId,
-                    Language = command.Language
+                    LanguageName = command.Language
                 };
 
                 await _repository.AddAsync(language);
@@ -46,7 +46,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure("Priest language not found.");
 
-                existing.Language = command.Language;
+                existing.LanguageName = command.Language;
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Priest language updated successfully.");

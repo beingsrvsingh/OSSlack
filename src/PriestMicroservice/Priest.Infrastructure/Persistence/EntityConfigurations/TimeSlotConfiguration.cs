@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 
 namespace Priest.Infrastructure.Persistence.EntityConfigurations
 {
@@ -13,14 +13,19 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Id).HasColumnName("id");
 
-            builder.Property(t => t.Id).HasColumnName("priest_id").IsRequired();
+            builder.Property(t => t.ScheduleId).HasColumnName("schedule_id").IsRequired();
             builder.Property(t => t.StartTime).HasColumnName("start_time").IsRequired();
             builder.Property(t => t.EndTime).HasColumnName("end_time").IsRequired();
             builder.Property(t => t.IsBooked).HasColumnName("is_booked").HasDefaultValue(false);
 
-            builder.HasOne(t => t.Schedule)
-                   .WithMany(p => p.TimeSlots)
-                   .HasForeignKey(t => t.Id);
+            builder.HasOne(ts => ts.Schedule)
+               .WithMany(s => s.TimeSlots)
+               .HasForeignKey(ts => ts.ScheduleId)
+               .HasConstraintName("fk_time_slots_schedule_id")
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(ts => ts.ScheduleId)
+                   .HasDatabaseName("ix_time_slots_schedule_id");
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Priest.Application.Features.Commands;
 using Priest.Application.Services;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -25,8 +25,8 @@ namespace Priest.Application.Features.EventHandlers.Commands
                 var priest = new PriestMaster
                 {
                     UserId = request.UserId,
-                    DisplayName = request.DisplayName,
-                    ProfilePictureUrl = request.ProfilePictureUrl,
+                    Name = request.DisplayName,
+                    ThumbnailUrl = request.ProfilePictureUrl,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 };

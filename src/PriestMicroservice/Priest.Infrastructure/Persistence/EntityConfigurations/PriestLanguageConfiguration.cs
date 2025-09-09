@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 
 namespace Priest.Infrastructure.Persistence.EntityConfigurations
 {
@@ -10,15 +10,35 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
         {
             builder.ToTable("priest_language");
 
-            builder.HasKey(pl => pl.Id);
-            builder.Property(pl => pl.Id).HasColumnName("id");
+            builder.HasKey(al => al.Id);
 
-            builder.Property(pl => pl.PriestId).HasColumnName("priest_id").IsRequired();
-            builder.Property(pl => pl.Language).HasColumnName("language").HasMaxLength(100).IsRequired();
+            builder.Property(al => al.Id)
+                   .HasColumnName("id");
 
-            builder.HasOne(pl => pl.Priest)
-                   .WithMany(p => p.PriestLanguages)
-                   .HasForeignKey(pl => pl.PriestId);
+            builder.Property(al => al.PriestId)
+                   .HasColumnName("priest_id");
+
+            builder.Property(al => al.LanguageId)
+                   .HasColumnName("language_id");
+
+            builder.Property(al => al.LanguageName)
+                   .HasColumnName("language_name");
+
+            builder.HasOne(al => al.Priest)
+                   .WithMany(a => a.PriestLanguages)
+                   .HasForeignKey(al => al.PriestId)
+                   .HasConstraintName("fk_priest_language_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(al => al.Language)
+                   .WithMany(l => l.PriestLanguages)
+                   .HasForeignKey(al => al.LanguageId)
+                   .HasConstraintName("fk_priest_language_language_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(al => new { al.PriestId, al.LanguageId })
+                   .IsUnique()
+                   .HasDatabaseName("ux_priest_language_priestid_languageid");
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using Priest.Domain.Entities;
+﻿using PriestMicroservice.Domain.Entities;
 using Shared.Domain.Repository;
 
 namespace Priest.Domain.Core.Repository

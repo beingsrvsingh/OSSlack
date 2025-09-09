@@ -32,13 +32,13 @@ namespace Priest.Application.Features.EventHandlers.Queries
                 if (!string.IsNullOrWhiteSpace(request.Language))
                 {
                     filteredPriests = filteredPriests.Where(p =>
-                        p.PriestLanguages.Any(l => l.Language.Equals(request.Language, StringComparison.OrdinalIgnoreCase))
+                        p.PriestLanguages.Any(l => l.LanguageName.Equals(request.Language, StringComparison.OrdinalIgnoreCase))
                     );
                 }
 
-                if (!string.IsNullOrWhiteSpace(request.Expertise) && Enum.TryParse<PriestExpertiseType>(request.Expertise, true, out var expertiseEnum))
+                if (!string.IsNullOrWhiteSpace(request.Expertise))
                 {
-                    filteredPriests = filteredPriests.Where(p => p.PriestExpertise.Any(e => e.ExpertiseArea == expertiseEnum));
+                    filteredPriests = filteredPriests.Where(p => p.PriestExpertise.Any(e => e.Name == request.Expertise));
                 }
 
                 return Result.Success(filteredPriests.ToList());

@@ -1,4 +1,5 @@
-﻿using Priest.Domain.Entities;
+﻿using PriestMicroservice.Domain.Entities;
+using Shared.Application.Contracts;
 
 namespace Priest.Application.Services
 {
@@ -12,7 +13,7 @@ namespace Priest.Application.Services
         Task DeletePriestAsync(int id);
 
         // ConsultationMode
-        Task<IEnumerable<ConsultationMode>> GetConsultationModesByPriestIdAsync(int priestId);
+        Task<IEnumerable<ConsultationMode>> GetConsultationModesByPriestIdAsync(int expertiseId);
 
         // Expertise
         Task<IEnumerable<PriestExpertise>> GetExpertiseByPriestIdAsync(int priestId);
@@ -23,8 +24,6 @@ namespace Priest.Application.Services
         // Schedules & TimeSlots
         Task<IEnumerable<Schedule>> GetSchedulesByPriestIdAsync(int priestId);
         Task<IEnumerable<TimeSlot>> GetTimeSlotsByScheduleIdAsync(int scheduleId);
-
-        // Ritual Services
-        Task<IEnumerable<ServicePackage>> GetRitualPackagesByPriestIdAsync(int priestId);
+        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Priest.Application.Features.Commands;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -37,8 +37,9 @@ namespace Priest.Infrastructure.Services
             {
                 var mode = new ConsultationMode
                 {
-                    PriestId = command.PriestId,
-                    ConsultationModeType = command.Mode
+                    ExpertiseId = command.ExpertieseId,
+                    Mode = command.Mode,
+                    ConsultationModeMasterId = command.ConsultationModeMasterId
                 };
 
                 await _repository.AddAsync(mode);
@@ -59,7 +60,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure("Consultation mode not found.");
 
-                existing.ConsultationModeType = command.Mode;
+                existing.Mode = command.Mode;
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Consultation mode updated successfully.");

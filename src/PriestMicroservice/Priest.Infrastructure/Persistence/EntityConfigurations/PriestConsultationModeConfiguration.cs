@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 
 namespace Priest.Infrastructure.Persistence.EntityConfigurations
 {
@@ -8,17 +8,35 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<ConsultationMode> builder)
         {
-            builder.ToTable("priest_consultation_mode");
+            builder.ToTable("consultation_mode");
 
-            builder.HasKey(c => c.Id);
-            builder.Property(c => c.Id).HasColumnName("id");
+            builder.HasKey(x => x.Id);
 
-            builder.Property(c => c.PriestId).HasColumnName("priest_id").IsRequired();
-            builder.Property(c => c.ConsultationModeType).HasColumnName("mode").IsRequired();
+            builder.Property(x => x.Id)
+                .HasColumnName("id");
 
-            builder.HasOne(c => c.Priest)
-                   .WithMany(p => p.ConsultationModes)
-                   .HasForeignKey(c => c.PriestId);
+            builder.Property(x => x.ExpertiseId)
+                .HasColumnName("expertise_id")
+                .IsRequired();
+
+            builder.Property(x => x.ConsultationModeMasterId)
+                .HasColumnName("consultation_mode_id")
+                .IsRequired();
+
+            builder.Property(x => x.Mode)
+                .HasColumnName("mode")
+                .HasMaxLength(100);
+
+            // Relationships
+            builder.HasOne(x => x.Expertise)
+                .WithMany(e => e.ConsultationModes)
+                .HasForeignKey(x => x.ExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.ConsultationModeMaster)
+                 .WithMany(x => x.ConsultationModes)
+                .HasForeignKey(x => x.ConsultationModeMasterId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 

@@ -2,20 +2,22 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Priest.Domain.Entities.Enums;
 
-namespace Priest.Domain.Entities
+namespace PriestMicroservice.Domain.Entities
 {
     public class ConsultationMode
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public int PriestId { get; set; }
+        public int ExpertiseId { get; set; }
 
-        [Required, MaxLength(100)]
-        public ConsultationModeType ConsultationModeType { get; set; } = ConsultationModeType.None;
+        public int ConsultationModeMasterId { get; set; }
+        public ConsultationModeType Mode { get; set; }
 
-        [ForeignKey(nameof(PriestId))]
-        public virtual PriestMaster Priest { get; set; } = null!;
+        [ForeignKey(nameof(ExpertiseId))]
+        public PriestExpertise Expertise { get; set; } = null!;
+
+        [ForeignKey(nameof(ConsultationModeMasterId))]
+        public virtual ConsultationModeMaster ConsultationModeMaster { get; set; } = null!;
     }
 }

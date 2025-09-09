@@ -25,8 +25,8 @@ namespace Priest.Application.Features.EventHandlers.Commands
                 if (priest == null)
                     return Result.Failure($"Priest with ID {request.Id} not found.");
 
-                priest.DisplayName = request.DisplayName ?? priest.DisplayName;
-                priest.ProfilePictureUrl = request.ProfilePictureUrl ?? priest.ProfilePictureUrl;
+                priest.Name = request.DisplayName ?? priest.Name;
+                priest.ThumbnailUrl = request.ProfilePictureUrl ?? priest.ThumbnailUrl;
                 priest.UpdatedAt = DateTime.UtcNow;
 
                 await _priestService.UpdatePriestAsync(priest);

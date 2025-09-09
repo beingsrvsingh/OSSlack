@@ -1,7 +1,7 @@
 ﻿using Priest.Application.Features.Commands;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 

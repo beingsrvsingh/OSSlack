@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Priest.Domain.Core.Repository;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Infrastructure.Repositories;
 
 namespace Priest.Infrastructure.Persistence.Repository

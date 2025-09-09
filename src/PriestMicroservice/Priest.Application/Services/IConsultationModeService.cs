@@ -1,5 +1,5 @@
 ﻿using Priest.Application.Features.Commands;
-using Priest.Domain.Entities;
+using PriestMicroservice.Domain.Entities;
 using Shared.Utilities.Response;
 
 namespace Priest.Application.Services

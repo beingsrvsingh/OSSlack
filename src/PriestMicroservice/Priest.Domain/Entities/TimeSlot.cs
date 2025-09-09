@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Priest.Domain.Entities
+namespace PriestMicroservice.Domain.Entities
 {
     public class TimeSlot
     {

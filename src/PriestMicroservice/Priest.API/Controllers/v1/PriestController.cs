@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Priest.Application.Features.Commands;
 using Priest.Application.Features.Query;
+using Shared.Utilities.Response;
 
 namespace Priest.API.Controllers.v1
 {
@@ -146,18 +147,29 @@ namespace Priest.API.Controllers.v1
             return Ok(result);
         }
 
-        // Get Ritual Service Packages By Priest ID
-        [HttpGet("{priestId:int}/ritual-packages")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRitualServicePackagesByPriestId(int priestId)
+        /// <summary>
+        /// Search products by query with pagination
+        /// </summary>
+        /// <param name="query">Search keyword</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Page size (default 10)</param>
+        /// <returns>Paginated list of product search results</returns>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
         {
-            var result = await Mediator.Send(new GetRitualServicePackagesByPriestIdQuery { PriestId = priestId });
+            if (string.IsNullOrWhiteSpace(query.Query))
+                return BadRequest("Query parameter is required.");
 
-            if (!result.Succeeded)
-                return NotFound(result);
+            var result = await Mediator.Send(query);
 
-            return Ok(result);
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 }
