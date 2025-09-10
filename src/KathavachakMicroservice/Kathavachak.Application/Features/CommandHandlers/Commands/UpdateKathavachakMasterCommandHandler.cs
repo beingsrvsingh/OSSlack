@@ -29,7 +29,7 @@ namespace Kathavachak.Application.Features.CommandHandlers.Commands
 
                 // Map updated fields
                 existing.Name = request.DisplayName;
-                existing.ProfilePictureUrl = request.ProfilePictureUrl;
+                existing.ThumbnailUrl = request.ProfilePictureUrl;
                 existing.IsActive = request.IsActive;
                 existing.UpdatedAt = DateTime.UtcNow;
 

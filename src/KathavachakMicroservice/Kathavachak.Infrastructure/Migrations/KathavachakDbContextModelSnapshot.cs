@@ -22,6 +22,64 @@ namespace Kathavachak.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakAttributeValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AttributeDataTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_data_type_id");
+
+                    b.Property<string>("AttributeKey")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("attribute_key");
+
+                    b.Property<string>("AttributeLabel")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("attribute_label");
+
+                    b.Property<int?>("CatalogAttributeGroupId")
+                        .HasColumnType("int")
+                        .HasColumnName("catalog_attribute_group_id");
+
+                    b.Property<int>("CatalogAttributeId")
+                        .HasColumnType("int")
+                        .HasColumnName("catalog_attribute_id");
+
+                    b.Property<int>("CatalogAttributeValueId")
+                        .HasColumnType("int")
+                        .HasColumnName("catalog_attribute_value_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    b.Property<int>("ExpertiseId")
+                        .HasColumnType("int")
+                        .HasColumnName("expertise_id");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpertiseId", "CatalogAttributeId")
+                        .HasDatabaseName("ix_kathavachak_attribute_values_kathavachak_catalogattribute");
+
+                    b.ToTable("attribute_values", (string)null);
+                });
+
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakExpertise", b =>
                 {
                     b.Property<int>("Id")
@@ -38,11 +96,27 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.Property<string>("CategoryNameSnapshot")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("cat_snap");
+                        .HasColumnName("category_name_snap");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext")
+                        .HasColumnName("description");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time(6)")
+                        .HasColumnName("duration");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_active");
 
                     b.Property<int>("KathavachakId")
                         .HasColumnType("int")
                         .HasColumnName("kathavachak_id");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)")
+                        .HasColumnName("price");
 
                     b.Property<string>("ProficiencyLevel")
                         .IsRequired()
@@ -56,7 +130,7 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.Property<string>("SubCategoryNameSnapshot")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("subcat_snap");
+                        .HasColumnName("sub_cat_name_snap");
 
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int")
@@ -85,6 +159,11 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.Property<int>("LanguageId")
                         .HasColumnType("int")
                         .HasColumnName("language_id");
+
+                    b.Property<string>("LanguageName")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("language_name");
 
                     b.HasKey("Id");
 
@@ -127,10 +206,10 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("name");
 
-                    b.Property<string>("ProfilePictureUrl")
+                    b.Property<string>("ThumbnailUrl")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)")
-                        .HasColumnName("profile_picture_url");
+                        .HasColumnName("thumbnail_url");
 
                     b.Property<int>("TotalRatings")
                         .ValueGeneratedOnAdd()
@@ -327,9 +406,9 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_booked");
 
-                    b.Property<int>("KathavachakId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("int")
-                        .HasColumnName("kathavachak_id");
+                        .HasColumnName("schedule_id");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time(6)")
@@ -337,7 +416,8 @@ namespace Kathavachak.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KathavachakId");
+                    b.HasIndex("ScheduleId")
+                        .HasDatabaseName("ix_time_slots_schedule_id");
 
                     b.ToTable("kathavachak_time_slot", (string)null);
                 });
@@ -402,6 +482,18 @@ namespace Kathavachak.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("languages", (string)null);
+                });
+
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakAttributeValue", b =>
+                {
+                    b.HasOne("Kathavachak.Domain.Entities.KathavachakExpertise", "Expertise")
+                        .WithMany("KathavachakAttributeValues")
+                        .HasForeignKey("ExpertiseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_kathavachak_attribute_value_expertise_id");
+
+                    b.Navigation("Expertise");
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakExpertise", b =>
@@ -471,13 +563,13 @@ namespace Kathavachak.Infrastructure.Migrations
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakTimeSlot", b =>
                 {
-                    b.HasOne("Kathavachak.Domain.Entities.KathavachakMaster", "Kathavachak")
+                    b.HasOne("Kathavachak.Domain.Entities.KathavachakSchedule", "Schedule")
                         .WithMany("TimeSlots")
-                        .HasForeignKey("KathavachakId")
+                        .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Kathavachak");
+                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakTopic", b =>
@@ -489,6 +581,11 @@ namespace Kathavachak.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Kathavachak");
+                });
+
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakExpertise", b =>
+                {
+                    b.Navigation("KathavachakAttributeValues");
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakMaster", b =>
@@ -503,9 +600,12 @@ namespace Kathavachak.Infrastructure.Migrations
 
                     b.Navigation("SessionModes");
 
-                    b.Navigation("TimeSlots");
-
                     b.Navigation("Topics");
+                });
+
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakSchedule", b =>
+                {
+                    b.Navigation("TimeSlots");
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.LanguageMaster", b =>

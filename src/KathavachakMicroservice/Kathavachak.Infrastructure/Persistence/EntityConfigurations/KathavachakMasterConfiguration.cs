@@ -24,8 +24,8 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("name")
                 .HasMaxLength(200);
 
-            builder.Property(k => k.ProfilePictureUrl)
-                .HasColumnName("profile_picture_url")
+            builder.Property(k => k.ThumbnailUrl)
+                .HasColumnName("thumbnail_url")
                 .HasMaxLength(500);
 
             builder.Property(k => k.AverageRating)
@@ -72,11 +72,6 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.Schedules)
-                .WithOne(e => e.Kathavachak)
-                .HasForeignKey(e => e.KathavachakId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(k => k.TimeSlots)
                 .WithOne(e => e.Kathavachak)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);

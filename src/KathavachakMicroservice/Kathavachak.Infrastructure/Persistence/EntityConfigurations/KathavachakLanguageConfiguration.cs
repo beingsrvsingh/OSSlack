@@ -23,6 +23,10 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("language_id")
                 .IsRequired();
 
+            builder.Property(l => l.LanguageName)
+                .HasColumnName("language_name")
+                .IsRequired();
+
             builder.HasOne(l => l.Kathavachak)
                 .WithMany(k => k.Languages)
                 .HasForeignKey(l => l.KathavachakId)

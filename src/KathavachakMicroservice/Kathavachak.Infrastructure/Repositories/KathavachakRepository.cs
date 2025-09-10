@@ -28,27 +28,27 @@ namespace Kathavachak.Infrastructure.Repositories
                         SELECT 
                             km.id AS Id,
                             km.name AS Name,
-                            km.description AS Description,
+                            ke.description AS Description,
                             km.thumbnail_url AS ThumbnailUrl,
-                            km.price AS Price,
-                            ke.cat_snap AS CatSnap,
-                            ke.subcat_snap AS SubcatSnap,
+                            ke.price AS Price,
+                            ke.category_name_snap AS CatSnap,
+                            ke.sub_cat_name_snap AS SubcatSnap,
                             ke.cat_id AS CategoryId,
                             ke.subcat_id AS SubcategoryId,
                             MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
-                            MATCH(ke.cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
-                            MATCH(ke.subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
+                            MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
+                            MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
                             (
                                 MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
-                                MATCH(ke.cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
-                                MATCH(ke.subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
+                                MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
+                                MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
                             ) AS TotalScore
                         FROM kathavachak_master km
                         LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
                         WHERE 
                             MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(ke.cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(ke.subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                            OR MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                            OR MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE)
                         ORDER BY TotalScore DESC
                         LIMIT {{1}} OFFSET {{2}};";
 
@@ -58,11 +58,12 @@ namespace Kathavachak.Infrastructure.Repositories
 
 
             var countSql = @"
-                            SELECT COUNT(*) FROM product_master
+                            SELECT COUNT(*) FROM kathavachak_master as km
+                            LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
                             WHERE 
                             MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(cat_snap) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(subcat_snap) AGAINST ({0} IN BOOLEAN MODE)";
+                            OR MATCH(ke.category_name_snap) AGAINST ({0} IN BOOLEAN MODE)
+                            OR MATCH(ke.sub_cat_name_snap) AGAINST ({0} IN BOOLEAN MODE)";
 
             var totalCount = await _context.KathavachakSearchRaws
                 .FromSqlRaw(countSql, booleanQuery)

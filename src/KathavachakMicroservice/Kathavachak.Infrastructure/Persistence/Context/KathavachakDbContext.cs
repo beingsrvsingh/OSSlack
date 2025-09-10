@@ -12,6 +12,7 @@ namespace Kathavachak.Infrastructure.Persistence.Context
         { }
 
         public DbSet<KathavachakMaster> KathavachakMasters => Set<KathavachakMaster>();
+        public DbSet<KathavachakAttributeValue> KathavachakAttributeValues => Set<KathavachakAttributeValue>();
         public DbSet<KathavachakExpertise> KathavachakCategories => Set<KathavachakExpertise>();
         public DbSet<KathavachakLanguage> KathavachakLanguages => Set<KathavachakLanguage>();
         public DbSet<KathavachakTopic> KathavachakTopics => Set<KathavachakTopic>();

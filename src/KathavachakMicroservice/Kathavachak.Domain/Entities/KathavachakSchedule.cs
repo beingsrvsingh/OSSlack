@@ -19,6 +19,8 @@ namespace Kathavachak.Domain.Entities
 
         [ForeignKey(nameof(KathavachakId))]
         public virtual KathavachakMaster Kathavachak { get; set; } = null!;
+
+        public ICollection<KathavachakTimeSlot> TimeSlots { get; set; } = new List<KathavachakTimeSlot>();
     }
 
 }

@@ -14,7 +14,7 @@ namespace Kathavachak.Domain.Entities
         public string? Name { get; set; }
 
         [MaxLength(500)]
-        public string? ProfilePictureUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
 
         [Column(TypeName = "decimal(3,2)")]
         public decimal AverageRating { get; set; } = 0m;
@@ -25,14 +25,12 @@ namespace Kathavachak.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
-        // Navigation
-        public ICollection<KathavachakAttributeValue> KathavachakAttributeValues { get; set; } = new List<KathavachakAttributeValue>();
+        // Navigation        
         public ICollection<KathavachakExpertise> Expertises { get; set; } = new List<KathavachakExpertise>();
         public ICollection<KathavachakLanguage> Languages { get; set; } = new List<KathavachakLanguage>();
         public ICollection<KathavachakTopic> Topics { get; set; } = new List<KathavachakTopic>();
         public ICollection<KathavachakSessionMode> SessionModes { get; set; } = new List<KathavachakSessionMode>();
-        public ICollection<KathavachakSchedule> Schedules { get; set; } = new List<KathavachakSchedule>();
-        public ICollection<KathavachakTimeSlot> TimeSlots { get; set; } = new List<KathavachakTimeSlot>();
+        public ICollection<KathavachakSchedule> Schedules { get; set; } = new List<KathavachakSchedule>();        
         public ICollection<KathavachakMedia> Media { get; set; } = new List<KathavachakMedia>();
     }
 

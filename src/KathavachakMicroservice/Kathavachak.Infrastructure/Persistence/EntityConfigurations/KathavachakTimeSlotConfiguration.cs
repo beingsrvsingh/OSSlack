@@ -15,8 +15,8 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
             builder.Property(t => t.Id)
                 .HasColumnName("id");
 
-            builder.Property(t => t.KathavachakId)
-                .HasColumnName("kathavachak_id")
+            builder.Property(t => t.ScheduleId)
+                .HasColumnName("schedule_id")
                 .IsRequired();
 
             builder.Property(t => t.StartTime)
@@ -35,10 +35,13 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_booked")
                 .HasDefaultValue(false);
 
-            builder.HasOne(t => t.Kathavachak)
+            builder.HasOne(t => t.Schedule)
                 .WithMany(k => k.TimeSlots)
-                .HasForeignKey(t => t.KathavachakId)
+                .HasForeignKey(t => t.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(ts => ts.ScheduleId)
+                   .HasDatabaseName("ix_time_slots_schedule_id");
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Kathavachak.Domain.Entities
         [Key]
         public int Id { get; set; }
 
-        public int KathavachakId { get; set; }
+        public int ScheduleId { get; set; }
 
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
@@ -17,8 +17,8 @@ namespace Kathavachak.Domain.Entities
 
         public bool IsBooked { get; set; }
 
-        [ForeignKey(nameof(KathavachakId))]
-        public virtual KathavachakMaster Kathavachak { get; set; } = null!;
+        [ForeignKey(nameof(ScheduleId))]
+        public virtual KathavachakSchedule Schedule { get; set; } = null!;
     }
 
 }
