@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Temple.Application\Temple.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

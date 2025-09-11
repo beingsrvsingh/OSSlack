@@ -8,64 +8,62 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<TempleMaster> builder)
         {
-            builder.ToTable("TempleMaster");
+            builder.ToTable("temple_master");
 
             builder.HasKey(t => t.Id);
 
+            builder.Property(t => t.Id)
+                .HasColumnName("id");
+
             builder.Property(t => t.LocationId)
                 .IsRequired()
-                .HasColumnName("location_id")
-                .HasMaxLength(100);
+                .HasColumnName("location_id");
 
             builder.Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .HasColumnName("name");
 
             builder.Property(t => t.Description)
-                .HasMaxLength(1000);
+                .HasMaxLength(1000)
+                .HasColumnName("description");
 
             builder.Property(t => t.ImageUrl)
-                .HasMaxLength(300);
+                .HasMaxLength(300)
+                .HasColumnName("thumbnail_url");
 
             builder.Property(t => t.IsActive)
-                .HasDefaultValue(true);
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
 
             builder.Property(t => t.CreatedAt)
-                .HasDefaultValueSql("TIMESTAMP(6)");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
 
-            // Relationships - optional, if navigation props used
-            builder.HasMany(t => t.TemplePoojas)
-                .WithOne(tp => tp.TempleMaster)
-                .HasForeignKey(tp => tp.TempleId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(t => t.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("updated_at");
 
-            builder.HasMany(t => t.Donations)
-                .WithOne()
-                .HasForeignKey(d => d.TempleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(t => t.Prasads)
-                .WithOne()
-                .HasForeignKey(p => p.TempleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(t => t.Aartis)
-                .WithOne()
-                .HasForeignKey(a => a.TempleId)
+            // Relationships
+            builder.HasMany(t => t.TempleExpertises)
+                .WithOne(te => te.Temple)
+                .HasForeignKey(te => te.TempleId)
+                .HasConstraintName("fk_temple_expertises_temple_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(t => t.TempleSchedules)
                 .WithOne(ts => ts.TempleMaster)
                 .HasForeignKey(ts => ts.TempleMasterId)
+                .HasConstraintName("fk_temple_schedules_temple_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(t => t.TempleExceptions)
                 .WithOne(te => te.TempleMaster)
                 .HasForeignKey(te => te.TempleMasterId)
+                .HasConstraintName("fk_temple_exceptions_temple_id")
                 .OnDelete(DeleteBehavior.Cascade);
-
-
         }
+
     }
 
 }

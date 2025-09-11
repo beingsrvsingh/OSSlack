@@ -23,7 +23,12 @@ namespace Temple.Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
+        [MaxLength(100)]
+        public string? Reason { get; set; }
+
         [ForeignKey(nameof(TempleMasterId))]
         public virtual TempleMaster TempleMaster { get; set; } = null!;
+
+        public virtual ICollection<TempleTimeSlot> TimeSlots { get; set; } = new List<TempleTimeSlot>();
     }
 }

@@ -1,6 +1,7 @@
 using System.Reflection;
 using Temple.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using TempleMicroservice.Domain.Entities;
 
 
 namespace Temple.Infrastructure.Persistence.Context
@@ -11,24 +12,20 @@ namespace Temple.Infrastructure.Persistence.Context
         { }
 
         public DbSet<TempleMaster> TempleMasters => Set<TempleMaster>();
-        public DbSet<TempleLocalizedText> TempleLocalizedTexts => Set<TempleLocalizedText>();
-
+        public DbSet<TempleExpertise> TempleExpertises => Set<TempleExpertise>();
+        public DbSet<AttributeValue> AttributeValues => Set<AttributeValue>();
         public DbSet<TempleSchedule> TempleSchedules => Set<TempleSchedule>();
         public DbSet<TempleException> TempleExceptions => Set<TempleException>();
-        public DbSet<TemplePooja> TemplePoojas => Set<TemplePooja>();
-        public DbSet<TemplePrasad> Prasads => Set<TemplePrasad>();
-        public DbSet<TempleDonation> Donations => Set<TempleDonation>();
-        public DbSet<TempleAarti> Aartis => Set<TempleAarti>();
-        public DbSet<TemplePoojaLocalizedText> TemplePoojaLocalizedTexts => Set<TemplePoojaLocalizedText>();
-        public DbSet<TemplePrasadLocalizedText> TemplePrasadLocalizedTexts => Set<TemplePrasadLocalizedText>();
-        public DbSet<TempleAartiLocalizedText> TempleAartiLocalizedTexts => Set<TempleAartiLocalizedText>();
-        public DbSet<TempleDonationLocalizedText> TempleDonationLocalizedTexts => Set<TempleDonationLocalizedText>();
-
+        public DbSet<TempleTimeSlot> TempleTimeSlots => Set<TempleTimeSlot>();
+        public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<SearchRaw>()
+            .HasNoKey()
+            .ToView(null);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

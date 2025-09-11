@@ -6,7 +6,7 @@ namespace Temple.Domain.Entities
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public int LocationId { get; set; }
 
@@ -25,13 +25,9 @@ namespace Temple.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation properties if needed
-        public virtual ICollection<TemplePooja> TemplePoojas { get; set; } = new List<TemplePooja>();
-        public virtual ICollection<TempleDonation> Donations { get; set; } = new List<TempleDonation>();
-        public virtual ICollection<TemplePrasad> Prasads { get; set; } = new List<TemplePrasad>();
-        public virtual ICollection<TempleAarti> Aartis { get; set; } = new List<TempleAarti>();
+        public virtual ICollection<TempleExpertise> TempleExpertises { get; set; } = new List<TempleExpertise>();
         public virtual ICollection<TempleSchedule> TempleSchedules { get; set; } = new List<TempleSchedule>();
         public virtual ICollection<TempleException> TempleExceptions { get; set; } = new List<TempleException>();
-        public ICollection<TempleLocalizedText> Localizations { get; set; } = new List<TempleLocalizedText>();
 
     }
 }

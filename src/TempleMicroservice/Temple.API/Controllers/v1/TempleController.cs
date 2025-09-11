@@ -1,5 +1,6 @@
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Utilities.Response;
 using Temple.Application.Features.Commands;
 using Temple.Application.Features.Queries;
 
@@ -72,6 +73,31 @@ namespace Temple.API.Controllers.v1
                 return Conflict(result);
 
             return Ok(new { Message = "Temple master deleted successfully." });
+        }
+
+        /// <summary>
+        /// Search products by query with pagination
+        /// </summary>
+        /// <param name="query">Search keyword</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Page size (default 10)</param>
+        /// <returns>Paginated list of product search results</returns>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
+        {
+            if (string.IsNullOrWhiteSpace(query.Query))
+                return BadRequest("Query parameter is required.");
+
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 }
