@@ -245,7 +245,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                     Score = products.FirstOrDefault()?.Score ?? 0,
                     MatchType = matchType,
                     EnableFilters = enableFilters,
-                    Source = "Product"
+                    Source = "Astrologer"
                 };
             }
             catch (Exception ex)
@@ -259,7 +259,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                     Score = 0,
                     MatchType = "Partial",
                     EnableFilters = false,
-                    Source = "Product"
+                    Source = "Astrologer"
                 };
             }
         }

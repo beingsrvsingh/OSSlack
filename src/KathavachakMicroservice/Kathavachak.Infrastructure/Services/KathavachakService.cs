@@ -137,7 +137,7 @@ namespace Kathavachak.Infrastructure.Services
                     Score = products.FirstOrDefault()?.Score ?? 0,
                     MatchType = matchType,
                     EnableFilters = enableFilters,
-                    Source = "Product"
+                    Source = "Kathavachak"
                 };
             }
             catch (Exception ex)
@@ -151,7 +151,7 @@ namespace Kathavachak.Infrastructure.Services
                     Score = 0,
                     MatchType = "Partial",
                     EnableFilters = false,
-                    Source = "Product"
+                    Source = "Kathavachak"
                 };
             }
         }
