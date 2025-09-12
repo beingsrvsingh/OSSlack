@@ -1,6 +1,7 @@
 ﻿using SearchAggregator.Application.Clients;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Response;
 using System.Net.Http.Json;
 
 namespace SearchAggregator.Infrastructure.Clients
@@ -23,18 +24,18 @@ namespace SearchAggregator.Infrastructure.Clients
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<SearchResultDto>(
-                    $"api/search?query={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
+                var response = await _httpClient.GetFromJsonAsync<Result<SearchResultDto>>(
+                    $"priest/search?q={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
                     cancellationToken
                 );
 
-                if (response == null)
+                if (response == null || response.Data is null)
                 {
                     _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
                     return new SearchResultDto(); // Return empty result
                 }
 
-                return response;
+                return response.Data;
             }
             catch (Exception ex)
             {

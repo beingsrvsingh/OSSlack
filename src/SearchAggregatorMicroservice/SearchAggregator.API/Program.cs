@@ -59,11 +59,29 @@ builder.Services.AddHttpClient<IProductClient, ProductClient>(client =>
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
-//builder.Services.AddHttpClient<IPriestClient, PriestClient>(client =>
-//{
-//    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
-//    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
-//});
+builder.Services.AddHttpClient<IAstrologerClient, AstrologerClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Astrologer-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IPriestClient, PriestClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Priest-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<ITempleClient, TempleClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Temple-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IKathavachakClient, KathavachakClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Kathavachak-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
 
 var app = builder.Build();
 

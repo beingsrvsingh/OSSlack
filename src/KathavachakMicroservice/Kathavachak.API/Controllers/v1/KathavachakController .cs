@@ -6,6 +6,7 @@ using Shared.Utilities.Response;
 
 namespace Kathavachak.API.Controllers.v1
 {
+    [Route("api/v{version:apiVersion}/kathavachak")]
     public class KathavachakMasterController : BaseController
     {
         [HttpPost("create")]

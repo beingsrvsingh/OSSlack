@@ -1,6 +1,7 @@
 ﻿using SearchAggregator.Application.Clients;
-using SearchAggregator.Application.Contracts;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
+using Shared.Utilities.Response;
 using System.Net.Http.Json;
 
 namespace SearchAggregator.Infrastructure.Clients
@@ -19,22 +20,22 @@ namespace SearchAggregator.Infrastructure.Clients
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<TempleSearchResult> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<TempleSearchResult>(
-                    $"api/search?query={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
+                var response = await _httpClient.GetFromJsonAsync<Result<SearchResultDto>>(
+                    $"temple/search?q={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
                     cancellationToken
                 );
 
-                if (response == null)
+                if (response == null || response.Data is null)
                 {
                     _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
-                    return new TempleSearchResult(); // Return empty result
+                    return new SearchResultDto(); // Return empty result
                 }
 
-                return response;
+                return response.Data;
             }
             catch (Exception ex)
             {

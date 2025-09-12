@@ -152,14 +152,16 @@ namespace Product.Infrastructure.Repositories
                             subcat_snap AS SubcatSnap,
                             category_id AS CategoryId,
                             subcategory_id AS SubcategoryId,
-                            MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
-                            MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
-                            MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
+
+                            LEAST(ROUND(IFNULL(MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
+                            LEAST(ROUND(IFNULL(MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
+                            LEAST(ROUND(IFNULL(MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
                             (
-                                MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
-                                MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
-                                MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
+                                LEAST(ROUND(IFNULL(MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
+                                LEAST(ROUND(IFNULL(MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
+                                LEAST(ROUND(IFNULL(MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
                             ) AS TotalScore
+
                         FROM product_master
                         WHERE 
                             MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)

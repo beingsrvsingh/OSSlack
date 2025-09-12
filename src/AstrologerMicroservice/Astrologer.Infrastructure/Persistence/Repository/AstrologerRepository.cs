@@ -63,16 +63,16 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
                             ae.category_id AS CategoryId,
                             ae.sub_category_id AS SubcategoryId,
 
-                            MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
-                            MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE) AS PackageNameScore,
-                            MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
-                            MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
+                            LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
+                            LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS PackageNameScore,
+                            LEAST(ROUND(IFNULL(MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
+                            LEAST(ROUND(IFNULL(MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
 
                             (
-                                MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
-                                MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
-                                MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
-                                MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
+                                LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
+                                LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
+                                LEAST(ROUND(IFNULL(MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
+                                LEAST(ROUND(IFNULL(MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
                             ) AS TotalScore
 
                         FROM astrologers a

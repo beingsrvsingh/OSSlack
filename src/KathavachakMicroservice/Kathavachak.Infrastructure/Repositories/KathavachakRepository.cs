@@ -35,20 +35,24 @@ namespace Kathavachak.Infrastructure.Repositories
                             ke.sub_cat_name_snap AS SubcatSnap,
                             ke.cat_id AS CategoryId,
                             ke.subcat_id AS SubcategoryId,
-                            MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE) AS NameScore,
-                            MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS CatScore,
-                            MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) AS SubcatScore,
+
+                            LEAST(ROUND(IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
+                            LEAST(ROUND(IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
+                            LEAST(ROUND(IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
                             (
-                                MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE) * 3 +
-                                MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 2 +
-                                MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) * 1
+                                LEAST(ROUND(IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
+                                LEAST(ROUND(IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
+                                LEAST(ROUND(IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
                             ) AS TotalScore
+
                         FROM kathavachak_master km
                         LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
+
                         WHERE 
-                            MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE)
+                            IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0 OR
+                            IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0 OR
+                            IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0
+
                         ORDER BY TotalScore DESC
                         LIMIT {{1}} OFFSET {{2}};";
 
@@ -61,7 +65,7 @@ namespace Kathavachak.Infrastructure.Repositories
                             SELECT COUNT(*) FROM kathavachak_master as km
                             LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
                             WHERE 
-                            MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
+                            MATCH(km.name) AGAINST ({0} IN BOOLEAN MODE)
                             OR MATCH(ke.category_name_snap) AGAINST ({0} IN BOOLEAN MODE)
                             OR MATCH(ke.sub_cat_name_snap) AGAINST ({0} IN BOOLEAN MODE)";
 

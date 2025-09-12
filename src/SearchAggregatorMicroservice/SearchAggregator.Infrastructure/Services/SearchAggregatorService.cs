@@ -12,6 +12,8 @@ namespace SearchAggregator.Infrastructure.Services
         private readonly IProductClient _productClient;
         private readonly IPriestClient _priestClient;
         private readonly IAstrologerClient _astrologerClient;
+        private readonly ITempleClient _templeClient;
+        private readonly IKathavachakClient _kathavachakClient;
         private readonly ILogger<SearchAggregatorService> _logger;
 
         private const float ExactMatchThreshold = 0.9f;
@@ -20,11 +22,15 @@ namespace SearchAggregator.Infrastructure.Services
             IProductClient productClient,
             IPriestClient priestClient,
             IAstrologerClient astrologerClient,
+            ITempleClient templeClient,
+            IKathavachakClient kathavachakClient,
             ILogger<SearchAggregatorService> logger)
         {
             _productClient = productClient;
             _priestClient = priestClient;
+            _templeClient = templeClient;
             _astrologerClient = astrologerClient;
+            _kathavachakClient = kathavachakClient;
             _logger = logger;
         }
 
@@ -33,65 +39,50 @@ namespace SearchAggregator.Infrastructure.Services
             var aggregatedResults = new List<AggregatedSearchResultDto>();
             bool directMatchFound = false;
 
-            // Step 1: Try Product MS for exact matches
-            var productResult = await SafeProductSearchAsync(query, page, pageSize, cancellationToken);
-            if (HasExactMatch(productResult))
-            {
-                directMatchFound = true;
-                aggregatedResults.AddRange(MapToSearchResult(productResult));
-            }
+            // Step 1: Try all MSs in parallel for exact match
+            var productTask = SafeProductSearchAsync(query, page, pageSize, cancellationToken);
+            var priestTask = SafePriestSearchAsync(query, page, pageSize, cancellationToken);
+            var astrologerTask = SafeAstrologerSearchAsync(query, page, pageSize, cancellationToken);
+            var templeTask = SafeTempleSearchAsync(query, page, pageSize, cancellationToken);
+            var kathavachakTask = SafeKathavachakSearchAsync(query, page, pageSize, cancellationToken);
 
-            // Step 2: If no direct product exact match, try Priest MS
-            if (!directMatchFound)
+            await Task.WhenAll(productTask, priestTask, astrologerTask, templeTask);
+
+            var results = new[] { productTask.Result, priestTask.Result, astrologerTask.Result, templeTask.Result, kathavachakTask.Result };
+
+            foreach (var result in results)
             {
-                var priestResult = await SafePriestSearchAsync(query, page, pageSize, cancellationToken);
-                if (HasExactMatch(priestResult))
+                if (HasExactMatch(result))
                 {
                     directMatchFound = true;
-                    aggregatedResults.AddRange(MapToSearchResult(priestResult));
+                    aggregatedResults.AddRange(MapToSearchResult(result));
                 }
             }
 
-            // Step 3: If still no exact match, do category/subcategory partial search in all MS concurrently
+            // Step 2: If no exact match, include all partial results
             if (!directMatchFound)
             {
-                var productTask = SafeProductSearchAsync(query, page, pageSize, cancellationToken);
-                var priestTask = SafePriestSearchAsync(query, page, pageSize, cancellationToken);
-                var astrologerTask = SafeAstrologerSearchAsync(query, page, pageSize, cancellationToken);
-
-                await Task.WhenAll(productTask, priestTask, astrologerTask);
-
-                if (productTask.Result != null)
-                    aggregatedResults.AddRange(MapToSearchResult(productTask.Result));
-                if (priestTask.Result != null)
-                    aggregatedResults.AddRange(MapToSearchResult(priestTask.Result));
-                if (astrologerTask.Result != null)
-                    aggregatedResults.AddRange(MapToSearchResult(astrologerTask.Result));
+                foreach (var result in results)
+                {
+                    if (result != null)
+                        aggregatedResults.AddRange(MapToSearchResult(result));
+                }
             }
 
-            // Order by Score descending (customize if needed)
+            // Step 3: Order and paginate
             var orderedResults = aggregatedResults
                 .OrderByDescending(r => r.Score)
                 .ToList();
 
-            // Manual pagination after aggregation
             var pagedResults = orderedResults
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Determine FilterMetadata based on aggregatedResults
-            var enableFilter = aggregatedResults.Any(r => r.EnableFilter);
-
-            // Extract first non-null category/subcategory for filter metadata if filter is enabled
-            int? categoryId = null;
-            int? subcategoryId = null;
-
-            if (enableFilter)
-            {
-                categoryId = aggregatedResults.FirstOrDefault(r => r.CategoryId != 0)?.CategoryId ?? 0;
-                subcategoryId = aggregatedResults.FirstOrDefault(r => r.SubcategoryId != 0)?.SubcategoryId ?? 0;
-            }
+            // Step 4: Filter metadata
+            bool enableFilter = aggregatedResults.Any(r => r.EnableFilter);
+            int? categoryId = enableFilter ? aggregatedResults.FirstOrDefault(r => r.CategoryId != 0)?.CategoryId ?? 0 : null;
+            int? subcategoryId = enableFilter ? aggregatedResults.FirstOrDefault(r => r.SubcategoryId != 0)?.SubcategoryId ?? 0 : null;
 
             return new SearchResponse
             {
@@ -152,6 +143,36 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Astrologer search failed");
+                return null;
+            }
+        }
+
+        private async Task<SearchResultDto?> SafeTempleSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _templeClient.SearchAsync(query, page, pageSize, cancellationToken);
+                if (result != null) result.Source = "Temple";
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Temple search failed");
+                return null;
+            }
+        }
+
+        private async Task<SearchResultDto?> SafeKathavachakSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _kathavachakClient.SearchAsync(query, page, pageSize, cancellationToken);
+                if (result != null) result.Source = "Kathavachak";
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Temple search failed");
                 return null;
             }
         }
