@@ -2,7 +2,7 @@
 
 namespace PriestMicroservice.Domain.Entities
 {
-    public class SearchRaw : BaseSearchRaw
+    public class SearchRaw : BaseSearchRaw<AttributeValue>
     {
     }
 }

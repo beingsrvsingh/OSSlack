@@ -14,7 +14,7 @@ namespace Product.Application.Services
         Task<IEnumerable<ProductTagMaster>> GetTagsAsync(int productId);
         Task<ProductSEOInfoMaster?> GetSEOInfoAsync(int productId);
         Task<ProductMaster?> GetProductByIdAsync(int id);
-        Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int cid);
+        Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int? cid);
         Task<bool> AddProductAsync(ProductMaster product);
         Task<bool> UpdateProductAsync(ProductMaster product);
         Task<bool> DeleteProductAsync(int productId);
@@ -26,7 +26,7 @@ namespace Product.Application.Services
         string? sortBy = null,
         bool sortDescending = false);
 
-        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 
 }

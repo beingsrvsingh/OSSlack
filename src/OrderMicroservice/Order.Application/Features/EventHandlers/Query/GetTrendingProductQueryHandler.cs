@@ -6,17 +6,17 @@ using Shared.Utilities.Response;
 
 namespace Order.Application.Features.EventHandlers.Query
 {
-    public class GetHighlightTrendingProductQueryHandler : IRequestHandler<GetHighlightTrendingProductQuery, Result>
+    public class GetTrendingProductQueryHandler : IRequestHandler<GetTrendingProductQuery, Result>
     {
-        private readonly ILoggerService<GetHighlightTrendingProductQueryHandler> logger;
+        private readonly ILoggerService<GetTrendingProductQueryHandler> logger;
         private readonly IOrderItemService orderItemService;
 
-        public GetHighlightTrendingProductQueryHandler(ILoggerService<GetHighlightTrendingProductQueryHandler> logger, IOrderItemService orderItemService){
+        public GetTrendingProductQueryHandler(ILoggerService<GetTrendingProductQueryHandler> logger, IOrderItemService orderItemService){
             this.logger = logger;
             this.orderItemService = orderItemService;
         }
 
-        public async Task<Result> Handle(GetHighlightTrendingProductQuery request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetTrendingProductQuery request, CancellationToken cancellationToken)
         {
             var result = await orderItemService.GetTrendingProductsByCategoryAsync(request.Cid, request.Records);
             if (result is null)

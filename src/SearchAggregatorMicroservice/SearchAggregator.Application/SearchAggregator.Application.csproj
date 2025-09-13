@@ -18,8 +18,4 @@
 		<ProjectReference Include="..\SearchAggregator.Domain\SearchAggregator.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Features\Query\" />
-	</ItemGroup>
-
 </Project>

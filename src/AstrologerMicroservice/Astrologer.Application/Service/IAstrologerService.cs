@@ -14,6 +14,6 @@ namespace AstrologerMicroservice.Application.Service
         Task<bool> CreateAsync(CreateAstrologerCommand command);
         Task<bool> UpdateAsync(UpdateAstrologerCommand command);
         Task<bool> DeleteAsync(int astrologerId);
-        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

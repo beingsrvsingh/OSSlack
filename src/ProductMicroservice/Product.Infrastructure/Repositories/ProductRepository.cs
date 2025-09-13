@@ -3,6 +3,7 @@ using MySqlConnector;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
 using Product.Infrastructure.Persistence.Context;
+using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 using System.Linq.Expressions;
 
@@ -78,9 +79,18 @@ namespace Product.Infrastructure.Repositories
             return await query.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int cid)
+        public async Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int? cid)
         {
-            return await _context.ProductMasters.Where(p => pids.Contains(p.Id) && p.CategoryId == cid).ToListAsync();
+            var query = _context.ProductMasters.AsQueryable();
+
+            query = query.Where(p => pids.Contains(p.Id));
+
+            if (cid.HasValue && cid.Value != 0)
+            {
+                query = query.Where(p => p.CategoryId == cid.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<List<ProductFilterRawResult>> GetFilteredProductsRawAsync(
@@ -143,15 +153,22 @@ namespace Product.Infrastructure.Repositories
 
             var sql = $@"
                         SELECT 
-                            Id, 
+                            p.Id, 
                             Name, 
                             Description, 
                             thumbnail_url AS ThumbnailUrl, 
                             Price,
-                            cat_snap AS CatSnap, 
-                            subcat_snap AS SubcatSnap,
+                            cat_snap AS CategoryNameSnapshot, 
+                            subcat_snap AS SubCategoryNameSnapshot,
                             category_id AS CategoryId,
                             subcategory_id AS SubcategoryId,
+
+                            pe.catalog_attribute_id as CatalogAttributeId,
+                            pe.cat_attr_val_id as CatalogAttributeValueId,
+                            pe.value as CatalogAttributeValue,
+                            pe.attribute_key as CatalogAttributeKey,
+                            pe.attribute_label as CatalogAttributeLabel,
+                            pe.attribute_datatype_id as CatalogAttributeDatatype,
 
                             LEAST(ROUND(IFNULL(MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
                             LEAST(ROUND(IFNULL(MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
@@ -162,7 +179,8 @@ namespace Product.Infrastructure.Repositories
                                 LEAST(ROUND(IFNULL(MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
                             ) AS TotalScore
 
-                        FROM product_master
+                        FROM product_master p
+                        LEFT JOIN product_attribute_value pe ON p.id = pe.product_id
                         WHERE 
                             MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)
                             OR MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
@@ -174,8 +192,32 @@ namespace Product.Infrastructure.Repositories
                 .FromSqlRaw(sql, booleanQuery, pageSize, skip)
                 .ToListAsync(cancellationToken);
 
+            var groupedResults = products
+                                .GroupBy(p => p.Id)
+                                .Select(g =>
+                                {
+                                    var product = g.First();
+
+                                    product.AttributeValues = g
+                                        .Where(x => x.CatalogAttributeId.HasValue)
+                                        .Select(x => new BaseAttributeValue
+                                        {
+                                            CatalogAttributeId = x.CatalogAttributeId ?? 0,
+                                            CatalogAttributeValueId = x.CatalogAttributeValueId ?? 0,
+                                            Value = x.CatalogAttributeValue,
+                                            AttributeKey = x.CatalogAttributeKey,
+                                            AttributeLabel = x.CatalogAttributeLabel,
+                                            AttributeDataTypeId = x.CatalogAttributeDatatype ?? 0
+                                        })
+                                        .ToList();
+
+                                    return product;
+                                })
+                                .ToList();
+
             var countSql = @"
-                            SELECT COUNT(*) FROM product_master
+                            SELECT COUNT(*) FROM product_master p
+                            LEFT JOIN product_attribute_value pe ON p.id = pe.product_id
                             WHERE 
                             MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
                             OR MATCH(cat_snap) AGAINST ({0} IN BOOLEAN MODE)
@@ -185,7 +227,7 @@ namespace Product.Infrastructure.Repositories
                 .FromSqlRaw(countSql, booleanQuery)
                 .CountAsync(cancellationToken);
 
-            return (products, totalCount);
+            return (groupedResults, totalCount);
         }
     }
 

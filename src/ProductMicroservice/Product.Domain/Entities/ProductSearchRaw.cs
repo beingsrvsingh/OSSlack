@@ -2,7 +2,7 @@
 
 namespace Product.Domain.Entities
 {
-    public class ProductSearchRaw : BaseSearchRaw
+    public class ProductSearchRaw : BaseSearchRaw<ProductAttributeValue>
     {
     }
 }

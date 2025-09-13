@@ -2,7 +2,7 @@
 
 namespace Kathavachak.Domain.Entities
 {
-    public class KathavachakSearchRaw : BaseSearchRaw
+    public class KathavachakSearchRaw : BaseSearchRaw<KathavachakAttributeValue>
     {
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 using Temple.Domain.Entities;
 using Temple.Domain.Repositories;
@@ -51,8 +52,15 @@ namespace Temple.Infrastructure.Persistence.Repository
                             a.thumbnail_url AS ThumbnailUrl,
                             ae.price AS Price,
 
-                            ae.category_name_snapshot AS CatSnap,
-                            ae.sub_category_name_snapshot AS SubcatSnap,
+                            1 AS CatalogAttributeId,
+                            1 AS CatalogAttributeValueId,
+                            'Test' AS CatalogAttributeValue,
+                            'test' AS CatalogAttributeKey,
+                            'test' AS CatalogAttributeLabel,
+                            1 AS CatalogAttributeDatatype;
+
+                            ae.category_name_snapshot AS CategoryNameSnapshot,
+                            ae.sub_category_name_snapshot AS SubCategoryNameSnapshot,
                             ae.category_id AS CategoryId,
                             ae.sub_category_id AS SubcategoryId,
 
@@ -86,6 +94,29 @@ namespace Temple.Infrastructure.Persistence.Repository
                 .FromSqlRaw(sql, booleanQuery, pageSize, skip)
                 .ToListAsync(cancellationToken);
 
+            var groupedResults = products
+                                .GroupBy(p => p.Id)
+                                .Select(g =>
+                                {
+                                    var product = g.First();
+
+                                    product.AttributeValues = g
+                                        .Where(x => x.CatalogAttributeId.HasValue)
+                                        .Select(x => new BaseAttributeValue
+                                        {
+                                            CatalogAttributeId = x.CatalogAttributeId ?? 0,
+                                            CatalogAttributeValueId = x.CatalogAttributeValueId ?? 0,
+                                            Value = x.CatalogAttributeValue,
+                                            AttributeKey = x.CatalogAttributeKey,
+                                            AttributeLabel = x.CatalogAttributeLabel,
+                                            AttributeDataTypeId = x.CatalogAttributeDatatype ?? 0
+                                        })
+                                        .ToList();
+
+                                    return product;
+                                })
+                                .ToList();
+
 
             var countSql = @"
                             SELECT COUNT(*) FROM temple_master a
@@ -100,7 +131,7 @@ namespace Temple.Infrastructure.Persistence.Repository
                 .FromSqlRaw(countSql, booleanQuery)
                 .CountAsync(cancellationToken);
 
-            return (products, totalCount);
+            return (groupedResults, totalCount);
         }
     }
 }

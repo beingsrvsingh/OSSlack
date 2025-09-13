@@ -29,8 +29,12 @@ namespace Product.Application.Features.EventHandlers.Query
             {
                 Id = p.Id,
                 CategoryId = p.CategoryId,
+                SubCategoryId = p.SubCategoryId,
                 ImageUrl = p.ThumbnailUrl,
-                Name = p.Name
+                Cost = (double)p.Price,
+                Name = p.Name,
+                Rating = p.Rating,
+                Reviews = p.Reviews
             }));
 
             return Result.Success(dtos);

@@ -1,8 +1,11 @@
 ﻿using BaseApi;
 using Microsoft.AspNetCore.Mvc;
-using SearchAggregator.Application.Features.Query;
 using SearchAggregator.Application.Contracts;
+using SearchAggregator.Application.Contracts.Dtos;
+using SearchAggregator.Application.Features.Command;
+using SearchAggregator.Application.Features.Query;
 using SearchAggregator.Application.Services;
+using SearchAggregator.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
 
 namespace SearchAggregator.API.Controllers.v1
@@ -16,6 +19,25 @@ namespace SearchAggregator.API.Controllers.v1
         {
             _searchService = searchService;
             _logger = logger;
+        }
+
+        [HttpPost("add")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddUserSearchHistory([FromBody] AddSearchUserHistoryCommand request)
+        {
+            if (string.IsNullOrWhiteSpace(request.UserId) || string.IsNullOrWhiteSpace(request.Query))
+            {
+                return BadRequest("UserId and Query are required.");
+            }
+
+            var added = await Mediator.Send(request);
+
+            if (added != null)
+                return Ok(added);
+
+            return StatusCode(500, "Failed to add search history.");
         }
 
         /// <summary>
@@ -48,5 +70,24 @@ namespace SearchAggregator.API.Controllers.v1
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("top-global")]
+        [ProducesResponseType(typeof(List<UserSearchHistory>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetTopGlobalSearches([FromQuery] int topN = 5)
+        {
+            try
+            {
+                var query = new GetTopGlobalSearchesQuery(topN);
+                var result = await Mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching top global searches");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
     }
 }

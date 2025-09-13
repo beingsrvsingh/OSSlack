@@ -2,6 +2,7 @@
 using Kathavachak.Domain.Entities;
 using Kathavachak.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 
 namespace Kathavachak.Infrastructure.Repositories
@@ -60,6 +61,30 @@ namespace Kathavachak.Infrastructure.Repositories
                 .FromSqlRaw(sql, booleanQuery, pageSize, skip)
                 .ToListAsync(cancellationToken);
 
+            var groupedResults = products
+                                .GroupBy(p => p.Id)
+                                .Select(g =>
+                                {
+                                    var product = g.First();
+
+                                    product.AttributeValues = g
+                                        .Where(x => x.CatalogAttributeId.HasValue)
+                                        .Select(x => new BaseAttributeValue
+                                        {
+                                            CategoryNameSnapshot = x.CategoryNameSnapshot,
+                                            CatalogAttributeId = x.CatalogAttributeId,
+                                            CatalogAttributeValueId = x.CatalogAttributeValueId,
+                                            Value = x.CatalogAttributeValue,
+                                            AttributeKey = x.CatalogAttributeKey,
+                                            AttributeLabel = x.CatalogAttributeLabel,
+                                            AttributeDataTypeId = x.CatalogAttributeDatatype
+                                        })
+                                        .ToList();
+
+                                    return product;
+                                })
+                                .ToList();
+
 
             var countSql = @"
                             SELECT COUNT(*) FROM kathavachak_master as km
@@ -73,7 +98,7 @@ namespace Kathavachak.Infrastructure.Repositories
                 .FromSqlRaw(countSql, booleanQuery)
                 .CountAsync(cancellationToken);
 
-            return (products, totalCount);
+            return (groupedResults, totalCount);
         }
     }
 }

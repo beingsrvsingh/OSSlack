@@ -10,6 +10,6 @@ namespace Temple.Application.Services
         Task<bool> CreateAsync(TempleMaster temple);
         Task<bool> UpdateAsync(TempleMaster temple);
         Task<bool> DeleteAsync(int id);
-        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

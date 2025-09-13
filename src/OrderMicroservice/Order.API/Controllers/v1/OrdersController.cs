@@ -37,7 +37,7 @@ namespace Order.API.Controllers.v1
         [HttpGet("trending-products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTrendingProductsByCid([FromQuery]GetHighlightTrendingProductQuery query)
+        public async Task<IActionResult> GetTrendingProductsByCid([FromQuery]GetTrendingProductQuery query)
         {
             var result = await Mediator.Send(query);
 

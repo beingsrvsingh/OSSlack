@@ -1,5 +1,7 @@
-﻿using MediatR;
-using Kathavachak.Application.Services;
+﻿using Kathavachak.Application.Services;
+using MediatR;
+using Shared.Application.Common.Contracts;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -8,11 +10,13 @@ namespace Kathavachak.Application.Features.Queries
     public class GetSearchQueryHandler : IRequestHandler<GetSearchQuery, Result>
     {
         private readonly ILoggerService<GetSearchQueryHandler> logger;
+        private readonly ICatalogService catalogService;
         private readonly IKathavachakService kathavachakService;
 
-        public GetSearchQueryHandler(ILoggerService<GetSearchQueryHandler> logger, IKathavachakService kathavachakService)
+        public GetSearchQueryHandler(ILoggerService<GetSearchQueryHandler> logger, ICatalogService catalogService, IKathavachakService kathavachakService)
         {
             this.logger = logger;
+            this.catalogService = catalogService;
             this.kathavachakService = kathavachakService;
         }
 
@@ -25,7 +29,16 @@ namespace Kathavachak.Application.Features.Queries
                 return Result.Success(new FailureResponse("No record found", "no record found"));
             }
 
-            return Result.Success(searchResult);
+            IEnumerable<BaseCatalogAttributeDto> attributes = Enumerable.Empty<BaseCatalogAttributeDto>();
+
+            if (searchResult.Filters.MatchType == "Exact")
+            {
+                attributes = await catalogService.GetAttributesByCategoryId(Convert.ToInt32(searchResult.Results.FirstOrDefault()!.Cid), Convert.ToInt32(searchResult.Results.FirstOrDefault().Scid), false);
+            }
+
+            var dto = SearchResponseDto.FromEntityList(searchResult, attributes);
+
+            return Result.Success(dto);
         }
 
     }

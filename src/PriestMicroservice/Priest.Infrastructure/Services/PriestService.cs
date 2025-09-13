@@ -171,7 +171,7 @@ namespace Priest.Infrastructure.Services
             }
         }
 
-        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -179,22 +179,30 @@ namespace Priest.Infrastructure.Services
 
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    Description = p.Description ?? "",
-                    Price = (double)(p.Price ?? 0),
+                    Pid = p.Id.ToString(),
+                    Cid = p.CategoryId.ToString(),
+                    Scid = p.SubcategoryId.ToString(),
+                    Name = p.Name ?? "",
+                    Cost = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    Score = p.Score,
-                    MatchType = p.MatchType ?? "Partial",
-                    CategoryId = p.CategoryId,
-                    SubcategoryId = p.SubcategoryId
+                    CategoryType = "Temple",
+                    Quantity = 1,
+                    Limit = 1,
+                    Rating = 1,
+                    Reviews = 10,
+                    AttributeValues = p.AttributeValues ?? [],
+                    SearchItemMeta = new SearchItemMeta
+                    {
+                        Score = p.Score,
+                        MatchType = p.MatchType ?? "Partial",
+                    }
                 }).ToList();
 
                 var normalizedQuery = query.Trim();
 
                 bool isCatOrSubcatExact = products.Any(p =>
-                    string.Equals(p.CatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(p.SubcatSnap?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
 
                 bool isNameExact = products.Any(p =>
                     string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
@@ -202,12 +210,11 @@ namespace Priest.Infrastructure.Services
                 string matchType = isCatOrSubcatExact || isNameExact ? "Exact" : "Partial";
 
                 bool enableFilters = isCatOrSubcatExact || products.Any(p =>
-                (p.CatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (p.SubcatSnap?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
+                (p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
 
-                return new SearchResultDto
+                var filterMeta = new BaseSearchFilterMetadata
                 {
-                    Results = resultDtos,
                     TotalCount = totalCount,
                     HasMoreResults = page * pageSize < totalCount,
                     Score = products.FirstOrDefault()?.Score ?? 0,
@@ -215,19 +222,30 @@ namespace Priest.Infrastructure.Services
                     EnableFilters = enableFilters,
                     Source = "Priest"
                 };
+
+                var result = new ProductSearchRawResultDto()
+                {
+                    Results = resultDtos,
+                    Filters = filterMeta
+                };
+
+                return result;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
-                return new SearchResultDto
+                return new ProductSearchRawResultDto
                 {
                     Results = new List<SearchItemDto>(),
-                    TotalCount = 0,
-                    HasMoreResults = false,
-                    Score = 0,
-                    MatchType = "Partial",
-                    EnableFilters = false,
-                    Source = "Priest"
+                    Filters = new BaseSearchFilterMetadata
+                    {
+                        TotalCount = 0,
+                        HasMoreResults = false,
+                        Score = 0,
+                        MatchType = "Partial",
+                        EnableFilters = false,
+                        Source = "Priest"
+                    }
                 };
             }
         }

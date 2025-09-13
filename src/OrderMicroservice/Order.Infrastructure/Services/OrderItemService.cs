@@ -36,18 +36,27 @@ namespace Order.Infrastructure.Services
             var productMap = products.ToDictionary(p => p.Id);
 
             var trendingProducts = filteredOrderItems
-                .GroupBy(oi => oi.ProductId)
-                .Where(g => productMap.ContainsKey(g.Key))
-                .Select(g =>
-                {
-                    var product = productMap[g.Key];
-                    return new TrendingProduct
-                    {   
-                        ProductId = g.Key,
-                        ProductName = product.Name
-                    };
-                })
-                .ToList();
+                                .GroupBy(oi => oi.ProductId)
+                                .Where(g => productMap.ContainsKey(g.Key))
+                                .Select(g =>
+                                {
+                                    var product = productMap[g.Key];
+
+                                    return new TrendingProduct
+                                    {
+                                        Pid = product.Id.ToString(),
+                                        Cid = product.CategoryId.ToString(),
+                                        Scid = product.SubCategoryId.ToString(),
+                                        Name = product.Name,
+                                        ThumbnailUrl = product.ImageUrl,
+                                        Cost = (double)product.Cost,
+                                        Rating = product.Rating,
+                                        Reviews = product.Reviews,
+                                        Quantity = 1,
+                                        Limit = 1
+                                    };
+                                })
+                                .ToList();
 
 
             return trendingProducts;

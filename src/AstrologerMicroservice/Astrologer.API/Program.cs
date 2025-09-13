@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Astrologer.Application.Services;
+using Astrologer.Infrastructure.Services;
 using AstrologerMicroservice.Infrastructure;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -50,6 +52,13 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenerate();
+
+
+builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
 
 var app = builder.Build();
 

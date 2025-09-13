@@ -20,11 +20,11 @@ namespace SearchAggregator.Infrastructure.Clients
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<List<SearchResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<Result<SearchResultDto>>(
+                var response = await _httpClient.GetFromJsonAsync<Result<List<SearchResponseDto>>>(
                     $"astrologer/search?q={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
                     cancellationToken
                 );
@@ -32,7 +32,7 @@ namespace SearchAggregator.Infrastructure.Clients
                 if (response == null || response.Data is null)
                 {
                     _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
-                    return new SearchResultDto(); // Return empty result
+                    return new List<SearchResponseDto>(); // Return empty result
                 }
 
                 return response.Data;

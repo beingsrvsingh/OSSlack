@@ -20,7 +20,7 @@ namespace SearchAggregator.Infrastructure.Clients
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<List<SearchResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -31,15 +31,15 @@ namespace SearchAggregator.Infrastructure.Clients
 
                 response.EnsureSuccessStatusCode();
 
-                var result = await response.Content.ReadFromJsonAsync<Result<SearchResultDto>>();
+                var result = await response.Content.ReadFromJsonAsync<Result<List<SearchResponseDto>>>();
 
                 if (result != null && result.Succeeded)
                 {
-                    return result.Data ?? new SearchResultDto();                    
+                    return result.Data ?? new List<SearchResponseDto>();                    
                 }
 
                 _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
-                return new SearchResultDto();
+                return new List<SearchResponseDto>();
             }
             catch (Exception ex)
             {

@@ -4,6 +4,6 @@ namespace SearchAggregator.Application.Clients
 {
     public interface ITempleClient
     {
-        Task<SearchResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<List<SearchResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

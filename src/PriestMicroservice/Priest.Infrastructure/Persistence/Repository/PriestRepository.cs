@@ -2,6 +2,7 @@
 using Priest.Domain.Core.Repository;
 using Priest.Infrastructure.Persistence.Context;
 using PriestMicroservice.Domain.Entities;
+using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 
 namespace Priest.Infrastructure.Persistence.Repository
@@ -67,6 +68,30 @@ namespace Priest.Infrastructure.Persistence.Repository
                 .FromSqlRaw(sql, booleanQuery, pageSize, skip)
                 .ToListAsync(cancellationToken);
 
+            var groupedResults = products
+                                .GroupBy(p => p.Id)
+                                .Select(g =>
+                                {
+                                    var product = g.First();
+
+                                    product.AttributeValues = g
+                                        .Where(x => x.CatalogAttributeId.HasValue)
+                                        .Select(x => new BaseAttributeValue
+                                        {
+                                            CategoryNameSnapshot = x.CategoryNameSnapshot,
+                                            CatalogAttributeId = x.CatalogAttributeId,
+                                            CatalogAttributeValueId = x.CatalogAttributeValueId,
+                                            Value = x.CatalogAttributeValue,
+                                            AttributeKey = x.CatalogAttributeKey,
+                                            AttributeLabel = x.CatalogAttributeLabel,
+                                            AttributeDataTypeId = x.CatalogAttributeDatatype
+                                        })
+                                        .ToList();
+
+                                    return product;
+                                })
+                                .ToList();
+
 
             var countSql = @"
                             SELECT COUNT(*) FROM priests a
@@ -81,7 +106,7 @@ namespace Priest.Infrastructure.Persistence.Repository
                 .FromSqlRaw(countSql, booleanQuery)
                 .CountAsync(cancellationToken);
 
-            return (products, totalCount);
+            return (groupedResults, totalCount);
         }
     }
 

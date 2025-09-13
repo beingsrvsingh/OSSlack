@@ -106,6 +106,11 @@ try
 
     app.MapControllers();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        InfrastructureServiceRegistration.MigrateDatabase(scope.ServiceProvider);
+    }
+
     app.Run();
 
 }

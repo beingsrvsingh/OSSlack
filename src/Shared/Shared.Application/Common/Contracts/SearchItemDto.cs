@@ -1,15 +1,17 @@
-﻿namespace Shared.Application.Contracts
+﻿using Shared.Application.Common.Contracts;
+using Shared.Domain.Entities.Base;
+
+namespace Shared.Application.Contracts
 {
-    public class SearchItemDto
+    public class SearchItemDto : BaseProductResponseDto
     {
-        public string Id { get; set; } = default!;
-        public string Name { get; set; } = default!;
-        public string Description { get; set; } = default!;
-        public string ThumbnailUrl { get; set; } = default!;
-        public double Price { get; set; }
+        public SearchItemMeta SearchItemMeta { get; set; } = new();
+        public List<BaseAttributeValue>? AttributeValues { get; set; } = [];
+    }
+
+    public class SearchItemMeta
+    {
         public float Score { get; set; }
         public string MatchType { get; set; } = "Partial";
-        public int CategoryId { get; set; }
-        public int SubcategoryId { get; set; }
     }
 }

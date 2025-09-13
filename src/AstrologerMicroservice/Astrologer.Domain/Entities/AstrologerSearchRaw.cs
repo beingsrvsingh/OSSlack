@@ -2,7 +2,7 @@
 
 namespace AstrologerMicroservice.Domain.Entities
 {
-    public class AstrologerSearchRaw : BaseSearchRaw
+    public class AstrologerSearchRaw : BaseSearchRaw<AstrologerAttributeValue>
     {
     }
 }
