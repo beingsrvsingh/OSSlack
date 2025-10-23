@@ -15,10 +15,10 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.Property(ca => ca.Id)
                 .HasColumnName("id");
 
-            builder.Property(ca => ca.Key)
+            builder.Property(ca => ca.CatalogAttributeKey)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnName("key");
+                .HasColumnName("catalog_attribute_key");
 
             builder.Property(ca => ca.Label)
                 .IsRequired()
@@ -31,6 +31,10 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(ca => ca.AttributeGroupId)
                 .HasColumnName("attribute_group_id")
+                .IsRequired(false);
+
+            builder.Property(ca => ca.AllowedValuesSource)
+                .HasColumnName("allowed_values_source")
                 .IsRequired(false);
 
             builder.Property(ca => ca.CategoryMasterId)

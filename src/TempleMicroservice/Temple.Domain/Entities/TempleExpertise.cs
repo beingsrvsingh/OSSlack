@@ -55,7 +55,7 @@ namespace Temple.Domain.Entities
         [ForeignKey(nameof(TempleId))]
         public virtual TempleMaster Temple { get; set; } = null!;
 
-        // Optional: Attributes or Modes (if needed later)
+        // Attributes associated with this expertise
         public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
     }
 

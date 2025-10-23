@@ -23,6 +23,9 @@ public partial class CategoryMaster
 
     public bool IsActive { get; set; } = true;
 
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+
     public virtual ICollection<SubCategoryMaster> SubCategoryMasters { get; set; } = new List<SubCategoryMaster>();    
     public virtual ICollection<CategoryLocalizedText> Localizations { get; set; } = new List<CategoryLocalizedText>();
 }

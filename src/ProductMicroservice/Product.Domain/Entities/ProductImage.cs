@@ -18,7 +18,7 @@ namespace Product.Domain.Entities
 
         [Required]
         public int ProductId { get; set; }
-
+        
         [ForeignKey(nameof(ProductId))]
         public virtual ProductMaster Product { get; set; } = null!;
     }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Catalog.Domain.Enums;
 
 namespace Catalog.Domain.Entities;
@@ -29,6 +30,7 @@ public partial class SubCategoryMaster
     
     public virtual CategoryMaster CategoryMaster { get; set; } = null!;
 
+    [JsonIgnore]
     [ForeignKey(nameof(ParentSubcategoryId))]
     public virtual SubCategoryMaster? ParentSubcategory { get; set; }
 

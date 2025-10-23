@@ -40,7 +40,7 @@ namespace Catalog.Infrastructure.Services
 
         public async Task<List<SubCategoryMaster>> GetSubCategoriesByCategoryIdAsync(int id)
         {
-            var result = await subCategoryRepository.GetAsync(s => s.CategoryMasterId == id);
+            var result = await subCategoryRepository.GetAsync(s => s.CategoryMasterId == id && s.ParentSubcategoryId == null);
             return result.ToList();
         }
 
@@ -127,7 +127,7 @@ namespace Catalog.Infrastructure.Services
             var dtos = attributes.Select(attr => new CatalogAttributeDto
             {
                 Id = attr.Id,
-                Key = attr.Key,
+                Key = attr.CatalogAttributeKey,
                 Label = attr.Label,
                 DataType = attr.AttributeDataType?.Name ?? "String",
                 IsCustom = attr.IsCustom,
@@ -173,7 +173,7 @@ namespace Catalog.Infrastructure.Services
                     Attributes = g.Select(attr => new CatalogAttributeDto
                     {
                         Id = attr.Id,
-                        Key = attr.Key,
+                        Key = attr.CatalogAttributeKey,
                         Label = attr.Label,
                         DataType = attr.AttributeDataType?.Name ?? "String",
                         IsCustom = attr.IsCustom,

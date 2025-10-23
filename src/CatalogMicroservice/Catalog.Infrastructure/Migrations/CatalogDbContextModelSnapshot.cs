@@ -98,6 +98,10 @@ namespace Catalog.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AllowedValuesSource")
+                        .HasColumnType("longtext")
+                        .HasColumnName("allowed_values_source");
+
                     b.Property<int>("AttributeDataTypeId")
                         .HasColumnType("int")
                         .HasColumnName("attribute_datatype_id");
@@ -109,6 +113,12 @@ namespace Catalog.Infrastructure.Migrations
                     b.Property<int?>("AttributeIconId")
                         .HasColumnType("int")
                         .HasColumnName("attribute_icon_id");
+
+                    b.Property<string>("CatalogAttributeKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("catalog_attribute_key");
 
                     b.Property<int?>("CategoryMasterId")
                         .HasColumnType("int")
@@ -143,12 +153,6 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_summary");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("key");
 
                     b.Property<string>("Label")
                         .IsRequired()
@@ -317,6 +321,9 @@ namespace Catalog.Infrastructure.Migrations
                     b.Property<string>("AllowedValue")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("AllowedValueId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("AllowedValueSortOrder")
                         .HasColumnType("int");
 
@@ -384,21 +391,24 @@ namespace Catalog.Infrastructure.Migrations
                             Id = 1,
                             AttributeGroupId = 1,
                             CategoryMasterId = 1,
-                            SortOrder = 1
+                            SortOrder = 1,
+                            SubCategoryMasterId = 1001
                         },
                         new
                         {
                             Id = 2,
                             AttributeGroupId = 2,
                             CategoryMasterId = 1,
-                            SortOrder = 2
+                            SortOrder = 2,
+                            SubCategoryMasterId = 1001
                         },
                         new
                         {
                             Id = 3,
                             AttributeGroupId = 3,
                             CategoryMasterId = 1,
-                            SortOrder = 3
+                            SortOrder = 3,
+                            SubCategoryMasterId = 1001
                         });
                 });
 
@@ -452,6 +462,12 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("category_type");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)")
@@ -480,9 +496,75 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
                     b.HasKey("Id");
 
                     b.ToTable("category_master", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryType = "Product",
+                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 532, DateTimeKind.Local).AddTicks(8379),
+                            Description = "Religious products and items",
+                            DisplayOrder = 1,
+                            ImageUrl = "https://example.com/images/product_icon.png",
+                            IsActive = true,
+                            Name = "Product",
+                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(196)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryType = "Temple",
+                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(727),
+                            Description = "Religious temples and associated services",
+                            DisplayOrder = 2,
+                            ImageUrl = "https://example.com/images/temple_icon.png",
+                            IsActive = true,
+                            Name = "Temple",
+                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(729)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryType = "Priest",
+                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(732),
+                            Description = "Priest services and rituals",
+                            DisplayOrder = 3,
+                            ImageUrl = "https://example.com/images/priest_icon.png",
+                            IsActive = true,
+                            Name = "Priest",
+                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(733)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryType = "Astrologer",
+                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(735),
+                            Description = "Astrology services and products",
+                            DisplayOrder = 4,
+                            ImageUrl = "https://example.com/images/astrologer_icon.png",
+                            IsActive = true,
+                            Name = "Astrologer",
+                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(736)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryType = "Kathavachak",
+                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(738),
+                            Description = "Religious storytellers and discourses",
+                            DisplayOrder = 5,
+                            ImageUrl = "https://example.com/images/kathavachak_icon.png",
+                            IsActive = true,
+                            Name = "Kathavachak",
+                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(739)
+                        });
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemMaster", b =>
@@ -591,8 +673,9 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("parent_subcategory_id");
 
-                    b.Property<int>("SubcategoryType")
-                        .HasColumnType("int")
+                    b.Property<string>("SubcategoryType")
+                        .IsRequired()
+                        .HasColumnType("LONGTEXT")
                         .HasColumnName("subcategory_type");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -605,7 +688,7 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasIndex("ParentSubcategoryId");
 
-                    b.ToTable("sub_category_master", (string)null);
+                    b.ToTable("subcategory_master", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>

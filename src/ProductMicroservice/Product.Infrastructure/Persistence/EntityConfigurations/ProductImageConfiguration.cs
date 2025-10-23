@@ -21,6 +21,12 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(300);
 
+            entity.Property(entity => entity.SortOrder)
+                .HasColumnName("sort_order");
+
+            entity.Property(entity => entity.AltText)
+                .HasColumnName("alt_text");
+
             entity.Property(img => img.ProductId)
                 .HasColumnName("product_id")
                 .IsRequired();

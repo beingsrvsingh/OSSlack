@@ -31,7 +31,6 @@ namespace Product.Application.Features.EventHandlers.Query
                 CategoryId = p.CategoryId,
                 SubCategoryId = p.SubCategoryId,
                 ImageUrl = p.ThumbnailUrl,
-                Cost = (double)p.Price,
                 Name = p.Name,
                 Rating = p.Rating,
                 Reviews = p.Reviews

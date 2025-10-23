@@ -112,7 +112,7 @@ namespace Product.Infrastructure.Repositories
                                 p.id AS Id, 
                                 p.name AS Name, 
                                 p.thumbnail_url AS ThumbnailUrl, 
-                                p.price AS Price, 
+                                pav.price AS Price, 
                                 p.category_id AS CategoryId, 
                                 p.subcategory_id AS SubCategoryId,
                                 p.cat_snap AS CategoryName,
@@ -155,7 +155,6 @@ namespace Product.Infrastructure.Repositories
                         SELECT 
                             p.Id, 
                             Name, 
-                            Description, 
                             thumbnail_url AS ThumbnailUrl, 
                             Price,
                             cat_snap AS CategoryNameSnapshot, 

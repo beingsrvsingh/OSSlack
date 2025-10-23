@@ -1,4 +1,6 @@
-﻿namespace Shared.Domain.Entities.Base
+﻿using Shared.Domain.Entities.Interface;
+
+namespace Shared.Domain.Entities.Base
 {
     public class BaseAttributeValue : IBaseAttributeValue
     {

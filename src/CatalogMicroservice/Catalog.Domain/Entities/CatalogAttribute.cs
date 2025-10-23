@@ -10,7 +10,7 @@ namespace Catalog.Domain.Entities
         public int Id { get; set; }
 
         [Required, MaxLength(100)]
-        public string Key { get; set; } = null!;
+        public string CatalogAttributeKey { get; set; } = null!;
 
         public int? CategoryMasterId { get; set; }
         public int? SubCategoryMasterId { get; set; }
@@ -21,6 +21,8 @@ namespace Catalog.Domain.Entities
         
         // <<-- FK to group master
         public int? AttributeGroupId { get; set; }
+
+        public string AllowedValuesSource { get; set; } = null!;
 
         public bool IsCustom { get; set; } = false;
         public bool IsRequired { get; set; } = false;

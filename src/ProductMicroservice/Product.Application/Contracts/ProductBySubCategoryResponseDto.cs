@@ -68,7 +68,6 @@ namespace Product.Application.Contracts
                 Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
-                Cost = (double)entity.Price,
                 Rating = entity.Rating,
                 Reviews = entity.Reviews,
                 CategoryType = entity.CategoryNameSnapshot,
@@ -142,12 +141,9 @@ namespace Product.Application.Contracts
                 Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
-                Cost = (double)entity.Price,
                 Rating = entity.Rating,
                 Reviews = entity.Reviews,
                 CategoryType = entity.CategoryNameSnapshot,
-                Quantity = 1,
-                Limit = 1,
                 Attributes = attributes
             };
         }

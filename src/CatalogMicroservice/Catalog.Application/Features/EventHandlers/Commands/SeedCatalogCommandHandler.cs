@@ -59,7 +59,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     new CatalogAttribute
                     {
                         Id = 1,
-                        Key = "brand",
+                        CatalogAttributeKey = "brand",
                         Label = "Brand",
                         AttributeDataTypeId = (int)(AttributeDataType)9, // Assuming 9 = string
                         IsCustom = false,
@@ -84,7 +84,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     new CatalogAttribute
                     {
                         Id = 2,
-                        Key = "color",
+                        CatalogAttributeKey = "color",
                         Label = "Color",
                         AttributeDataTypeId = (int)(AttributeDataType)9,
                         IsCustom = false,
@@ -111,7 +111,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     new CatalogAttribute
                     {
                         Id = 3,
-                        Key = "storage",
+                        CatalogAttributeKey = "storage",
                         Label = "Storage Capacity",
                         AttributeDataTypeId = (int)(AttributeDataType)9,
                         IsCustom = false,
@@ -137,7 +137,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     new CatalogAttribute
                     {
                         Id = 4,
-                        Key = "ram",
+                        CatalogAttributeKey = "ram",
                         Label = "RAM",
                         AttributeDataTypeId = (int)(AttributeDataType)9,
                         IsCustom = false,
@@ -162,7 +162,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
                     new CatalogAttribute
                     {
                         Id = 5,
-                        Key = "screen_size",
+                        CatalogAttributeKey = "screen_size",
                         Label = "Screen Size",
                         AttributeDataTypeId = (int)(AttributeDataType)9,
                         IsCustom = false,

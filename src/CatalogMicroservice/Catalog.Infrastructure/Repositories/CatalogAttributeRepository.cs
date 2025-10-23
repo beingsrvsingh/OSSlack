@@ -51,7 +51,7 @@ namespace Catalog.Infrastructure.Repositories
                             .FromSqlRaw(@"
                                 SELECT
                                     attr.id AS Id,
-                                    attr.key AS `Key`,
+                                    attr.catalog_attribute_key AS `Key`,
                                     attr.category_id AS CategoryMasterId,
                                     attr.sub_category_id AS SubCategoryMasterId,
                                     attr.label AS Label,

@@ -1,4 +1,4 @@
-using Shared.Domain.Entities.Base;
+using Shared.Domain.Entities.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,13 +17,12 @@ namespace Product.Domain.Entities
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? CategoryNameSnapshot { get; set; }
 
         [Required]
         public int ProductMasterId { get; set; }
 
         [ForeignKey(nameof(ProductMasterId))]
-        public virtual ProductMaster ProductMaster { get; set; } = null!;        
+        public virtual ProductMaster ProductMaster { get; set; } = null!;
     }
 
 }

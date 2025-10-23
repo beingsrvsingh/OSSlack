@@ -19,6 +19,8 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(300);
             builder.Property(c => c.IsActive).HasColumnName("is_active").HasDefaultValue(true);
             builder.Property(c => c.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
+            builder.Property(s => s.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            builder.Property(s => s.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
 
             builder.HasMany(c => c.SubCategoryMasters)
                    .WithOne(s => s.CategoryMaster)
@@ -28,7 +30,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.HasMany(c => c.Localizations)
            .WithOne(l => l.Category)
            .HasForeignKey(l => l.CategoryId)
-           .OnDelete(DeleteBehavior.Cascade);       
+           .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

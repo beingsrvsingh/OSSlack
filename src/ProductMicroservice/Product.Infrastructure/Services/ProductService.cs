@@ -182,7 +182,7 @@ namespace Product.Infrastructure.Services
         {
             return await _productRepository.GetSingleAsync(
                 p => p.Id == productId,
-                include: query => query.Include(p => p.Images).Include(p => p.AttributeValues));
+                include: query => query.Include(p => p.AttributeValues));
         }
 
         public async Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(

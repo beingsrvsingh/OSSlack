@@ -1,4 +1,4 @@
-﻿namespace Shared.Domain.Entities.Base
+﻿namespace Shared.Domain.Entities.Interface
 {
     public interface IBaseAttributeValue
     {
@@ -10,7 +10,6 @@
         int? AttributeDataTypeId { get; set; }
         int? CatalogAttributeGroupId { get; set; }
         DateTime CreatedAt { get; set; }
-        string? CategoryNameSnapshot { get; set; }
     }
 
 }

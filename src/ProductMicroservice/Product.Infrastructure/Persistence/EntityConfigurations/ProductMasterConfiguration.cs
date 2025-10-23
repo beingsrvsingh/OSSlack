@@ -28,33 +28,13 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(150)
                 .HasColumnName("name");
 
-            builder.Property(p => p.Description)
-                .IsRequired(false)
-                .HasColumnName("description");
-
-            builder.Property(p => p.Price)
-                .HasColumnType("decimal(18,2)")
-                .HasColumnName("price");
-
             builder.Property(p => p.ThumbnailUrl)
                 .HasMaxLength(300)
-                .HasColumnName("thumbnail_url");
+                .HasColumnName("thumbnail_url");   
 
-            builder.Property(p => p.SKU)
+            builder.Property(p => p.IsActive)
                 .HasMaxLength(50)
-                .HasColumnName("sku");
-
-            builder.Property(p => p.ProductType)
-                .HasMaxLength(50)
-                .HasColumnName("product_type");
-
-            builder.Property(p => p.IsNew)
-                .HasDefaultValue(false)
-                .HasColumnName("is_new");
-
-            builder.Property(p => p.IsFeatured)
-                .HasDefaultValue(false)
-                .HasColumnName("is_featured");
+                .HasColumnName("is_active");
 
             builder.Property(p => p.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
@@ -107,7 +87,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.HasMany(p => p.AttributeValues)
                 .WithOne(s => s.ProductMaster)
                 .HasForeignKey(t => t.ProductMasterId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);                           
                 
             builder.HasMany(p => p.Images)
                 .WithOne(img => img.Product)

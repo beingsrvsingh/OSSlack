@@ -66,7 +66,6 @@ namespace Product.Application.Features.EventHandlers.Query
                         Id = group.Key,
                         Name = first.Name,
                         ThumbnailUrl = first.ThumbnailUrl,
-                        Price = (decimal)first.Price,
                         CategoryId = first.CategoryId,
                         SubCategoryId = first.SubCategoryId,
                         Reviews = summary?.TotalReviews ?? 0,

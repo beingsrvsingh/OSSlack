@@ -24,11 +24,7 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(200)
                 .HasColumnName("name");
 
-            builder.Property(t => t.Description)
-                .HasMaxLength(1000)
-                .HasColumnName("description");
-
-            builder.Property(t => t.ImageUrl)
+            builder.Property(t => t.ThumbnailUrl)
                 .HasMaxLength(300)
                 .HasColumnName("thumbnail_url");
 
