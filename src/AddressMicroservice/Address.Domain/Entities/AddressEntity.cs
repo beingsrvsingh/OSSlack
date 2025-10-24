@@ -1,6 +1,7 @@
 
-using System.ComponentModel.DataAnnotations;
 using Address.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Address.Domain.Entities
 {
@@ -44,8 +45,10 @@ namespace Address.Domain.Entities
         public string PhoneNumber { get; set; } = null!;
 
         // Foreign key to AddressType
+        [ForeignKey(nameof(AddressType))]
         public int AddressTypeId { get; set; }
-        public AddressType AddressType { get; set; } = null!; 
+
+        public virtual AddressType AddressType { get; set; } = null!;
 
         public bool IsDefault { get; set; } = false;
 

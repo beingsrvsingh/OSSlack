@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 .vscode/launch.json
 .vscode/tasks.json
+/src/AddressMicroservice/Address.Infrastructure/Migrations

@@ -26,6 +26,7 @@ namespace Address.Application.Features.EventHandlers.Commands
                 new AddressEntity
                 {
                     Uid = Guid.NewGuid(),
+                    OwnerId = 1001,
                     Name = "Saurav Sinha",
                     Label = "Home",
                     AddressLine1 = "Gate No.7 7005 - A FirstFloor",
@@ -40,6 +41,7 @@ namespace Address.Application.Features.EventHandlers.Commands
                 new AddressEntity
                 {
                     Uid = Guid.NewGuid(),
+                    OwnerId = 1001,
                     Name = "Jaksh Sinha",
                     Label = "Work",
                     AddressLine1 = "Gate No.9007 - A Fourth",

@@ -33,14 +33,6 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
             builder.Property(a => a.Landmark).HasColumnName("landmark");
             builder.Property(a => a.PhoneNumber).IsRequired().HasColumnName("phone_number");
 
-            builder.Property(a => a.AddressTypeId)
-                .HasColumnName("address_type")
-                .HasDefaultValue(1); // e.g., 3 = "Other" in AddressType table
-
-            builder.HasOne(a => a.AddressType)
-                .WithMany()
-                .HasForeignKey(a => a.AddressTypeId);
-
             builder.Property(a => a.IsDefault).HasColumnName("is_default").HasDefaultValue(false);
             builder.Property(a => a.IsActive).HasColumnName("is_active").HasDefaultValue(true);
 
@@ -54,6 +46,15 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(a => a.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
             builder.Property(a => a.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+            builder.Property(a => a.AddressTypeId)
+                .HasColumnName("address_type_id")
+                .HasDefaultValue(1); // e.g., 3 = "Other" in AddressType table
+
+            builder.HasOne(a => a.AddressType)
+               .WithMany(t => t.Addresses)
+               .HasForeignKey(a => a.AddressTypeId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
