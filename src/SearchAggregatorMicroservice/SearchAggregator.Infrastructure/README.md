@@ -1,11 +1,11 @@
 find . -name "*.csproj";
 
-dotnet sln add ./src/SearchAggregatorMicroservice/*/*.csproj
+dotnet sln add ./src/PoojaMicroservice/*/*.csproj
 
-Get-ChildItem -Path ./src/SearchAggregatorMicroservice -Recurse -Filter *.csproj | Select-Object FullName
+Get-ChildItem -Path ./src/PoojaMicroservice -Recurse -Filter *.csproj | Select-Object FullName
 
-Get-ChildItem -Path ./src/SearchAggregatorMicroservice -Recurse -Filter *.csproj | ForEach-Object {dotnet sln add $_.FullName}
+Get-ChildItem -Path ./src/PoojaMicroservice -Recurse -Filter *.csproj | ForEach-Object {dotnet sln add $_.FullName}
 
-dotnet ef migrations add Initial-Create --output-dir Migrations --context SearchDbContext --startup-project ../SearchAggregator.API 
+dotnet ef migrations add Initial-Create --output-dir Migrations --context PoojaDbContext --startup-project ../Pooja.API 
 
-dotnet ef database update --context SearchDbContext --startup-project ../SearchAggregator.API
+dotnet ef database update --context PoojaDbContext --startup-project ../Pooja.API

@@ -1,0 +1,25 @@
+INSERT INTO pooja_master
+(id, name, description, base_price, discounted_price, is_price_variable, duration, is_available_online,
+ is_temple_required, is_home_available, preparation_time, priest_included, bring_your_own_priest_allowed,
+ average_rating, total_reviews, image_url, category_id, created_at, updated_at, is_active)
+VALUES
+(1, 'Ganesh Pooja', 'Traditional Ganesh Pooja for auspicious occasions', 1500.00, NULL, 0, '01:00:00', 0,
+ 1, 1, '00:15:00', 1, 1, 4.5, 120, 'https://example.com/images/ganesh_pooja.jpg', 1, NOW(), NULL, 1),
+(2, 'Satyanarayan Pooja', 'Monthly or special day pooja for prosperity', 2000.00, 1800.00, 0, '01:30:00', 0,
+ 1, 1, '00:20:00', 0, 1, 4.8, 85, 'https://example.com/images/satyanarayan_pooja.jpg', 1, NOW(), NULL, 1),
+(3, 'Lakshmi Pooja', 'Pooja to seek blessings of Goddess Lakshmi', 1200.00, NULL, 0, '00:45:00', 0,
+ 1, 0, '00:10:00', 1, 0, 4.2, 45, 'https://example.com/images/lakshmi_pooja.jpg', 2, NOW(), NULL, 1),
+(4, 'Navagraha Pooja', 'Pooja to appease nine planets', 3000.00, 2800.00, 1, '02:00:00', 0,
+ 1, 1, '00:25:00', 1, 1, 4.7, 60, 'https://example.com/images/navagraha_pooja.jpg', 3, NOW(), NULL, 1),
+(5, 'Vastu Pooja', 'Pooja to bring positivity in home or office', 1800.00, NULL, 0, '01:00:00', 0,
+ 0, 1, '00:15:00', 0, 0, 4.0, 30, 'https://example.com/images/vastu_pooja.jpg', 4, NOW(), NULL, 1),
+(6, 'Durga Pooja', 'Invoke blessings of Goddess Durga for health and prosperity', 2200.00, 2000.00, 0, '01:15:00', 0,
+ 1, 1, '00:20:00', 1, 1, 4.6, 55, 'https://example.com/images/durga_pooja.jpg', 2, NOW(), NULL, 1),
+(7, 'Saraswati Pooja', 'For wisdom and knowledge, ideal for students', 1000.00, NULL, 0, '00:50:00', 0,
+ 0, 1, '00:10:00', 0, 1, 4.3, 40, 'https://example.com/images/saraswati_pooja.jpg', 2, NOW(), NULL, 1),
+(8, 'Maha Shivaratri Pooja', 'Special pooja during Maha Shivaratri festival', 3500.00, 3300.00, 1, '02:30:00', 0,
+ 1, 0, '00:30:00', 1, 0, 4.9, 70, 'https://example.com/images/shivaratri_pooja.jpg', 3, NOW(), NULL, 1),
+(9, 'Griha Pravesh Pooja', 'Housewarming pooja to bless a new home', 2500.00, 2200.00, 0, '01:45:00', 0,
+ 1, 1, '00:20:00', 1, 1, 4.7, 65, 'https://example.com/images/griha_pravesh.jpg', 4, NOW(), NULL, 1),
+(10, 'Ayushman Pooja', 'Pooja for health and longevity', 2000.00, 1800.00, 0, '01:20:00', 0,
+ 1, 1, '00:15:00', 0, 1, 4.4, 50, 'https://example.com/images/ayushman_pooja.jpg', 1, NOW(), NULL, 1);
