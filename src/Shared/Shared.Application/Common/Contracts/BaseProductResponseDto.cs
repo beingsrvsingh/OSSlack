@@ -7,11 +7,8 @@ namespace Shared.Application.Common.Contracts
         [JsonPropertyName("pid")]
         public string Pid { get; set; } = null!;
 
-        [JsonPropertyName("cid")]
-        public string Cid { get; set; } = string.Empty;
-
-        [JsonPropertyName("scid")]
-        public string Scid { get; set; } = null!;
+        [JsonPropertyName("type")]
+        public string Type { get; set; } = "product";
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
@@ -19,8 +16,8 @@ namespace Shared.Application.Common.Contracts
         [JsonPropertyName("thumbnail_url")]
         public string? ThumbnailUrl { get; set; }
 
-        [JsonPropertyName("cost")]
-        public double Cost { get; set; }
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
 
         [JsonPropertyName("rating")]
         public double Rating { get; set; } = 0;
@@ -28,11 +25,39 @@ namespace Shared.Application.Common.Contracts
         [JsonPropertyName("reviews")]
         public int Reviews { get; set; } = 0;
 
-        [JsonPropertyName("categorytype")]
-        public string? CategoryType { get; set; }
-        [JsonPropertyName("quantity")]
-        public int Quantity { get; set; } = 1;
-        [JsonPropertyName("limit")]
-        public int Limit { get; set; } = 1;
+        [JsonPropertyName("categoryId")]
+        public string CategoryId { get; set; } = string.Empty;
+
+        [JsonPropertyName("subCategoryId")]
+        public string SubCategoryId { get; set; } = string.Empty;
+
+        [JsonPropertyName("categoryNameSnapshot")]
+        public string? CategoryNameSnapshot { get; set; }
+
+        [JsonPropertyName("subCategoryNameSnapshot")]
+        public string? SubCategoryNameSnapshot { get; set; }
+
+        [JsonPropertyName("isActive")]
+        public bool IsActive { get; set; } = true;
+
+        [JsonPropertyName("isTrending")]
+        public bool IsTrending { get; set; } = false;
+
+        [JsonPropertyName("isFeatured")]
+        public bool IsFeatured { get; set; } = false;
+
+        [JsonPropertyName("tags")]
+        public List<string>? Tags { get; set; }
+
+        [JsonPropertyName("createdAt")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonPropertyName("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
+
+        [JsonPropertyName("currency")]
+        public string? Currency { get; set; } = "INR";
     }
+
+
 }

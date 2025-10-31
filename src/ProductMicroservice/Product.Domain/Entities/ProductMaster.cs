@@ -13,7 +13,7 @@ namespace Product.Domain.Entities
         public virtual ICollection<ProductTagMaster> ProductTagMasters { get; set; } = new List<ProductTagMaster>();
         public virtual ProductSEOInfoMaster? SEOInfoMaster { get; set; }
         public virtual ICollection<ProductAttributeValue> AttributeValues { get; set; } = new List<ProductAttributeValue>();        
-        public virtual ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
+        public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
 
     }
 }

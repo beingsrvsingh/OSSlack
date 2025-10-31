@@ -10,8 +10,5 @@
 
         // From CatalogAttribute (optional but useful for UI)
         public BaseCatalogAttributeIconDto? Icon { get; set; }
-
-        // If the attribute is of Enum type, include allowed values
-        public List<BaseCatalogAttributeAllowedValueDto>? AllowedValues { get; set; }
     }
 }

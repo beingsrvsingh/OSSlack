@@ -31,6 +31,11 @@ namespace Shared.Domain.Entities.Base
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+
+        // Optional, domain-dependent fields
+        public string Currency { get; set; } = "INR";
+        public bool? IsTrending { get; set; }        // any entity can be trending
+        public bool? IsFeatured { get; set; }        // highlight entity
     }
 
 }

@@ -32,7 +32,7 @@ namespace Product.Application.Features.Query
 
             if (searchResult.Filters.MatchType == "Exact")
             {
-                attributes = await catalogService.GetAttributesByCategoryId(Convert.ToInt32(searchResult.Results.FirstOrDefault()!.Cid), Convert.ToInt32(searchResult.Results.FirstOrDefault().Scid), false);
+                attributes = await catalogService.GetAttributesByCategoryId(Convert.ToInt32(searchResult.Results.FirstOrDefault()!.CategoryId), Convert.ToInt32(searchResult.Results.FirstOrDefault().SubCategoryId), false);
             }
 
             var dto = SearchResponseDto.FromEntityList(searchResult, attributes);

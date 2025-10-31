@@ -81,7 +81,7 @@ namespace Product.Application.Features.EventHandlers.Query
                             }).ToList()
                     };
 
-                    return ProductBySubCategoryResponseDto.FromEntity(entity, attributes);
+                    return ProductBySubCategoryResponseDto.FromEntity(entity);
                 })
                 .ToList();
 

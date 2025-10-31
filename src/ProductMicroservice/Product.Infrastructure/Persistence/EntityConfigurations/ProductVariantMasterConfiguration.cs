@@ -24,12 +24,46 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnType("decimal(18,2)")
                 .HasColumnName("price");
 
-            builder.Property(v => v.ProductId)
-                .HasColumnName("product_id");
+            builder.Property(v => v.MRP)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("mrp");
+
+            builder.Property(v => v.StockQuantity)
+                .HasColumnName("stock_quantity");
+
+            builder.Property(v => v.IsDefault)
+                .HasColumnName("is_default");
+
+            builder.Property(v => v.DurationMinutes)
+            .HasColumnType("int")
+            .IsRequired(false);
+
+            builder.Property(v => v.AvailableSlots)
+                .HasColumnType("int")
+                .IsRequired(false);
+
+            builder.Property(v => v.BookingType)
+                .HasMaxLength(50)
+                .IsRequired(false);
+
+            builder.Property(v => v.ProductMasterId)
+                .HasColumnName("product_master_id");
 
             builder.HasOne(v => v.ProductMaster)
-                .WithMany(p => p.VariantMasters)
-                .HasForeignKey(v => v.ProductId)
+                .WithMany(p => p.VariantMasters)   // navigation property in ProductMaster
+                .HasForeignKey(v => v.ProductMasterId) // matches the FK property
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationships for VariantImages
+            builder.HasMany(v => v.VariantImages)
+                .WithOne(vi => vi.ProductVariant)
+                .HasForeignKey(vi => vi.ProductVariantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationships for Attributes
+            builder.HasMany(v => v.Attributes)
+                .WithOne(a => a.ProductVariant)
+                .HasForeignKey(a => a.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

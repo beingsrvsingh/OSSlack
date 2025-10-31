@@ -1,12 +1,21 @@
 use catalogdb;
+
+SET FOREIGN_KEY_CHECKS = 0;
+delete from subcategory_master where id is null;
+SET FOREIGN_KEY_CHECKS = 0;
+
 SELECT * FROM catalogdb.category_master;
 
-INSERT INTO category_master (id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at) VALUES
+INSERT INTO category_master 
+(id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at) 
+VALUES
 (1, 'Product', 'Product', 'Religious products and items', 1, 'https://example.com/images/product_icon.png', 1, NOW(), NOW()),
-(2, 'Temple', 'Temple', 'Religious temples and associated services', 2, 'https://example.com/images/temple_icon.png', 1, NOW(), NOW()),
-(3, 'Priest', 'Priest', 'Priest services and rituals', 3, 'https://example.com/images/priest_icon.png', 1, NOW(), NOW()),
-(4, 'Astrologer', 'Astrologer', 'Astrology services and products', 4, 'https://example.com/images/astrologer_icon.png', 1, NOW(), NOW()),
-(5, 'Kathavachak', 'Kathavachak', 'Religious storytellers and discourses', 5, 'https://example.com/images/kathavachak_icon.png', 1, NOW(), NOW());
+(2, 'Pooja', 'Pooja', 'Religious pooja services and rituals', 2, 'https://example.com/images/pooja_icon.png', 1, NOW(), NOW()),
+(3, 'Temple', 'Temple', 'Religious temples and associated services', 3, 'https://example.com/images/temple_icon.png', 1, NOW(), NOW()),
+(4, 'Priest', 'Priest', 'Priest services and rituals', 4, 'https://example.com/images/priest_icon.png', 1, NOW(), NOW()),
+(5, 'Astrologer', 'Astrologer', 'Astrology services and products', 5, 'https://example.com/images/astrologer_icon.png', 1, NOW(), NOW()),
+(6, 'Kathavachak', 'Kathavachak', 'Religious storytellers and discourses', 6, 'https://example.com/images/kathavachak_icon.png', 1, NOW(), NOW());
+
 
 
 -- Category 3: Product (IDs 1 - 100)

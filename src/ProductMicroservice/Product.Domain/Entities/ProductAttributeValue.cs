@@ -23,6 +23,11 @@ namespace Product.Domain.Entities
 
         [ForeignKey(nameof(ProductMasterId))]
         public virtual ProductMaster ProductMaster { get; set; } = null!;
+
+        public int? ProductVariantId { get; set; }
+
+        [ForeignKey(nameof(ProductVariantId))]
+        public virtual ProductVariantMaster? ProductVariant { get; set; }
     }
 
 }

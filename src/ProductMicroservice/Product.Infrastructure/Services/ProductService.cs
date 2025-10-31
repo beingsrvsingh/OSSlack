@@ -156,13 +156,20 @@ namespace Product.Infrastructure.Services
             {
                 var result = await _productRepository.GetAsync(
                     p => p.SubCategoryId == subCategoryId,
-                    include: query => query.Include(p => p.Images).Include(p => p.AttributeValues));
+                    include: query => query
+                        .Include(p => p.ProductImages)
+                        .Include(p => p.AttributeValues)
+                        .Include(p => p.VariantMasters)
+                            .ThenInclude(v => v.VariantImages)
+                        .Include(p => p.VariantMasters)
+                            .ThenInclude(v => v.Attributes)
+                );
 
                 return result.ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetProductBySubCategoryIdAsync: {ex.Message}", ex);
+                _logger.LogError(ex, $"Error in GetProductBySubCategoryIdAsync");
                 return new List<ProductMaster>();
             }
         }
@@ -226,14 +233,14 @@ namespace Product.Infrastructure.Services
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
                     Pid = p.Id.ToString(),
-                    Cid = p.CategoryId.ToString(),
-                    Scid = p.SubcategoryId.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    Cost = (double)(p.Price ?? 0),
-                    ThumbnailUrl = p.ThumbnailUrl ?? "",                                        
-                    CategoryType = "Product",
-                    Quantity = 1,
-                    Limit = 1,
+                    //Cost = (double)(p.Price ?? 0),
+                    //ThumbnailUrl = p.ThumbnailUrl ?? "",                                        
+                    //CategoryType = "Product",
+                    //Quantity = 1,
+                    //Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],

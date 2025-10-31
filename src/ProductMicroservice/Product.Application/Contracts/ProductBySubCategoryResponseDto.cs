@@ -1,7 +1,8 @@
 
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Product.Domain.Entities;
 using Shared.Application.Common.Contracts;
+using System.Text.Json.Serialization;
 
 namespace Product.Application.Contracts
 {
@@ -52,8 +53,7 @@ namespace Product.Application.Contracts
                             Label = firstVal.AttributeLabel ?? firstVal.AttributeKey!,
                             Values = values.Select(v => v.Value).ToList(),
                             DataType = attr.DataType ?? "String",
-                            Icon = attr.Icon,
-                            AllowedValues = attr.AllowedValues
+                            Icon = attr.Icon
                         };
                     })
                     .ToList()
@@ -64,16 +64,16 @@ namespace Product.Application.Contracts
             return new ProductSummaryResponseDto
             {
                 Pid = entity.Id.ToString(),
-                Cid = entity.CategoryId.ToString(),
-                Scid = entity.SubCategoryId.ToString(),
+                //Cid = entity.CategoryId.ToString(),
+                //Scid = entity.SubCategoryId.ToString(),
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
                 Rating = entity.Rating,
                 Reviews = entity.Reviews,
-                CategoryType = entity.CategoryNameSnapshot,
-                Quantity = 1,
-                Limit = 1,
-                Images = entity.Images.Select(img => new ProductImageDto
+                //CategoryType = entity.CategoryNameSnapshot,
+                //Quantity = 1,
+                //Limit = 1,
+                Images = entity.ProductImages.Select(img => new ProductImageDto
                 {
                     ImageUrl = img.ImageUrl
                 }).ToList(),
@@ -87,66 +87,73 @@ namespace Product.Application.Contracts
         [JsonPropertyName("attributes")]
         public List<ProductAttributeDto>? Attributes { get; set; }
 
+        [JsonPropertyName("product_images")]
+        public List<string>? ProductImages { get; set; }
+
+        [JsonPropertyName("variants")]
+        public List<VariantResponseDto>? Variants { get; set; }
+
         public static List<ProductBySubCategoryResponseDto> FromEntityList(IEnumerable<ProductMaster> products, IEnumerable<CatalogAttributeDto> catalogAttributeGroups, bool isSummary = false)
         {
-            return products.Select(p => FromEntity(p, catalogAttributeGroups, isSummary)).ToList();
+            return products.Select(p => FromEntity(p)).ToList();
         }
 
-        public static ProductBySubCategoryResponseDto FromEntity(
-        ProductMaster entity,
-        IEnumerable<CatalogAttributeDto> catalogAttributes,
-        bool isSummary = false)
+        public static ProductBySubCategoryResponseDto FromEntity(ProductMaster entity)
         {
-            // Build dictionary from attribute definitions keyed by attribute key
-            var attributeDict = catalogAttributes
-                .ToDictionary(attr => attr.Key, attr => attr);
-
-            var attributeValues = entity.AttributeValues ?? new List<ProductAttributeValue>();
-
-            // If not summary view, only include values with matching definitions
-            if (!isSummary)
-            {
-                attributeValues = attributeValues
-                    .Where(attrVal => attrVal.AttributeKey != null && attributeDict.ContainsKey(attrVal.AttributeKey))
-                    .ToList();
-            }
-
-            // Group values by attribute key
-            var groupedAttributeValues = attributeValues
-                .Where(val => !string.IsNullOrEmpty(val.AttributeKey))
-                .GroupBy(val => val.AttributeKey!)
-                .ToList();
-
-            // Build ProductAttributeDto list
-            var attributes = groupedAttributeValues.Select(group =>
-            {
-                var firstVal = group.First();
-                attributeDict.TryGetValue(group.Key, out var definition);
-
-                return new ProductAttributeDto
-                {
-                    Key = firstVal.AttributeKey!,
-                    Label = firstVal.AttributeLabel ?? firstVal.AttributeKey!,
-                    Values = group.Select(v => v.Value).Where(v => !string.IsNullOrWhiteSpace(v)).ToList(),
-                    DataType = definition?.DataType ?? "String",
-                    Icon = definition?.Icon,
-                    AllowedValues = definition?.AllowedValues
-                };
-            }).ToList();
-
             return new ProductBySubCategoryResponseDto
             {
-                Pid = entity.Id.ToString(),
-                Cid = entity.CategoryId.ToString(),
-                Scid = entity.SubCategoryId.ToString(),
+                Pid = $"P{entity.Id:D4}",
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
                 Rating = entity.Rating,
                 Reviews = entity.Reviews,
-                CategoryType = entity.CategoryNameSnapshot,
-                Attributes = attributes
+                CategoryId = entity.CategoryId.ToString() ?? string.Empty,
+                SubCategoryId = entity.SubCategoryId.ToString() ?? string.Empty,
+                CategoryNameSnapshot = entity.CategoryNameSnapshot,
+                SubCategoryNameSnapshot = entity.SubCategoryNameSnapshot,
+                IsActive = entity.IsActive,
+                IsTrending = entity.IsTrending ?? false,
+                IsFeatured = entity.IsFeatured ?? false,
+                Tags = new List<string> { entity.CategoryNameSnapshot ?? "", entity.SubCategoryNameSnapshot ?? "" },
+                CreatedAt = entity.CreatedAt,
+                UpdatedAt = entity.UpdatedAt,
+                Currency = entity.Currency ?? "INR",
+
+                // Collect all variant-level attributes and group them
+                Attributes = entity.VariantMasters?
+                .SelectMany(v => v.Attributes ?? new List<ProductAttributeValue>())
+                .Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))
+                .GroupBy(a => a.AttributeKey!)
+                .Select(g => new ProductAttributeDto
+                {
+                    Key = g.Key,
+                    Label = g.First().AttributeLabel ?? g.Key,
+                    DataType = g.First().AttributeDataTypeId?.ToString() ?? "String",
+                    Values = g.Select(a => a.Value!).Distinct().ToList(),
+                    Icon = null
+                })
+                .ToList() ?? new List<ProductAttributeDto>(),
+
+                ProductImages = entity.ProductImages?.Select(i => i.ImageUrl).ToList() ?? new(),
+
+                Variants = entity.VariantMasters?.Select(v => new VariantResponseDto
+                {
+                    Sku = $"SKU-{v.Id:D4}",
+                    Name = v.Name,
+                    Price = v.Price,
+                    MRP = v.MRP,
+                    Quantity = v.StockQuantity ?? 0,
+                    IsDefault = v.IsDefault,
+                    Attributes = v.Attributes?.Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))
+                                .ToDictionary(a => a.AttributeKey!, a => a.Value!) ?? new Dictionary<string, string>(),
+                    VariantImages = v.VariantImages?.Select(i => i.ImageUrl).ToList() ?? new(),
+                    DurationMinutes = v.DurationMinutes,
+                    AvailableSlots = v.AvailableSlots,
+                    BookingType = v.BookingType
+                }).ToList() ?? new()
             };
         }
 
     }
+
 }

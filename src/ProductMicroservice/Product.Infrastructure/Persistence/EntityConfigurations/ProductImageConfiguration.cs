@@ -32,7 +32,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired();
 
             entity.HasOne(img => img.Product)
-                .WithMany(p => p.Images)
+                .WithMany(p => p.ProductImages)
                 .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

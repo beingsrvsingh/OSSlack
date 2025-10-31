@@ -54,24 +54,23 @@ namespace Shared.Application.Contracts
                     Label = firstVal.AttributeLabel ?? firstVal.AttributeKey!,
                     Values = group.Select(v => v.Value ?? "").Where(v => !string.IsNullOrWhiteSpace(v)).ToList(),
                     DataType = definition?.DataType ?? "String",
-                    Icon = definition?.Icon,
-                    AllowedValues = definition?.AllowedValues
+                    Icon = definition?.Icon
                 };
             }).ToList();
 
             return new SearchResponseDto
             {
                 Pid = entity.Pid.ToString(),
-                Cid = entity.Cid.ToString(),
-                Scid = entity.Scid.ToString(),
+                //Cid = entity.Cid.ToString(),
+                //Scid = entity.Scid.ToString(),
                 Name = entity.Name,
                 ThumbnailUrl = entity.ThumbnailUrl,
-                Cost = (double)entity.Cost,
+                //Cost = (double)entity.Cost,
                 Rating = entity.Rating,
                 Reviews = entity.Reviews,
-                CategoryType = "",
-                Quantity = 1,
-                Limit = 1,
+                //CategoryType = "",
+                //Quantity = 1,
+                //Limit = 1,
                 Filter = Filter,
                 Attributes = attributes
             };

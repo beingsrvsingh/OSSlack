@@ -35,7 +35,7 @@ namespace Product.Infrastructure.Repositories
         public async Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId)
         {
             return await _context.ProductVariantMasters.AsNoTracking()
-                .Where(v => v.ProductId == productId)
+                .Where(v => v.ProductMasterId == productId)
                 .ToListAsync();
         }
 

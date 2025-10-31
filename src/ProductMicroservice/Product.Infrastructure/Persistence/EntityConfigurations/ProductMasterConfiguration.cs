@@ -21,7 +21,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(p => p.SubCategoryId)
                 .IsRequired()
-                .HasColumnName("subcategory_id");
+                .HasColumnName("sub_category_id");
 
             builder.Property(p => p.Name)
                 .IsRequired()
@@ -52,11 +52,21 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(p => p.CategoryNameSnapshot)
                 .HasMaxLength(100)
-                .HasColumnName("cat_snap");
+                .HasColumnName("category_name_snapshot");
 
             builder.Property(p => p.SubCategoryNameSnapshot)
                 .HasMaxLength(100)
-                .HasColumnName("subcat_snap");
+                .HasColumnName("sub_category_name_snapshot");            
+
+            builder.Property(p => p.IsTrending)
+                .HasColumnName("is_trending");
+
+            builder.Property(p => p.IsFeatured)
+                .HasColumnName("is_featured");
+
+            builder.Property(p => p.Currency)
+                .HasMaxLength(3)
+                .HasColumnName("currency");
 
             // Relationships
             builder.HasMany(p => p.RegionPriceMaster)
@@ -66,7 +76,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
 
             builder.HasMany(p => p.VariantMasters)
                 .WithOne(v => v.ProductMaster)
-                .HasForeignKey(v => v.ProductId)
+                .HasForeignKey(v => v.ProductMasterId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(p => p.LocalizationMasters)
@@ -89,7 +99,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(t => t.ProductMasterId)
                 .OnDelete(DeleteBehavior.Cascade);                           
                 
-            builder.HasMany(p => p.Images)
+            builder.HasMany(p => p.ProductImages)
                 .WithOne(img => img.Product)
                 .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
