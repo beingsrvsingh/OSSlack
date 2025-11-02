@@ -31,12 +31,9 @@
 
         // Categories & Tags
         public int? CategoryId { get; set; }
-        public PoojaCategory? Category { get; set; }
         public List<string>? Tags { get; set; } // e.g., "Satyanarayana", "Griha Pravesh"
 
         // Relationships
-        public ICollection<PoojaTemple> PoojaTemples { get; set; } = new List<PoojaTemple>();
-        public ICollection<PoojaPriest> PoojaPriests { get; set; } = new List<PoojaPriest>();
         public ICollection<PoojaAddon> Addons { get; set; } = new List<PoojaAddon>();
 
         // Metadata

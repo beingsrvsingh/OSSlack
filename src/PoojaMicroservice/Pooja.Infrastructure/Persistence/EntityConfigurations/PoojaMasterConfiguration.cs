@@ -96,22 +96,6 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_active");
 
             // Relationships
-            builder.HasOne(p => p.Category)
-                .WithMany(c => c.PoojaMasters)
-                .HasForeignKey(p => p.CategoryId)
-                .HasConstraintName("fk_pooja_master_category")
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasMany(p => p.PoojaTemples)
-                .WithOne(pt => pt.PoojaMaster)
-                .HasForeignKey(pt => pt.PoojaId)
-                .HasConstraintName("fk_pooja_temple_pooja_master");
-
-            builder.HasMany(p => p.PoojaPriests)
-                .WithOne(pp => pp.PoojaMaster)
-                .HasForeignKey(pp => pp.PoojaId)
-                .HasConstraintName("fk_pooja_priest_pooja_master");
-
             builder.HasMany(p => p.Addons)
                 .WithOne(a => a.PoojaMaster)
                 .HasForeignKey(a => a.PoojaId)

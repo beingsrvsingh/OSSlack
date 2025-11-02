@@ -17,8 +17,6 @@ namespace Pooja.Infrastructure.Persistence.Repository
 
         public async Task<PoojaMaster?> GetByIdAsync(int id) =>
         await _dbContext.PoojaMasters
-            .Include(p => p.PoojaTemples)
-            .Include(p => p.PoojaPriests)
             .Include(p => p.Addons)
             .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -49,12 +47,12 @@ namespace Pooja.Infrastructure.Persistence.Repository
 
         public async Task<IEnumerable<PoojaMaster>> GetByTempleAsync(int templeId) =>
             await _dbContext.PoojaMasters
-                .Where(p => p.PoojaTemples.Any(pt => pt.TempleId == templeId))
+                //.Where(p => p.PoojaTemples.Any(pt => pt.TempleId == templeId))
                 .ToListAsync();
 
         public async Task<IEnumerable<PoojaMaster>> GetByPriestAsync(int priestId) =>
             await _dbContext.PoojaMasters
-                .Where(p => p.PoojaPriests.Any(pp => pp.PriestId == priestId))
+                //.Where(p => p.PoojaPriests.Any(pp => pp.PriestId == priestId))
                 .ToListAsync();
     }
 

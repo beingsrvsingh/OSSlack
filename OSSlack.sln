@@ -211,7 +211,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kathavachak.Infrastructure"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PoojaMicroservice", "PoojaMicroservice", "{D595EEE1-1503-8ADC-4387-02672BDA75BD}"
 	ProjectSection(SolutionItems) = preProject
-		src\SearchAggregatorMicroservice\SearchAggregator.Infrastructure\README.md = src\SearchAggregatorMicroservice\SearchAggregator.Infrastructure\README.md
 		seed.sql = seed.sql
 	EndProjectSection
 EndProject
