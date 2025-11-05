@@ -17,7 +17,7 @@ namespace AstrologerMicroservice.Domain.Entities
         public bool IsAvailable { get; set; } = true;
 
         [ForeignKey(nameof(AstrologerId))]
-        public virtual AstrologerEntity Astrologer { get; set; } = null!;
+        public virtual AstrologerMaster Astrologer { get; set; } = null!;
 
         public virtual ICollection<TimeSlot> TimeSlots { get; set; } = new List<TimeSlot>();
     }

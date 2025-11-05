@@ -9,15 +9,11 @@ namespace AstrologerMicroservice.Domain.Entities
         [Key]
         public int Id { get; set; }
         public int AstrologerId { get; set; }
-        public int LanguageId { get; set; }
 
         public string? LanguageName { get; set; }
 
         [ForeignKey(nameof(AstrologerId))]
-        public AstrologerEntity Astrologer { get; set; } = null!;
-
-        [ForeignKey(nameof(LanguageId))]
-        public virtual LanguageMaster Language { get; set; } = null!;
+        public AstrologerMaster Astrologer { get; set; } = null!;
     }
 
 }

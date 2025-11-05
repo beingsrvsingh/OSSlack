@@ -3,6 +3,8 @@ using AstrologerMicroservice.Application.Service;
 using AstrologerMicroservice.Domain.Entities;
 using AstrologerMicroservice.Domain.Repositories;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
@@ -20,7 +22,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<AstrologerEntity>> GetAvailableAsync(DateTime date, string language, string expertise)
+        public async Task<IEnumerable<AstrologerMaster>> GetAvailableAsync(DateTime date, string language, string expertise)
         {
             try
             {
@@ -29,16 +31,94 @@ namespace AstrologerMicroservice.Infrastructure.Service
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch available astrologers.");
-                return Enumerable.Empty<AstrologerEntity>();
+                return Enumerable.Empty<AstrologerMaster>();
             }
         }
 
-        public async Task<AstrologerEntity?> GetByIdAsync(int astrologerId)
+        public async Task<CatalogResponseDto?> GetByIdAsync(int astrologerId)
         {
             _logger.LogInfo($"Getting astrologer by Id: {astrologerId}");
             try
             {
-                var astrologer = await _repository.GetByIdAsync(astrologerId);
+                var query = _repository.Query();
+
+                var astrologer = await query
+                    .Where(p => p.Id == astrologerId)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        IsActive = p.IsActive,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        CategoryName = p.CategoryNameSnapshot,
+                        SubCategoryName = p.SubCategoryNameSnapshot,
+                        Currency = p.Currency ?? "INR",
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+
+                        // Media
+                        Media = p.AstrologerMedia.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // Astrologer-level addons
+                        Addons = p.AstrologerAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Price = a.Price,
+                            Description = a.Description,
+                            Currency = a.Currency ?? "0"
+                        }).ToList(),
+
+                        // Astrologer-level attributes
+                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId,
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.AstrologerExpertises.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id,
+                            Name = v.Name,
+                            Price = v.Price,
+                            MRP = v.MRP,
+                            StockQuantity = v.StockQuantity,
+                            DurationMinutes = v.DurationMinutes,
+                            Attributes = v.AstrologerAttributeValues.Select(a => new AttributeResponseDto
+                            {
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId,
+                            }).ToList(),
+                            Addons = v.AstrologerAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Price = a.Price,
+                                Description = a.Description,
+                                Currency = a.Currency ?? "0"
+                            }).ToList(),
+                            Media = v.AstrologerExpertiseMedia.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
                 if (astrologer == null)
                     _logger.LogWarning($"Astrologer with Id {astrologerId} not found.");
                 return astrologer;
@@ -50,7 +130,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<AstrologerEntity?> GetByUserIdAsync(string userId)
+        public async Task<AstrologerMaster?> GetByUserIdAsync(string userId)
         {
             _logger.LogInfo($"Getting astrologer by UserId: {userId}");
             try
@@ -67,7 +147,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<IEnumerable<AstrologerEntity>> GetAllAsync(int page = 1, int pageSize = 20)
+        public async Task<IEnumerable<AstrologerMaster>> GetAllAsync(int page = 1, int pageSize = 20)
         {
             _logger.LogInfo($"Getting all astrologers - Page: {page}, PageSize: {pageSize}");
             try
@@ -88,7 +168,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             try
             {
                 // Check if astrologer exists by unique field, e.g. Email
-                var exists = await _repository.AnyAsync(a => a.UserId == command.UserId);
+                var exists = await _repository.AnyAsync(a => a.Id.ToString() == command.UserId);
                 if (exists)
                 {
                     _logger.LogWarning($"Astrologer with userId {command.UserId} already exists.");
@@ -96,14 +176,14 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 }
 
                 // Create new astrologer
-                var astrologer = command.Adapt<AstrologerEntity>();
+                var astrologer = command.Adapt<AstrologerMaster>();
 
                 astrologer.AstrologerLanguages.Clear();
                 foreach (var languageEnum in command.Languages)
                 {
                     astrologer.AstrologerLanguages.Add(new AstrologerLanguage
                     {
-                        LanguageId = (int)languageEnum
+                        Id = (int)languageEnum
                     });
                 }
 
@@ -152,7 +232,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 {
                     astrologer.AstrologerLanguages.Add(new AstrologerLanguage
                     {
-                        LanguageId = (int)langEnum
+                        Id = (int)langEnum
                     });
                 }
 
@@ -212,14 +292,14 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
                     Pid = p.Id.ToString(),
-                    Cid = p.CategoryId.ToString(),
-                    Scid = p.SubcategoryId.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    Cost = (double)(p.Price ?? 0),
+                    //Cost = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    CategoryType = "Temple",
-                    Quantity = 1,
-                    Limit = 1,
+                    //CategoryType = "Temple",
+                    //Quantity = 1,
+                    //Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],

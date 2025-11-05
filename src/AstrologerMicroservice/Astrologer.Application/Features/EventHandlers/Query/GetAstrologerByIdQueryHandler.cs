@@ -7,7 +7,7 @@ using Shared.Utilities.Response;
 
 namespace AstrologerMicroservice.Application.Features.EventHandlers.Query
 {
-    public class GetAstrologerByIdQueryHandler : IRequestHandler<GetSearchAstrologersQuery, Result>
+    public class GetAstrologerByIdQueryHandler : IRequestHandler<GetAstrologerByIdQuery, Result>
     {
         private readonly IAstrologerService _astrologerService;
         private readonly ILoggerService<GetAstrologerByIdQueryHandler> _logger;
@@ -20,10 +20,10 @@ namespace AstrologerMicroservice.Application.Features.EventHandlers.Query
             _logger = logger;
         }
 
-        public async Task<Result> Handle(GetSearchAstrologersQuery request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetAstrologerByIdQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInfo("Fetching astrologer with ID: {Id}", request.Language!);
-            var astrologer = await _astrologerService.GetAllAsync();
+            _logger.LogInfo("Fetching astrologer with ID: {Id}", request.Id!);
+            var astrologer = await _astrologerService.GetByIdAsync(request.Id);
 
             if (astrologer != null)
             {
@@ -31,7 +31,7 @@ namespace AstrologerMicroservice.Application.Features.EventHandlers.Query
             }
             else
             {
-                _logger.LogWarning("Astrologer not found for ID: {Id}", request.Language!);
+                _logger.LogWarning("Astrologer not found for ID: {Id}", request.Id!);
                 return Result.Failure(new FailureResponse("ASTRO_NOT_FOUND", "Astrologer not found."));
             }
         }

@@ -7,7 +7,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
 {
-    public class AstrologerRepository : Repository<AstrologerEntity>, IAstrologerRepository
+    public class AstrologerRepository : Repository<AstrologerMaster>, IAstrologerRepository
     {
         private readonly AstrologerDbContext _context;
         public AstrologerRepository(AstrologerDbContext dbContext) : base(dbContext)
@@ -15,16 +15,16 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
             this._context = dbContext;
         }
 
-        public async Task<IEnumerable<AstrologerEntity>> GetAvailableAsync(DateTime date, string language, string expertise)
+        public async Task<IEnumerable<AstrologerMaster>> GetAvailableAsync(DateTime date, string language, string expertise)
         {
             return await _context.Astrologers
             .Where(a => a.IsActive)
-            .Where(a => a.AstrologerLanguages.Any(l => l.Language.Name == language))
+            .Where(a => a.AstrologerLanguages.Any(l => l.LanguageName == language))
             .Where(a => a.Schedules.Any(s => s.Day == date.DayOfWeek))
             .ToListAsync();
         }
 
-        public async Task<IEnumerable<AstrologerEntity>> GetAllAsync(int page = 1, int pageSize = 20)
+        public async Task<IEnumerable<AstrologerMaster>> GetAllAsync(int page = 1, int pageSize = 20)
         {
             return await _context.Astrologers
                 .AsNoTracking()
@@ -34,7 +34,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
                 .ToListAsync();
         }
 
-        public async Task<AstrologerEntity?> GetAstrologerWithLanguagesAndExpertisesAsync(int id)
+        public async Task<AstrologerMaster?> GetAstrologerWithLanguagesAndExpertisesAsync(int id)
         {
             return await _context.Astrologers
                 .Include(a => a.AstrologerLanguages)

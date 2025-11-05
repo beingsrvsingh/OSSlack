@@ -17,12 +17,15 @@ namespace AstrologerMicroservice.Domain.Entities
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? CategoryNameSnapshot { get; set; }
 
-        public int ExpertiseId { get; set; }
+        public int? AstrologerId { get; set; }
+        public int? ExpertiseId { get; set; }
+
+        [ForeignKey(nameof(AstrologerId))]
+        public virtual AstrologerMaster? AstrologerMaster { get; set; } = null!;
 
         [ForeignKey(nameof(ExpertiseId))]
-        public virtual AstrologerExpertise AstrologerExpertise { get; set; } = null!;
+        public virtual AstrologerExpertise? AstrologerExpertise { get; set; }
     }
 
 }

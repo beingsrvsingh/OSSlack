@@ -18,9 +18,6 @@ namespace Identity.Infrastructure.Persistence.EntityConfigurations
             builder.Property(al => al.AstrologerId)
                    .HasColumnName("astrologer_id");
 
-            builder.Property(al => al.LanguageId)
-                   .HasColumnName("language_id");
-
             builder.Property(al => al.LanguageName)
                    .HasColumnName("language_name");
 
@@ -29,16 +26,6 @@ namespace Identity.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(al => al.AstrologerId)
                    .HasConstraintName("fk_astrologer_language_astrologer_id")
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(al => al.Language)
-                   .WithMany(l => l.AstrologerLanguages)
-                   .HasForeignKey(al => al.LanguageId)
-                   .HasConstraintName("fk_astrologer_language_language_id")
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasIndex(al => new { al.AstrologerId, al.LanguageId })
-                   .IsUnique()
-                   .HasDatabaseName("ux_astrologer_language_astrologerid_languageid");
         }
 
     }

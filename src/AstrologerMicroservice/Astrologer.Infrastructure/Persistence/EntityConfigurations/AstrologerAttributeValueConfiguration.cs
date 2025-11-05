@@ -8,7 +8,7 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AstrologerAttributeValue> builder)
         {
-            builder.ToTable("astrologer_attribute_values");
+            builder.ToTable("astrologer_attribute_value");
 
             builder.HasKey(aav => aav.Id);
 
@@ -19,6 +19,9 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
             builder.Property(aav => aav.ExpertiseId)
                    .HasColumnName("expertise_id")
                    .IsRequired();
+
+            builder.Property(aav => aav.AstrologerId)
+                   .HasColumnName("astrologer_id");
 
             builder.Property(aav => aav.CatalogAttributeId)
                    .HasColumnName("catalog_attribute_id")
@@ -51,10 +54,15 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                    .IsRequired();
 
+            builder.HasOne(pav => pav.AstrologerMaster)
+                .WithMany(p => p.AttributeValues)
+                .HasForeignKey(pav => pav.AstrologerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(aav => aav.AstrologerExpertise)
                    .WithMany(a => a.AstrologerAttributeValues)
                    .HasForeignKey(aav => aav.ExpertiseId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.SetNull);
 
             // Optional: Add indexes if necessary, e.g. on AstrologerId + CatalogAttributeId
             builder.HasIndex(aav => new { aav.ExpertiseId, aav.CatalogAttributeId })
