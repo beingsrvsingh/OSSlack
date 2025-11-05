@@ -496,11 +496,17 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("parent_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("category_master", (string)null);
 
@@ -509,61 +515,61 @@ namespace Catalog.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 532, DateTimeKind.Local).AddTicks(8379),
+                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 932, DateTimeKind.Local).AddTicks(7671),
                             Description = "Religious products and items",
                             DisplayOrder = 1,
                             ImageUrl = "https://example.com/images/product_icon.png",
                             IsActive = true,
                             Name = "Product",
-                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(196)
+                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(4022)
                         },
                         new
                         {
                             Id = 2,
                             CategoryType = "Temple",
-                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(727),
+                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5181),
                             Description = "Religious temples and associated services",
                             DisplayOrder = 2,
                             ImageUrl = "https://example.com/images/temple_icon.png",
                             IsActive = true,
                             Name = "Temple",
-                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(729)
+                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5197)
                         },
                         new
                         {
                             Id = 3,
                             CategoryType = "Priest",
-                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(732),
+                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5205),
                             Description = "Priest services and rituals",
                             DisplayOrder = 3,
                             ImageUrl = "https://example.com/images/priest_icon.png",
                             IsActive = true,
                             Name = "Priest",
-                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(733)
+                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5206)
                         },
                         new
                         {
                             Id = 4,
                             CategoryType = "Astrologer",
-                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(735),
+                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5215),
                             Description = "Astrology services and products",
                             DisplayOrder = 4,
                             ImageUrl = "https://example.com/images/astrologer_icon.png",
                             IsActive = true,
                             Name = "Astrologer",
-                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(736)
+                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5215)
                         },
                         new
                         {
                             Id = 5,
                             CategoryType = "Kathavachak",
-                            CreatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(738),
+                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5219),
                             Description = "Religious storytellers and discourses",
                             DisplayOrder = 5,
                             ImageUrl = "https://example.com/images/kathavachak_icon.png",
                             IsActive = true,
                             Name = "Kathavachak",
-                            UpdatedAt = new DateTime(2025, 10, 23, 9, 59, 54, 534, DateTimeKind.Local).AddTicks(739)
+                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5220)
                         });
                 });
 
@@ -671,12 +677,7 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.Property<int?>("ParentSubcategoryId")
                         .HasColumnType("int")
-                        .HasColumnName("parent_subcategory_id");
-
-                    b.Property<string>("SubcategoryType")
-                        .IsRequired()
-                        .HasColumnType("LONGTEXT")
-                        .HasColumnName("subcategory_type");
+                        .HasColumnName("parent_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
@@ -756,6 +757,17 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Catalog.Domain.Entities.CategoryMaster", b =>
+                {
+                    b.HasOne("Catalog.Domain.Entities.CategoryMaster", "ParentCategoryMaster")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_category_parent");
+
+                    b.Navigation("ParentCategoryMaster");
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.PoojaKitItemMaster", b =>
                 {
                     b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "KitSubcategory")
@@ -816,6 +828,8 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryMaster", b =>
                 {
+                    b.Navigation("ChildCategories");
+
                     b.Navigation("Localizations");
 
                     b.Navigation("SubCategoryMasters");

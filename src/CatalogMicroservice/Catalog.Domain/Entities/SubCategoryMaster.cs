@@ -20,9 +20,6 @@ public partial class SubCategoryMaster
 
     public bool IsActive { get; set; } = true;
 
-    [Required]
-    public SubcategoryType SubcategoryType { get; set; }
-
     public int? ParentSubcategoryId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

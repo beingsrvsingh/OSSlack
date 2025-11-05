@@ -27,6 +27,18 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(s => s.CategoryMasterId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Property(c => c.ParentCategoryId)
+              .HasColumnName("parent_id");
+
+            builder.HasOne(c => c.ParentCategoryMaster)
+                   .WithMany(c => c.ChildCategories)
+                   .HasForeignKey(c => c.ParentCategoryId)
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .HasConstraintName("fk_category_parent");
+
+            // Child categories navigation
+            builder.Navigation(c => c.ChildCategories).AutoInclude(false);
+
             builder.HasMany(c => c.Localizations)
            .WithOne(l => l.Category)
            .HasForeignKey(l => l.CategoryId)

@@ -30,6 +30,8 @@ find . -name "*.csproj";
 
 dotnet sln add ./src/CatalogMicroservice/*/*.csproj
 
+cd src/CatalogMicroservice/catalog.infrastructure
+
 dotnet ef migrations add Initial-Create --output-dir Migrations --context CatalogDbContext --startup-project ../Catalog.API 
 
 dotnet ef database update --context CatalogDbContext --startup-project ../Catalog.API

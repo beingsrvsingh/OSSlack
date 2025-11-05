@@ -17,11 +17,10 @@ public class SubCategoryMasterConfiguration : IEntityTypeConfiguration<SubCatego
         builder.Property(s => s.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
         builder.Property(s => s.Description).HasColumnName("description").HasMaxLength(500);
         builder.Property(s => s.IsActive).HasColumnName("is_active").HasDefaultValue(true);
-        builder.Property(s => s.SubcategoryType).HasColumnName("subcategory_type").HasColumnType("LONGTEXT").HasConversion<string>();
         builder.Property(s => s.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         builder.Property(s => s.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
 
-        builder.Property(s => s.ParentSubcategoryId).HasColumnName("parent_subcategory_id");
+        builder.Property(s => s.ParentSubcategoryId).HasColumnName("parent_id");
 
         builder.HasOne(s => s.CategoryMaster)
                .WithMany(c => c.SubCategoryMasters)
