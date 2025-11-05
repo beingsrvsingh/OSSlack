@@ -18,8 +18,7 @@ namespace Product.Domain.Entities
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [Required]
-        public int ProductMasterId { get; set; }
+        public int? ProductMasterId { get; set; }
 
         [ForeignKey(nameof(ProductMasterId))]
         public virtual ProductMaster ProductMaster { get; set; } = null!;

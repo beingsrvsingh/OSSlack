@@ -34,18 +34,6 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(v => v.IsDefault)
                 .HasColumnName("is_default");
 
-            builder.Property(v => v.DurationMinutes)
-            .HasColumnType("int")
-            .IsRequired(false);
-
-            builder.Property(v => v.AvailableSlots)
-                .HasColumnType("int")
-                .IsRequired(false);
-
-            builder.Property(v => v.BookingType)
-                .HasMaxLength(50)
-                .IsRequired(false);
-
             builder.Property(v => v.ProductMasterId)
                 .HasColumnName("product_master_id");
 
@@ -63,6 +51,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             // Relationships for Attributes
             builder.HasMany(v => v.Attributes)
                 .WithOne(a => a.ProductVariant)
+                .HasForeignKey(a => a.ProductVariantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.ProductAddons)
+                .WithOne(a => a.ProductVariantMaster)
                 .HasForeignKey(a => a.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

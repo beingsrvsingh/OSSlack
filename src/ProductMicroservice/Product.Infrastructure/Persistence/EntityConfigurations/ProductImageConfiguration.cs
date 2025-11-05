@@ -31,6 +31,14 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("product_id")
                 .IsRequired();
 
+            entity.Property(vi => vi.MediaType)
+                .HasColumnName("media_type")
+                .HasConversion<string>();
+
+            entity.Property(p => p.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+            entity.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
             entity.HasOne(img => img.Product)
                 .WithMany(p => p.ProductImages)
                 .HasForeignKey(img => img.ProductId)

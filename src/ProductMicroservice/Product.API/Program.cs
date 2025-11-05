@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
+using Microsoft.Extensions.Options;
 using Product.Application.Services;
 using Product.Infrastructure;
 using Product.Infrastructure.Services;
@@ -46,6 +47,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddJsonOptions(opts =>
 {
     opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    //opts.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    //opts.JsonSerializerOptions.WriteIndented = true;
 });
 
 // Add services to the container.

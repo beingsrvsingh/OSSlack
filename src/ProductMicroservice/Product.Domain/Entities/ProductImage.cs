@@ -1,20 +1,11 @@
+using Shared.Domain.Entities.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Product.Domain.Entities
 {
-    public class ProductImage
+    public class ProductImage : BaseMedia
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [MaxLength(300)]
-        public string ImageUrl { get; set; } = null!;
-
-        public int SortOrder { get; set; } = 0;
-        [MaxLength(50)]        
-        public string? AltText { get; set; }
 
         [Required]
         public int ProductId { get; set; }

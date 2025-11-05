@@ -1,4 +1,5 @@
 using Product.Domain.Entities;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 
 namespace Product.Application.Services
@@ -18,7 +19,7 @@ namespace Product.Application.Services
         Task<bool> AddProductAsync(ProductMaster product);
         Task<bool> UpdateProductAsync(ProductMaster product);
         Task<bool> DeleteProductAsync(int productId);
-        Task<ProductMaster?> GetProductWithAttributesAsync(int productId);
+        Task<CatalogResponseDto?> GetProductWithAttributesAsync(int productId);
 
         Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
         List<int>attributeIds, int pageNumber,

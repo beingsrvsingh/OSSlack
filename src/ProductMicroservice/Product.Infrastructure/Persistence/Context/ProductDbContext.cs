@@ -14,6 +14,7 @@ namespace Product.Infrastructure.Persistence.Context
         public DbSet<ProductMaster> ProductMasters { get; set; } = null!;
         public DbSet<ProductRegionPriceMaster> ProductRegionPriceMasters { get; set; } = null!;
         public DbSet<ProductVariantMaster> ProductVariantMasters { get; set; } = null!;
+        public DbSet<ProductAddon> ProductAddons { get; set; } = null!;
         public DbSet<LocalizedProductInfoMaster> LocalizedProductInfoMasters { get; set; } = null!;
         public DbSet<ProductTagMaster> ProductTagMasters { get; set; } = null!;
         public DbSet<ProductSEOInfoMaster> ProductSEOInfoMasters { get; set; } = null!;

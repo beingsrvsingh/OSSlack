@@ -17,8 +17,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
 
             // ProductMaster relationship
             builder.Property(pav => pav.ProductMasterId)
-                .HasColumnName("product_id")
-                .IsRequired();
+                .HasColumnName("product_id");
 
             builder.HasOne(pav => pav.ProductMaster)
                 .WithMany(p => p.AttributeValues)
@@ -28,11 +27,6 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             // ProductVariant relationship (optional)
             builder.Property(pav => pav.ProductVariantId)
                 .HasColumnName("product_variant_id");
-
-            builder.HasOne(pav => pav.ProductVariant)
-                .WithMany(v => v.Attributes)
-                .HasForeignKey(pav => pav.ProductVariantId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(pav => pav.CatalogAttributeId)
                 .HasColumnName("catalog_attribute_id");
@@ -61,6 +55,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(pav => pav.CreatedAt)
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+            builder.HasOne(pav => pav.ProductVariant)
+                .WithMany(v => v.Attributes)
+                .HasForeignKey(pav => pav.ProductVariantId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 

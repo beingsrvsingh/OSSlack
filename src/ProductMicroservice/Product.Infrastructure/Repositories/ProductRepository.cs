@@ -69,6 +69,11 @@ namespace Product.Infrastructure.Repositories
             return await query.AsNoTracking().Where(predicate).ToListAsync();
         }
 
+        public IQueryable<ProductMaster> Query()
+        {
+            return _context.ProductMasters.AsNoTracking();
+        }
+
         public async Task<ProductMaster?> GetSingleAsync(Expression<Func<ProductMaster, bool>> predicate, Func<IQueryable<ProductMaster>, IQueryable<ProductMaster>>? include = null)
         {
             IQueryable<ProductMaster> query = _context.ProductMasters;

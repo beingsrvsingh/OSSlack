@@ -103,6 +103,11 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .WithOne(img => img.Product)
                 .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.ProductAddons)
+                .WithOne(img => img.Product)
+                .HasForeignKey(img => img.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

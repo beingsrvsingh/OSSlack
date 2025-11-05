@@ -23,6 +23,10 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(vi => vi.SortOrder)
                 .HasColumnName("sort_order");
 
+            builder.Property(vi => vi.MediaType)
+                .HasColumnName("media_type")
+                .HasConversion<string>();
+
             builder.Property(vi => vi.AltText)
                 .HasMaxLength(50)
                 .HasColumnName("alt_text");
@@ -30,6 +34,10 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(vi => vi.ProductVariantId)
                 .IsRequired()
                 .HasColumnName("product_variant_id");
+
+            builder.Property(p => p.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+            builder.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            builder.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(vi => vi.ProductVariant)
                 .WithMany(v => v.VariantImages)

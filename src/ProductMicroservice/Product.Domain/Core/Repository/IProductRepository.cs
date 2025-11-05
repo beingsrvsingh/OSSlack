@@ -8,6 +8,7 @@ namespace Product.Domain.Repository
     {
         Task<List<ProductMaster>> GetProductsByIdAndCategoryIdAsync(List<int> pids, int? cid);
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
+        IQueryable<ProductMaster> Query();
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);
         Task<IEnumerable<LocalizedProductInfoMaster>> GetLocalizedInfoAsync(int productId);

@@ -147,9 +147,6 @@ namespace Product.Application.Contracts
                     Attributes = v.Attributes?.Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))
                                 .ToDictionary(a => a.AttributeKey!, a => a.Value!) ?? new Dictionary<string, string>(),
                     VariantImages = v.VariantImages?.Select(i => i.ImageUrl).ToList() ?? new(),
-                    DurationMinutes = v.DurationMinutes,
-                    AvailableSlots = v.AvailableSlots,
-                    BookingType = v.BookingType
                 }).ToList() ?? new()
             };
         }
