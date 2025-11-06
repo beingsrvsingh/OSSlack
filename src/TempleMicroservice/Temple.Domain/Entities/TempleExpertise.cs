@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shared.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Temple.Domain.Entities
@@ -9,54 +10,32 @@ namespace Temple.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
         public int TempleId { get; set; }
 
-        [Required]
-        public int CategoryId { get; set; }
+        [ForeignKey(nameof(TempleId))]
+        public virtual TempleMaster TempleMaster { get; set; } = null!;
 
-        [Required]
-        public int SubCategoryId { get; set; }
-
-        [MaxLength(100)]
-        public string? CategoryNameSnapshot { get; set; }
-
-        [MaxLength(100)]
-        public string? SubCategoryNameSnapshot { get; set; }
-
-        // Basic Info
         [Required, MaxLength(100)]
         public string Name { get; set; } = null!;
 
-        [MaxLength(1000)]
-        public string? Description { get; set; }
-
-        public bool HasSchedule { get; set; } = false;
-
-        // Pricing and Duration
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
-        public TimeSpan Duration { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? MRP { get; set; }
 
-        // Optional: If you want ratings (like in Priest)
-        [Column(TypeName = "decimal(3,2)")]
-        public decimal AverageRating { get; set; } = 0;
+        public int? StockQuantity { get; set; }
 
-        public int TotalRatings { get; set; } = 0;
+        public int DurationMinutes { get; set; }
+        public BookingType BookingType { get; set; }
+        public int AvailableSlots { get; set; } = 1;
 
-        // Flags
-        public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-
-        // Navigation
-        [ForeignKey(nameof(TempleId))]
-        public virtual TempleMaster Temple { get; set; } = null!;
+        public bool IsDefault { get; set; } = false;
 
         // Attributes associated with this expertise
         public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
+        public virtual ICollection<TempleExpertiseImage> TempleExpertiseImages { get; set; } = new List<TempleExpertiseImage>();
+        public virtual ICollection<TempleAddon> TempleAddons { get; set; } = new List<TempleAddon>();
     }
 
 }

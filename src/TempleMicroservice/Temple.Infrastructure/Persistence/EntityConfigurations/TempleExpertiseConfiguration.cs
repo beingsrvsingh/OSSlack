@@ -10,74 +10,45 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
         {
             builder.ToTable("temple_expertise");
 
-            builder.HasKey(te => te.Id);
+            builder.HasKey(v => v.Id);
 
-            builder.Property(te => te.Id)
+            builder.Property(v => v.Id)
                 .HasColumnName("id");
 
-            builder.Property(te => te.TempleId)
-                .IsRequired()
+            builder.Property(v => v.TempleId)
                 .HasColumnName("temple_id");
 
-            builder.Property(te => te.CategoryId)
-                .IsRequired()
-                .HasColumnName("category_id");
-
-            builder.Property(te => te.SubCategoryId)
-                .IsRequired()
-                .HasColumnName("sub_category_id");
-
-            builder.Property(te => te.CategoryNameSnapshot)
-                .HasMaxLength(100)
-                .HasColumnName("category_name_snapshot");
-
-            builder.Property(te => te.SubCategoryNameSnapshot)
-                .HasMaxLength(100)
-                .HasColumnName("sub_category_name_snapshot");
-
-            builder.Property(te => te.Name)
+            builder.Property(v => v.Name)
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("name");
 
-            builder.Property(te => te.Description)
-                .HasMaxLength(1000)
-                .HasColumnName("description");
-
-            builder.Property(te => te.HasSchedule)
-                .HasDefaultValue(false)
-                .HasColumnName("has_schedule");
-
-            builder.Property(te => te.Price)
-                .HasColumnType("decimal(10,2)")
+            builder.Property(v => v.Price)
+                .HasColumnType("decimal(18,2)")
                 .HasColumnName("price");
 
-            builder.Property(te => te.Duration)
-                .HasColumnName("duration");
+            builder.Property(v => v.MRP)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("mrp");
 
-            builder.Property(te => te.AverageRating)
-                .HasColumnType("decimal(3,2)")
-                .HasDefaultValue(0)
-                .HasColumnName("average_rating");
+            builder.Property(v => v.StockQuantity)
+                .HasColumnName("stock_quantity");
 
-            builder.Property(te => te.TotalRatings)
-                .HasDefaultValue(0)
-                .HasColumnName("total_ratings");
+            builder.Property(v => v.DurationMinutes)
+                .HasColumnName("duration_minute");
 
-            builder.Property(te => te.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
+            builder.Property(v => v.BookingType)
+                .HasColumnName("booking_type")
+                .HasConversion<String>();
 
-            builder.Property(te => te.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
-                .HasColumnName("created_at");
+            builder.Property(v => v.AvailableSlots)
+                .HasColumnName("available_slots");
 
-            builder.Property(te => te.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
-                .HasColumnName("updated_at");
+            builder.Property(v => v.IsDefault)
+                .HasColumnName("is_default");
 
             // Relationships
-            builder.HasOne(te => te.Temple)
+            builder.HasOne(te => te.TempleMaster)
                 .WithMany(t => t.TempleExpertises)
                 .HasForeignKey(te => te.TempleId)
                 .HasConstraintName("fk_temple_expertise_temple_id")
@@ -85,8 +56,18 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
 
             builder.HasMany(te => te.AttributeValues)
                 .WithOne(av => av.TempleExpertise)
-                .HasForeignKey(av => av.ExpertiseId) // Assumes such a FK exists
+                .HasForeignKey(av => av.ExpertiseId)
                 .HasConstraintName("fk_attribute_value_expertise_id")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.TempleAddons)
+                .WithOne(a => a.TempleExpertise)
+                .HasForeignKey(a => a.TempleExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.TempleExpertiseImages)
+                .WithOne(vi => vi.TempleExpertise)
+                .HasForeignKey(vi => vi.TempleExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -1,4 +1,6 @@
-﻿using Shared.Application.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Application.Common.Contracts.Response;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Temple.Application.Services;
 using Temple.Domain.Entities;
@@ -22,11 +24,92 @@ namespace Temple.Infrastructure.Services
             return await _templeRepository.GetAllAsync(page, pageSize);
         }
 
-        public async Task<TempleMaster?> GetByIdWithDetailsAsync(int id)
+        public async Task<CatalogResponseDto?> GetByIdWithDetailsAsync(int id)
         {
             try
             {
-                return await _templeRepository.GetByIdWithDetailsAsync(id);
+                var query = _templeRepository.Query();
+
+                var productDto = await query
+                    .Where(p => p.Id == id)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        IsActive = p.IsActive,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        CategoryName = p.CategoryNameSnapshot,
+                        SubCategoryName = p.SubCategoryNameSnapshot,
+                        Currency = p.Currency ?? "INR",
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+
+                        // Media
+                        Media = p.TempleImages.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // Product-level addons
+                        Addons = p.TempleAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Price = a.Price,
+                            Description = a.Description,
+                            Currency = a.Currency ?? "0"
+                        }).ToList(),
+
+                        // Product-level attributes
+                        Attributes = p.TempleAttributes.Select(a => new AttributeResponseDto
+                        {
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId,
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.TempleExpertises.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id,
+                            Name = v.Name,
+                            Price = v.Price,
+                            MRP = v.MRP,
+                            StockQuantity = v.StockQuantity,
+                            DurationMinutes = v.DurationMinutes,
+                            BookingType = v.BookingType,
+                            AvailableSlots = v.AvailableSlots,
+                            Attributes = v.AttributeValues.Select(a => new AttributeResponseDto
+                            {
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId,
+                            }).ToList(),
+                            Addons = v.TempleAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Price = a.Price,
+                                Description = a.Description,
+                                Currency = a.Currency ?? "0"
+                            }).ToList(),
+                            Media = v.TempleExpertiseImages.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                return productDto;
             }
             catch (Exception ex)
             {
@@ -91,14 +174,14 @@ namespace Temple.Infrastructure.Services
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
                     Pid = p.Id.ToString(),
-                    Cid = p.CategoryId.ToString(),
-                    Scid = p.SubcategoryId.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    Cost = (double)(p.Price ?? 0),
+                    //Cost = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    CategoryType = "Temple",
-                    Quantity = 1,
-                    Limit = 1,
+                    //CategoryType = "Temple",
+                    //Quantity = 1,
+                    //Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],

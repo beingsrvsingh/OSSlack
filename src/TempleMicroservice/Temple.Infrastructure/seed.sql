@@ -144,3 +144,71 @@ INSERT INTO temple_exception (
     reason
 ) VALUES
 (1, 1, '2025-09-14', true, NULL, NULL, 'Closed due to renovation');
+
+
+-------------------------------Temple---------------------------------------
+
+use templedb;
+
+-- Temple Master
+INSERT INTO temple_master 
+(id, name, thumbnail_url, is_active, rating_snap, reviews_snap, category_id, sub_category_id, category_name_snapshot, sub_category_name_snapshot, currency, is_trending, is_featured, location_id, created_at)
+VALUES
+(1, 'Shree Balaji Temple', 'https://example.com/images/balaji_temple_main.png', TRUE, 4.9, 520, 2, 104, 'Service', 'Temple', 'INR', TRUE, TRUE, 101, NOW()),
+(2, 'ISKCON Temple', 'https://example.com/images/iskcon_temple_main.png', TRUE, 4.7, 430, 2, 104, 'Service', 'Temple', 'INR', FALSE, TRUE, 102, NOW());
+
+-- Temple Expertises (like Product Variants or Temple Poojas)
+INSERT INTO temple_expertise 
+(id, temple_id, name, price, mrp, duration_minute, is_default, booking_type, available_slots)
+VALUES
+(1, 1, 'Abhishekam Pooja', 1500.00, 1800.00, 45, TRUE, 'InPerson',5),
+(2, 1, 'Archana Pooja', 700.00, 900.00, 25, TRUE, 'Online',5),
+(3, 2, 'Krishna Abhishekam', 1200.00, 1500.00, 40, TRUE, 'InPerson',5),
+(4, 2, 'Aarti Seva', 500.00, 700.00, 20, TRUE, 'Online', 10);
+
+-- Temple Master Images
+INSERT INTO temple_image 
+(id, temple_id, media_type, image_url, alt_text, sort_order, created_at)
+VALUES
+(1, 1, 'Image', 'https://example.com/images/balaji_temple_entrance.png', 'Temple Entrance', 1, NOW()),
+(2, 1, 'Image', 'https://example.com/images/balaji_temple_inner.png', 'Inner Sanctum', 2, NOW()),
+(3, 2, 'Image', 'https://example.com/images/iskcon_temple_front.png', 'ISKCON Front View', 1, NOW()),
+(4, 2, 'Image', 'https://example.com/images/iskcon_temple_hall.png', 'Main Hall', 2, NOW());
+
+-- Temple Expertise Images
+INSERT INTO temple_expertise_image 
+(id, temple_expertise_id, media_type, image_url, alt_text, sort_order, created_at)
+VALUES
+(1, 1, 'Image', 'https://example.com/images/abhishekam_pooja.png', 'Abhishekam Pooja Ceremony', 1, NOW()),
+(2, 2, 'Image', 'https://example.com/images/archana_pooja.png', 'Archana Pooja Ritual', 1, NOW()),
+(3, 3, 'Image', 'https://example.com/images/krishna_abhishekam.png', 'Krishna Abhishekam', 1, NOW()),
+(4, 4, 'Image', 'https://example.com/images/aarti_seva.png', 'Evening Aarti Seva', 1, NOW());
+
+-- Temple Attribute Values (Expertise-level and Temple-level)
+INSERT INTO attribute_value 
+(id, temple_id, expertise_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, attribute_label, value, created_at)
+VALUES
+-- Temple-level attributes
+(1, 1, NULL, 1, 1, 'Location', 'Location', 'Tirupati, Andhra Pradesh', NOW()),
+(2, 1, NULL, 2, 2, 'MainDeity', 'Main Deity', 'Lord Balaji', NOW()),
+(3, 2, NULL, 3, 3, 'Location', 'Location', 'Bengaluru, Karnataka', NOW()),
+(4, 2, NULL, 4, 4, 'MainDeity', 'Main Deity', 'Lord Krishna', NOW()),
+-- Expertise-level attributes
+(5, NULL, 1, 5, 5, 'Priest', 'Priest', 'Pandit Shankar', NOW()),
+(6, NULL, 1, 6, 6, 'Language', 'Language', 'Sanskrit', NOW()),
+(7, NULL, 2, 7, 7, 'Priest', 'Priest', 'Pandit Mahesh', NOW()),
+(8, NULL, 3, 8, 8, 'Priest', 'Priest', 'Swami Nityanand', NOW()),
+(9, NULL, 4, 9, 9, 'Priest', 'Priest', 'Swami Govind', NOW());
+
+-- Temple Addons (General and Expertise-level)
+INSERT INTO temple_addon 
+(id, temple_id, temple_expertise_id, name, description, price, currency, is_active, display_order, created_at)
+VALUES
+-- Temple-level addons
+(1, 1, NULL, 'Temple Donation', 'Contribute towards temple maintenance', 100.00, 'INR', TRUE, 1, NOW()),
+(2, 2, NULL, 'Annadanam', 'Donate for daily free meals service', 200.00, 'INR', TRUE, 1, NOW()),
+-- Expertise-level addons
+(3, 1, 1, 'Extra Prasad', 'Additional prasad for family members', 250.00, 'INR', TRUE, 1, NOW()),
+(4, 1, 2, 'Special Flower Garland', 'Premium flowers for deity offering', 150.00, 'INR', TRUE, 1, NOW()),
+(5, 2, 3, 'VIP Darshan Pass', 'Priority darshan access for devotees', 500.00, 'INR', TRUE, 1, NOW()),
+(6, 2, 4, 'Photo Package', 'Get digital photos of Aarti and rituals', 300.00, 'INR', TRUE, 2, NOW());

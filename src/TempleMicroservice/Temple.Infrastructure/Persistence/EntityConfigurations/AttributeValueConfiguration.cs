@@ -16,8 +16,10 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("id");
 
             builder.Property(av => av.ExpertiseId)
-                .IsRequired()
                 .HasColumnName("expertise_id");
+
+            builder.Property(av => av.TempleId)
+                .HasColumnName("temple_id");
 
             builder.Property(av => av.CatalogAttributeId)
                 .IsRequired()
@@ -48,10 +50,15 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("created_at");
 
             // Foreign key relationship
+            builder.HasOne(pav => pav.TempleMaster)
+                .WithMany(p => p.TempleAttributes)
+                .HasForeignKey(pav => pav.TempleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(aav => aav.TempleExpertise)
-                  .WithMany(a => a.AttributeValues)
-                  .HasForeignKey(aav => aav.ExpertiseId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                   .WithMany(a => a.AttributeValues)
+                   .HasForeignKey(aav => aav.TempleId)
+                   .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasIndex(aav => new { aav.ExpertiseId, aav.CatalogAttributeId })
                    .HasDatabaseName("ix_temple_attribute_values_temple_catalogattribute");
