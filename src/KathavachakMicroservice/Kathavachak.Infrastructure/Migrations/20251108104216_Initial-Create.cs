@@ -21,17 +21,25 @@ namespace Kathavachak.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    user_id = table.Column<string>(type: "varchar(36)", maxLength: 36, nullable: false)
+                    name = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                    thumbnail_url = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    thumbnail_url = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                    is_active = table.Column<bool>(type: "tinyint(50)", maxLength: 50, nullable: false),
+                    rating_snap = table.Column<int>(type: "int", nullable: false),
+                    reviews_snap = table.Column<int>(type: "int", nullable: false),
+                    category_id = table.Column<int>(type: "int", nullable: false),
+                    sub_category_id = table.Column<int>(type: "int", nullable: false),
+                    category_name_snapshot = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    average_rating = table.Column<decimal>(type: "decimal(3,2)", nullable: false, defaultValue: 0m),
-                    total_ratings = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    is_active = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    sub_category_name_snapshot = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
-                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    currency = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    is_trending = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    is_featured = table.Column<bool>(type: "tinyint(1)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,50 +48,27 @@ namespace Kathavachak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "languages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    language_name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    language_code = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    display_order = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_languages", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "kathavachak_experties",
+                name: "kathavachak_expertise",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     kathavachak_id = table.Column<int>(type: "int", nullable: false),
-                    cat_id = table.Column<int>(type: "int", nullable: false),
-                    subcat_id = table.Column<int>(type: "int", nullable: false),
-                    yrs_of_exp = table.Column<int>(type: "int", nullable: false),
-                    proficiency_level = table.Column<string>(type: "longtext", nullable: false)
+                    name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    description = table.Column<string>(type: "longtext", nullable: true)
+                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    mrp = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    stock_quantity = table.Column<int>(type: "int", nullable: true),
+                    duration_minute = table.Column<int>(type: "int", nullable: false),
+                    booking_type = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    duration = table.Column<TimeSpan>(type: "time(6)", nullable: false),
-                    is_active = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    sub_cat_name_snap = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    category_name_snap = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    is_default = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_kathavachak_experties", x => x.id);
+                    table.PrimaryKey("PK_kathavachak_expertise", x => x.id);
                     table.ForeignKey(
-                        name: "FK_kathavachak_experties_kathavachak_master_kathavachak_id",
+                        name: "FK_kathavachak_expertise_kathavachak_master_kathavachak_id",
                         column: x => x.kathavachak_id,
                         principalTable: "kathavachak_master",
                         principalColumn: "id",
@@ -92,25 +77,51 @@ namespace Kathavachak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "kathavachak_media",
+                name: "kathavachak_image",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     kathavachak_id = table.Column<int>(type: "int", nullable: false),
-                    url = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                    image_url = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
+                    media_type = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    media_type = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    description = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true)
+                    alt_text = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    sort_order = table.Column<int>(type: "int", nullable: false),
+                    is_active = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kathavachak_image", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_kathavachak_image_kathavachak_master_kathavachak_id",
+                        column: x => x.kathavachak_id,
+                        principalTable: "kathavachak_master",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "kathavachak_language",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    kathavachak_id = table.Column<int>(type: "int", nullable: false),
+                    language_id = table.Column<int>(type: "int", nullable: false),
+                    language_name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_kathavachak_media", x => x.id);
+                    table.PrimaryKey("PK_kathavachak_language", x => x.id);
                     table.ForeignKey(
-                        name: "FK_kathavachak_media_kathavachak_master_kathavachak_id",
+                        name: "fk_kathavachak_language_kathavachak_id",
                         column: x => x.kathavachak_id,
                         principalTable: "kathavachak_master",
                         principalColumn: "id",
@@ -188,41 +199,49 @@ namespace Kathavachak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "kathavachak_language",
+                name: "kathavachak_addon",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    kathavachak_id = table.Column<int>(type: "int", nullable: false),
-                    language_id = table.Column<int>(type: "int", nullable: false),
-                    language_name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    kathavachak_id = table.Column<int>(type: "int", nullable: true),
+                    kathavachak_expertise_id = table.Column<int>(type: "int", nullable: true),
+                    name = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    description = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    currency = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, defaultValue: "INR")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    is_active = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    display_order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_kathavachak_language", x => x.id);
+                    table.PrimaryKey("pk_kathavachak_addon_id", x => x.id);
                     table.ForeignKey(
-                        name: "fk_kathavachak_language_kathavachak_id",
-                        column: x => x.kathavachak_id,
-                        principalTable: "kathavachak_master",
+                        name: "fk_kathavachak_addon_kathavachak_variant_id",
+                        column: x => x.kathavachak_expertise_id,
+                        principalTable: "kathavachak_expertise",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_kathavachak_language_language_id",
-                        column: x => x.language_id,
-                        principalTable: "languages",
-                        principalColumn: "Id",
+                        name: "fk_kathavachak_addons_kathavachak_id",
+                        column: x => x.kathavachak_id,
+                        principalTable: "kathavachak_master",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "attribute_values",
+                name: "kathavachak_attribute_value",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    expertise_id = table.Column<int>(type: "int", nullable: false),
                     catalog_attribute_id = table.Column<int>(type: "int", nullable: false),
                     catalog_attribute_value_id = table.Column<int>(type: "int", nullable: false),
                     value = table.Column<string>(type: "longtext", nullable: false)
@@ -233,15 +252,53 @@ namespace Kathavachak.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     attribute_data_type_id = table.Column<int>(type: "int", nullable: true),
                     catalog_attribute_group_id = table.Column<int>(type: "int", nullable: true),
-                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)")
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    kathavachak_id = table.Column<int>(type: "int", nullable: true),
+                    expertise_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_attribute_values", x => x.id);
+                    table.PrimaryKey("PK_kathavachak_attribute_value", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_kathavachak_attribute_value_kathavachak_master_kathavachak_id",
+                        column: x => x.kathavachak_id,
+                        principalTable: "kathavachak_master",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_kathavachak_attribute_value_expertise_id",
                         column: x => x.expertise_id,
-                        principalTable: "kathavachak_experties",
+                        principalTable: "kathavachak_expertise",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "kathavachak_expertise_image",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    kathavachak_expertise_id = table.Column<int>(type: "int", nullable: false),
+                    image_url = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    media_type = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    alt_text = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    sort_order = table.Column<int>(type: "int", nullable: false),
+                    is_active = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kathavachak_expertise_image", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_kathavachak_expertise_image_kathavachak_expertise_kathavacha~",
+                        column: x => x.kathavachak_expertise_id,
+                        principalTable: "kathavachak_expertise",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -272,28 +329,43 @@ namespace Kathavachak.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_kathavachak_addon_kathavachak_expertise_id",
+                table: "kathavachak_addon",
+                column: "kathavachak_expertise_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kathavachak_addon_kathavachak_id",
+                table: "kathavachak_addon",
+                column: "kathavachak_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kathavachak_attribute_value_kathavachak_id",
+                table: "kathavachak_attribute_value",
+                column: "kathavachak_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_kathavachak_attribute_values_kathavachak_catalogattribute",
-                table: "attribute_values",
+                table: "kathavachak_attribute_value",
                 columns: new[] { "expertise_id", "catalog_attribute_id" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_kathavachak_experties_kathavachak_id",
-                table: "kathavachak_experties",
+                name: "IX_kathavachak_expertise_kathavachak_id",
+                table: "kathavachak_expertise",
+                column: "kathavachak_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kathavachak_expertise_image_kathavachak_expertise_id",
+                table: "kathavachak_expertise_image",
+                column: "kathavachak_expertise_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_kathavachak_image_kathavachak_id",
+                table: "kathavachak_image",
                 column: "kathavachak_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_kathavachak_language_kathavachak_id",
                 table: "kathavachak_language",
-                column: "kathavachak_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_kathavachak_language_language_id",
-                table: "kathavachak_language",
-                column: "language_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_kathavachak_media_kathavachak_id",
-                table: "kathavachak_media",
                 column: "kathavachak_id");
 
             migrationBuilder.CreateIndex(
@@ -315,25 +387,25 @@ namespace Kathavachak.Infrastructure.Migrations
                 name: "IX_kathavachak_topic_kathavachak_id",
                 table: "kathavachak_topic",
                 column: "kathavachak_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_languages_language_name",
-                table: "languages",
-                column: "language_name",
-                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "attribute_values");
+                name: "kathavachak_addon");
+
+            migrationBuilder.DropTable(
+                name: "kathavachak_attribute_value");
+
+            migrationBuilder.DropTable(
+                name: "kathavachak_expertise_image");
+
+            migrationBuilder.DropTable(
+                name: "kathavachak_image");
 
             migrationBuilder.DropTable(
                 name: "kathavachak_language");
-
-            migrationBuilder.DropTable(
-                name: "kathavachak_media");
 
             migrationBuilder.DropTable(
                 name: "kathavachak_session_mode");
@@ -345,10 +417,7 @@ namespace Kathavachak.Infrastructure.Migrations
                 name: "kathavachak_topic");
 
             migrationBuilder.DropTable(
-                name: "kathavachak_experties");
-
-            migrationBuilder.DropTable(
-                name: "languages");
+                name: "kathavachak_expertise");
 
             migrationBuilder.DropTable(
                 name: "kathavachak_schedule");

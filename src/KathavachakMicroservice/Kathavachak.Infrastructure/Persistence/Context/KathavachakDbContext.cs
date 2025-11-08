@@ -20,7 +20,8 @@ namespace Kathavachak.Infrastructure.Persistence.Context
         public DbSet<KathavachakSchedule> KathavachakSchedules => Set<KathavachakSchedule>();
         public DbSet<KathavachakTimeSlot> KathavachakTimeSlots => Set<KathavachakTimeSlot>();
         public DbSet<KathavachakMedia> KathavachakMedia => Set<KathavachakMedia>();
-        public DbSet<LanguageMaster> Languages => Set<LanguageMaster>();
+        public DbSet<KathavachakAddon> KathavachakAddon => Set<KathavachakAddon>();
+        public DbSet<KathavachakExpertiseMedia> KathavachakExpertiseMedia => Set<KathavachakExpertiseMedia>();
         public DbSet<KathavachakSearchRaw> KathavachakSearchRaws => Set<KathavachakSearchRaw>();
 
         protected override void OnModelCreating(ModelBuilder builder)

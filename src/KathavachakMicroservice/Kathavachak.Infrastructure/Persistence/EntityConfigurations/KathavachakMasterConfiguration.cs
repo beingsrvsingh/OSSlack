@@ -10,49 +10,68 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
         {
             builder.ToTable("kathavachak_master");
 
-            builder.HasKey(k => k.Id);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(k => k.Id)
+            builder.Property(p => p.Id)
                 .HasColumnName("id");
 
-            builder.Property(k => k.UserId)
-                .HasColumnName("user_id")
+            builder.Property(p => p.CategoryId)
                 .IsRequired()
-                .HasMaxLength(36);
+                .HasColumnName("category_id");
 
-            builder.Property(k => k.Name)
-                .HasColumnName("name")
-                .HasMaxLength(200);
+            builder.Property(p => p.SubCategoryId)
+                .IsRequired()
+                .HasColumnName("sub_category_id");
 
-            builder.Property(k => k.ThumbnailUrl)
-                .HasColumnName("thumbnail_url")
-                .HasMaxLength(500);
+            builder.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(150)
+                .HasColumnName("name");
 
-            builder.Property(k => k.AverageRating)
-                .HasColumnName("average_rating")
-                .HasColumnType("decimal(3,2)")
-                .HasDefaultValue(0m);
+            builder.Property(p => p.ThumbnailUrl)
+                .HasMaxLength(300)
+                .HasColumnName("thumbnail_url");
 
-            builder.Property(k => k.TotalRatings)
-                .HasColumnName("total_ratings")
-                .HasDefaultValue(0);
+            builder.Property(p => p.IsActive)
+                .HasMaxLength(50)
+                .HasColumnName("is_active");
 
-            builder.Property(k => k.IsActive)
-                .HasColumnName("is_active")
-                .HasDefaultValue(true);
+            builder.Property(p => p.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
 
-            builder.Property(k => k.CreatedAt)
-                .HasColumnName("created_at")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            builder.Property(p => p.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("updated_at");
 
-            builder.Property(k => k.UpdatedAt)
-                .HasColumnName("updated_at")
-                .IsRequired(false);
+            builder.Property(p => p.Rating)
+                .HasColumnName("rating_snap");
+
+            builder.Property(p => p.Reviews)
+                .HasColumnName("reviews_snap");
+
+            builder.Property(p => p.CategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("category_name_snapshot");
+
+            builder.Property(p => p.SubCategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("sub_category_name_snapshot");
+
+            builder.Property(p => p.IsTrending)
+                .HasColumnName("is_trending");
+
+            builder.Property(p => p.IsFeatured)
+                .HasColumnName("is_featured");
+
+            builder.Property(p => p.Currency)
+                .HasMaxLength(3)
+                .HasColumnName("currency");
 
             // Navigation properties
 
-            builder.HasMany(k => k.Expertises)
-                .WithOne(e => e.Kathavachak)
+            builder.HasMany(k => k.KathavachakExpertises)
+                .WithOne(e => e.KathavachakMaster)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -76,8 +95,19 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(k => k.Media)
-                .WithOne(e => e.Kathavachak)
+            builder.HasMany(p => p.AttributeValues)
+                .WithOne(s => s.KathavachakMaster)
+                .HasForeignKey(t => t.KathavachakId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.KathavachakAddons)
+                   .WithOne(aa => aa.KathavachakMaster)
+                   .HasForeignKey(aa => aa.KathavachakId)
+                   .HasConstraintName("fk_kathavachak_addons_kathavachak_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(k => k.KathavachakMedia)
+                .WithOne(e => e.KathavachakMaster)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

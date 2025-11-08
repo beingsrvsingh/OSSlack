@@ -81,3 +81,63 @@ INSERT INTO attribute_values
     (id, expertise_id, catalog_attribute_id, catalog_attribute_value_id, value, attribute_key, attribute_label, attribute_data_type_id, catalog_attribute_group_id, created_at)
 VALUES
     (1, 1, 101, 1001, 'Advanced', 'story_level', 'Story Level', 1, NULL, UTC_TIMESTAMP());
+
+    ------------------------------------Kathavachak -----------------------
+
+
+    use kathavachakdb;
+
+-- Kathavachak Master
+INSERT INTO kathavachak_master
+(id, name, thumbnail_url, is_active, rating_snap, reviews_snap, category_id, sub_category_id, category_name_snapshot, sub_category_name_snapshot, currency, is_trending, is_featured, created_at)
+VALUES
+(1, 'GuruVani', 'https://example.com/images/guruvani.png', TRUE, 4.9, 300, 2, 106, 'Service', 'Kathavachak', 'INR', TRUE, TRUE, NOW()),
+(2, 'DivineVoice', 'https://example.com/images/divinevoice.png', TRUE, 4.6, 220, 2, 106, 'Service', 'Kathavachak', 'INR', FALSE, TRUE, NOW());
+
+-- Kathavachak Expertise (like Product Variants)
+INSERT INTO kathavachak_expertise
+(id, kathavachak_id, name, price, mrp, duration_minute, is_default, booking_type)
+VALUES
+(1, 1, 'Bhagavad Katha', 2000.00, 2500.00, 60, TRUE, 'Online'),
+(2, 1, 'Spiritual Discourse', 1800.00, 2200.00, 45, TRUE, 'Online'),
+(3, 2, 'Bhagavad Katha', 2100.00, 2600.00, 70, TRUE, 'Online'),
+(4, 2, 'Devotional Stories', 1700.00, 2100.00, 50, TRUE, 'Online');
+
+-- Kathavachak Master Images
+INSERT INTO kathavachak_image
+(id, kathavachak_id, media_type, image_url, alt_text, sort_order, created_at)
+VALUES
+(1, 1, 'Image', 'https://example.com/images/guruvani_profile.png', 'GuruVani Profile Photo', 1, NOW()),
+(2, 2, 'Image', 'https://example.com/images/divinevoice_profile.png', 'DivineVoice Profile Photo', 1, NOW());
+
+-- Kathavachak Expertise Images
+INSERT INTO kathavachak_expertise_image
+(id, kathavachak_expertise_id, media_type, image_url, alt_text, sort_order, created_at)
+VALUES
+(1, 1, 'Image', 'https://example.com/images/bhagavad_katha.png', 'Bhagavad Katha Session', 1, NOW()),
+(2, 2, 'Image', 'https://example.com/images/spiritual_discourse.png', 'Spiritual Discourse', 1, NOW()),
+(3, 3, 'Image', 'https://example.com/images/bhagavad_katha2.png', 'Bhagavad Katha Session', 1, NOW()),
+(4, 4, 'Image', 'https://example.com/images/devotional_stories.png', 'Devotional Stories Session', 1, NOW());
+
+-- Kathavachak Attribute Values (Expertise-level Attributes)
+INSERT INTO kathavachak_attribute_value
+(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, attribute_label, value, created_at)
+VALUES
+(1, 1, 1, 1, 'Experience', 'Experience', '15 Years', NOW()),
+(2, 1, 2, 2, 'ProficiencyLevel', 'Proficiency Level', 'Expert', NOW()),
+(3, 2, 1, 3, 'Experience', 'Experience', '12 Years', NOW()),
+(4, 2, 2, 4, 'ProficiencyLevel', 'Proficiency Level', 'Advanced', NOW()),
+(5, 3, 1, 5, 'Experience', 'Experience', '18 Years', NOW()),
+(6, 3, 2, 6, 'ProficiencyLevel', 'Proficiency Level', 'Expert', NOW()),
+(7, 4, 1, 7, 'Experience', 'Experience', '10 Years', NOW()),
+(8, 4, 2, 8, 'ProficiencyLevel', 'Proficiency Level', 'Intermediate', NOW());
+
+-- Kathavachak Addons (General or Expertise-specific)
+INSERT INTO kathavachak_addon
+(id, kathavachak_id, kathavachak_expertise_id, name, description, price, currency, is_active, display_order, created_at)
+VALUES
+(1, 1, 1, 'Printed Katha Book', 'Bhagavad Katha book PDF and print copy', 300.00, 'INR', TRUE, 1, NOW()),
+(2, 1, 2, 'Audio Recording', 'Spiritual discourse recording', 200.00, 'INR', TRUE, 2, NOW()),
+(3, 2, 3, 'Bhagavad Katha Book', 'Full Bhagavad Katha book', 350.00, 'INR', TRUE, 1, NOW()),
+(4, 2, 4, 'Devotional Song Pack', 'Audio songs for devotional stories', 250.00, 'INR', TRUE, 2, NOW());
+

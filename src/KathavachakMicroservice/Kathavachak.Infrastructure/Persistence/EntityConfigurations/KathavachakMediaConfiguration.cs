@@ -6,36 +6,42 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
 {
     public class KathavachakMediaConfiguration : IEntityTypeConfiguration<KathavachakMedia>
     {
-        public void Configure(EntityTypeBuilder<KathavachakMedia> builder)
+        public void Configure(EntityTypeBuilder<KathavachakMedia> entity)
         {
-            builder.ToTable("kathavachak_media");
+            entity.ToTable("kathavachak_image");
 
-            builder.HasKey(m => m.Id);
+            entity.HasKey(img => img.Id);
 
-            builder.Property(m => m.Id)
-                .HasColumnName("id");
+            entity.Property(img => img.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
 
-            builder.Property(m => m.KathavachakId)
+            entity.Property(img => img.ImageUrl)
+                .HasColumnName("image_url")
+                .IsRequired()
+                .HasMaxLength(300);
+
+            entity.Property(entity => entity.SortOrder)
+                .HasColumnName("sort_order");
+
+            entity.Property(entity => entity.AltText)
+                .HasColumnName("alt_text");
+
+            entity.Property(img => img.KathavachakId)
                 .HasColumnName("kathavachak_id")
                 .IsRequired();
 
-            builder.Property(m => m.MediaType)
+            entity.Property(vi => vi.MediaType)
                 .HasColumnName("media_type")
-                .HasMaxLength(50)
-                .IsRequired();
+                .HasConversion<string>();
 
-            builder.Property(m => m.Url)
-                .HasColumnName("url")
-                .HasMaxLength(500)
-                .IsRequired();
+            entity.Property(p => p.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+            entity.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
-            builder.Property(m => m.Description)
-                .HasColumnName("description")
-                .HasMaxLength(1000);
-
-            builder.HasOne(m => m.Kathavachak)
-                .WithMany(k => k.Media)
-                .HasForeignKey(m => m.KathavachakId)
+            entity.HasOne(img => img.KathavachakMaster)
+                .WithMany(p => p.KathavachakMedia)
+                .HasForeignKey(img => img.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shared.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kathavachak.Domain.Entities
@@ -7,31 +8,33 @@ namespace Kathavachak.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }        
+        public int Id { get; set; }
+
         public int KathavachakId { get; set; }
-        public int CategoryId { get; set; }
-        public int SubCategoryId { get; set; }
-
-        // Expertise Info
-        public int YearsOfExperience { get; set; }
-        public string? ProficiencyLevel { get; set; } // e.g., Beginner, Expert, etc.
-
-        // Package Info
-        public string? Description { get; set; }
-        public decimal Price { get; set; }
-        public TimeSpan Duration { get; set; }
-        public bool IsActive { get; set; } = true;
-
-        // Catalog MS Snapshot        
-        [MaxLength(100)]
-        public string? SubCategoryNameSnapshot { get; set; }
-        [MaxLength(100)]
-        public string? CategoryNameSnapshot { get; set; }
 
         [ForeignKey(nameof(KathavachakId))]
-        public virtual KathavachakMaster Kathavachak { get; set; } = null!;
+        public virtual KathavachakMaster KathavachakMaster { get; set; } = null!;
+
+        [Required, MaxLength(100)]
+        public string Name { get; set; } = null!;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? MRP { get; set; }
+
+        public int? StockQuantity { get; set; }
+
+        public int DurationMinutes { get; set; }
+        public BookingType BookingType { get; set; }
+
+        public bool IsDefault { get; set; } = false;
 
         public ICollection<KathavachakAttributeValue> KathavachakAttributeValues { get; set; } = new List<KathavachakAttributeValue>();
+
+        public virtual ICollection<KathavachakAddon> KathavachakAddons { get; set; } = new List<KathavachakAddon>();
+        public virtual ICollection<KathavachakExpertiseMedia> KathavachakExpertiseMedia { get; set; } = new List<KathavachakExpertiseMedia>();
     }
 
 }

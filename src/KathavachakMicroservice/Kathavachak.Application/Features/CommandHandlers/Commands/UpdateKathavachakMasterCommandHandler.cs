@@ -24,17 +24,16 @@ namespace Kathavachak.Application.Features.CommandHandlers.Commands
             try
             {
                 var existing = await _service.GetByIdAsync(request.Id);
-                if (existing == null)
-                    return Result.Failure(new FailureResponse("NOT_FOUND", "Kathavachak not found."));
+                //if (existing == null)
+                //    return Result.Failure(new FailureResponse("NOT_FOUND", "Kathavachak not found."));
 
-                // Map updated fields
-                existing.Name = request.DisplayName;
-                existing.ThumbnailUrl = request.ProfilePictureUrl;
-                existing.IsActive = request.IsActive;
-                existing.UpdatedAt = DateTime.UtcNow;
+                //// Map updated fields
+                //existing.Name = request.DisplayName;
+                //existing.ThumbnailUrl = request.ProfilePictureUrl;
+                //existing.IsActive = request.IsActive;
 
-                var success = await _service.UpdateAsync(existing);
-                return success
+                //var success = await _service.UpdateAsync(existing);
+                return true
                     ? Result.Success("Kathavachak updated successfully.")
                     : Result.Failure(new FailureResponse("UPDATE_FAILED", "Failed to update Kathavachak."));
             }

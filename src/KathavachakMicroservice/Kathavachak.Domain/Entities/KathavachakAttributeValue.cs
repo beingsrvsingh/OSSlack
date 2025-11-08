@@ -17,12 +17,15 @@ namespace Kathavachak.Domain.Entities
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? CategoryNameSnapshot { get; set; }
 
-        public int ExpertiseId { get; set; }
+        public int? KathavachakId { get; set; }
+        public int? ExpertiseId { get; set; }
+
+        [ForeignKey(nameof(KathavachakId))]
+        public virtual KathavachakMaster? KathavachakMaster { get; set; } = null!;
 
         [ForeignKey(nameof(ExpertiseId))]
-        public virtual KathavachakExpertise Expertise { get; set; } = null!;
+        public virtual KathavachakExpertise? KathavachakExpertise { get; set; }
     }
 
 }

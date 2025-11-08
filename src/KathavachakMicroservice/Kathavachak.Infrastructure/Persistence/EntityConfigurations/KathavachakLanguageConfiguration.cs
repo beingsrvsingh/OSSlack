@@ -36,11 +36,6 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                    .WithMany(a => a.Languages)
                    .HasForeignKey(al => al.LanguageId)
                    .HasConstraintName("fk_kathavachak_language_kathavachak_id");
-
-            builder.HasOne(al => al.Language)
-                   .WithMany(l => l.KathavachakLanguages)
-                   .HasForeignKey(al => al.LanguageId)
-                   .HasConstraintName("fk_kathavachak_language_language_id");
         }
     }
 

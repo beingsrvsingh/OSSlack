@@ -8,56 +8,62 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<KathavachakExpertise> builder)
         {
-            builder.ToTable("kathavachak_experties");
+            builder.ToTable("kathavachak_expertise");
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(v => v.Id);
 
-            builder.Property(c => c.Id)
+            builder.Property(v => v.Id)
                 .HasColumnName("id");
 
-            builder.Property(c => c.KathavachakId)
-                .HasColumnName("kathavachak_id")
-                .IsRequired();
+            builder.Property(v => v.KathavachakId)
+                .HasColumnName("kathavachak_id");
 
-            builder.Property(c => c.CategoryId)
-                .HasColumnName("cat_id")
-                .IsRequired();
-
-            builder.Property(c => c.SubCategoryId)
-               .HasColumnName("subcat_id")
-               .IsRequired();
-
-            builder.Property(c => c.ProficiencyLevel)
-                .HasColumnName("proficiency_level")
-                .IsRequired();
-
-            builder.Property(c => c.YearsOfExperience)
-                .HasColumnName("yrs_of_exp")
-                .IsRequired();
-
-            builder.Property(ae => ae.Description).HasColumnName("description");
-            builder.Property(ae => ae.Price).HasColumnName("price");
-            builder.Property(ae => ae.Duration).HasColumnName("duration");
-            builder.Property(ae => ae.IsActive).HasColumnName("is_active");
-
-            builder.Property(p => p.CategoryNameSnapshot)
+            builder.Property(v => v.Name)
+                .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnName("category_name_snap");
+                .HasColumnName("name");
 
-            builder.Property(p => p.SubCategoryNameSnapshot)
-                .HasMaxLength(100)
-                .HasColumnName("sub_cat_name_snap");
+            builder.Property(v => v.Price)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("price");
 
-            builder.HasOne(c => c.Kathavachak)
-                 .WithMany(k => k.Expertises)
+            builder.Property(v => v.MRP)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("mrp");
+
+            builder.Property(v => v.StockQuantity)
+                .HasColumnName("stock_quantity");
+
+            builder.Property(v => v.DurationMinutes)
+                .HasColumnName("duration_minute");
+
+            builder.Property(v => v.BookingType)
+                .HasColumnName("booking_type")
+                .HasConversion<String>();
+
+            builder.Property(v => v.IsDefault)
+                .HasColumnName("is_default");
+
+            builder.HasOne(c => c.KathavachakMaster)
+                 .WithMany(k => k.KathavachakExpertises)
                  .HasForeignKey(c => c.KathavachakId)
                  .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(pe => pe.KathavachakAttributeValues)
-                   .WithOne(av => av.Expertise)
+                   .WithOne(av => av.KathavachakExpertise)
                    .HasForeignKey(av => av.ExpertiseId)
                    .HasConstraintName("fk_kathavachak_attribute_value_expertise_id")
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.KathavachakExpertiseMedia)
+                .WithOne(vi => vi.KathavachakExpertise)
+                .HasForeignKey(vi => vi.KathavachakExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.KathavachakAddons)
+                .WithOne(a => a.KathavachakExpertise)
+                .HasForeignKey(a => a.KathavachakExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

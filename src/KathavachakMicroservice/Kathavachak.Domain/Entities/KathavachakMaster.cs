@@ -1,37 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shared.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kathavachak.Domain.Entities
 {
-    public class KathavachakMaster
+    public class KathavachakMaster : CatalogMetadata
     {
-        public int Id { get; set; }
-
-        [Required, MaxLength(36)]
-        public string UserId { get; set; } = null!;
-
-        [MaxLength(200)]
-        public string? Name { get; set; }
-
-        [MaxLength(500)]
-        public string? ThumbnailUrl { get; set; }
-
-        [Column(TypeName = "decimal(3,2)")]
-        public decimal AverageRating { get; set; } = 0m;
-
-        public int TotalRatings { get; set; }
-
-        public bool IsActive { get; set; } = true;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-
         // Navigation        
-        public ICollection<KathavachakExpertise> Expertises { get; set; } = new List<KathavachakExpertise>();
+        public ICollection<KathavachakExpertise> KathavachakExpertises { get; set; } = new List<KathavachakExpertise>();
+        public virtual ICollection<KathavachakAttributeValue> AttributeValues { get; set; } = new List<KathavachakAttributeValue>();
+        public virtual ICollection<KathavachakAddon> KathavachakAddons { get; set; } = new List<KathavachakAddon>();
         public ICollection<KathavachakLanguage> Languages { get; set; } = new List<KathavachakLanguage>();
         public ICollection<KathavachakTopic> Topics { get; set; } = new List<KathavachakTopic>();
         public ICollection<KathavachakSessionMode> SessionModes { get; set; } = new List<KathavachakSessionMode>();
         public ICollection<KathavachakSchedule> Schedules { get; set; } = new List<KathavachakSchedule>();        
-        public ICollection<KathavachakMedia> Media { get; set; } = new List<KathavachakMedia>();
+        public ICollection<KathavachakMedia> KathavachakMedia { get; set; } = new List<KathavachakMedia>();        
     }
 
 }

@@ -1,6 +1,8 @@
 ﻿using Kathavachak.Application.Services;
 using Kathavachak.Domain.Core.Repository;
 using Kathavachak.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
@@ -17,16 +19,98 @@ namespace Kathavachak.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<KathavachakMaster?> GetByIdAsync(int id)
+        public async Task<CatalogResponseDto?> GetByIdAsync(int id)
         {
+            _logger.LogInfo($"Getting kathavachak by Id: {id}");
             try
             {
-                return await _repository.GetByIdAsync(id);
+                var query = _repository.Query();
+
+                var kathavachak = await query
+                    .Where(p => p.Id == id)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        IsActive = p.IsActive,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        CategoryName = p.CategoryNameSnapshot,
+                        SubCategoryName = p.SubCategoryNameSnapshot,
+                        Currency = p.Currency ?? "INR",
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+
+                        // Media
+                        Media = p.KathavachakMedia.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // Astrologer-level addons
+                        Addons = p.KathavachakAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Price = a.Price,
+                            Description = a.Description,
+                            Currency = a.Currency ?? "0"
+                        }).ToList(),
+
+                        // Astrologer-level attributes
+                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId,
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.KathavachakExpertises.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id,
+                            Name = v.Name,
+                            Price = v.Price,
+                            MRP = v.MRP,
+                            StockQuantity = v.StockQuantity,
+                            DurationMinutes = v.DurationMinutes,
+                            Attributes = v.KathavachakAttributeValues.Select(a => new AttributeResponseDto
+                            {
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId,
+                            }).ToList(),
+                            Addons = v.KathavachakAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Price = a.Price,
+                                Description = a.Description,
+                                Currency = a.Currency ?? "0"
+                            }).ToList(),
+                            Media = v.KathavachakExpertiseMedia.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (kathavachak == null)
+                    _logger.LogWarning($"Astrologer with Id {id} not found.");
+                return kathavachak;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetByIdAsync: {ex.Message}", ex);
-                return null;
+                _logger.LogError($"Error retrieving astrologer with Id {id}", ex);
+                throw;
             }
         }
 
@@ -104,14 +188,14 @@ namespace Kathavachak.Infrastructure.Services
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
                     Pid = p.Id.ToString(),
-                    Cid = p.CategoryId.ToString(),
-                    Scid = p.SubcategoryId.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    Cost = (double)(p.Price ?? 0),
+                    //Cost = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    CategoryType = "Temple",
-                    Quantity = 1,
-                    Limit = 1,
+                    //CategoryType = "Temple",
+                    //Quantity = 1,
+                    //Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],

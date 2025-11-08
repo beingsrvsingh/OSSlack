@@ -14,9 +14,6 @@ namespace Kathavachak.Domain.Entities
 
         [ForeignKey(nameof(KathavachakId))]
         public virtual KathavachakMaster Kathavachak { get; set; } = null!;
-
-        [ForeignKey(nameof(LanguageId))]
-        public virtual LanguageMaster Language { get; set; } = null!;
     }
 
 }
