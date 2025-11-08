@@ -1,3 +1,5 @@
+using Priest.Domain.Entities;
+using Shared.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,32 +13,29 @@ namespace PriestMicroservice.Domain.Entities
 
         public int PriestId { get; set; }
 
-        public int CategoryId { get; set; }
-        public int SubCategoryId { get; set; }
-
-        // Expertise Info
-        public int YearsOfExperience { get; set; }
-        public string? ProficiencyLevel { get; set; }
-
-        // Package Info
-        [MaxLength(100)]
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
-        public decimal Price { get; set; }
-        public TimeSpan Duration { get; set; }
-        public bool IsActive { get; set; } = true;
-
-        // Snapshots
-        [MaxLength(100)]
-        public string? SubCategoryNameSnapshot { get; set; }
-        [MaxLength(100)]
-        public string? CategoryNameSnapshot { get; set; }
-
         [ForeignKey(nameof(PriestId))]
-        public virtual PriestMaster Priest { get; set; } = null!;
+        public virtual PriestMaster PriestMaster { get; set; } = null!;
+
+        [Required, MaxLength(100)]
+        public string Name { get; set; } = null!;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? MRP { get; set; }
+
+        public int? StockQuantity { get; set; }
+
+        public int DurationMinutes { get; set; }
+        public BookingType BookingType { get; set; }
+
+        public bool IsDefault { get; set; } = false;
 
         public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
         public ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
+        public virtual ICollection<Addon> Addons { get; set; } = new List<Addon>();
+        public virtual ICollection<PriestExpertiseMedia> PriestExpertiseMedia { get; set; } = new List<PriestExpertiseMedia>();
 
     }
 

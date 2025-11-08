@@ -8,7 +8,7 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AttributeValue> builder)
         {
-            builder.ToTable("attribute_values");
+            builder.ToTable("priest_attribute_value");
 
             builder.HasKey(aav => aav.Id);
 
@@ -17,8 +17,11 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .ValueGeneratedOnAdd();
 
             builder.Property(aav => aav.ExpertiseId)
-                   .HasColumnName("expertiese_id")
+                   .HasColumnName("expertise_id")
                    .IsRequired();
+
+            builder.Property(aav => aav.PriestId)
+                   .HasColumnName("priest_id");
 
             builder.Property(aav => aav.CatalogAttributeId)
                    .HasColumnName("catalog_attribute_id")
@@ -51,12 +54,17 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                    .IsRequired();
 
+            builder.HasOne(pav => pav.PriestMaster)
+                .WithMany(p => p.AttributeValues)
+                .HasForeignKey(pav => pav.PriestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(aav => aav.PriestExpertise)
                    .WithMany(a => a.AttributeValues)
                    .HasForeignKey(aav => aav.ExpertiseId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.SetNull);
 
-            // Optional: Add indexes if necessary, e.g. on PriestId + CatalogAttributeId
+            // Optional: Add indexes if necessary, e.g. on AstrologerId + CatalogAttributeId
             builder.HasIndex(aav => new { aav.ExpertiseId, aav.CatalogAttributeId })
                    .HasDatabaseName("ix_priest_attribute_values_priest_catalogattribute");
         }

@@ -8,53 +8,102 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<PriestMaster> builder)
         {
-            builder.ToTable("priests");
+            builder.ToTable("priest_master");
 
-            builder.HasKey(p => p.Id);
+            builder.HasKey(a => a.Id);
+
             builder.Property(p => p.Id)
-                .HasColumnName("id")
-                .ValueGeneratedOnAdd();
+                .HasColumnName("id");
 
-            builder.Property(p => p.UserId)
-                .HasColumnName("user_id")
-                .HasMaxLength(36)
-                .IsRequired();
+            builder.Property(p => p.CategoryId)
+                .IsRequired()
+                .HasColumnName("category_id");
 
-            builder.Property(p => p.TempleId)
-                .HasColumnName("temple_id")
-                .HasMaxLength(36);
+            builder.Property(p => p.SubCategoryId)
+                .IsRequired()
+                .HasColumnName("sub_category_id");
 
             builder.Property(p => p.Name)
-                .HasColumnName("name")
-                .HasMaxLength(200);
+                .IsRequired()
+                .HasMaxLength(150)
+                .HasColumnName("name");
 
             builder.Property(p => p.ThumbnailUrl)
-                .HasColumnName("thumbnail_url")
-                .HasMaxLength(500);
-
-            builder.Property(p => p.AverageRating)
-                .HasColumnName("average_rating")
-                .HasColumnType("decimal(3,2)")
-                .HasDefaultValue(0m);
-
-            builder.Property(p => p.TotalRatings)
-                .HasColumnName("total_ratings")
-                .HasDefaultValue(0);
+                .HasMaxLength(300)
+                .HasColumnName("thumbnail_url");
 
             builder.Property(p => p.IsActive)
-                .HasColumnName("is_active")
-                .HasDefaultValue(true);
+                .HasMaxLength(50)
+                .HasColumnName("is_active");
 
             builder.Property(p => p.CreatedAt)
-                .HasColumnName("created_at")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .HasColumnName("created_at");
 
             builder.Property(p => p.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("updated_at");
 
-            builder.HasMany(p => p.PriestLanguages).WithOne(l => l.Priest).HasForeignKey(l => l.PriestId).OnDelete(DeleteBehavior.Cascade);;
-            builder.HasMany(p => p.PriestExpertise).WithOne(e => e.Priest).HasForeignKey(e => e.PriestId).OnDelete(DeleteBehavior.Cascade);;            
-            builder.HasMany(p => p.Schedules).WithOne(s => s.Priest).HasForeignKey(s => s.PriestId).OnDelete(DeleteBehavior.Cascade);
+            builder.Property(p => p.Rating)
+                .HasColumnName("rating_snap");
+
+            builder.Property(p => p.Reviews)
+                .HasColumnName("reviews_snap");
+
+            builder.Property(p => p.CategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("category_name_snapshot");
+
+            builder.Property(p => p.SubCategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("sub_category_name_snapshot");
+
+            builder.Property(p => p.IsTrending)
+                .HasColumnName("is_trending");
+
+            builder.Property(p => p.IsFeatured)
+                .HasColumnName("is_featured");
+
+            builder.Property(p => p.Currency)
+                .HasMaxLength(3)
+                .HasColumnName("currency");
+
+            // Relationships
+
+            builder.HasMany(a => a.PriestLanguages)
+                   .WithOne(al => al.Priest)
+                   .HasForeignKey(al => al.PriestId)
+                   .HasConstraintName("fk_priest_language_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.PriestExpertise)
+                   .WithOne(al => al.PriestMaster)
+                   .HasForeignKey(al => al.PriestId)
+                   .HasConstraintName("fk_priest_expertise_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.Schedules)
+                   .WithOne(al => al.Priest)
+                   .HasForeignKey(al => al.PriestId)
+                   .HasConstraintName("fk_priest_schedules_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.AttributeValues)
+                .WithOne(s => s.PriestMaster)
+                .HasForeignKey(t => t.PriestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.Addons)
+                   .WithOne(aa => aa.PriestMaster)
+                   .HasForeignKey(aa => aa.PriestId)
+                   .HasConstraintName("fk_priest_addons_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.AstrologerMedia)
+                   .WithOne(am => am.PriestMaster)
+                   .HasForeignKey(am => am.PriestId)
+                   .HasConstraintName("fk_priest_media_priest_id")
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

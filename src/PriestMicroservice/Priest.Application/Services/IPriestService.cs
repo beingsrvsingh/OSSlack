@@ -1,4 +1,5 @@
 ﻿using PriestMicroservice.Domain.Entities;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 
 namespace Priest.Application.Services
@@ -6,7 +7,7 @@ namespace Priest.Application.Services
     public interface IPriestService
     {
         // PriestMaster operations
-        Task<PriestMaster?> GetPriestByIdAsync(int id);
+        Task<CatalogResponseDto?> GetPriestByIdAsync(int id);
         Task<IEnumerable<PriestMaster>> GetAllActivePriestsAsync();
         Task AddPriestAsync(PriestMaster priest);
         Task UpdatePriestAsync(PriestMaster priest);

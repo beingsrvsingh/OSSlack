@@ -1,6 +1,8 @@
-﻿using Priest.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
 using PriestMicroservice.Domain.Entities;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 
@@ -34,16 +36,98 @@ namespace Priest.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<PriestMaster?> GetPriestByIdAsync(int id)
+        public async Task<CatalogResponseDto?> GetPriestByIdAsync(int id)
         {
+            _logger.LogInfo($"Getting astrologer by Id: {id}");
             try
             {
-                return await _priestRepository.GetByIdAsync(id);
+                var query = _priestRepository.Query();
+
+                var priest = await query
+                    .Where(p => p.Id == id)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        IsActive = p.IsActive,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        CategoryName = p.CategoryNameSnapshot,
+                        SubCategoryName = p.SubCategoryNameSnapshot,
+                        Currency = p.Currency ?? "INR",
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+
+                        // Media
+                        Media = p.AstrologerMedia.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // addons
+                        Addons = p.Addons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Price = a.Price,
+                            Description = a.Description,
+                            Currency = a.Currency ?? "0"
+                        }).ToList(),
+
+                        // Astrologer-level attributes
+                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId,
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id,
+                            Name = v.Name,
+                            Price = v.Price,
+                            MRP = v.MRP,
+                            StockQuantity = v.StockQuantity,
+                            DurationMinutes = v.DurationMinutes,
+                            Attributes = v.AttributeValues.Select(a => new AttributeResponseDto
+                            {
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId,
+                            }).ToList(),
+                            Addons = v.Addons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Price = a.Price,
+                                Description = a.Description,
+                                Currency = a.Currency ?? "0"
+                            }).ToList(),
+                            Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (priest == null)
+                    _logger.LogWarning($"Astrologer with Id {id} not found.");
+                return priest;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to fetch priest by ID: {id}");
-                return null;
+                _logger.LogError($"Error retrieving astrologer with Id {id}", ex);
+                throw;
             }
         }
 
@@ -180,14 +264,14 @@ namespace Priest.Infrastructure.Services
                 var resultDtos = products.Select(p => new SearchItemDto
                 {
                     Pid = p.Id.ToString(),
-                    Cid = p.CategoryId.ToString(),
-                    Scid = p.SubcategoryId.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    Cost = (double)(p.Price ?? 0),
+                    //Cost = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    CategoryType = "Temple",
-                    Quantity = 1,
-                    Limit = 1,
+                    //CategoryType = "Temple",
+                    //Quantity = 1,
+                    //Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],

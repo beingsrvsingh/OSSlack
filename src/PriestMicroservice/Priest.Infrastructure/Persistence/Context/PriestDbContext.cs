@@ -17,7 +17,6 @@ namespace Priest.Infrastructure.Persistence.Context
         public DbSet<ConsultationModeMaster> ConsultationModeMasters => Set<ConsultationModeMaster>();
         public DbSet<PriestExpertise> PriestExpertise => Set<PriestExpertise>();
         public DbSet<PriestLanguage> PriestLanguages => Set<PriestLanguage>();
-        public DbSet<LanguageMaster> LanguageMasters => Set<LanguageMaster>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
         public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();

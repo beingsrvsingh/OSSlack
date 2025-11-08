@@ -27,9 +27,8 @@ namespace Priest.Application.Features.EventHandlers.Commands
 
                 priest.Name = request.DisplayName ?? priest.Name;
                 priest.ThumbnailUrl = request.ProfilePictureUrl ?? priest.ThumbnailUrl;
-                priest.UpdatedAt = DateTime.UtcNow;
 
-                await _priestService.UpdatePriestAsync(priest);
+                //await _priestService.UpdatePriestAsync(priest);
                 return Result.Success(priest);
             }
             catch (Exception ex)

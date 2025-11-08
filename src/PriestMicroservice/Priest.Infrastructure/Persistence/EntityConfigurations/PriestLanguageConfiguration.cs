@@ -30,12 +30,6 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .HasConstraintName("fk_priest_language_priest_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(al => al.Language)
-                   .WithMany(l => l.PriestLanguages)
-                   .HasForeignKey(al => al.LanguageId)
-                   .HasConstraintName("fk_priest_language_language_id")
-                   .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasIndex(al => new { al.PriestId, al.LanguageId })
                    .IsUnique()
                    .HasDatabaseName("ux_priest_language_priestid_languageid");

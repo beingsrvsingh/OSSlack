@@ -17,9 +17,6 @@ namespace PriestMicroservice.Domain.Entities
 
         [ForeignKey(nameof(PriestId))]
         public PriestMaster Priest { get; set; } = null!;
-
-        [ForeignKey(nameof(LanguageId))]
-        public virtual LanguageMaster Language { get; set; } = null!;
     }
 
 }

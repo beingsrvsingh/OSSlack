@@ -8,54 +8,68 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<PriestExpertise> builder)
         {
-            builder.ToTable("priest_expertises");
+            builder.ToTable("priest_expertise");
 
-            // Primary Key
-            builder.HasKey(ae => ae.Id);
-            builder.Property(ae => ae.Id).HasColumnName("id");
+            builder.HasKey(v => v.Id);
 
-            // Foreign Keys
-            builder.Property(ae => ae.PriestId).HasColumnName("priest_id");
-            builder.Property(ae => ae.CategoryId).HasColumnName("category_id");
-            builder.Property(ae => ae.SubCategoryId).HasColumnName("sub_category_id");
+            builder.Property(v => v.Id)
+                .HasColumnName("id");
 
-            // Expertise Info
-            builder.Property(ae => ae.YearsOfExperience).HasColumnName("years_of_experience");
-            builder.Property(ae => ae.ProficiencyLevel).HasColumnName("proficiency_level");
+            builder.Property(v => v.PriestId)
+                .HasColumnName("priest_id");
 
-            // Package Info
-            builder.Property(ae => ae.Name).HasColumnName("name");
-            builder.Property(ae => ae.Description).HasColumnName("description");
-            builder.Property(ae => ae.Price).HasColumnName("price");
-            builder.Property(ae => ae.Duration).HasColumnName("duration");
-            builder.Property(ae => ae.IsActive).HasColumnName("is_active");
+            builder.Property(v => v.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("name");
 
-            // Snapshots
-            builder.Property(ae => ae.SubCategoryNameSnapshot)
-                   .HasColumnName("sub_cat_name_snap")
-                   .HasMaxLength(100);
-            builder.Property(ae => ae.CategoryNameSnapshot)
-                   .HasColumnName("category_name_snap")
-                   .HasMaxLength(100);
+            builder.Property(v => v.Price)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("price");
+
+            builder.Property(v => v.MRP)
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("mrp");
+
+            builder.Property(v => v.StockQuantity)
+                .HasColumnName("stock_quantity");
+
+            builder.Property(v => v.DurationMinutes)
+                .HasColumnName("duration_minute");
+
+            builder.Property(v => v.BookingType)
+                .HasColumnName("booking_type")
+                .HasConversion<String>();
+
+            builder.Property(v => v.IsDefault)
+                .HasColumnName("is_default");
 
             // Relationships
-            builder.HasOne(pe => pe.Priest)
-                    .WithMany(p => p.PriestExpertise)
-                    .HasForeignKey(pe => pe.PriestId)
-                    .HasConstraintName("fk_priest_expertise_priest_id")
-                    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(ae => ae.PriestMaster)
+                   .WithMany(a => a.PriestExpertise)
+                   .HasForeignKey(ae => ae.PriestId)
+                   .HasConstraintName("fk_priest_expertise_priest_id");
 
             builder.HasMany(pe => pe.ConsultationModes)
                    .WithOne(cm => cm.Expertise)
                    .HasForeignKey(cm => cm.ExpertiseId)
-                   .HasConstraintName("fk_priest_consultation_mode_expertise_id")
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .HasConstraintName("fk_priest_consultation_mode_expertise_id");
 
             builder.HasMany(pe => pe.AttributeValues)
                    .WithOne(av => av.PriestExpertise)
                    .HasForeignKey(av => av.ExpertiseId)
                    .HasConstraintName("fk_priest_attribute_value_expertise_id")
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.PriestExpertiseMedia)
+                .WithOne(vi => vi.PriestExpertise)
+                .HasForeignKey(vi => vi.PriestExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(v => v.Addons)
+                .WithOne(a => a.PriestExpertise)
+                .HasForeignKey(a => a.PriestExpertiseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

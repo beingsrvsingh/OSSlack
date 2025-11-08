@@ -17,7 +17,11 @@ namespace PriestMicroservice.Domain.Entities
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? CategoryNameSnapshot { get; set; }
+
+        public int? PriestId { get; set; }
+
+        [ForeignKey(nameof(PriestId))]
+        public virtual PriestMaster? PriestMaster { get; set; } = null!;
 
         public int ExpertiseId { get; set; }
 
