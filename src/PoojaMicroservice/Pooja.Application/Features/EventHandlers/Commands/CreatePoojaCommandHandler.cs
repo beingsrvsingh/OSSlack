@@ -25,9 +25,6 @@ namespace Pooja.Application.Features.EventHandlers.Commands
                 var pooja = new PoojaMaster
                 {
                     Name = request.Name,
-                    Description = request.Description,
-                    IsHomeAvailable = request.IsHomeAvailable,
-                    BasePrice = request.Price
                 };
 
                 await _service.AddPoojaAsync(pooja);

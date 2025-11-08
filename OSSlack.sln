@@ -210,9 +210,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kathavachak.Infrastructure", "src\KathavachakMicroservice\Kathavachak.Infrastructure\Kathavachak.Infrastructure.csproj", "{B8028055-5F67-4B64-833D-6B2E9380B879}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PoojaMicroservice", "PoojaMicroservice", "{D595EEE1-1503-8ADC-4387-02672BDA75BD}"
-	ProjectSection(SolutionItems) = preProject
-		seed.sql = seed.sql
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pooja.API", "src\PoojaMicroservice\Pooja.API\Pooja.API.csproj", "{184F1D67-D025-4399-A0DA-895B7CFFDFDB}"
 EndProject

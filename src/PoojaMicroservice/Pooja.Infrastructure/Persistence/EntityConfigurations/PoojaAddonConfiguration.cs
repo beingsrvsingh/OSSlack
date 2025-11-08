@@ -7,42 +7,40 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
     public class PoojaAddonConfiguration : IEntityTypeConfiguration<PoojaAddon>
     {
         public void Configure(EntityTypeBuilder<PoojaAddon> builder)
-        {            
+        {
+            // Table name
             builder.ToTable("pooja_addon");
 
-            // Primary key
-            builder.HasKey(a => a.Id)
-                   .HasName("pk_pooja_addon");
-            
-            builder.Property(a => a.Id)
-                .HasColumnName("id");
+            // Primary Key
+            builder.HasKey(p => p.Id)
+                   .HasName("pk_pooja_addon_id");
 
-            builder.Property(a => a.PoojaId)
-                .HasColumnName("pooja_id");
+            // Properties with snake_case
+            builder.Property(p => p.Id).HasColumnName("id");
+            builder.Property(p => p.Name).HasColumnName("name").HasMaxLength(150).IsRequired();
+            builder.Property(p => p.Description).HasColumnName("description").HasMaxLength(300);
+            builder.Property(p => p.Price).HasColumnName("price").HasColumnType("decimal(12,2)");
+            builder.Property(p => p.Currency).HasColumnName("currency").HasMaxLength(50).HasDefaultValue("INR");
+            builder.Property(p => p.IsActive).HasColumnName("is_active").HasDefaultValue(true);
+            builder.Property(p => p.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
+            builder.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+            builder.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
-            builder.Property(a => a.Name)
-                .IsRequired()
-                .HasMaxLength(150)
-                .HasColumnName("name");
+            // Foreign key
+            builder.Property(p => p.PoojaId).HasColumnName("pooja_id");
+            builder.Property(p => p.PoojaVariantId).HasColumnName("pooja_variant_id");
 
-            builder.Property(a => a.Description)
-                .HasMaxLength(1000)
-                .HasColumnName("description");
+            builder.HasOne(p => p.PoojaMaster)
+                   .WithMany(p => p.PoojaAddons)
+                   .HasForeignKey(p => p.PoojaId)
+                   .HasConstraintName("fk_pooja_addon_pooja_id")
+                   .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Property(a => a.Price)
-                .HasColumnType("decimal(18,2)")
-                .HasDefaultValue(0)
-                .HasColumnName("price");
-
-            builder.Property(a => a.IsOptional)
-                .HasDefaultValue(true)
-                .HasColumnName("is_optional");
-
-            // Relationship
-            builder.HasOne(a => a.PoojaMaster)
-                .WithMany(p => p.Addons)
-                .HasForeignKey(a => a.PoojaId)
-                .HasConstraintName("fk_pooja_addon_pooja_master");
+            builder.HasOne(p => p.PoojaVariantMaster)
+                   .WithMany(p => p.PoojaAddons)
+                   .HasForeignKey(p => p.PoojaVariantId)
+                   .HasConstraintName("fk_pooja_addon_pooja_variant_id")
+                   .OnDelete(DeleteBehavior.SetNull);
         }
 
     }

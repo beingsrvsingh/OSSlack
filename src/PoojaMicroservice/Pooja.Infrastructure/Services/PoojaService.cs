@@ -1,6 +1,8 @@
-﻿using Pooja.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using Pooja.Application.Services;
 using Pooja.Domain.Core.Repository;
 using Pooja.Domain.Entities;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
 
 
@@ -30,16 +32,98 @@ namespace Pooja.Infrastructure.Services
             }
         }
 
-        public async Task<PoojaMaster?> GetPoojaByIdAsync(int id)
+        public async Task<CatalogResponseDto?> GetPoojaByIdAsync(int id)
         {
+            _logger.LogInfo($"Getting astrologer by Id: {id}");
             try
             {
-                return await _repository.GetByIdAsync(id);
+                var query = _repository.Query();
+
+                var pooja = await query
+                    .Where(p => p.Id == id)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        IsActive = p.IsActive,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        CategoryId = p.CategoryId,
+                        SubCategoryId = p.SubCategoryId,
+                        CategoryName = p.CategoryNameSnapshot,
+                        SubCategoryName = p.SubCategoryNameSnapshot,
+                        Currency = p.Currency ?? "INR",
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+
+                        // Media
+                        Media = p.PoojaImages.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // addons
+                        Addons = p.PoojaAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Price = a.Price,
+                            Description = a.Description,
+                            Currency = a.Currency ?? "0"
+                        }).ToList(),
+
+                        // attributes
+                        Attributes = p.PoojaAttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId,
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.PoojaVariantMasters.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id,
+                            Name = v.Name,
+                            Price = v.Price,
+                            MRP = v.MRP,
+                            StockQuantity = v.StockQuantity,
+                            DurationMinutes = v.DurationMinutes,
+                            Attributes = v.PoojaAttributeValues.Select(a => new AttributeResponseDto
+                            {
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId,
+                            }).ToList(),
+                            Addons = v.PoojaAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Price = a.Price,
+                                Description = a.Description,
+                                Currency = a.Currency ?? "0"
+                            }).ToList(),
+                            Media = v.PoojaVariantImages.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (pooja == null)
+                    _logger.LogWarning($"Astrologer with Id {id} not found.");
+                return pooja;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to retrieve pooja with id: {id}");
-                return null;
+                _logger.LogError($"Error retrieving astrologer with Id {id}", ex);
+                throw;
             }
         }
 
@@ -127,7 +211,7 @@ namespace Pooja.Infrastructure.Services
             try
             {
                 var pooja = await _repository.GetByIdAsync(poojaId);
-                return pooja?.IsHomeAvailable ?? false;
+                return false;
             }
             catch (Exception ex)
             {

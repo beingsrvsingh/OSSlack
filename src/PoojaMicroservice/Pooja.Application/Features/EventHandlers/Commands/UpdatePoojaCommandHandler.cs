@@ -26,11 +26,8 @@ namespace Pooja.Application.Features.EventHandlers.Commands
                     return Result.Failure("Pooja not found.");
 
                 pooja.Name = request.Name;
-                pooja.Description = request.Description;
-                pooja.IsHomeAvailable = request.IsHomeAvailable;
-                pooja.BasePrice = request.Price;
 
-                await _service.UpdatePoojaAsync(pooja);
+                //await _service.UpdatePoojaAsync(pooja);
                 return Result.Success(pooja);
             }
             catch (Exception ex)

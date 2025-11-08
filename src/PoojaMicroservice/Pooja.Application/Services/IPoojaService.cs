@@ -1,10 +1,11 @@
 ﻿using Pooja.Domain.Entities;
+using Shared.Application.Common.Contracts.Response;
 
 namespace Pooja.Application.Services
 {
     public interface IPoojaService
     {
-        Task<PoojaMaster?> GetPoojaByIdAsync(int id);
+        Task<CatalogResponseDto?> GetPoojaByIdAsync(int id);
         Task<IEnumerable<PoojaMaster>> GetAllPoojasAsync();
         Task<IEnumerable<PoojaMaster>> GetPoojasByTempleAsync(int templeId);
         Task<IEnumerable<PoojaMaster>> GetPoojasByPriestAsync(int priestId);

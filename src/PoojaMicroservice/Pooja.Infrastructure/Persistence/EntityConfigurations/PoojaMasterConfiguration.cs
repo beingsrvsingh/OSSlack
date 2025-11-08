@@ -7,81 +7,34 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
     public class PoojaMasterConfiguration : IEntityTypeConfiguration<PoojaMaster>
     {
         public void Configure(EntityTypeBuilder<PoojaMaster> builder)
-        {            
+        {
             builder.ToTable("pooja_master");
 
-            // Primary key
-            builder.HasKey(p => p.Id)
-                   .HasName("pk_pooja_master");
-            
+            builder.HasKey(p => p.Id);
+
             builder.Property(p => p.Id)
                 .HasColumnName("id");
 
+            builder.Property(p => p.CategoryId)
+                .IsRequired()
+                .HasColumnName("category_id");
+
+            builder.Property(p => p.SubCategoryId)
+                .IsRequired()
+                .HasColumnName("sub_category_id");
+
             builder.Property(p => p.Name)
                 .IsRequired()
-                .HasMaxLength(200)
+                .HasMaxLength(150)
                 .HasColumnName("name");
 
-            builder.Property(p => p.Description)
-                .HasMaxLength(2000)
-                .HasColumnName("description");
+            builder.Property(p => p.ThumbnailUrl)
+                .HasMaxLength(300)
+                .HasColumnName("thumbnail_url");
 
-            builder.Property(p => p.IsPriceVariable)
-                .HasDefaultValue(false)
-                .HasColumnName("is_price_variable");
-
-            builder.Property(p => p.BasePrice)
-                .HasColumnType("decimal(18,2)")
-                .HasColumnName("base_price");
-
-            builder.Property(p => p.DiscountedPrice)
-                .HasColumnType("decimal(18,2)")
-                .HasColumnName("discounted_price");
-
-            builder.Property(p => p.Duration)
-                .IsRequired()
-                .HasColumnName("duration");
-
-            builder.Property(p => p.PreparationTime)
-                .HasColumnName("preparation_time");
-
-            builder.Property(p => p.IsAvailableOnline)
-                .HasDefaultValue(false)
-                .HasColumnName("is_available_online");
-
-            builder.Property(p => p.IsTempleRequired)
-                .HasDefaultValue(false)
-                .HasColumnName("is_temple_required");
-
-            builder.Property(p => p.IsHomeAvailable)
-                .HasDefaultValue(false)
-                .HasColumnName("is_home_available");
-
-            builder.Property(p => p.PriestIncluded)
-                .HasDefaultValue(false)
-                .HasColumnName("priest_included");
-
-            builder.Property(p => p.BringYourOwnPriestAllowed)
-                .HasDefaultValue(false)
-                .HasColumnName("bring_your_own_priest_allowed");
-
-            builder.Property(p => p.AverageRating)
-                .HasColumnType("decimal(3,2)")
-                .HasDefaultValue(0)
-                .HasColumnName("average_rating");
-
-            builder.Property(p => p.TotalReviews)
-                .HasDefaultValue(0)
-                .HasColumnName("total_reviews");
-
-            builder.Property(p => p.ImageUrl)
-                .HasColumnName("image_url");
-
-            builder.Property(p => p.Tags)
-                .HasColumnName("tags");
-
-            builder.Property(p => p.CategoryId)
-                .HasColumnName("category_id");
+            builder.Property(p => p.IsActive)
+                .HasMaxLength(50)
+                .HasColumnName("is_active");
 
             builder.Property(p => p.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
@@ -91,15 +44,51 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("updated_at");
 
-            builder.Property(p => p.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
+            builder.Property(p => p.Rating)
+                .HasColumnName("rating_snap");
+
+            builder.Property(p => p.Reviews)
+                .HasColumnName("reviews_snap");
+
+            builder.Property(p => p.CategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("category_name_snapshot");
+
+            builder.Property(p => p.SubCategoryNameSnapshot)
+                .HasMaxLength(100)
+                .HasColumnName("sub_category_name_snapshot");
+
+            builder.Property(p => p.IsTrending)
+                .HasColumnName("is_trending");
+
+            builder.Property(p => p.IsFeatured)
+                .HasColumnName("is_featured");
+
+            builder.Property(p => p.Currency)
+                .HasMaxLength(3)
+                .HasColumnName("currency");
 
             // Relationships
-            builder.HasMany(p => p.Addons)
-                .WithOne(a => a.PoojaMaster)
-                .HasForeignKey(a => a.PoojaId)
-                .HasConstraintName("fk_pooja_addon_pooja_master");
+
+            builder.HasMany(p => p.PoojaVariantMasters)
+                .WithOne(v => v.PoojaMaster)
+                .HasForeignKey(v => v.PoojaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.PoojaAttributeValues)
+                .WithOne(s => s.PoojaMaster)
+                .HasForeignKey(t => t.PoojaMasterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.PoojaImages)
+                .WithOne(img => img.PoojaMaster)
+                .HasForeignKey(img => img.PoojaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.PoojaAddons)
+                .WithOne(img => img.PoojaMaster)
+                .HasForeignKey(img => img.PoojaId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }
