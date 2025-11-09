@@ -33,39 +33,39 @@ namespace Product.Application.Features.EventHandlers.Query
             {
                 var products = await _productService.GetProductBySubCategoryIdAsync(request.SubCategoryId);
 
-                if (products == null || products.Count == 0)
+                if (products == null)
                     return Result.Failure(new FailureResponse("NotFound", "No products found"));
 
-                var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
+                //var attributes = await catalogService.GetAttributesByCategoryId(request.CategoryId, request.SubCategoryId, request.IsSummary);
 
-                // Get all product IDs
-                var productIds = products.Select(p => p.Id).ToList();
+                //// Get all product IDs
+                //var productIds = products.Select(p => p.Id).ToList();
 
-                // Fetch all review summaries in one call
-                var reviewSummaries = await reviewService.GetProductReviewSummariesAsync(productIds);
+                //// Fetch all review summaries in one call
+                //var reviewSummaries = await reviewService.GetProductReviewSummariesAsync(productIds);
 
-                // Create a lookup for quick access
-                var summaryLookup = reviewSummaries.ToDictionary(r => r.ProductId);
+                //// Create a lookup for quick access
+                //var summaryLookup = reviewSummaries.ToDictionary(r => r.ProductId);
 
-                // Map summaries back to products
-                foreach (var product in products)
-                {
-                    if (summaryLookup.TryGetValue(product.Id, out var summary))
-                    {
-                        product.Reviews = summary.TotalReviews;
-                        product.Rating = (int)summary.AverageRating;
-                    }
-                    else
-                    {
-                        product.Reviews = 0;
-                        product.Rating = 0;
-                    }
-                }
+                //// Map summaries back to products
+                //foreach (var product in products)
+                //{
+                //    if (summaryLookup.TryGetValue(product.Id, out var summary))
+                //    {
+                //        product.Reviews = summary.TotalReviews;
+                //        product.Rating = (int)summary.AverageRating;
+                //    }
+                //    else
+                //    {
+                //        product.Reviews = 0;
+                //        product.Rating = 0;
+                //    }
+                //}
 
 
-                var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
+                //var dtoList = ProductBySubCategoryResponseDto.FromEntityList(products, attributes!);
 
-                return Result.Success(dtoList);
+                return Result.Success(products);
             }
             catch (Exception ex)
             {

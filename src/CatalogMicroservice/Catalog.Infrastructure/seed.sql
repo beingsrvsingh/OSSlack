@@ -1471,7 +1471,7 @@ INSERT INTO attribute_allowed_value (
 
 
 
------
+--------------------------------------------------------Catalog-------------------------------------------------------
 
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -1481,26 +1481,27 @@ SET FOREIGN_KEY_CHECKS = 1;
 INSERT INTO category_master 
 (id, parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at)
 VALUES
-(1, NULL, 'Product', 'Product', 'All tangible products', 1, 'https://example.com/images/product_icon.png', 1, NOW(), NOW()),
-(2, NULL, 'Service', 'Service', 'All service-based offerings', 2, 'https://example.com/images/service_icon.png', 1, NOW(), NOW()),
-(3, NULL, 'Resource', 'Resource', 'All human or spiritual resources', 3, 'https://example.com/images/resource_icon.png', 1, NOW(), NOW());
-
+(1, NULL, 'Product', 'Product', 'All tangible products', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(2, NULL, 'Service', 'Service', 'All service-based offerings', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(3, NULL, 'Resource', 'Resource', 'All human or spiritual resources', 3, 'assets/images/placeholder.png', 1, NOW(), NOW());
 
 INSERT INTO category_master 
-(id,parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at)
+(id, parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at)
 VALUES
 -- Product Subcategories
-(101,1, 'Electronics', 'Product', 'Electronic items like phones and gadgets', 1, 'https://example.com/images/electronics_icon.png', 1, NOW(), NOW()),
-(102,1, 'Clothing', 'Product', 'Men and women clothing', 2, 'https://example.com/images/clothing_icon.png', 1, NOW(), NOW()),
+(101, 1, 'Electronics', 'Product', 'Electronic items like phones and gadgets', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(102, 1, 'Clothing', 'Product', 'Men and women clothing', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(103, 1, 'Fitness', 'Product', 'Fitness equipment, accessories, and activewear', 3, 'assets/images/placeholder.png', 1, NOW(), NOW()),
 
 -- Service Subcategories
-(103,2, 'Pooja', 'Service', 'Religious pooja services and rituals', 1, 'https://example.com/images/pooja_icon.png', 1, NOW(), NOW()),
-(104,2, 'Temple', 'Service', 'Religious temples and associated services', 2, 'https://example.com/images/temple_icon.png', 1, NOW(), NOW()),
-(105,2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'https://example.com/images/astrologer_icon.png', 1, NOW(), NOW()),
-(106,2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'https://example.com/images/kathavachak_icon.png', 1, NOW(), NOW()),
+(104, 2, 'Pooja', 'Service', 'Religious pooja services and rituals', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(105, 2, 'Temple', 'Service', 'Religious temples and associated services', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(106, 2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(107, 2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'assets/images/placeholder.png', 1, NOW(), NOW()),
 
 -- Resource Subcategories
-(107,3, 'Priest', 'Resource', 'Priests available for rituals and poojas', 1, 'https://example.com/images/priest_icon.png', 1, NOW(), NOW());
+(108, 3, 'Priest', 'Resource', 'Priests available for rituals and poojas', 1, 'assets/images/placeholder.png', 1, NOW(), NOW());
+
 
 SET FOREIGN_KEY_CHECKS = 0;
 DELETE FROM subcategory_master;
@@ -1509,24 +1510,42 @@ SET FOREIGN_KEY_CHECKS = 1;
 INSERT INTO subcategory_master (
     id, category_id, name, description, is_active, parent_id, created_at, updated_at
 ) VALUES
+-- Electronics
 (1, 101, 'Mobile Phones', 'Smartphones and mobile devices', 1, NULL, NOW(), NOW()),
 (2, 101, 'Laptops', 'Personal and professional laptops', 1, NULL, NOW(), NOW()),
 (3, 101, 'Apple', 'Apple brand smartphones', 1, 1, NOW(), NOW()),
 (4, 101, 'Samsung', 'Samsung brand smartphones', 1, 1, NOW(), NOW()),
+
+-- Clothing
 (5, 102, 'Men', 'Men’s clothing collection', 1, NULL, NOW(), NOW()),
 (6, 102, 'Women', 'Women’s clothing collection', 1, NULL, NOW(), NOW()),
 (7, 102, 'Jeans', 'Men’s jeans', 1, 5, NOW(), NOW()),
 (8, 102, 'T-Shirts', 'Casual t-shirts for men', 1, 5, NOW(), NOW()),
-(9, 103, 'Ganesh Pooja', 'Ganesh Chaturthi pooja and rituals', 1, NULL, NOW(), NOW()),
-(10, 103, 'Lakshmi Pooja', 'Pooja for Goddess Lakshmi prosperity blessings', 1, NULL, NOW(), NOW()),
-(11, 103, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 9, NOW(), NOW()),
-(12, 104, 'Vishnu Temple', 'Temples dedicated to Lord Vishnu', 1, NULL, NOW(), NOW()),
-(13, 104, 'Shiva Temple', 'Temples dedicated to Lord Shiva', 1, NULL, NOW(), NOW()),
-(14, 104, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 12, NOW(), NOW()),
-(15, 105, 'Horoscope Reading', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
-(16, 105, 'Palm Reading', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
-(17, 106, 'Spiritual Kathavachak', 'Spiritual storytelling sessions', 1, NULL, NOW(), NOW()),
-(18, 106, 'Ramayana Kathavachak', 'Kathas from Ramayana', 1, 17, NOW(), NOW()),
-(19, 106, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 17, NOW(), NOW()),
-(20, 107, 'Ganesh Pooja Priest', 'Priest specialized in Ganesh Pooja', 1, NULL, NOW(), NOW()),
-(21, 107, 'Vishnu Temple Priest', 'Priest assigned for Vishnu Temple rituals', 1, NULL, NOW(), NOW());
+
+-- Fitness
+(9, 103, 'Equipment', 'Fitness and gym equipment', 1, NULL, NOW(), NOW()),
+(10, 103, 'Yoga Mat', 'High-quality yoga mats for workouts and yoga sessions', 1, 9, NOW(), NOW()),
+
+-- Pooja (Service)
+(11, 104, 'Ganesh Pooja', 'Ganesh Chaturthi pooja and rituals', 1, NULL, NOW(), NOW()),
+(12, 104, 'Lakshmi Pooja', 'Pooja for Goddess Lakshmi prosperity blessings', 1, NULL, NOW(), NOW()),
+(13, 104, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 11, NOW(), NOW()),
+
+-- Temple (Service)
+(14, 105, 'Vishnu Temple', 'Temples dedicated to Lord Vishnu', 1, NULL, NOW(), NOW()),
+(15, 105, 'Shiva Temple', 'Temples dedicated to Lord Shiva', 1, NULL, NOW(), NOW()),
+(16, 105, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 14, NOW(), NOW()),
+
+-- Astrologer (Service)
+(17, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
+(18, 106, 'Palm Reading', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
+
+-- Kathavachak (Service)
+(19, 107, 'Spiritual Kathavachak', 'Spiritual storytelling sessions', 1, NULL, NOW(), NOW()),
+(20, 107, 'Ramayana Kathavachak', 'Kathas from Ramayana', 1, 19, NOW(), NOW()),
+(21, 107, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 19, NOW(), NOW()),
+
+-- Priest (Resource)
+(22, 108, 'Ganesh Pooja Priest', 'Priest specialized in Ganesh Pooja', 1, NULL, NOW(), NOW()),
+(23, 108, 'Vishnu Temple Priest', 'Priest assigned for Vishnu Temple rituals', 1, NULL, NOW(), NOW());
+

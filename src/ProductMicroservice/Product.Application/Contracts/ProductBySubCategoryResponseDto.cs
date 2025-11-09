@@ -117,10 +117,10 @@ namespace Product.Application.Contracts
                 Tags = new List<string> { entity.CategoryNameSnapshot ?? "", entity.SubCategoryNameSnapshot ?? "" },
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt,
-                Currency = entity.Currency ?? "INR",
+                Currency = entity?.Price?.Currency ?? "INR",
 
                 // Collect all variant-level attributes and group them
-                Attributes = entity.VariantMasters?
+                Attributes = entity?.VariantMasters?
                 .SelectMany(v => v.Attributes ?? new List<ProductAttributeValue>())
                 .Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))
                 .GroupBy(a => a.AttributeKey!)
@@ -134,14 +134,14 @@ namespace Product.Application.Contracts
                 })
                 .ToList() ?? new List<ProductAttributeDto>(),
 
-                ProductImages = entity.ProductImages?.Select(i => i.ImageUrl).ToList() ?? new(),
+                ProductImages = entity?.ProductImages?.Select(i => i.ImageUrl).ToList() ?? new(),
 
-                Variants = entity.VariantMasters?.Select(v => new VariantResponseDto
+                Variants = entity?.VariantMasters?.Select(v => new VariantResponseDto
                 {
                     Sku = $"SKU-{v.Id:D4}",
                     Name = v.Name,
-                    Price = v.Price,
-                    MRP = v.MRP,
+                    Price = v.Price.Amount,
+                    MRP = v.Price.Mrp,
                     Quantity = v.StockQuantity ?? 0,
                     IsDefault = v.IsDefault,
                     Attributes = v.Attributes?.Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))

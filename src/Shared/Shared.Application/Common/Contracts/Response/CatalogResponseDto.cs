@@ -1,33 +1,47 @@
 ﻿namespace Shared.Application.Common.Contracts.Response
 {
+    using System.Text.Json.Serialization;
+
     public class CatalogResponseDto
     {
-        public int Id { get; set; }
+        [JsonPropertyName("id")]
+        public required string Id { get; set; }
+
+        [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
+
+        [JsonPropertyName("thumbnail_url")]
         public string? ThumbnailUrl { get; set; }
-        public bool IsActive { get; set; }
+
+        [JsonPropertyName("rating")]
         public int Rating { get; set; }
+
+        [JsonPropertyName("reviews")]
         public int Reviews { get; set; }
 
-        public int CategoryId { get; set; }
-        public int SubCategoryId { get; set; }
-        public string? CategoryName { get; set; }
-        public string? SubCategoryName { get; set; }
+        [JsonPropertyName("sub_category_id")]
+        public required string SubCategoryId { get; set; }
 
-        public string Currency { get; set; } = "INR";
+        [JsonPropertyName("is_trending")]
         public bool? IsTrending { get; set; }
+
+        [JsonPropertyName("is_featured")]
         public bool? IsFeatured { get; set; }
 
-        // Common media for UI
+        [JsonPropertyName("price")]
+        public PriceResponseDto? Price { get; set; }
+        
+        [JsonPropertyName("media")]
         public List<MediaResponseDto> Media { get; set; } = new List<MediaResponseDto>();
 
-        // Variants for products/services
+        [JsonPropertyName("variants")]
         public List<CatalogVariantResponseDto> Variants { get; set; } = new List<CatalogVariantResponseDto>();
 
-        // Addons (product, service, pooja, etc.)
+        [JsonPropertyName("addons")]
         public List<AddonResponseDto> Addons { get; set; } = new List<AddonResponseDto>();
 
-        // Attributes (color, size, duration, slots, etc.)
+        [JsonPropertyName("attributes")]
         public List<AttributeResponseDto> Attributes { get; set; } = new List<AttributeResponseDto>();
     }
+
 }

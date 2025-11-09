@@ -6,6 +6,7 @@ namespace Product.Domain.Entities
 {
     public class ProductMaster : CatalogMetadata
     {
+        public bool HasVariants => VariantMasters?.Count > 0;
 
         public virtual ICollection<ProductVariantMaster> VariantMasters { get; set; } = new List<ProductVariantMaster>();
         public virtual ICollection<ProductAttributeValue> AttributeValues { get; set; } = new List<ProductAttributeValue>();

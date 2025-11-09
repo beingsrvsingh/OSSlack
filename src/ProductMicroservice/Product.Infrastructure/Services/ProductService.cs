@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Product.Application.Contracts;
 using Product.Application.Services;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
@@ -20,6 +21,17 @@ namespace Product.Infrastructure.Services
             _logger = logger;
         }
 
+        public async Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName)
+        {
+            var result = await _productRepository.GetAsync(p => p.Name.Contains(prodName));
+            return result.ToList();
+        }
+
+        public async Task<ProductMaster?> GetProductByIdAsync(int id)
+        {
+            return await _productRepository.GetByIdAsync(id);
+        }
+
         public async Task<ProductMaster?> GetProductWithVariantsAsync(int productId)
         {
             try
@@ -31,6 +43,36 @@ namespace Product.Infrastructure.Services
                 _logger.LogError($"Error in GetProductWithVariantsAsync: {ex.Message}", ex);
                 return null;
             }
+        }
+
+        public async Task<List<TrendingProductResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
+        {
+            List<ProductMaster> lstProducts = new List<ProductMaster> ();
+            if(subCategoryId is null)
+            {
+                lstProducts = await _productRepository.GetAsync((p) => p.IsTrending == true);
+            }
+            else
+            {
+                lstProducts = await _productRepository.GetAsync((p) => p.SubCategoryId == subCategoryId && p.IsTrending == true);
+            }
+
+
+            var trendingProducts = lstProducts
+                                    .Take(topN)
+                                    .Select(product =>
+                                    {
+                                        return new TrendingProductResponse
+                                        {
+                                            Id = product.Id.ToString(),
+                                            Scid = product.SubCategoryId.ToString(),
+                                            Name = product.Name
+                                        };
+                                    })
+                                    .ToList();
+
+
+            return trendingProducts;
         }
 
         public async Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId)
@@ -151,43 +193,115 @@ namespace Product.Infrastructure.Services
             }
         }
 
-        public async Task<List<ProductMaster>> GetProductBySubCategoryIdAsync(int subCategoryId)
+        public async Task<List<CatalogResponseDto>?> GetProductBySubCategoryIdAsync(int? subCategoryId = null, int topN = 5)
         {
             try
             {
-                var result = await _productRepository.GetAsync(
-                    p => p.SubCategoryId == subCategoryId,
-                    include: query => query.AsSplitQuery()
-                        .Include(p => p.ProductImages)
-                        .Include(p => p.AttributeValues)
-                        .Include(p => p.ProductAddons)
-                        .Include(p => p.VariantMasters)
-                            .ThenInclude(v => v.VariantImages)
-                        .Include(p => p.VariantMasters)
-                            .ThenInclude(v => v.Attributes)
-                        .Include(p => p.VariantMasters)
-                            .ThenInclude(v => v.ProductAddons)
-                );
+                // Use IQueryable from repository
+                var query = _productRepository.Query();
 
+                if (subCategoryId.HasValue && subCategoryId.Value > 0)
+                {
+                    query = query.Where(p => p.SubCategoryId == subCategoryId.Value);
+                }
 
-                return result.ToList();
+                var products = await query
+                    .Take(topN)
+                    .Select(p => new CatalogResponseDto
+                    {
+                        Id = p.Id.ToString(),
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        SubCategoryId = p.SubCategoryId.ToString(),
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+                        Price = new PriceResponseDto
+                        {
+                            Amount = p.Price.Amount,
+                            Currency = p.Price.Currency,
+                            Discount = p.Price.Discount,
+                            Mrp = p.Price.Mrp,
+                            Tax = p.Price.Tax
+                        },
+
+                        // Media
+                        Media = p.ProductImages.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
+
+                        // addons
+                        Addons = p.ProductAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,                            
+                            Description = a.Description,
+                            Price = new PriceResponseDto
+                            {
+                                Amount = p.Price.Amount,
+                                Mrp = p.Price.Mrp
+                            },
+                        }).ToList(),
+
+                        // attributes
+                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Key = a.AttributeKey,
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId.ToString(),                            
+                        }).ToList(),
+
+                        // Variants
+                        Variants = p.VariantMasters.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id.ToString(),
+                            Name = v.Name,
+                            Price = new PriceResponseDto { 
+                                Amount = v.Price.Amount, 
+                                Currency = v.Price.Currency, 
+                                Discount = v.Price.Discount, 
+                                Mrp = v.Price.Mrp, 
+                                Tax = v.Price.Tax },
+                            StockQuantity = v.StockQuantity,
+                            Attributes = v.Attributes.Select(a => new AttributeResponseDto
+                            {
+                                Key = a.AttributeKey,
+                                Label = a.AttributeLabel ?? "",
+                                Value = a.Value,
+                                DataTypeId = a.AttributeDataTypeId.ToString(),
+                            }).ToList(),
+                            Addons = v.ProductAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Description = a.Description,
+                                Price = new PriceResponseDto
+                                {
+                                    Amount = a.Price.Amount,
+                                    Mrp = a.Price.Mrp
+                                },
+                            }).ToList(),
+                            Media = v.VariantImages.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    }).ToListAsync();
+
+                return products;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error in GetProductBySubCategoryIdAsync");
-                return new List<ProductMaster>();
+                return new List<CatalogResponseDto>();
             }
-        }
-
-        public async Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName)
-        {
-            var result = await _productRepository.GetAsync(p => p.Name.Contains(prodName));
-            return result.ToList();
-        }
-
-        public async Task<ProductMaster?> GetProductByIdAsync(int id)
-        {
-            return await _productRepository.GetByIdAsync(id);
         }
 
         public async Task<CatalogResponseDto?> GetProductWithAttributesAsync(int productId)
@@ -199,17 +313,20 @@ namespace Product.Infrastructure.Services
                 .Where(p => p.Id == productId)
                 .Select(p => new CatalogResponseDto
                 {
-                    Id = p.Id,
+                    Id = p.Id.ToString(),
                     Name = p.Name,
                     ThumbnailUrl = p.ThumbnailUrl,
-                    IsActive = p.IsActive,
                     Rating = p.Rating,
                     Reviews = p.Reviews,
-                    CategoryId = p.CategoryId,
-                    SubCategoryId = p.SubCategoryId,
-                    CategoryName = p.CategoryNameSnapshot,
-                    SubCategoryName = p.SubCategoryNameSnapshot,
-                    Currency = p.Currency ?? "INR",
+                    SubCategoryId = p.SubCategoryId.ToString(),
+                    Price = new PriceResponseDto
+                    {
+                        Amount = p.Price.Amount,
+                        Currency = p.Price!.Currency,
+                        Discount = p.Price.Discount,
+                        Mrp = p.Price.Mrp,
+                        Tax = p.Price.Tax
+                    },
                     IsTrending = p.IsTrending,
                     IsFeatured = p.IsFeatured,
 
@@ -226,39 +343,53 @@ namespace Product.Infrastructure.Services
                     Addons = p.ProductAddons.Select(a => new AddonResponseDto
                     {
                         Name = a.Name,
-                        Price = a.Price,
                         Description = a.Description,
-                        Currency = a.Currency ?? "0"
+                        Price = new PriceResponseDto
+                        {
+                            Amount = a.Price.Amount,
+                            Mrp = a.Price.Mrp
+                        },
                     }).ToList(),
 
                     // Product-level attributes
                     Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
                     {
+                        Key = a.AttributeKey,
                         Label = a.AttributeLabel ?? "",
                         Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId,
+                        DataTypeId = a.AttributeDataTypeId.ToString(),
                     }).ToList(),
 
                     // Variants
                     Variants = p.VariantMasters.Select(v => new CatalogVariantResponseDto
                     {
-                        Id = v.Id,
+                        Id = v.Id.ToString(),
                         Name = v.Name,
-                        Price = v.Price,
-                        MRP = v.MRP,
+                        Price = new PriceResponseDto
+                        {
+                            Amount = v.Price.Amount,
+                            Currency = p.Price!.Currency,
+                            Discount = p.Price.Discount,
+                            Mrp = p.Price.Mrp,
+                            Tax = p.Price.Tax
+                        },
                         StockQuantity = v.StockQuantity,
                         Attributes = v.Attributes.Select(a => new AttributeResponseDto
                         {
+                            Key = a.AttributeKey,
                             Label = a.AttributeLabel ?? "",
                             Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId,
+                            DataTypeId = a.AttributeDataTypeId.ToString(),
                         }).ToList(),
                         Addons = v.ProductAddons.Select(a => new AddonResponseDto
                         {
                             Name = a.Name,
-                            Price = a.Price,
                             Description = a.Description,
-                            Currency = a.Currency ?? "0"
+                            Price = new PriceResponseDto
+                            {
+                                Amount = a.Price.Amount,
+                                Mrp = a.Price.Mrp
+                            },
                         }).ToList(),
                         Media = v.VariantImages.Select(img => new MediaResponseDto
                         {
@@ -273,7 +404,6 @@ namespace Product.Infrastructure.Services
 
             return productDto;
         }
-
 
         public async Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
         List<int> attributeIds, int pageNumber,

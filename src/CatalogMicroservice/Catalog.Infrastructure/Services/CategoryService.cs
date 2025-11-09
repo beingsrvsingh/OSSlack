@@ -30,7 +30,7 @@ namespace Catalog.Infrastructure.Services
 
         public async Task<IEnumerable<CategoryMaster>> GetAllCategoriesAsync()
         {
-            return await _categoryRepository.GetAllAsync();
+            return await _categoryRepository.GetAsync(c => c.ParentCategoryId != null) ?? Enumerable.Empty<CategoryMaster>();
         }
 
         public async Task<CategoryMaster?> GetCategoryByIdAsync(int id)

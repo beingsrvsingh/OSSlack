@@ -1,10 +1,16 @@
-﻿namespace Shared.Application.Common.Contracts.Response
+﻿using System.Text.Json.Serialization;
+
+namespace Shared.Application.Common.Contracts.Response
 {
     public class AddonResponseDto
     {
+        [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
+
+        [JsonPropertyName("description")]
         public string? Description { get; set; }
-        public decimal Price { get; set; }
-        public string Currency { get; set; } = "INR";
+
+        [JsonPropertyName("price")]
+        public PriceResponseDto Price { get; set; } = null!;
     }
 }

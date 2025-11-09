@@ -20,6 +20,19 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("trending-products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingProductQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Products not found." });
+
+            return Ok(result);
+        }
+
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]

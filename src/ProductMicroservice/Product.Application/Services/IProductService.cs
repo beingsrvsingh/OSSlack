@@ -1,3 +1,4 @@
+using Product.Application.Contracts;
 using Product.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
@@ -7,7 +8,8 @@ namespace Product.Application.Services
     public interface IProductService
     {
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
-        Task<List<ProductMaster>> GetProductBySubCategoryIdAsync(int subCategoryId);
+        Task<List<TrendingProductResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
+        Task<List<CatalogResponseDto>?> GetProductBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
         Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);

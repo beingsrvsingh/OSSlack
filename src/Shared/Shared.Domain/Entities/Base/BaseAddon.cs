@@ -15,10 +15,7 @@ namespace Shared.Domain.Entities.Base
         [MaxLength(300)]
         public string? Description { get; set; }
 
-        public decimal Price { get; set; }
-
-        [MaxLength(50)]
-        public string? Currency { get; set; } = "INR";
+        public BasePrice Price { get; set; } = null!;
 
         public bool IsActive { get; set; } = true;
 
