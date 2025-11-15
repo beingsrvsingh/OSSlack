@@ -18,19 +18,37 @@ VALUES
 -- Note: Yoga Mat has no variants
 
 INSERT INTO product_attribute_value 
-(id, product_id, product_variant_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, value, created_at)
+(id, product_id, product_variant_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, attribute_label, value, created_at, attribute_group_name_snap)
 VALUES
--- iPhone Variants
-(1, NULL, 1, 1, 1, 'color', 'Black', NOW()),
-(2, NULL, 2, 1, 2, 'color', 'White', NOW()),
+--Basic Info (Product Level)
+(1, 1, NULL, 1, NULL, 'brand', 'Brand', 'Apple', NOW(), 'Basic Info'),
+(2, 1, NULL, 2, NULL, 'model_name', 'Model Name', 'iPhone 14', NOW(), 'Basic Info'),
+(3, 1, NULL, 3, NULL, 'in_the_box', 'In the Box', 'Handset, USB-C Cable, Documentation', NOW(), 'Basic Info'),
 
--- Jeans Variants
-(3, NULL, 3, 2, 3, 'fit', 'Slim', NOW()),
-(4, NULL, 4, 2, 4, 'fit', 'Regular', NOW()),
+-- Technical Details (Product Level)
+(4, 1, NULL, 4, NULL, 'processor', 'Processor', 'A15 Bionic Chip', NOW(), 'Technical Details'),
+(5, 1, NULL, 5, NULL, 'display', 'Display', '6.1-inch Super Retina XDR', NOW(), 'Technical Details'),
+(6, 1, NULL, 6, NULL, 'battery', 'Battery', '3227 mAh', NOW(), 'Technical Details');
 
--- Yoga Mat (no variant → product-level)
-(5, 3, NULL, 3, 5, 'color', 'Blue', NOW()),
-(6, 3, NULL, 4, 6, 'material', 'Eco-friendly', NOW());
+INSERT INTO product_attribute_value 
+(id, product_id, product_variant_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, attribute_label, value, created_at, attribute_group_name_snap)
+VALUES
+-- Variant Info: Color
+(7, NULL, 1, 10, 1, 'color', 'Color', 'Black', NOW(), 'Variant Info'),
+(8, NULL, 2, 10, 2, 'color', 'Color', 'White', NOW(), 'Variant Info'),
+
+-- Variant Info: Storage
+(9, NULL, 1, 11, 3, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
+(10, NULL, 2, 11, 3, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
+	
+-- Technical Info (Variant-specific if applicable)
+(11, NULL, 1, 12, NULL, 'sar_value', 'SAR Value', '1.18 W/kg', NOW(), 'Technical Info'),
+(12, NULL, 2, 12, NULL, 'sar_value', 'SAR Value', '1.18 W/kg', NOW(), 'Technical Info'),
+
+-- Variant-specific Model Codes (Real-world)
+(13, NULL, 1, 14, NULL, 'model_number', 'Model Number', 'A2882', NOW(), 'Variant Info'),
+(14, NULL, 2, 14, NULL, 'model_number', 'Model Number', 'A2883', NOW(), 'Variant Info');
+
 
 INSERT INTO product_image 
 (id, product_id, media_type, image_url, alt_text, sort_order, created_at)
@@ -53,7 +71,7 @@ INSERT INTO product_addon
 VALUES
 -- Variant-level addons (apply to specific variants)
 (1, NULL, 1, 'Screen Protector', 'Tempered Glass Screen Protector', 499.00, 599.00, 'INR', 0, 18, NOW(), NULL, TRUE, 1, NOW(), NOW()),
-(2, NULL, 2, 'Fast Charger', '20W USB-C Power Adapter', 1499.00, 1799.00, 'INR', 0, 18, NOW(), NULL, TRUE, 2, NOW(), NOW()),
+(2, 1, NULL, 'Fast Charger', '20W USB-C Power Adapter', 1499.00, 1799.00, 'INR', 0, 18, NOW(), NULL, TRUE, 2, NOW(), NOW()),
 
 -- Product-level addons (apply to whole product)
 (3, 2, NULL, 'Extra Button', 'Spare Jeans Button', 50.00, 60.00, 'INR', 0, 5, NOW(), NULL, TRUE, 1, NOW(), NOW()),

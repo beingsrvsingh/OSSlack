@@ -9,6 +9,7 @@
         string? AttributeLabel { get; set; }
         int? AttributeDataTypeId { get; set; }
         int? CatalogAttributeGroupId { get; set; }
+        string? AttributeGroupNameSnapshot { get; set; }
         DateTime CreatedAt { get; set; }
     }
 

@@ -30,7 +30,10 @@
 
         [JsonPropertyName("price")]
         public PriceResponseDto? Price { get; set; }
-        
+
+        [JsonPropertyName("has_variants")]
+        public bool HasVariants => Variants?.Count > 0;
+
         [JsonPropertyName("media")]
         public List<MediaResponseDto> Media { get; set; } = new List<MediaResponseDto>();
 

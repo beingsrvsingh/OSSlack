@@ -7,6 +7,7 @@ using Shared.Application.Common.Contracts;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Enums;
 
 namespace Product.Infrastructure.Services
 {
@@ -253,7 +254,7 @@ namespace Product.Infrastructure.Services
                             Key = a.AttributeKey,
                             Label = a.AttributeLabel ?? "",
                             Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId.ToString(),                            
+                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String, 
                         }).ToList(),
 
                         // Variants
@@ -268,13 +269,20 @@ namespace Product.Infrastructure.Services
                                 Mrp = v.Price.Mrp, 
                                 Tax = v.Price.Tax },
                             StockQuantity = v.StockQuantity,
-                            Attributes = v.Attributes.Select(a => new AttributeResponseDto
-                            {
-                                Key = a.AttributeKey,
-                                Label = a.AttributeLabel ?? "",
-                                Value = a.Value,
-                                DataTypeId = a.AttributeDataTypeId.ToString(),
-                            }).ToList(),
+                            Attributes = v.Attributes.AsEnumerable()
+                                .GroupBy(a => a.AttributeGroupNameSnapshot)
+                                .Select(g => new AttributeGroupResponseDto
+                                {
+                                    AttributeGroupName = g.Key,
+                                    Attributes = g.Select(a => new AttributeResponseDto
+                                    {
+                                        Key = a.AttributeKey,
+                                        Label = a.AttributeLabel ?? "",
+                                        Value = a.Value,
+                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                                    }).ToList()
+                                })
+                                .ToList(),
                             Addons = v.ProductAddons.Select(a => new AddonResponseDto
                             {
                                 Name = a.Name,
@@ -357,7 +365,7 @@ namespace Product.Infrastructure.Services
                         Key = a.AttributeKey,
                         Label = a.AttributeLabel ?? "",
                         Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId.ToString(),
+                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
                     }).ToList(),
 
                     // Variants
@@ -374,13 +382,20 @@ namespace Product.Infrastructure.Services
                             Tax = p.Price.Tax
                         },
                         StockQuantity = v.StockQuantity,
-                        Attributes = v.Attributes.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId.ToString(),
-                        }).ToList(),
+                        Attributes = v.Attributes.AsEnumerable()
+                                .GroupBy(a => a.AttributeGroupNameSnapshot)
+                                .Select(g => new AttributeGroupResponseDto
+                                {
+                                    AttributeGroupName = g.Key,
+                                    Attributes = g.Select(a => new AttributeResponseDto
+                                    {
+                                        Key = a.AttributeKey,
+                                        Label = a.AttributeLabel ?? "",
+                                        Value = a.Value,
+                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                                    }).ToList()
+                                })
+                                .ToList(),
                         Addons = v.ProductAddons.Select(a => new AddonResponseDto
                         {
                             Name = a.Name,

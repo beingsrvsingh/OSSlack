@@ -25,7 +25,7 @@ namespace Shared.Application.Common.Contracts.Response
         public int? AvailableSlots { get; set; } = 0;
 
         [JsonPropertyName("booking_type")]
-        public BookingType? BookingType { get; set; } = Domain.Entities.BookingType.Online;
+        public BookingType? BookingType { get; set; } = Domain.Entities.BookingType.Online;        
 
         [JsonPropertyName("media")]
         public List<MediaResponseDto> Media { get; set; } = new List<MediaResponseDto>();
@@ -34,7 +34,7 @@ namespace Shared.Application.Common.Contracts.Response
         public List<AddonResponseDto> Addons { get; set; } = new List<AddonResponseDto>();
 
         [JsonPropertyName("attributes")]
-        public List<AttributeResponseDto> Attributes { get; set; } = new List<AttributeResponseDto>();
+        public List<AttributeGroupResponseDto> Attributes { get; set; } = new List<AttributeGroupResponseDto>();
     }
 
 }

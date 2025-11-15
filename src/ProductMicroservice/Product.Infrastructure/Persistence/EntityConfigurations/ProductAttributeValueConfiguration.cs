@@ -43,6 +43,9 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(pav => pav.CatalogAttributeGroupId)
                 .HasColumnName("attribute_group_id");
 
+            builder.Property(pav => pav.AttributeGroupNameSnapshot)
+                .HasColumnName("attribute_group_name_snap");
+
             builder.Property(pav => pav.Value)
                 .HasColumnName("value")
                 .HasMaxLength(500);

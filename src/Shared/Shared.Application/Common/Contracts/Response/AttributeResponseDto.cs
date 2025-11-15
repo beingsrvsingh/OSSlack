@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Shared.Domain.Enums;
+using System.Text.Json.Serialization;
 
 namespace Shared.Application.Common.Contracts.Response
 {
@@ -14,6 +15,6 @@ namespace Shared.Application.Common.Contracts.Response
         public string? Value { get; set; }
 
         [JsonPropertyName("data_type_id")]
-        public string DataTypeId { get; set; } = "String";
+        public int DataTypeId { get; set; } = (int)AttributeDataType.String;
     }
 }

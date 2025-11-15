@@ -16,6 +16,7 @@ namespace Product.Domain.Entities
         public string? AttributeLabel { get; set; }
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
+        public string? AttributeGroupNameSnapshot { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public int? ProductMasterId { get; set; }
@@ -26,7 +27,7 @@ namespace Product.Domain.Entities
         public int? ProductVariantId { get; set; }
 
         [ForeignKey(nameof(ProductVariantId))]
-        public virtual ProductVariantMaster? ProductVariant { get; set; }
+        public virtual ProductVariantMaster? ProductVariant { get; set; }        
     }
 
 }
