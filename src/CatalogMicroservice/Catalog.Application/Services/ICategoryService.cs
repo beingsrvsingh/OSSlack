@@ -5,6 +5,7 @@ namespace Catalog.Application.Services
 {
     public interface ICategoryService
     {
+        Task<List<CategoryParentResponseDto>> GetParentSubcategoriesAsync();
         Task<IEnumerable<CategoryMaster>> GetAllCategoriesAsync();
         Task<CategoryMaster?> GetCategoryByIdAsync(int id);
         Task<List<SubCategoryMaster>> GetSubCategoriesByCategoryIdAsync(int id);

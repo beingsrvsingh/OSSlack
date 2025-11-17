@@ -9,5 +9,6 @@ namespace Catalog.Domain.Core.Repository
 
         Task<IEnumerable<CategoryLocalizedText>> GetLocalizationsAsync(int categoryId);
         Task<CategoryLocalizedText> AddLocalizationAsync(CategoryLocalizedText localization);
+        Task<List<ParentCategoryRaw>> GetParentSubcategoriesRawAsync();
     }
 }

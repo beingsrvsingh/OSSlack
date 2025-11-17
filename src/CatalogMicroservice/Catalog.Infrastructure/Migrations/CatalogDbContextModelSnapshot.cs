@@ -515,61 +515,128 @@ namespace Catalog.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 932, DateTimeKind.Local).AddTicks(7671),
-                            Description = "Religious products and items",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 904, DateTimeKind.Local).AddTicks(1280),
+                            Description = "All tangible products",
                             DisplayOrder = 1,
                             ImageUrl = "https://example.com/images/product_icon.png",
                             IsActive = true,
                             Name = "Product",
-                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(4022)
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4215)
                         },
                         new
                         {
                             Id = 2,
-                            CategoryType = "Temple",
-                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5181),
+                            CategoryType = "Service",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4985),
+                            Description = "All service-based offerings",
+                            DisplayOrder = 2,
+                            ImageUrl = "https://example.com/images/service_icon.png",
+                            IsActive = true,
+                            Name = "Service",
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4988)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryType = "Resource",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4993),
+                            Description = "All human or spiritual resources",
+                            DisplayOrder = 3,
+                            ImageUrl = "https://example.com/images/resource_icon.png",
+                            IsActive = true,
+                            Name = "Resource",
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4993)
+                        },
+                        new
+                        {
+                            Id = 101,
+                            CategoryType = "Product",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4997),
+                            Description = "Electronic items like phones and gadgets",
+                            DisplayOrder = 1,
+                            ImageUrl = "https://example.com/images/electronics_icon.png",
+                            IsActive = true,
+                            Name = "Electronics",
+                            ParentCategoryId = 1,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4997)
+                        },
+                        new
+                        {
+                            Id = 102,
+                            CategoryType = "Product",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5000),
+                            Description = "Men and women clothing",
+                            DisplayOrder = 2,
+                            ImageUrl = "https://example.com/images/clothing_icon.png",
+                            IsActive = true,
+                            Name = "Clothing",
+                            ParentCategoryId = 1,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5001)
+                        },
+                        new
+                        {
+                            Id = 103,
+                            CategoryType = "Service",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5004),
+                            Description = "Religious pooja services and rituals",
+                            DisplayOrder = 1,
+                            ImageUrl = "https://example.com/images/pooja_icon.png",
+                            IsActive = true,
+                            Name = "Pooja",
+                            ParentCategoryId = 2,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5004)
+                        },
+                        new
+                        {
+                            Id = 104,
+                            CategoryType = "Service",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5007),
                             Description = "Religious temples and associated services",
                             DisplayOrder = 2,
                             ImageUrl = "https://example.com/images/temple_icon.png",
                             IsActive = true,
                             Name = "Temple",
-                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5197)
+                            ParentCategoryId = 2,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5008)
                         },
                         new
                         {
-                            Id = 3,
-                            CategoryType = "Priest",
-                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5205),
-                            Description = "Priest services and rituals",
+                            Id = 105,
+                            CategoryType = "Service",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5032),
+                            Description = "Astrology services and consultations",
                             DisplayOrder = 3,
-                            ImageUrl = "https://example.com/images/priest_icon.png",
-                            IsActive = true,
-                            Name = "Priest",
-                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5206)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryType = "Astrologer",
-                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5215),
-                            Description = "Astrology services and products",
-                            DisplayOrder = 4,
                             ImageUrl = "https://example.com/images/astrologer_icon.png",
                             IsActive = true,
                             Name = "Astrologer",
-                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5215)
+                            ParentCategoryId = 2,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5033)
                         },
                         new
                         {
-                            Id = 5,
-                            CategoryType = "Kathavachak",
-                            CreatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5219),
-                            Description = "Religious storytellers and discourses",
-                            DisplayOrder = 5,
+                            Id = 106,
+                            CategoryType = "Service",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5036),
+                            Description = "Religious storytellers and spiritual discourses",
+                            DisplayOrder = 4,
                             ImageUrl = "https://example.com/images/kathavachak_icon.png",
                             IsActive = true,
                             Name = "Kathavachak",
-                            UpdatedAt = new DateTime(2025, 11, 5, 14, 57, 54, 934, DateTimeKind.Local).AddTicks(5220)
+                            ParentCategoryId = 2,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5037)
+                        },
+                        new
+                        {
+                            Id = 107,
+                            CategoryType = "Resource",
+                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5039),
+                            Description = "Priests available for rituals and poojas",
+                            DisplayOrder = 1,
+                            ImageUrl = "https://example.com/images/priest_icon.png",
+                            IsActive = true,
+                            Name = "Priest",
+                            ParentCategoryId = 3,
+                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5040)
                         });
                 });
 
@@ -662,6 +729,17 @@ namespace Catalog.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)")
                         .HasColumnName("description");
+
+                    b.Property<int>("DisplayOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("display_order");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)")
+                        .HasColumnName("image_url");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()

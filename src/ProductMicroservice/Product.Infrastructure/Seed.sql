@@ -7,10 +7,10 @@ INSERT INTO product_master
  currency, amount, mrp, discount, tax, price_effective_from, price_effective_to, 
  is_trending, is_featured, created_at, updated_at) 
 VALUES  
-(1, 'iPhone 14', 'https://example.com/images/iphone14.png', TRUE, 5, 120, 101, 1, 'Electronics', 'Mobile Phones', 'INR', 79900, 89900, 0, 18, NOW(), NULL, TRUE, TRUE, NOW(), NOW()),  
-(2, 'Cargo Jeans', 'https://example.com/images/abc_jeans.png', TRUE, 4, 80, 102, 5, 'Clothing', 'Men', 'INR', 1999, 2499, 20, 5, NOW(), NULL, FALSE, TRUE, NOW(), NOW()),  
-(3, 'Yoga Mat', 'https://example.com/images/yoga_mat.png', TRUE, 4, 45, 103, 9, 'Fitness', 'Equipment', 'INR', 1200, 1500, 10, 5, NOW(), NULL, FALSE, FALSE, NOW(), NOW()),  
-(4, 'Samsung Galaxy S23', 'https://example.com/images/samsung_s23.png', TRUE, 5, 98, 101, 1, 'Electronics', 'Mobile Phones', 'INR', 74999, 79999, 5, 18, NOW(), NULL, TRUE, FALSE, NOW(), NOW()),
+(1, 'iPhone 14', 'https://example.com/images/iphone14.png', TRUE, 5, 120, 101, 3, 'Electronics', 'Mobile Phones', 'INR', 79900, 89900, 0, 18, NOW(), NULL, TRUE, TRUE, NOW(), NOW()),  
+(2, 'Cargo Jeans', 'https://example.com/images/abc_jeans.png', TRUE, 4, 80, 102, 7, 'Clothing', 'Men', 'INR', 1999, 2499, 20, 5, NOW(), NULL, FALSE, TRUE, NOW(), NOW()),  
+(3, 'Yoga Mat', 'https://example.com/images/yoga_mat.png', TRUE, 4, 45, 103, 10, 'Fitness', 'Equipment', 'INR', 1200, 1500, 10, 5, NOW(), NULL, FALSE, FALSE, NOW(), NOW()),  
+(4, 'Samsung Galaxy S23', 'https://example.com/images/samsung_s23.png', TRUE, 5, 98, 101, 4, 'Electronics', 'Mobile Phones', 'INR', 74999, 79999, 5, 18, NOW(), NULL, TRUE, FALSE, NOW(), NOW()),
 (5, 'Dell Inspiron 15', 'https://example.com/images/dell_inspiron15.png', TRUE, 5, 210,
  101, 2, 'Electronics', 'Laptops', 'INR',
  52999, 59999, 10, 18, NOW(), NULL, TRUE, FALSE, NOW(), NOW()),

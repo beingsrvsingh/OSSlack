@@ -54,6 +54,14 @@ namespace Catalog.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetParentSubcategories()
+        {
+            var result = await Mediator.Send(new GetParentSubcategoriesQuery());
+            return Ok(result);
+        }
+
+
         [HttpGet("all-categories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllCategories()

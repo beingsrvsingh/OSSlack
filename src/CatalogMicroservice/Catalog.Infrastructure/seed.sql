@@ -1434,11 +1434,11 @@ INSERT INTO catalog_attribute (
     updated_at,
     allowed_values_source
 ) VALUES
-(1, 'brand', 1, 1, 1, 'Brand', 1, 0, 0, 1, 1, 1, NULL, NOW(), NOW(), 'brands'),
-(2, 'color', 1, 1, 2, 'Color', 1, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'colors'),
-(3, 'size', 1, 1, 2, 'Size', 2, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'size'),
-(4, 'storage', 1, 1, 2, 'Storage', 2, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'storage'),
-(5, 'price', 1, 1, 4, 'Price', 1, 1, 1, 1, 1, 2, NULL, NOW(), NOW(), NULL)
+(1, 'brand', 101, 1, 1, 'Brand', 1, 0, 0, 1, 1, 1, NULL, NOW(), NOW(), 'brands'),
+(2, 'color', 101, 1, 2, 'Color', 1, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'colors'),
+(3, 'size', 101, 1, 2, 'Size', 2, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'size'),
+(4, 'storage', 101, 1, 2, 'Storage', 2, 0, 0, 1, 1, 5, NULL, NOW(), NOW(), 'storage'),
+(5, 'price', 101, 1, 4, 'Price', 1, 1, 1, 1, 1, 2, NULL, NOW(), NOW(), NULL);
 
 
 
@@ -1499,9 +1499,6 @@ VALUES
 (106, 2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'assets/images/placeholder.png', 1, NOW(), NOW()),
 (107, 2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'assets/images/placeholder.png', 1, NOW(), NOW()),
 
--- Resource Subcategories
-(108, 3, 'Priest', 'Resource', 'Priests available for rituals and poojas', 1, 'assets/images/placeholder.png', 1, NOW(), NOW());
-
 
 SET FOREIGN_KEY_CHECKS = 0;
 DELETE FROM subcategory_master;
@@ -1537,15 +1534,14 @@ INSERT INTO subcategory_master (
 (16, 105, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 14, NOW(), NOW()),
 
 -- Astrologer (Service)
-(17, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
-(18, 106, 'Palm Reading', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
+(17, 106, 'Vedic Astrology', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
+(18, 106, 'Numerology', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
 
 -- Kathavachak (Service)
 (19, 107, 'Spiritual Kathavachak', 'Spiritual storytelling sessions', 1, NULL, NOW(), NOW()),
 (20, 107, 'Ramayana Kathavachak', 'Kathas from Ramayana', 1, 19, NOW(), NOW()),
 (21, 107, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 19, NOW(), NOW()),
 
--- Priest (Resource)
-(22, 108, 'Ganesh Pooja Priest', 'Priest specialized in Ganesh Pooja', 1, NULL, NOW(), NOW()),
-(23, 108, 'Vishnu Temple Priest', 'Priest assigned for Vishnu Temple rituals', 1, NULL, NOW(), NOW());
+(22, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, 17, NOW(), NOW()),
+(23, 106, 'Name Analysis', 'Future predictions through palm analysis', 1, 18, NOW(), NOW());
 

@@ -28,6 +28,26 @@ namespace Catalog.Infrastructure.Services
             _logger = logger;
         }
 
+        public async Task<List<CategoryParentResponseDto>> GetParentSubcategoriesAsync()
+        {
+            var raw = await _categoryRepository.GetParentSubcategoriesRawAsync();
+
+            var result = raw
+                .GroupBy(x => x.CategoryName)
+                .Select(g => new CategoryParentResponseDto
+                {
+                    CategoryName = g.Key,
+                    Subcategories = g.Select(s => new SubCategoryParentResponseDto
+                    {
+                        Id = s.SubcategoryId,
+                        Name = s.SubcategoryName
+                    }).ToList()
+                })
+                .ToList();
+
+            return result;
+        }
+
         public async Task<IEnumerable<CategoryMaster>> GetAllCategoriesAsync()
         {
             return await _categoryRepository.GetAsync(c => c.ParentCategoryId != null) ?? Enumerable.Empty<CategoryMaster>();
@@ -40,7 +60,7 @@ namespace Catalog.Infrastructure.Services
 
         public async Task<List<SubCategoryMaster>> GetSubCategoriesByCategoryIdAsync(int id)
         {
-            var result = await subCategoryRepository.GetAsync(s => s.CategoryMasterId == id && s.ParentSubcategoryId == null);
+            var result = await subCategoryRepository.GetAsync(s => s.ParentSubcategoryId == id);
             return result.ToList();
         }
 

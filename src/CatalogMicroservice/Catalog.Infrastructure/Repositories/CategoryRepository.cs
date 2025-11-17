@@ -39,5 +39,23 @@ namespace Catalog.Infrastructure.Repositories
                 .Where(x => x.CategoryId == categoryId)
                 .ToListAsync();
         }
+
+        public async Task<List<ParentCategoryRaw>> GetParentSubcategoriesRawAsync()
+        {
+            var query = @"
+                            SELECT 
+                                c.name AS CategoryName,
+                                s.id AS SubcategoryId,
+                                s.name AS SubcategoryName
+                            FROM category_master c
+                            INNER JOIN subcategory_master s
+                                ON s.category_id = c.id
+                            WHERE s.parent_id IS NULL
+                            ORDER BY c.name, s.id;";
+
+            return await _context.Database
+                .SqlQueryRaw<ParentCategoryRaw>(query)
+                .ToListAsync();
+        }
     }
 }

@@ -16,6 +16,8 @@ public class SubCategoryMasterConfiguration : IEntityTypeConfiguration<SubCatego
         builder.Property(s => s.CategoryMasterId).HasColumnName("category_id");
         builder.Property(s => s.Name).HasColumnName("name").IsRequired().HasMaxLength(100);
         builder.Property(s => s.Description).HasColumnName("description").HasMaxLength(500);
+        builder.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(300);
+        builder.Property(c => c.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
         builder.Property(s => s.IsActive).HasColumnName("is_active").HasDefaultValue(true);
         builder.Property(s => s.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         builder.Property(s => s.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
