@@ -99,16 +99,13 @@ namespace Catalog.Infrastructure.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AllowedValuesSource")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("allowed_values_source");
 
                     b.Property<int>("AttributeDataTypeId")
                         .HasColumnType("int")
                         .HasColumnName("attribute_datatype_id");
-
-                    b.Property<int?>("AttributeGroupId")
-                        .HasColumnType("int")
-                        .HasColumnName("attribute_group_id");
 
                     b.Property<int?>("AttributeIconId")
                         .HasColumnType("int")
@@ -119,10 +116,6 @@ namespace Catalog.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("catalog_attribute_key");
-
-                    b.Property<int?>("CategoryMasterId")
-                        .HasColumnType("int")
-                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -166,10 +159,6 @@ namespace Catalog.Infrastructure.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("sort_order");
 
-                    b.Property<int?>("SubCategoryMasterId")
-                        .HasColumnType("int")
-                        .HasColumnName("sub_category_id");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
@@ -178,11 +167,7 @@ namespace Catalog.Infrastructure.Migrations
 
                     b.HasIndex("AttributeDataTypeId");
 
-                    b.HasIndex("AttributeGroupId");
-
                     b.HasIndex("AttributeIconId");
-
-                    b.HasIndex("SubCategoryMasterId");
 
                     b.ToTable("catalog_attribute", (string)null);
                 });
@@ -314,6 +299,70 @@ namespace Catalog.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("attribute_icon", (string)null);
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttributeGroupId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_group_id");
+
+                    b.Property<int>("AttributeId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_id");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("category_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                    b.Property<bool>("IsFilterable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_filterable");
+
+                    b.Property<bool>("IsRequired")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_required");
+
+                    b.Property<bool>("IsSummary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_summary");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("sub_category_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeGroupId");
+
+                    b.HasIndex("AttributeId");
+
+                    b.ToTable("category_attribute_map", (string)null);
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeRaw", b =>
@@ -515,128 +564,128 @@ namespace Catalog.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 904, DateTimeKind.Local).AddTicks(1280),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 972, DateTimeKind.Local).AddTicks(5156),
                             Description = "All tangible products",
                             DisplayOrder = 1,
-                            ImageUrl = "https://example.com/images/product_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Product",
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4215)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 981, DateTimeKind.Local).AddTicks(8451)
                         },
                         new
                         {
                             Id = 2,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4985),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(573),
                             Description = "All service-based offerings",
                             DisplayOrder = 2,
-                            ImageUrl = "https://example.com/images/service_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Service",
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4988)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(589)
                         },
                         new
                         {
                             Id = 3,
                             CategoryType = "Resource",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4993),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(605),
                             Description = "All human or spiritual resources",
                             DisplayOrder = 3,
-                            ImageUrl = "https://example.com/images/resource_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Resource",
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4993)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(606)
                         },
                         new
                         {
                             Id = 101,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4997),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(621),
                             Description = "Electronic items like phones and gadgets",
                             DisplayOrder = 1,
-                            ImageUrl = "https://example.com/images/electronics_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Electronics",
                             ParentCategoryId = 1,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(4997)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(623)
                         },
                         new
                         {
                             Id = 102,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5000),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(632),
                             Description = "Men and women clothing",
                             DisplayOrder = 2,
-                            ImageUrl = "https://example.com/images/clothing_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Clothing",
                             ParentCategoryId = 1,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5001)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(633)
                         },
                         new
                         {
                             Id = 103,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5004),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(641),
                             Description = "Religious pooja services and rituals",
                             DisplayOrder = 1,
-                            ImageUrl = "https://example.com/images/pooja_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Pooja",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5004)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(642)
                         },
                         new
                         {
                             Id = 104,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5007),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(650),
                             Description = "Religious temples and associated services",
                             DisplayOrder = 2,
-                            ImageUrl = "https://example.com/images/temple_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Temple",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5008)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(652)
                         },
                         new
                         {
                             Id = 105,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5032),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(658),
                             Description = "Astrology services and consultations",
                             DisplayOrder = 3,
-                            ImageUrl = "https://example.com/images/astrologer_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Astrologer",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5033)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(660)
                         },
                         new
                         {
                             Id = 106,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5036),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(668),
                             Description = "Religious storytellers and spiritual discourses",
                             DisplayOrder = 4,
-                            ImageUrl = "https://example.com/images/kathavachak_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Kathavachak",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5037)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(670)
                         },
                         new
                         {
                             Id = 107,
                             CategoryType = "Resource",
-                            CreatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5039),
+                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(747),
                             Description = "Priests available for rituals and poojas",
                             DisplayOrder = 1,
-                            ImageUrl = "https://example.com/images/priest_icon.png",
+                            ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Priest",
                             ParentCategoryId = 3,
-                            UpdatedAt = new DateTime(2025, 11, 17, 23, 19, 23, 905, DateTimeKind.Local).AddTicks(5040)
+                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(750)
                         });
                 });
 
@@ -770,6 +819,43 @@ namespace Catalog.Infrastructure.Migrations
                     b.ToTable("subcategory_master", (string)null);
                 });
 
+            modelBuilder.Entity("Catalog.Domain.Entities.SubcategoryAllowedValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AllowedValueId")
+                        .HasColumnType("int")
+                        .HasColumnName("allowed_value_id");
+
+                    b.Property<int>("AttributeId")
+                        .HasColumnType("int")
+                        .HasColumnName("attribute_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("sub_category_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AllowedValueId");
+
+                    b.HasIndex("AttributeId");
+
+                    b.HasIndex("SubCategoryId", "AttributeId", "AllowedValueId")
+                        .IsUnique();
+
+                    b.ToTable("subcategory_allowed_value", (string)null);
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttribute", b =>
                 {
                     b.HasOne("Catalog.Domain.Entities.AttributeDataTypeMaster", "AttributeDataType")
@@ -778,28 +864,14 @@ namespace Catalog.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeGroupMaster", "AttributeGroup")
-                        .WithMany()
-                        .HasForeignKey("AttributeGroupId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Catalog.Domain.Entities.CatalogAttributeIcon", "AttributeIcon")
                         .WithMany()
                         .HasForeignKey("AttributeIconId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
-                        .WithMany("CatalogAttributes")
-                        .HasForeignKey("SubCategoryMasterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.Navigation("AttributeDataType");
 
-                    b.Navigation("AttributeGroup");
-
                     b.Navigation("AttributeIcon");
-
-                    b.Navigation("SubCategoryMaster");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeAllowedValue", b =>
@@ -811,6 +883,25 @@ namespace Catalog.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CatalogAttribute");
+                });
+
+            modelBuilder.Entity("Catalog.Domain.Entities.CatalogAttributeMap", b =>
+                {
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeGroupMaster", "AttributeGroup")
+                        .WithMany()
+                        .HasForeignKey("AttributeGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttribute", "Attribute")
+                        .WithMany()
+                        .HasForeignKey("AttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attribute");
+
+                    b.Navigation("AttributeGroup");
                 });
 
             modelBuilder.Entity("Catalog.Domain.Entities.CategoryAttributeGroupMapping", b =>
@@ -894,6 +985,33 @@ namespace Catalog.Infrastructure.Migrations
                     b.Navigation("ParentSubcategory");
                 });
 
+            modelBuilder.Entity("Catalog.Domain.Entities.SubcategoryAllowedValue", b =>
+                {
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttributeAllowedValue", "CatalogAttributeAllowedValue")
+                        .WithMany()
+                        .HasForeignKey("AllowedValueId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.CatalogAttribute", "Attribute")
+                        .WithMany()
+                        .HasForeignKey("AttributeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Catalog.Domain.Entities.SubCategoryMaster", "SubCategoryMaster")
+                        .WithMany()
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Attribute");
+
+                    b.Navigation("CatalogAttributeAllowedValue");
+
+                    b.Navigation("SubCategoryMaster");
+                });
+
             modelBuilder.Entity("Catalog.Domain.Entities.AttributeDataTypeMaster", b =>
                 {
                     b.Navigation("CatalogAttributes");
@@ -915,8 +1033,6 @@ namespace Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Catalog.Domain.Entities.SubCategoryMaster", b =>
                 {
-                    b.Navigation("CatalogAttributes");
-
                     b.Navigation("ChildSubcategories");
 
                     b.Navigation("Localizations");

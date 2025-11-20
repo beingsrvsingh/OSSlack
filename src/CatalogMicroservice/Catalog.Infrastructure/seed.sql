@@ -1512,36 +1512,272 @@ INSERT INTO subcategory_master (
 (2, 101, 'Laptops', 'Personal and professional laptops', 1, NULL, NOW(), NOW()),
 (3, 101, 'Apple', 'Apple brand smartphones', 1, 1, NOW(), NOW()),
 (4, 101, 'Samsung', 'Samsung brand smartphones', 1, 1, NOW(), NOW()),
+(5, 101, 'Lenovo', 'Lenovo brand smartphones', 1, 2, NOW(), NOW()),
+(6, 101, 'HP', 'HP brand smartphones', 1, 2, NOW(), NOW()),
 
 -- Clothing
-(5, 102, 'Men', 'Men’s clothing collection', 1, NULL, NOW(), NOW()),
-(6, 102, 'Women', 'Women’s clothing collection', 1, NULL, NOW(), NOW()),
-(7, 102, 'Jeans', 'Men’s jeans', 1, 5, NOW(), NOW()),
-(8, 102, 'T-Shirts', 'Casual t-shirts for men', 1, 5, NOW(), NOW()),
+(7, 102, 'Men', 'Men’s clothing collection', 1, NULL, NOW(), NOW()),
+(8, 102, 'Women', 'Women’s clothing collection', 1, NULL, NOW(), NOW()),
+(9, 102, 'Jeans', 'Men’s jeans', 1, 7, NOW(), NOW()),
+(10, 102, 'T-Shirts', 'Casual t-shirts for men', 1, 7, NOW(), NOW()),
 
 -- Fitness
-(9, 103, 'Equipment', 'Fitness and gym equipment', 1, NULL, NOW(), NOW()),
-(10, 103, 'Yoga Mat', 'High-quality yoga mats for workouts and yoga sessions', 1, 9, NOW(), NOW()),
+(11, 103, 'Equipment', 'Fitness and gym equipment', 1, NULL, NOW(), NOW()),
+(12, 103, 'Yoga Mat', 'High-quality yoga mats for workouts and yoga sessions', 1, 11, NOW(), NOW()),
 
 -- Pooja (Service)
-(11, 104, 'Ganesh Pooja', 'Ganesh Chaturthi pooja and rituals', 1, NULL, NOW(), NOW()),
-(12, 104, 'Lakshmi Pooja', 'Pooja for Goddess Lakshmi prosperity blessings', 1, NULL, NOW(), NOW()),
-(13, 104, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 11, NOW(), NOW()),
+(13, 104, 'Ganesh Pooja', 'Ganesh Chaturthi pooja and rituals', 1, NULL, NOW(), NOW()),
+(14, 104, 'Lakshmi Pooja', 'Pooja for Goddess Lakshmi prosperity blessings', 1, NULL, NOW(), NOW()),
+(15, 104, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 13, NOW(), NOW()),
 
 -- Temple (Service)
-(14, 105, 'Vishnu Temple', 'Temples dedicated to Lord Vishnu', 1, NULL, NOW(), NOW()),
-(15, 105, 'Shiva Temple', 'Temples dedicated to Lord Shiva', 1, NULL, NOW(), NOW()),
-(16, 105, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 14, NOW(), NOW()),
+(16, 105, 'Vishnu Temple', 'Temples dedicated to Lord Vishnu', 1, NULL, NOW(), NOW()),
+(17, 105, 'Shiva Temple', 'Temples dedicated to Lord Shiva', 1, NULL, NOW(), NOW()),
+(18, 105, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 16, NOW(), NOW()),
 
 -- Astrologer (Service)
-(17, 106, 'Vedic Astrology', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
-(18, 106, 'Numerology', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
+(19, 106, 'Vedic Astrology', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
+(20, 106, 'Numerology', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
 
 -- Kathavachak (Service)
-(19, 107, 'Spiritual Kathavachak', 'Spiritual storytelling sessions', 1, NULL, NOW(), NOW()),
-(20, 107, 'Ramayana Kathavachak', 'Kathas from Ramayana', 1, 19, NOW(), NOW()),
-(21, 107, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 19, NOW(), NOW()),
+(21, 107, 'Spiritual Kathavachak', 'Spiritual storytelling sessions', 1, NULL, NOW(), NOW()),
+(22, 107, 'Ramayana Kathavachak', 'Kathas from Ramayana', 1, 21, NOW(), NOW()),
+(23, 107, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 21, NOW(), NOW()),
 
-(22, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, 17, NOW(), NOW()),
-(23, 106, 'Name Analysis', 'Future predictions through palm analysis', 1, 18, NOW(), NOW());
+(24, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, 17, NOW(), NOW()),
+(25, 106, 'Name Analysis', 'Future predictions through palm analysis', 1, 20, NOW(), NOW());
 
+
+INSERT INTO catalog_attribute (id, attribute_datatype_id, catalog_attribute_key, label, allowed_values_source, is_custom, is_required, is_filterable, is_summary, sort_order, created_at, updated_at)
+VALUES
+-- Brand (used by Electronics, Clothing, Fitness)
+(1, 1, 'brand', 'Brand', 'brands', 0, 1, 1, 1, 1, NOW(), NOW()),
+
+-- Electronics
+(2, 1, 'color', 'Color', 'colors', 0, 0, 1, 0, 2, NOW(), NOW()),
+(3, 1, 'storage', 'Storage', 'storage', 0, 0, 1, 0, 3, NOW(), NOW()),
+
+-- Clothing
+(4, 1, 'size', 'Size', 'sizes', 0, 1, 1, 0, 4, NOW(), NOW()),
+(5, 1, 'material', 'Material', 'materials', 0, 0, 1, 0, 5, NOW(), NOW()),
+
+-- Fitness
+(6, 1, 'weight', 'Weight', 'weight_options', 0, 0, 1, 0, 6, NOW(), NOW()),
+
+-- Services
+(7, 1, 'duration', 'Duration', 'duration_options', 0, 1, 1, 0, 7, NOW(), NOW()),
+(8, 1, 'priest', 'Priest / Expert', 'priest_options', 0, 0, 1, 0, 8, NOW(), NOW()),
+(9, 1, 'location', 'Location', 'location_options', 0, 0, 1, 0, 9, NOW(), NOW()),
+(10, 1, 'language', 'Language', 'language_options', 0, 0, 1, 0, 10, NOW(), NOW()),
+(11, 1, 'price', 'Price', 'price_options', 0, 1, 1, 1, 11, NOW(), NOW());
+
+-- Brands
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(1, 1, 'Apple', 1, NOW()),
+(2, 1, 'Samsung', 2, NOW()),
+(3, 1, 'Lenovo', 3, NOW()),
+(4, 1, 'HP', 4, NOW()),
+(5, 1, 'Nike', 5, NOW()),
+(6, 1, 'Adidas', 6, NOW()),
+(7, 1, 'Reebok', 7, NOW());
+
+-- Electronics: Color
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(8, 2, 'Red', 1, NOW()),
+(9, 2, 'Blue', 2, NOW()),
+(10, 2, 'Black', 3, NOW()),
+(11, 2, 'Silver', 4, NOW());
+
+-- Storage
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(12, 3, '32GB', 1, NOW()),
+(13, 3, '64GB', 2, NOW()),
+(14, 3, '128GB', 3, NOW());
+
+-- Clothing: Size
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(15, 4, 'S', 1, NOW()),
+(16, 4, 'M', 2, NOW()),
+(17, 4, 'L', 3, NOW()),
+(18, 4, 'XL', 4, NOW());
+
+-- Clothing: Material
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(19, 5, 'Cotton', 1, NOW()),
+(20, 5, 'Polyester', 2, NOW()),
+(21, 5, 'Wool', 3, NOW());
+
+-- Fitness: Weight
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(22, 6, '5kg', 1, NOW()),
+(23, 6, '10kg', 2, NOW()),
+(24, 6, '15kg', 3, NOW());
+
+-- Services
+INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
+VALUES
+(25, 7, '30min', 1, NOW()),
+(26, 7, '1h', 2, NOW()),
+(27, 7, '2h', 3, NOW()),
+(28, 8, 'Priest A', 1, NOW()),
+(29, 8, 'Priest B', 2, NOW()),
+(30, 8, 'Astrologer A', 3, NOW()),
+(31, 8, 'Kathavachak A', 4, NOW()),
+(32, 9, 'Vishnu Temple', 1, NOW()),
+(33, 9, 'Shiva Temple', 2, NOW()),
+(34, 9, 'Tirupati Temple', 3, NOW()),
+(35, 10, 'Hindi', 1, NOW()),
+(36, 10, 'English', 2, NOW()),
+(37, 11, '100', 1, NOW()),
+(38, 11, '200', 2, NOW()),
+(39, 11, '500', 3, NOW());
+
+
+-- Electronics: Mobile Phones
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(1, 1, 1, NOW()), -- Brand: Apple
+(1, 1, 2, NOW()), -- Brand: Samsung
+(1, 1, 3, NOW()), -- Brand: Lenovo
+(1, 2, 8, NOW()), -- Color: Red
+(1, 2, 9, NOW()), -- Color: Blue
+(1, 2, 10, NOW()), -- Color: Black
+(1, 2, 11, NOW()), -- Color: Silver
+(1, 3, 12, NOW()), -- Storage: 32GB
+(1, 3, 13, NOW()), -- Storage: 64GB
+(1, 3, 14, NOW()); -- Storage: 128GB
+
+-- Electronics: Laptops
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(2, 1, 1, NOW()), -- Brand: Apple
+(2, 1, 3, NOW()), -- Brand: Lenovo
+(2, 1, 4, NOW()), -- Brand: HP
+(2, 2, 8, NOW()), -- Color: Red
+(2, 2, 9, NOW()), -- Color: Blue
+(2, 2, 10, NOW()), -- Color: Black
+(2, 2, 11, NOW()), -- Color: Silver
+(2, 3, 12, NOW()), -- Storage: 32GB
+(2, 3, 13, NOW()), -- Storage: 64GB
+(2, 3, 14, NOW()); -- Storage: 128GB
+
+-- Clothing: Men
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(7, 1, 5, NOW()), -- Brand: Nike
+(7, 1, 6, NOW()), -- Brand: Adidas
+(7, 1, 7, NOW()), -- Brand: Reebok
+(7, 4, 15, NOW()), -- Size: S
+(7, 4, 16, NOW()), -- Size: M
+(7, 4, 17, NOW()), -- Size: L
+(7, 4, 18, NOW()), -- Size: XL
+(7, 5, 19, NOW()), -- Material: Cotton
+(7, 5, 20, NOW()), -- Material: Polyester
+(7, 5, 21, NOW()); -- Material: Wool
+
+-- Clothing: Women
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(8, 1, 5, NOW()), -- Brand: Nike
+(8, 1, 6, NOW()), -- Brand: Adidas
+(8, 1, 7, NOW()), -- Brand: Reebok
+(8, 4, 15, NOW()), -- Size: S
+(8, 4, 16, NOW()), -- Size: M
+(8, 4, 17, NOW()), -- Size: L
+(8, 4, 18, NOW()), -- Size: XL
+(8, 5, 19, NOW()), -- Material: Cotton
+(8, 5, 20, NOW()), -- Material: Polyester
+(8, 5, 21, NOW()); -- Material: Wool
+
+-- Fitness: Equipment
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(11, 1, 5, NOW()), -- Brand: Nike
+(11, 1, 6, NOW()), -- Brand: Adidas
+(11, 1, 7, NOW()), -- Brand: Reebok
+(11, 6, 22, NOW()), -- Weight: 5kg
+(11, 6, 23, NOW()), -- Weight: 10kg
+(11, 6, 24, NOW()); -- Weight: 15kg
+
+-- Fitness: Yoga Mat
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(12, 1, 5, NOW()), -- Brand: Nike
+(12, 1, 6, NOW()), -- Brand: Adidas
+(12, 6, 22, NOW()), -- Weight: 5kg
+(12, 6, 23, NOW()); -- Weight: 10kg
+
+-- Services (example: Pooja)
+INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
+VALUES
+(13, 7, 25, NOW()), -- Duration: 30min
+(13, 7, 26, NOW()), -- Duration: 1h
+(13, 7, 27, NOW()), -- Duration: 2h
+(13, 8, 28, NOW()), -- Priest: Priest A
+(13, 8, 29, NOW()); -- Priest: Priest B
+
+
+
+--- clean up
+-- Electronics
+INSERT INTO category_attribute_map (id, category_id, sub_category_id, attribute_id, attribute_group_id, sort_order, is_required, is_filterable, is_summary, created_at)
+VALUES
+(1, 101, 1, 1, 1, 1, 1, 1, 1, NOW()),
+(2, 101, 1, 2, 2, 2, 0, 1, 0, NOW()),
+(3, 101, 1, 3, 2, 3, 0, 1, 0, NOW()),
+(4, 101, 2, 1, 1, 1, 1, 1, 1, NOW()),
+(5, 101, 2, 2, 2, 2, 0, 1, 0, NOW()),
+(6, 101, 2, 3, 2, 3, 0, 1, 0, NOW());
+
+-- Clothing
+INSERT INTO category_attribute_map (id, category_id, sub_category_id, attribute_id, attribute_group_id, sort_order, is_required, is_filterable, is_summary, created_at)
+VALUES
+(7, 102, 7, 1, 1, 1, 1, 1, 0, NOW()), -- Brand
+(8, 102, 7, 4, 1, 2, 1, 1, 0, NOW()), -- Size
+(9, 102, 7, 5, 2, 3, 0, 1, 0, NOW()), -- Material
+(10, 102, 8, 1, 1, 1, 1, 1, 0, NOW()),
+(11, 102, 8, 4, 1, 2, 1, 1, 0, NOW()),
+(12, 102, 8, 5, 2, 3, 0, 1, 0, NOW());
+
+-- Fitness
+INSERT INTO category_attribute_map (id, category_id, sub_category_id, attribute_id, attribute_group_id, sort_order, is_required, is_filterable, is_summary, created_at)
+VALUES
+(13, 103, 11, 1, 1, 1, 1, 1, 0, NOW()), -- Brand
+(14, 103, 11, 6, 1, 2, 0, 1, 0, NOW()),
+(15, 103, 12, 1, 1, 1, 1, 1, 0, NOW()),
+(16, 103, 12, 6, 1, 2, 0, 1, 0, NOW());
+
+-- Services (Pooja, Temple, Astrology, Kathavachak)
+INSERT INTO category_attribute_map (id, category_id, sub_category_id, attribute_id, attribute_group_id, sort_order, is_required, is_filterable, is_summary, created_at)
+VALUES
+-- Pooja
+(17, 104, 13, 7, 1, 1, 1, 1, 0, NOW()),
+(18, 104, 13, 8, 2, 2, 0, 1, 0, NOW()),
+(19, 104, 14, 7, 1, 1, 1, 1, 0, NOW()),
+(20, 104, 14, 8, 2, 2, 0, 1, 0, NOW()),
+(21, 104, 15, 7, 1, 1, 1, 1, 0, NOW()),
+(22, 104, 15, 8, 2, 2, 0, 1, 0, NOW()),
+
+-- Temple
+(23, 105, 16, 9, 1, 1, 0, 1, 0, NOW()),
+(24, 105, 17, 9, 1, 1, 0, 1, 0, NOW()),
+(25, 105, 18, 9, 1, 1, 0, 1, 0, NOW()),
+
+-- Astrology
+(26, 106, 19, 7, 1, 1, 1, 1, 0, NOW()),
+(27, 106, 19, 8, 2, 2, 0, 1, 0, NOW()),
+(28, 106, 20, 7, 1, 1, 1, 0, 0, NOW()),
+(29, 106, 20, 8, 2, 2, 0, 1, 0, NOW()),
+(30, 106, 24, 7, 1, 1, 1, 0, 0, NOW()),
+(31, 106, 25, 8, 2, 2, 0, 1, 0, NOW()),
+
+-- Kathavachak
+(32, 107, 21, 10, 1, 1, 0, 1, 0, NOW()),
+(33, 107, 22, 10, 1, 1, 0, 1, 0, NOW()),
+(34, 107, 23, 10, 1, 1, 0, 1, 0, NOW());

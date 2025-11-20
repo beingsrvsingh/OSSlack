@@ -29,25 +29,9 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .IsRequired()
                 .HasColumnName("attribute_datatype_id");
 
-            builder.Property(ca => ca.AttributeGroupId)
-                .HasColumnName("attribute_group_id")
-                .IsRequired(false);
-
             builder.Property(ca => ca.AllowedValuesSource)
-                .HasColumnName("allowed_values_source")
-                .IsRequired(false);
-
-            builder.Property(ca => ca.CategoryMasterId)
-                .HasColumnName("category_id")
-                .IsRequired(false);
-
-            builder.Property(ca => ca.SubCategoryMasterId)
-                .HasColumnName("sub_category_id")
-                .IsRequired(false);
-
-            builder.Property(ca => ca.AttributeIconId)
-                .HasColumnName("attribute_icon_id")
-                .IsRequired(false);
+                .IsRequired()
+                .HasColumnName("allowed_values_source");
 
             builder.Property(ca => ca.IsCustom)
                 .HasColumnName("is_custom")
@@ -69,6 +53,10 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("sort_order")
                 .HasDefaultValue(0);
 
+            builder.Property(ca => ca.AttributeIconId)
+                .HasColumnName("attribute_icon_id")
+                .IsRequired(false);
+
             builder.Property(ca => ca.CreatedAt)
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
@@ -77,21 +65,9 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("updated_at")
                 .IsRequired(false);
 
-            // Relationships
-
             builder.HasOne(ca => ca.AttributeIcon)
-                .WithMany() // No navigation property on CatalogAttributeIcon
-                .HasForeignKey(ca => ca.AttributeIconId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(ca => ca.SubCategoryMaster)
-                .WithMany(sc => sc.CatalogAttributes)
-                .HasForeignKey(ca => ca.SubCategoryMasterId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(ca => ca.AttributeGroup)
                 .WithMany()
-                .HasForeignKey(ca => ca.AttributeGroupId)
+                .HasForeignKey(ca => ca.AttributeIconId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(ca => ca.AttributeDataType)
@@ -104,6 +80,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(av => av.CatalogAttributeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 
 

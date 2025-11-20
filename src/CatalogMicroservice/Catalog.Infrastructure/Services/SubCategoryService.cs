@@ -56,15 +56,15 @@ namespace Catalog.Infrastructure.Services
             try
             {
                 await _subCategoryRepository.AddAsync(subCategory);
-                if (subCategory.CatalogAttributes.Any())
-                {
-                    foreach (var attribute in subCategory.CatalogAttributes)
-                    {
-                        // Associate attribute with the newly created category
-                        attribute.SubCategoryMasterId = subCategory.Id;
-                        await attributeRepository.AddAsync(attribute);
-                    }
-                }
+                //if (subCategory.CatalogAttributes.Any())
+                //{
+                //    foreach (var attribute in subCategory.CatalogAttributes)
+                //    {
+                //        // Associate attribute with the newly created category
+                //        attribute.SubCategoryMasterId = subCategory.Id;
+                //        await attributeRepository.AddAsync(attribute);
+                //    }
+                //}
 
                 await transaction.CommitAsync();
 

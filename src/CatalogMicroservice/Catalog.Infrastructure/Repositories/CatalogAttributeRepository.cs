@@ -35,43 +35,45 @@ namespace Catalog.Infrastructure.Repositories
                 .Include(a => a.AllowedValues)
                 .Include(a => a.AttributeIcon)
                 .Include(a => a.AttributeDataType)
-                .Include(a => a.AttributeGroup)
                 .AsNoTracking()
                 .ToListAsync();
 
             return attributes;
         }
 
-        public async Task<List<CatalogAttributeRaw>> GetFilterableAttributes(int categoryId, int subCategoryId)
+        public async Task<List<CatalogAttributeRaw>> GetFilterableAttributes(int Scid)
         {
-            var categoryMasterIdParam = new MySqlParameter("@CategoryMasterId", (object)categoryId);
-            var subCategoryMasterIdParam = new MySqlParameter("@SubCategoryMasterId", (object)subCategoryId);
+            var subCategoryIdParam = new MySqlParameter("@SubCategoryId", (object)Scid);
 
             var rawResults = await dbContext.RawAttributeValues
-                            .FromSqlRaw(@"
-                                SELECT
-                                    attr.id AS Id,
-                                    attr.catalog_attribute_key AS `Key`,
-                                    attr.category_id AS CategoryMasterId,
-                                    attr.sub_category_id AS SubCategoryMasterId,
-                                    attr.label AS Label,
-                                    av.id as AllowedValueId,
-                                    av.value AS AllowedValue,
-                                    av.sort_order AS AllowedValueSortOrder,
-                                    attr.sort_order AS AttributeSortOrder 
-                                FROM catalog_attribute attr
-                                INNER JOIN attribute_allowed_value av ON av.attribute_id = attr.id
-                                WHERE 
-                                    (@CategoryMasterId IS NOT NULL AND attr.category_id = @CategoryMasterId)
-                                    OR
-                                    (@SubCategoryMasterId IS NOT NULL AND attr.sub_category_id = @SubCategoryMasterId)
-                                ORDER BY attr.sort_order, av.sort_order",
-                                categoryMasterIdParam, subCategoryMasterIdParam)
-                            .AsNoTracking()
-                            .ToListAsync();
+                .FromSqlRaw(@"
+                            SELECT
+                                attr.id AS Id,
+                                attr.catalog_attribute_key AS `Key`,
+                                cam.category_id AS CategoryMasterId,
+                                cam.sub_category_id AS SubCategoryMasterId,
+                                attr.label AS Label,
+                                av.id AS AllowedValueId,
+                                av.value AS AllowedValue,
+                                av.sort_order AS AllowedValueSortOrder,
+                                attr.sort_order AS AttributeSortOrder
+                            FROM category_attribute_map cam
+                            INNER JOIN catalog_attribute attr 
+                                ON cam.attribute_id = attr.id
+                            INNER JOIN subcategory_allowed_value sav
+                                ON sav.attribute_id = attr.id
+                               AND sav.sub_category_id = cam.sub_category_id
+                            INNER JOIN attribute_allowed_value av
+                                ON av.id = sav.allowed_value_id
+                            WHERE cam.sub_category_id = @SubCategoryId
+                            ORDER BY attr.sort_order, av.sort_order",
+                                    subCategoryIdParam)
+                                .AsNoTracking()
+                                .ToListAsync();
 
             return rawResults;
         }
+
 
     }
 }

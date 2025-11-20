@@ -19,15 +19,14 @@ namespace Catalog.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetFilterableAttributesQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInfo("Fetching filterable attributes for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
-                request.CategoryId, request.SubCategoryId);
+            _logger.LogInfo("Fetching filterable attributes for SubCategoryId: {SubCategoryId}",
+                request.Scid);
 
-            var attributes = await _service.GetFilterableAttributes(request.CategoryId, request.SubCategoryId);
+            var attributes = await _service.GetFilterableAttributes(request.Scid);
 
             if (attributes == null && attributes.Attributes.Count == 0)
             {
-                _logger.LogWarning("No filterable attributes found for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
-                    request.CategoryId, request.SubCategoryId);
+                _logger.LogWarning("No filterable attributes found.");
 
                 return Result.Success(new List<object>());
             }

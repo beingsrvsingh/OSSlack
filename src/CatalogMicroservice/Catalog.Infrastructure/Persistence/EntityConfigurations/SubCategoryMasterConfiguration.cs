@@ -39,10 +39,5 @@ public class SubCategoryMasterConfiguration : IEntityTypeConfiguration<SubCatego
                .HasForeignKey(l => l.SubCategoryId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(c => c.CatalogAttributes)
-              .WithOne(ca => ca.SubCategoryMaster)
-              .HasForeignKey(ca => ca.SubCategoryMasterId)
-              .OnDelete(DeleteBehavior.Cascade);
-
     }
 }

@@ -186,41 +186,40 @@ namespace Catalog.Infrastructure.Services
                 .GetAttributesByCategoryOrSubCategoryAsync(categoryId, subCategoryId, summaryOnly);
 
             var grouped = attributes
-                .GroupBy(attr => attr.AttributeGroup?.DisplayName ?? "Basic Details")
                 .Select(g => new CatalogAttributeGroupDto
                 {
-                    GroupName = g.Key,
-                    Attributes = g.Select(attr => new CatalogAttributeDto
-                    {
-                        Id = attr.Id,
-                        Key = attr.CatalogAttributeKey,
-                        Label = attr.Label,
-                        DataType = attr.AttributeDataType?.Name ?? "String",
-                        IsCustom = attr.IsCustom,
-                        IsRequired = attr.IsRequired,
-                        IsFilterable = attr.IsFilterable,
-                        IsSummary = attr.IsSummary,
-                        SortOrder = attr.SortOrder,
-                        AllowedValues = attr.AllowedValues != null
-                            ? attr.AllowedValues
-                                .OrderBy(v => v.SortOrder)
-                                .Select(v => new CatalogAttributeAllowedValueDto
-                                {
-                                    Id = v.Id,
-                                    Value = v.Value,
-                                    SortOrder = v.SortOrder
-                                })
-                                .ToList()
-                            : new List<CatalogAttributeAllowedValueDto>(),
-                        Icon = attr.AttributeIcon != null
-                            ? new CatalogAttributeIconDto
-                            {
-                                IconCodePoint = attr.AttributeIcon.IconCodePoint,
-                                IconFontFamily = attr.AttributeIcon.IconFontFamily,
-                                IconName = attr.AttributeIcon.IconName,
-                            }
-                            : null
-                    }).OrderBy(a => a.SortOrder).ToList()
+                    //GroupName = g.Key,
+                    //Attributes = g.Select(attr => new CatalogAttributeDto
+                    //{
+                    //    Id = attr.Id,
+                    //    Key = attr.CatalogAttributeKey,
+                    //    Label = attr.Label,
+                    //    DataType = attr.AttributeDataType?.Name ?? "String",
+                    //    IsCustom = attr.IsCustom,
+                    //    IsRequired = attr.IsRequired,
+                    //    IsFilterable = attr.IsFilterable,
+                    //    IsSummary = attr.IsSummary,
+                    //    SortOrder = attr.SortOrder,
+                    //    AllowedValues = attr.AllowedValues != null
+                    //        ? attr.AllowedValues
+                    //            .OrderBy(v => v.SortOrder)
+                    //            .Select(v => new CatalogAttributeAllowedValueDto
+                    //            {
+                    //                Id = v.Id,
+                    //                Value = v.Value,
+                    //                SortOrder = v.SortOrder
+                    //            })
+                    //            .ToList()
+                    //        : new List<CatalogAttributeAllowedValueDto>(),
+                    //    Icon = attr.AttributeIcon != null
+                    //        ? new CatalogAttributeIconDto
+                    //        {
+                    //            IconCodePoint = attr.AttributeIcon.IconCodePoint,
+                    //            IconFontFamily = attr.AttributeIcon.IconFontFamily,
+                    //            IconName = attr.AttributeIcon.IconName,
+                    //        }
+                    //        : null
+                    //}).OrderBy(a => a.SortOrder).ToList()
                 })
                 .OrderBy(g => g.GroupName)
                 .ToList();
@@ -229,11 +228,11 @@ namespace Catalog.Infrastructure.Services
 
         }
 
-        public async Task<FilterAttributeGroupDto> GetFilterableAttributes(int categoryId, int subCategoryId)
+        public async Task<FilterAttributeGroupDto> GetFilterableAttributes(int scid)
         {
             try
             {
-                var groupedAttributes = await attributeRepository.GetFilterableAttributes(categoryId, subCategoryId);
+                var groupedAttributes = await attributeRepository.GetFilterableAttributes(scid);
 
                 var first = groupedAttributes.FirstOrDefault();
 
@@ -270,8 +269,7 @@ namespace Catalog.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching filterable attributes for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId}",
-                    categoryId, subCategoryId);
+                _logger.LogError(ex, "Error fetching filterable attributes.");
 
                 return new FilterAttributeGroupDto();
             }

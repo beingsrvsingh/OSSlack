@@ -12,16 +12,10 @@ namespace Catalog.Domain.Entities
         [Required, MaxLength(100)]
         public string CatalogAttributeKey { get; set; } = null!;
 
-        public int? CategoryMasterId { get; set; }
-        public int? SubCategoryMasterId { get; set; }
-        public int AttributeDataTypeId { get; set; }
-
         [Required, MaxLength(200)]
         public string Label { get; set; } = null!;
         
-        // <<-- FK to group master
-        public int? AttributeGroupId { get; set; }
-
+        [Required]
         public string AllowedValuesSource { get; set; } = null!;
 
         public bool IsCustom { get; set; } = false;
@@ -30,24 +24,20 @@ namespace Catalog.Domain.Entities
         public bool IsSummary { get; set; } = false;
 
         public int SortOrder { get; set; } = 0;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+
+        public int AttributeDataTypeId { get; set; }
+
         public int? AttributeIconId { get; set; }
 
         [ForeignKey(nameof(AttributeIconId))]
         public virtual CatalogAttributeIcon? AttributeIcon { get; set; }
 
-        [ForeignKey(nameof(SubCategoryMasterId))]
-        public virtual SubCategoryMaster? SubCategoryMaster { get; set; }
-
         [ForeignKey(nameof(AttributeDataTypeId))]
         public virtual AttributeDataTypeMaster AttributeDataType { get; set; } = null!;
 
-        [ForeignKey(nameof(AttributeGroupId))]
-        public virtual CatalogAttributeGroupMaster? AttributeGroup { get; set; }
-
         public virtual ICollection<CatalogAttributeAllowedValue> AllowedValues { get; set; } = new List<CatalogAttributeAllowedValue>();
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
     }
 
 }
