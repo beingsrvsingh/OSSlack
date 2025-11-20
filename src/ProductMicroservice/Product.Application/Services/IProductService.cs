@@ -23,11 +23,7 @@ namespace Product.Application.Services
         Task<bool> DeleteProductAsync(int productId);
         Task<CatalogResponseDto?> GetProductWithAttributesAsync(int productId);
 
-        Task<List<ProductFilterRawResult>> GetFilteredProductsAsync(
-        List<int>attributeIds, int pageNumber,
-        int pageSize,
-        string? sortBy = null,
-        bool sortDescending = false);
+        Task<List<CatalogResponseDto>> GetFilteredProductsAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10);
 
         Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }

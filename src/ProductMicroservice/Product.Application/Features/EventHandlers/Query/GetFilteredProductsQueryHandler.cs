@@ -29,63 +29,14 @@ namespace Product.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetFilteredProductsQuery request, CancellationToken cancellationToken)
         {
-            var response = await _productService.GetFilteredProductsAsync(
-                request.AttributeId,
-                request.PageNumber,
-                request.PageSize,
-                request.SortBy,
-                request.SortDescending
+            var response = await _productService.GetFilteredProductsAsync(request.AttributeId,Convert.ToInt32(request.SubCategoryId),request.PageSize
             );
 
             if (response == null || !response.Any())
             {
                 return Result.Success(new List<ProductBySubCategoryResponseDto>());
             }
-
-            var attributes = await catalogService.GetAttributesByCategoryId(
-                Convert.ToInt32(request.CategoryId),
-                Convert.ToInt32(request.SubCategoryId)
-            );
-
-            var productIds = response.Select(p => p.Id).Distinct().ToList();
-
-            var reviewSummaries = await reviewService.GetProductReviewSummariesAsync(productIds);
-            var summaryLookup = reviewSummaries.ToDictionary(r => r.ProductId);
-
-            var grouped = response
-                .GroupBy(r => r.Id)
-                .Select(group =>
-                {
-                    var first = group.First();
-
-                    // Lookup review summary, if missing, use defaults
-                    summaryLookup.TryGetValue(group.Key, out var summary);
-
-                    var entity = new ProductMaster
-                    {
-                        Id = group.Key,
-                        Name = first.Name,
-                        ThumbnailUrl = first.ThumbnailUrl,
-                        CategoryId = first.CategoryId,
-                        SubCategoryId = first.SubCategoryId,
-                        Reviews = summary?.TotalReviews ?? 0,
-                        Rating = (int)(summary?.AverageRating ?? 0),
-                        CategoryNameSnapshot = first.CategoryName,
-                        AttributeValues = group
-                            .Where(g => !string.IsNullOrEmpty(g.AttributeKey))
-                            .Select(g => new ProductAttributeValue
-                            {
-                                AttributeKey = g.AttributeKey,
-                                AttributeLabel = g.AttributeLabel,
-                                Value = g.Value ?? string.Empty
-                            }).ToList()
-                    };
-
-                    return ProductBySubCategoryResponseDto.FromEntity(entity);
-                })
-                .ToList();
-
-            return Result.Success(grouped);
+            return Result.Success(response);
 
         }
 
