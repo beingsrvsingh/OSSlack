@@ -23,13 +23,36 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasMaxLength(100)
                 .HasColumnName("name");
 
-            builder.Property(v => v.Price)
-                .HasColumnType("decimal(18,2)")
-                .HasColumnName("price");
+            builder.OwnsOne(p => p.Price, price =>
+            {
+                price.Property(pm => pm.Amount)
+                    .HasColumnName("amount")
+                    .HasColumnType("decimal(18,2)");
 
-            builder.Property(v => v.MRP)
-                .HasColumnType("decimal(18,2)")
-                .HasColumnName("mrp");
+                price.Property(pm => pm.Mrp)
+                    .HasColumnName("mrp")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Currency)
+                    .HasMaxLength(3)
+                    .HasColumnName("currency");
+
+                price.Property(pm => pm.Discount)
+                    .HasColumnName("discount")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Tax)
+                    .HasColumnName("tax")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.EffectiveFrom)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_from");
+
+                price.Property(pm => pm.EffectiveTo)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_to");
+            });
 
             builder.Property(v => v.StockQuantity)
                 .HasColumnName("stock_quantity");

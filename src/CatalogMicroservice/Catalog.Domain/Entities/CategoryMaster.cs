@@ -20,6 +20,8 @@ public partial class CategoryMaster
 
     public int DisplayOrder { get; set; }
 
+    public string? ResourceType { get; set; }
+
     [MaxLength(300)]
     public string? ImageUrl { get; set; }
 

@@ -9,6 +9,11 @@ namespace Pooja.Application.Services
         Task<IEnumerable<PoojaMaster>> GetAllPoojasAsync();
         Task<IEnumerable<PoojaMaster>> GetPoojasByTempleAsync(int templeId);
         Task<IEnumerable<PoojaMaster>> GetPoojasByPriestAsync(int priestId);
+
+        Task<List<CatalogResponseDto>?> GetPoojasBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
+        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
+        Task<List<CatalogResponseDto>> GetFilteredPoojasAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10);
+
         Task AddPoojaAsync(PoojaMaster pooja);
         Task UpdatePoojaAsync(PoojaMaster pooja);
         Task DeletePoojaAsync(int id);

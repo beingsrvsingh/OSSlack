@@ -8,7 +8,7 @@ using Shared.Utilities.Response;
 
 namespace Product.Application.Features.EventHandlers.Query
 {
-    public class GetProductsWithAttributesQueryHandler : IRequestHandler<GetProductsWithAttributesQuery, Result>
+    public class GetProductsWithAttributesQueryHandler : IRequestHandler<GetProductsBySubcategoryIdQuery, Result>
     {
         private readonly ILoggerService<GetLocalizedInfoQueryHandler> _logger;
         private readonly IProductService _productService;
@@ -27,7 +27,7 @@ namespace Product.Application.Features.EventHandlers.Query
             this.reviewService = reviewService;
         }
 
-        public async Task<Result> Handle(GetProductsWithAttributesQuery request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(GetProductsBySubcategoryIdQuery request, CancellationToken cancellationToken)
         {
             try
             {

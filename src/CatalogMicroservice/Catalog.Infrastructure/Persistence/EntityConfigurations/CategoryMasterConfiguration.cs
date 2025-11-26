@@ -17,6 +17,7 @@ namespace Catalog.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.CategoryType).HasColumnName("category_type").IsRequired().HasMaxLength(100);
             builder.Property(c => c.Description).HasColumnName("description").HasMaxLength(500);
             builder.Property(c => c.ImageUrl).HasColumnName("image_url").HasMaxLength(300);
+            builder.Property(c => c.ResourceType).HasColumnName("resource_type").HasMaxLength(100);
             builder.Property(c => c.IsActive).HasColumnName("is_active").HasDefaultValue(true);
             builder.Property(c => c.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
             builder.Property(s => s.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");

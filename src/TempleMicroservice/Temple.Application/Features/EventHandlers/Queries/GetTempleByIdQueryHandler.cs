@@ -26,7 +26,7 @@ namespace Temple.Application.Features.EventHandlers.Queries
         {
             _logger.LogInfo("Fetching temple schedule with ID: {Id}", request.Id);
 
-            var entity = await _service.GetByIdWithDetailsAsync(request.Id);
+            var entity = await _service.GetTempleByIdWithDetailsAsync(request.Id);
 
             if (entity != null)
                 return Result.Success(entity);

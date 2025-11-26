@@ -68,9 +68,36 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.IsFeatured)
                 .HasColumnName("is_featured");
 
-            builder.Property(p => p.Currency)
-                .HasMaxLength(3)
-                .HasColumnName("currency");
+            builder.OwnsOne(p => p.Price, price =>
+            {
+                price.Property(pm => pm.Amount)
+                    .HasColumnName("amount")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Mrp)
+                    .HasColumnName("mrp")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Currency)
+                    .HasMaxLength(3)
+                    .HasColumnName("currency");
+
+                price.Property(pm => pm.Discount)
+                    .HasColumnName("discount")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Tax)
+                    .HasColumnName("tax")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.EffectiveFrom)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_from");
+
+                price.Property(pm => pm.EffectiveTo)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_to");
+            });
 
             // Relationships
             builder.HasMany(t => t.TempleExpertises)

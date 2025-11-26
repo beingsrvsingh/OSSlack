@@ -9,18 +9,45 @@ namespace Product.API.Controllers.v1
 {
     public class ProductController : BaseController
     {
-
-        [HttpGet("{name}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetGetProductByProductNameAsync(string name)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductByIdAsync(int id)
         {
-            var result = await Mediator.Send(new GetProductByProductName { ProductName = name });
-
+            var query = new GetProductQuery() { productId = id};
+            var result = await Mediator.Send(query);
             return Ok(result);
         }
 
-        [HttpGet("trending-products")]
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductsBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetProductsBySubcategoryIdQuery() { SubCategoryId = int.Parse(scid) };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFilteredProductsAsync([FromBody] GetFilteredProductsQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }        
+
+        [HttpGet("trending")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingProductQuery query)
@@ -30,6 +57,15 @@ namespace Product.API.Controllers.v1
             if (!result.Succeeded)
                 return NotFound(new { Message = "Products not found." });
 
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductByNameAsync([FromQuery(Name = "q")] string name)
+        {
+            var result = await Mediator.Send(new GetProductByProductName { ProductName = name });
             return Ok(result);
         }
 
@@ -140,41 +176,7 @@ namespace Product.API.Controllers.v1
         {
             var result = await Mediator.Send(new GetProductSEOInfoQuery(productId));
             return Ok(result);
-        }
-
-        [HttpGet("product")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductQuery query)
-        {
-            var result = await Mediator.Send(query);
-            return Ok(result);
-        }
-
-        [HttpGet("products")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetProductsWithAttributesAsync([FromQuery] GetProductsWithAttributesQuery query)
-        {
-            var result = await Mediator.Send(query);
-            return Ok(result);
         }        
-
-        [HttpPost("filtered-products")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetFilteredProductsAsync([FromBody] GetFilteredProductsQuery query)
-        {
-            var result = await Mediator.Send(query);
-
-            if (result.Succeeded)
-            {
-                return Ok(result);
-            }
-
-            // Return bad request or other appropriate status if failure
-            return BadRequest(result);
-        }
 
         /// <summary>
         /// Search products by query with pagination

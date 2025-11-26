@@ -40,7 +40,8 @@ namespace Catalog.Infrastructure.Services
                     Subcategories = g.Select(s => new SubCategoryParentResponseDto
                     {
                         Id = s.SubcategoryId,
-                        Name = s.SubcategoryName
+                        Name = s.SubcategoryName,
+                        ResourceType = s.ResourceType
                     }).ToList()
                 })
                 .ToList();

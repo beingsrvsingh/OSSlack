@@ -1,5 +1,6 @@
 using BaseApi;
 using Microsoft.AspNetCore.Mvc;
+using Temple.Application.Features.Query;
 using Shared.Utilities.Response;
 using Temple.Application.Features.Commands;
 using Temple.Application.Features.Queries;
@@ -8,16 +9,55 @@ namespace Temple.API.Controllers.v1
 {
     public class TempleController : BaseController
     {
-        // GET api/TempleMaster/{id}
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTempleMasterByIdAsync(int id)
+        public async Task<IActionResult> GetTempleByIdAsync(int id)
         {
             var result = await Mediator.Send(new GetTempleByIdQuery(id));
 
             if (!result.Succeeded)
                 return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTemplesBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetTemplesBySubcategoryIdQuery() { SubCategoryId = scid };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFiltereTemplesAsync([FromBody] GetFilteredTemplesQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }
+
+        [HttpGet("trending")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Products not found." });
 
             return Ok(result);
         }

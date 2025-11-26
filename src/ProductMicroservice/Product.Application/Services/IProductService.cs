@@ -8,7 +8,7 @@ namespace Product.Application.Services
     public interface IProductService
     {
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
-        Task<List<TrendingProductResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
+        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
         Task<List<CatalogResponseDto>?> GetProductBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
         Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);

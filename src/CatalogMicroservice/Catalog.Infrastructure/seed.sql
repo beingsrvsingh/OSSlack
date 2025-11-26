@@ -1479,25 +1479,25 @@ DELETE FROM category_master;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO category_master 
-(id, parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at)
+(id, parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at, resource_type)
 VALUES
-(1, NULL, 'Product', 'Product', 'All tangible products', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(2, NULL, 'Service', 'Service', 'All service-based offerings', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(3, NULL, 'Resource', 'Resource', 'All human or spiritual resources', 3, 'assets/images/placeholder.png', 1, NOW(), NOW());
+(1, NULL, 'Product', 'Product', 'All tangible products', 1, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW()),
+(2, NULL, 'Service', 'Service', 'All service-based offerings', 2, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW()),
+(3, NULL, 'Resource', 'Resource', 'All human or spiritual resources', 3, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW());
 
 INSERT INTO category_master 
 (id, parent_id, name, category_type, description, display_order, image_url, is_active, created_at, updated_at)
 VALUES
 -- Product Subcategories
-(101, 1, 'Electronics', 'Product', 'Electronic items like phones and gadgets', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(102, 1, 'Clothing', 'Product', 'Men and women clothing', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(103, 1, 'Fitness', 'Product', 'Fitness equipment, accessories, and activewear', 3, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(101, 1, 'Electronics', 'Product', 'Electronic items like phones and gadgets', 1, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
+(102, 1, 'Clothing', 'Product', 'Men and women clothing', 2, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
+(103, 1, 'Fitness', 'Product', 'Fitness equipment, accessories, and activewear', 3, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
 
 -- Service Subcategories
-(104, 2, 'Pooja', 'Service', 'Religious pooja services and rituals', 1, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(105, 2, 'Temple', 'Service', 'Religious temples and associated services', 2, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(106, 2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'assets/images/placeholder.png', 1, NOW(), NOW()),
-(107, 2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'assets/images/placeholder.png', 1, NOW(), NOW()),
+(104, 2, 'Pooja', 'Service', 'Religious pooja services and rituals', 1, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
+(105, 2, 'Temple', 'Service', 'Religious temples and associated services', 2, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
+(106, 2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
+(107, 2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
 
 
 SET FOREIGN_KEY_CHECKS = 0;

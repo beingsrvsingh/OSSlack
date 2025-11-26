@@ -8,6 +8,10 @@ namespace Catalog.Application.Contracts
         public int Id { get; set; }
         [JsonPropertyName("name")]
         public string Name { get; set; }
+
+        [JsonPropertyName("resource_type")]
+        public required string ResourceType { get; set; }
+
         [JsonPropertyName("image_url")]
         public string ImageUrl { get; set; }
         [JsonPropertyName("display_order")]

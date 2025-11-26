@@ -43,16 +43,15 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
             builder.Property(pav => pav.CatalogAttributeGroupId)
                 .HasColumnName("attribute_group_id");
 
-            builder.Property(pav => pav.Value)
-                .HasColumnName("value")
-                .HasMaxLength(500);
+            builder.Property(pav => pav.AttributeGroupNameSnapshot)
+                .HasColumnName("attribute_group_name_snap");
 
             builder.Property(pav => pav.CreatedAt)
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(pav => pav.PoojaMaster)
-                .WithMany(p => p.PoojaAttributeValues)
+                .WithMany(p => p.PoojaAttribute)
                 .HasForeignKey(pav => pav.PoojaMasterId)
                 .OnDelete(DeleteBehavior.Cascade);
 

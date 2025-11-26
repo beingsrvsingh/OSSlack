@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Product.Application.Contracts
+namespace Shared.Application.Common.Contracts.Response
 {
-    public class TrendingProductResponse
+    public class TrendingResponse
     {
         [JsonPropertyName("id")]
         public string Id { get; set; } = "";

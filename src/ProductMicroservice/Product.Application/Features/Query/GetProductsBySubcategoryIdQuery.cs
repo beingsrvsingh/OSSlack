@@ -3,7 +3,7 @@ using Shared.Utilities.Response;
 
 namespace Product.Application.Features.Query
 {
-    public record GetProductsWithAttributesQuery : IRequest<Result>
+    public record GetProductsBySubcategoryIdQuery : IRequest<Result>
     {
         public int SubCategoryId { get; set; }
         public bool IsSummary = false;

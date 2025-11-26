@@ -19,8 +19,36 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.Id).HasColumnName("id");
             builder.Property(p => p.Name).HasColumnName("name").HasMaxLength(150).IsRequired();
             builder.Property(p => p.Description).HasColumnName("description").HasMaxLength(300);
-            builder.Property(p => p.Price).HasColumnName("price").HasColumnType("decimal(12,2)");
-            builder.Property(p => p.Currency).HasColumnName("currency").HasMaxLength(50).HasDefaultValue("INR");
+            builder.OwnsOne(p => p.Price, price =>
+            {
+                price.Property(pm => pm.Amount)
+                    .HasColumnName("amount")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Mrp)
+                    .HasColumnName("mrp")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Currency)
+                    .HasMaxLength(3)
+                    .HasColumnName("currency");
+
+                price.Property(pm => pm.Discount)
+                    .HasColumnName("discount")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.Tax)
+                    .HasColumnName("tax")
+                    .HasColumnType("decimal(18,2)");
+
+                price.Property(pm => pm.EffectiveFrom)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_from");
+
+                price.Property(pm => pm.EffectiveTo)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                    .HasColumnName("price_effective_to");
+            });
             builder.Property(p => p.IsActive).HasColumnName("is_active").HasDefaultValue(true);
             builder.Property(p => p.DisplayOrder).HasColumnName("display_order").HasDefaultValue(0);
             builder.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");

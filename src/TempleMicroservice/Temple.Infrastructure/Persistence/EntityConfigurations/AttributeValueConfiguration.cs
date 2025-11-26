@@ -45,6 +45,9 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
             builder.Property(av => av.CatalogAttributeGroupId)
                 .HasColumnName("catalog_attribute_group_id");
 
+            builder.Property(pav => pav.AttributeGroupNameSnapshot)
+                .HasColumnName("attribute_group_name_snap");
+
             builder.Property(av => av.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .HasColumnName("created_at");

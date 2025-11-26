@@ -27,5 +27,6 @@ namespace Pooja.Domain.Entities
 
         [ForeignKey(nameof(PoojaVariantId))]
         public virtual PoojaVariantMaster? PoojaVariantMaster { get; set; }
+        public string? AttributeGroupNameSnapshot { get; set; }
     }
 }

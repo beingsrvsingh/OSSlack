@@ -549,6 +549,11 @@ namespace Catalog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("parent_id");
 
+                    b.Property<string>("ResourceType")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("resource_type");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
@@ -564,128 +569,128 @@ namespace Catalog.Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 972, DateTimeKind.Local).AddTicks(5156),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 383, DateTimeKind.Local).AddTicks(3173),
                             Description = "All tangible products",
                             DisplayOrder = 1,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Product",
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 981, DateTimeKind.Local).AddTicks(8451)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(6663)
                         },
                         new
                         {
                             Id = 2,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(573),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7184),
                             Description = "All service-based offerings",
                             DisplayOrder = 2,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Service",
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(589)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7186)
                         },
                         new
                         {
                             Id = 3,
                             CategoryType = "Resource",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(605),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7190),
                             Description = "All human or spiritual resources",
                             DisplayOrder = 3,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Resource",
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(606)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7191)
                         },
                         new
                         {
                             Id = 101,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(621),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7197),
                             Description = "Electronic items like phones and gadgets",
                             DisplayOrder = 1,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Electronics",
                             ParentCategoryId = 1,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(623)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7198)
                         },
                         new
                         {
                             Id = 102,
                             CategoryType = "Product",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(632),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7200),
                             Description = "Men and women clothing",
                             DisplayOrder = 2,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Clothing",
                             ParentCategoryId = 1,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(633)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7201)
                         },
                         new
                         {
                             Id = 103,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(641),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7204),
                             Description = "Religious pooja services and rituals",
                             DisplayOrder = 1,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Pooja",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(642)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7204)
                         },
                         new
                         {
                             Id = 104,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(650),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7207),
                             Description = "Religious temples and associated services",
                             DisplayOrder = 2,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Temple",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(652)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7208)
                         },
                         new
                         {
                             Id = 105,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(658),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7211),
                             Description = "Astrology services and consultations",
                             DisplayOrder = 3,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Astrologer",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(660)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7211)
                         },
                         new
                         {
                             Id = 106,
                             CategoryType = "Service",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(668),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7214),
                             Description = "Religious storytellers and spiritual discourses",
                             DisplayOrder = 4,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Kathavachak",
                             ParentCategoryId = 2,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(670)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7215)
                         },
                         new
                         {
                             Id = 107,
                             CategoryType = "Resource",
-                            CreatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(747),
+                            CreatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7217),
                             Description = "Priests available for rituals and poojas",
                             DisplayOrder = 1,
                             ImageUrl = "https://picsum.photos/seed/picsum/200/300",
                             IsActive = true,
                             Name = "Priest",
                             ParentCategoryId = 3,
-                            UpdatedAt = new DateTime(2025, 11, 20, 23, 9, 50, 982, DateTimeKind.Local).AddTicks(750)
+                            UpdatedAt = new DateTime(2025, 11, 22, 17, 26, 23, 384, DateTimeKind.Local).AddTicks(7218)
                         });
                 });
 

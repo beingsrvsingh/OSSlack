@@ -27,5 +27,6 @@ namespace Temple.Domain.Entities
 
         [ForeignKey(nameof(ExpertiseId))]
         public virtual TempleExpertise? TempleExpertise { get; set; } = null!;
+        public string? AttributeGroupNameSnapshot { get; set; }
     }
 }

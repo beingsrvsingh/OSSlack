@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Pooja.Application.Features.Commands;
 using Pooja.Application.Features.Queries;
+using Pooja.Application.Features.Query;
 
 namespace Pooja.API.Controllers.v1
 {
@@ -67,6 +68,46 @@ namespace Pooja.API.Controllers.v1
 
             if (!result.Succeeded)
                 return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPoojaBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetPoojasBySubcategoryIdQuery() { SubCategoryId = scid };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFiltereTemplesAsync([FromBody] GetFilteredPoojasQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }
+
+        [HttpGet("trending")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Products not found." });
 
             return Ok(result);
         }

@@ -45,6 +45,7 @@ namespace Catalog.Infrastructure.Repositories
             var query = @"
                             SELECT 
                                 c.name AS CategoryName,
+                                c.resource_type AS ResourceType,
                                 s.id AS SubcategoryId,
                                 s.name AS SubcategoryName
                             FROM category_master c

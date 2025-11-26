@@ -46,24 +46,17 @@ namespace Product.Infrastructure.Services
             }
         }
 
-        public async Task<List<TrendingProductResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
+        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
         {
             List<ProductMaster> lstProducts = new List<ProductMaster> ();
-            if(subCategoryId is null)
-            {
-                lstProducts = await _productRepository.GetAsync((p) => p.IsTrending == true);
-            }
-            else
-            {
-                lstProducts = await _productRepository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
-            }
 
+            lstProducts = await _productRepository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
 
             var trendingProducts = lstProducts
                                     .Take(topN)
                                     .Select(product =>
                                     {
-                                        return new TrendingProductResponse
+                                        return new TrendingResponse
                                         {
                                             Id = product.Id.ToString(),
                                             Scid = product.SubCategoryId.ToString(),

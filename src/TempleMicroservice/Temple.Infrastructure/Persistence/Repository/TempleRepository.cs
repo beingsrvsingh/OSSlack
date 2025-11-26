@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
+using System.Linq.Expressions;
 using Temple.Domain.Entities;
 using Temple.Domain.Repositories;
 using Temple.Infrastructure.Persistence.Context;
@@ -14,7 +15,17 @@ namespace Temple.Infrastructure.Persistence.Repository
         public TempleRepository(TempleDbContext dbContext) : base(dbContext)
         {
             this._context = dbContext;
-        }        
+        }
+
+        public async Task<List<TempleMaster>> GetAsync(Expression<Func<TempleMaster, bool>> predicate, Func<IQueryable<TempleMaster>, IQueryable<TempleMaster>>? include = null)
+        {
+            IQueryable<TempleMaster> query = _context.TempleMasters;
+
+            if (include != null)
+                query = include(query);
+
+            return await query.AsNoTracking().Where(predicate).ToListAsync();
+        }
 
         public async Task<IEnumerable<TempleMaster>> GetAllAsync(int page = 1, int pageSize = 20)
         {
