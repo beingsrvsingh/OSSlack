@@ -27,6 +27,7 @@ namespace PriestMicroservice.Domain.Entities
 
         [ForeignKey(nameof(ExpertiseId))]
         public virtual PriestExpertise PriestExpertise { get; set; } = null!;
+        public string? AttributeGroupNameSnapshot { get; set; }
     }
 
 }

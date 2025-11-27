@@ -1499,6 +1499,9 @@ VALUES
 (106, 2, 'Astrologer', 'Service', 'Astrology services and consultations', 3, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
 (107, 2, 'Kathavachak', 'Service', 'Religious storytellers and spiritual discourses', 4, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'product'),
 
+-- Resource
+(108, 3, 'Priest', 'Resource', 'Priests available for rituals and poojas', 1, 'https://picsum.photos/seed/picsum/200/300', 1, NOW(), NOW(), 'priest');
+
 
 SET FOREIGN_KEY_CHECKS = 0;
 DELETE FROM subcategory_master;
@@ -1545,7 +1548,19 @@ INSERT INTO subcategory_master (
 (23, 107, 'Bhagavad Gita Kathavachak', 'Teachings from Bhagavad Gita', 1, 21, NOW(), NOW()),
 
 (24, 106, 'Horoscope Reading', 'Personal horoscope analysis', 1, 17, NOW(), NOW()),
-(25, 106, 'Name Analysis', 'Future predictions through palm analysis', 1, 20, NOW(), NOW());
+(25, 106, 'Name Analysis', 'Future predictions through palm analysis', 1, 20, NOW(), NOW()),
+
+-- Priest (Resource)
+(26, 108, 'Marriage Rituals', 'All marriage related priest rituals', 1, NULL, NOW(), NOW()),
+(27, 108, 'House Rituals', 'All home related priest rituals', 1, NULL, NOW(), NOW()),
+
+
+(28, 108, 'Vivah Pooja', 'Complete Hindu marriage pooja', 1, 26, NOW(), NOW()),
+(29, 108, 'Engagement Ceremony', 'Sagai / Engagement rituals', 1, 26, NOW(), NOW()),
+
+
+(30, 108, 'Griha Pravesh', 'Housewarming puja performed by priest', 1, 27, NOW(), NOW()),
+(31, 108, 'Vastu Shanti', 'Vastu dosh nivaran puja', 1, 27, NOW(), NOW());
 
 
 INSERT INTO catalog_attribute (id, attribute_datatype_id, catalog_attribute_key, label, allowed_values_source, is_custom, is_required, is_filterable, is_summary, sort_order, created_at, updated_at)

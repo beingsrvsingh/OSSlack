@@ -72,8 +72,48 @@ namespace Priest.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPriestBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetPriestsBySubcategoryIdQuery() { SubCategoryId = scid };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFilterePriestsAsync([FromBody] GetFilteredQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }
+
+        [HttpGet("trending")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Products not found." });
+
+            return Ok(result);
+        }
+
         // Get Filtered Priests (by Language and Expertise)
-        [HttpGet("filter")]
+        [HttpGet("filter-priest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetFilteredPriests([FromQuery] string? language, [FromQuery] string? expertise)
         {

@@ -170,59 +170,75 @@ INSERT INTO time_slot (
 
 
 ------------------------------------------Priest-------------------------------------------------------------
-
 use priestdb;
 
--- Priest Master
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM priest_master;
+SET FOREIGN_KEY_CHECKS = 1;
+
 INSERT INTO priest_master
-(id, name, thumbnail_url, is_active, rating_snap, reviews_snap, category_id, sub_category_id, category_name_snapshot, sub_category_name_snapshot, currency, is_trending, is_featured, created_at)
+(id, name, thumbnail_url, is_active, rating_snap, reviews_snap, category_id, sub_category_id,
+ category_name_snapshot, sub_category_name_snapshot, currency, amount, mrp, tax, discount,
+ is_trending, is_featured, created_at, updated_at)
 VALUES
-(1, 'PanditRaghav', 'https://example.com/images/panditraghav.png', TRUE, 4.9, 320, 2, 108, 'Service', 'Priest', 'INR', TRUE, TRUE, NOW()),
-(2, 'PanditSharma', 'https://example.com/images/panditsharma.png', TRUE, 4.7, 210, 2, 108, 'Service', 'Priest', 'INR', FALSE, TRUE, NOW());
+(1, 'PanditRaghav', 'https://picsum.photos/seed/priest1/200/300', TRUE, 4.9, 320, 26, 28,
+ 'Service', 'Priest', 'INR', 1500.00, 1800.00, 8.00, 5.00, TRUE, TRUE, NOW(), NOW()),
 
--- Priest Expertise (like Product Variants / Rituals)
-INSERT INTO priest_expertise
-(id, priest_id, name, price, mrp, duration_minute, is_default, booking_type)
+(2, 'PanditSharma', 'https://picsum.photos/seed/priest1/200/300', TRUE, 4.7, 210, 26, 28,
+ 'Service', 'Priest', 'INR', 1800.00, 2100.00, 8.00, 0.00, FALSE, TRUE, NOW(), NOW());
+ 
+ INSERT INTO priest_expertise
+(id, priest_id, name, amount, mrp, currency, tax, discount, duration_minute,
+ booking_type, is_default, stock_quantity, price_effective_from, price_effective_to)
 VALUES
-(1, 1, 'Ganesh Pooja Performance', 1500.00, 1800.00, 30, TRUE, 'Onsite'),
-(2, 1, 'Lakshmi Pooja Performance', 1800.00, 2100.00, 40, TRUE, 'Onsite'),
-(3, 2, 'Navagraha Pooja Performance', 2000.00, 2400.00, 50, TRUE, 'Onsite'),
-(4, 2, 'Saraswati Pooja Performance', 1700.00, 2000.00, 35, TRUE, 'Onsite');
+(1, 1, 'Ganesh Pooja Performance', 1500.00, 1800.00, 'INR', 8.00, 5.00, 30, 'Onsite', TRUE, 20, NOW(), NOW()),
+(2, 1, 'Lakshmi Pooja Performance', 1800.00, 2100.00, 'INR', 8.00, 0.00, 40, 'Onsite', TRUE, 18, NOW(), NOW()),
+(3, 2, 'Navagraha Pooja Performance', 2000.00, 2400.00, 'INR', 10.00, 5.00, 50, 'Onsite', TRUE, 15, NOW(), NOW()),
+(4, 2, 'Saraswati Pooja Performance', 1700.00, 2000.00, 'INR', 7.00, 0.00, 35, 'Onsite', TRUE, 22, NOW(), NOW());
 
--- Priest Master Images
+
 INSERT INTO priest_image
-(id, priest_id, media_type, image_url, alt_text, sort_order, created_at)
+(id, priest_id, media_type, image_url, alt_text, sort_order, created_at, updated_at)
 VALUES
-(1, 1, 'Image', 'https://example.com/images/panditraghav_profile.png', 'Pandit Raghav Profile Photo', 1, NOW()),
-(2, 2, 'Image', 'https://example.com/images/panditsharma_profile.png', 'Pandit Sharma Profile Photo', 1, NOW());
+(1, 1, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Pandit Raghav Profile Photo', 1, NOW(), NOW()),
+(2, 2, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Pandit Sharma Profile Photo', 1, NOW(), NOW());
 
--- Priest Expertise Images
 INSERT INTO priest_expertise_image
-(id, priest_expertise_id, media_type, image_url, alt_text, sort_order, created_at)
+(id, priest_expertise_id, media_type, image_url, alt_text, sort_order, created_at, updated_at)
 VALUES
-(1, 1, 'Image', 'https://example.com/images/ganesh_pooja_priest.png', 'Ganesh Pooja Performance', 1, NOW()),
-(2, 2, 'Image', 'https://example.com/images/lakshmi_pooja_priest.png', 'Lakshmi Pooja Performance', 1, NOW()),
-(3, 3, 'Image', 'https://example.com/images/navagraha_pooja_priest.png', 'Navagraha Pooja Performance', 1, NOW()),
-(4, 4, 'Image', 'https://example.com/images/saraswati_pooja_priest.png', 'Saraswati Pooja Performance', 1, NOW());
+(1, 1, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Ganesh Pooja Performance', 1, NOW(), NOW()),
+(2, 2, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Lakshmi Pooja Performance', 1, NOW(), NOW()),
+(3, 3, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Navagraha Pooja Performance', 1, NOW(), NOW()),
+(4, 4, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Saraswati Pooja Performance', 1, NOW(), NOW());
 
--- Priest Attribute Values (Expertise-level Attributes)
+
 INSERT INTO priest_attribute_value
-(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id, attribute_key, attribute_label, value, created_at)
+(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id,
+ attribute_key, attribute_label, value, attribute_group_name_snap, created_at)
 VALUES
-(1, 1, 1, 1, 'Experience', 'Experience', '12 Years', NOW()),
-(2, 1, 2, 2, 'Specialization', 'Specialization', 'Ganesh Pooja', NOW()),
-(3, 2, 1, 3, 'Experience', 'Experience', '10 Years', NOW()),
-(4, 2, 2, 4, 'Specialization', 'Specialization', 'Lakshmi Pooja', NOW()),
-(5, 3, 1, 5, 'Experience', 'Experience', '15 Years', NOW()),
-(6, 3, 2, 6, 'Specialization', 'Specialization', 'Navagraha Pooja', NOW()),
-(7, 4, 1, 7, 'Experience', 'Experience', '8 Years', NOW()),
-(8, 4, 2, 8, 'Specialization', 'Specialization', 'Saraswati Pooja', NOW());
+(1, 1, 1, 1, 'Experience', 'Experience', '12 Years', 'Basic Info', NOW()),
+(2, 1, 2, 2, 'Specialization', 'Specialization', 'Ganesh Pooja', 'Basic Info', NOW()),
+(3, 2, 1, 3, 'Experience', 'Experience', '10 Years', 'Basic Info', NOW()),
+(4, 2, 2, 4, 'Specialization', 'Specialization', 'Lakshmi Pooja', 'Basic Info', NOW()),
+(5, 3, 1, 5, 'Experience', 'Experience', '15 Years', 'Basic Info', NOW()),
+(6, 3, 2, 6, 'Specialization', 'Specialization', 'Navagraha Pooja', 'Basic Info', NOW()),
+(7, 4, 1, 7, 'Experience', 'Experience', '8 Years', 'Basic Info', NOW()),
+(8, 4, 2, 8, 'Specialization', 'Specialization', 'Saraswati Pooja', 'Basic Info', NOW());
 
--- Priest Addons (Expertise-specific or General)
+
 INSERT INTO priest_addon
-(id, priest_id, priest_expertise_id, name, description, price, currency, is_active, display_order, created_at)
+(id, priest_id, priest_expertise_id, name, description, amount, mrp, currency,
+ tax, discount, is_active, display_order, created_at, updated_at)
 VALUES
-(1, 1, 1, 'Pooja Samagri Kit', 'All required items for Ganesh Pooja', 500.00, 'INR', TRUE, 1, NOW()),
-(2, 1, 2, 'Lakshmi Prasad', 'Special Prasad for Lakshmi Pooja', 300.00, 'INR', TRUE, 2, NOW()),
-(3, 2, 3, 'Navagraha Havan Materials', 'Complete Havan material set', 600.00, 'INR', TRUE, 1, NOW()),
-(4, 2, 4, 'Saraswati Pooja Book', 'Booklet with Saraswati Pooja details', 250.00, 'INR', TRUE, 2, NOW());
+(1, 1, 1, 'Pooja Samagri Kit', 'All required items for Ganesh Pooja', 
+ 500.00, 600.00, 'INR', 8.00, 0.00, TRUE, 1, NOW(), NOW()),
+
+(2, 1, 2, 'Lakshmi Prasad', 'Special Prasad for Lakshmi Pooja',
+ 300.00, 350.00, 'INR', 5.00, 0.00, TRUE, 2, NOW(), NOW()),
+
+(3, 2, 3, 'Navagraha Havan Materials', 'Complete Havan material set',
+ 600.00, 700.00, 'INR', 10.00, 5.00, TRUE, 1, NOW(), NOW()),
+
+(4, 2, 4, 'Saraswati Pooja Book', 'Booklet with Saraswati Pooja details',
+ 250.00, 300.00, 'INR', 5.00, 0.00, TRUE, 2, NOW(), NOW());
+

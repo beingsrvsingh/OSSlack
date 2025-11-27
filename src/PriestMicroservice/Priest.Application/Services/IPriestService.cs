@@ -13,6 +13,10 @@ namespace Priest.Application.Services
         Task UpdatePriestAsync(PriestMaster priest);
         Task DeletePriestAsync(int id);
 
+        Task<List<CatalogResponseDto>?> GetPriestsBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
+        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
+        Task<List<CatalogResponseDto>> GetFilteredAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10);
+
         // ConsultationMode
         Task<IEnumerable<ConsultationMode>> GetConsultationModesByPriestIdAsync(int expertiseId);
 

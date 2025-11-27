@@ -49,6 +49,9 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
             builder.Property(aav => aav.CatalogAttributeGroupId)
                    .HasColumnName("catalog_attribute_group_id");
 
+            builder.Property(pav => pav.AttributeGroupNameSnapshot)
+                .HasColumnName("attribute_group_name_snap");
+
             builder.Property(aav => aav.CreatedAt)
                    .HasColumnName("created_at")
                    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
