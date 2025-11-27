@@ -26,6 +26,7 @@ namespace AstrologerMicroservice.Domain.Entities
 
         [ForeignKey(nameof(ExpertiseId))]
         public virtual AstrologerExpertise? AstrologerExpertise { get; set; }
+        public string? AttributeGroupNameSnapshot { get; set; }
     }
 
 }

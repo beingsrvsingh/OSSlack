@@ -37,13 +37,6 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
-                    b.Property<string>("Currency")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasDefaultValue("INR")
-                        .HasColumnName("currency");
-
                     b.Property<string>("Description")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)")
@@ -75,10 +68,6 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasColumnType("varchar(150)")
                         .HasColumnName("name");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(12,2)")
-                        .HasColumnName("price");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
@@ -107,6 +96,10 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.Property<int?>("AttributeDataTypeId")
                         .HasColumnType("int")
                         .HasColumnName("attribute_data_type_id");
+
+                    b.Property<string>("AttributeGroupNameSnapshot")
+                        .HasColumnType("longtext")
+                        .HasColumnName("attribute_group_name_snap");
 
                     b.Property<string>("AttributeKey")
                         .HasMaxLength(200)
@@ -185,19 +178,11 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("kathavachak_id");
 
-                    b.Property<decimal?>("MRP")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("mrp");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("price");
 
                     b.Property<int?>("StockQuantity")
                         .HasColumnType("int")
@@ -320,12 +305,6 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("varchar(3)")
-                        .HasColumnName("currency");
 
                     b.Property<bool>("IsActive")
                         .HasMaxLength(50)
@@ -646,9 +625,59 @@ namespace Kathavachak.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_kathavachak_addons_kathavachak_id");
 
+                    b.OwnsOne("Shared.Domain.Entities.Base.BasePrice", "Price", b1 =>
+                        {
+                            b1.Property<int>("KathavachakAddonId")
+                                .HasColumnType("int");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("varchar(3)")
+                                .HasColumnName("currency");
+
+                            b1.Property<decimal?>("Discount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("discount");
+
+                            b1.Property<DateTime?>("EffectiveFrom")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_from")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<DateTime?>("EffectiveTo")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_to")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<decimal?>("Mrp")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("mrp");
+
+                            b1.Property<decimal?>("Tax")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("tax");
+
+                            b1.HasKey("KathavachakAddonId");
+
+                            b1.ToTable("kathavachak_addon");
+
+                            b1.WithOwner()
+                                .HasForeignKey("KathavachakAddonId");
+                        });
+
                     b.Navigation("KathavachakExpertise");
 
                     b.Navigation("KathavachakMaster");
+
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakAttributeValue", b =>
@@ -678,7 +707,57 @@ namespace Kathavachak.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Shared.Domain.Entities.Base.BasePrice", "Price", b1 =>
+                        {
+                            b1.Property<int>("KathavachakExpertiseId")
+                                .HasColumnType("int");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("varchar(3)")
+                                .HasColumnName("currency");
+
+                            b1.Property<decimal?>("Discount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("discount");
+
+                            b1.Property<DateTime?>("EffectiveFrom")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_from")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<DateTime?>("EffectiveTo")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_to")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<decimal?>("Mrp")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("mrp");
+
+                            b1.Property<decimal?>("Tax")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("tax");
+
+                            b1.HasKey("KathavachakExpertiseId");
+
+                            b1.ToTable("kathavachak_expertise");
+
+                            b1.WithOwner()
+                                .HasForeignKey("KathavachakExpertiseId");
+                        });
+
                     b.Navigation("KathavachakMaster");
+
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakExpertiseMedia", b =>
@@ -702,6 +781,58 @@ namespace Kathavachak.Infrastructure.Migrations
                         .HasConstraintName("fk_kathavachak_language_kathavachak_id");
 
                     b.Navigation("Kathavachak");
+                });
+
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakMaster", b =>
+                {
+                    b.OwnsOne("Shared.Domain.Entities.Base.BasePrice", "Price", b1 =>
+                        {
+                            b1.Property<int>("KathavachakMasterId")
+                                .HasColumnType("int");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("varchar(3)")
+                                .HasColumnName("currency");
+
+                            b1.Property<decimal?>("Discount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("discount");
+
+                            b1.Property<DateTime?>("EffectiveFrom")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_from")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<DateTime?>("EffectiveTo")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime(6)")
+                                .HasColumnName("price_effective_to")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+                            b1.Property<decimal?>("Mrp")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("mrp");
+
+                            b1.Property<decimal?>("Tax")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("tax");
+
+                            b1.HasKey("KathavachakMasterId");
+
+                            b1.ToTable("kathavachak_master");
+
+                            b1.WithOwner()
+                                .HasForeignKey("KathavachakMasterId");
+                        });
+
+                    b.Navigation("Price");
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakMedia", b =>

@@ -26,6 +26,7 @@ namespace Kathavachak.Domain.Entities
 
         [ForeignKey(nameof(ExpertiseId))]
         public virtual KathavachakExpertise? KathavachakExpertise { get; set; }
+        public string? AttributeGroupNameSnapshot { get; set; }
     }
 
 }

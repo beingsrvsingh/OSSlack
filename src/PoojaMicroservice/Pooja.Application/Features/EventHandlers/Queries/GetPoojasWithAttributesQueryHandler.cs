@@ -4,7 +4,7 @@ using Pooja.Application.Services;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
-namespace Temple.Application.Features.EventHandlers.Queries
+namespace Pooja.Application.Features.EventHandlers.Queries
 {
     public class GetPoojasWithAttributesQueryHandler : IRequestHandler<GetPoojasBySubcategoryIdQuery, Result>
     {

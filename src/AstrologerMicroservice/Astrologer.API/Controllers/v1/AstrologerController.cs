@@ -1,3 +1,4 @@
+using Astrologer.Application.Features.Query;
 using AstrologerMicroservice.Application.Features.Commands;
 using AstrologerMicroservice.Application.Features.Query;
 using AstrologerMicroservice.Domain.Entities.Enums;
@@ -71,6 +72,46 @@ namespace Astrologer.API.Controllers.v1
                 return NotFound(new { Message = "Astrologer not found." });
 
             return Ok(result.Data);
+        }
+
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAstrologersBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetAstrologersBySubcategoryIdQuery() { SubCategoryId = scid };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFiltereAstrologersAsync([FromBody] GetFilteredAstrologersQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }
+
+        [HttpGet("trending")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Astrologers not found." });
+
+            return Ok(result);
         }
 
         /// <summary>

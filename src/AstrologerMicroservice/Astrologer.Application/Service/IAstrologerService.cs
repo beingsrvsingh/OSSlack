@@ -12,6 +12,11 @@ namespace AstrologerMicroservice.Application.Service
         Task<CatalogResponseDto?> GetByIdAsync(int astrologerId);
         Task<AstrologerMaster?> GetByUserIdAsync(string userId);
         Task<IEnumerable<AstrologerMaster>> GetAllAsync(int page = 1, int pageSize = 20);
+
+        Task<List<CatalogResponseDto>?> GetAstrologersBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
+        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
+        Task<List<CatalogResponseDto>> GetFilteredAstrologersAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10);
+
         Task<bool> CreateAsync(CreateAstrologerCommand command);
         Task<bool> UpdateAsync(UpdateAstrologerCommand command);
         Task<bool> DeleteAsync(int astrologerId);

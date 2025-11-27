@@ -1,6 +1,7 @@
 ﻿using BaseApi;
 using Kathavachak.Application.Features.Commands;
 using Kathavachak.Application.Features.Queries;
+using Kathavachak.Application.Features.Query;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Utilities.Response;
 
@@ -59,12 +60,52 @@ namespace Kathavachak.API.Controllers.v1
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetKathavachakMasterById(int id)
+        public async Task<IActionResult> GetKathavachakById(int id)
         {
             var result = await Mediator.Send(new GetKathavachakMasterByIdQuery(id));
 
             if (!result.Succeeded)
                 return NotFound(result.Errors);
+
+            return Ok(result);
+        }
+
+        [HttpGet("by-subcategory")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetKathavachaksBySubcategoryIdAsync([FromQuery] string scid)
+        {
+            var query = new GetKathavachaksBySubcategoryIdQuery() { SubCategoryId = scid };
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFiltereKathavachaksAsync([FromBody] GetFilteredKathavachaksQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+
+            // Return bad request or other appropriate status if failure
+            return BadRequest(result);
+        }
+
+        [HttpGet("trending")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSubcategoryTrendingAsync([FromQuery] GetTrendingQuery query)
+        {
+            var result = await Mediator.Send(query);
+
+            if (!result.Succeeded)
+                return NotFound(new { Message = "Products not found." });
 
             return Ok(result);
         }

@@ -36,8 +36,14 @@ namespace Kathavachak.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
                     updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
-                    currency = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false)
+                    amount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    mrp = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    currency = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    tax = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    price_effective_from = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    price_effective_to = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
                     is_trending = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     is_featured = table.Column<bool>(type: "tinyint(1)", nullable: true)
                 },
@@ -56,8 +62,14 @@ namespace Kathavachak.Infrastructure.Migrations
                     kathavachak_id = table.Column<int>(type: "int", nullable: false),
                     name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     mrp = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    currency = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    tax = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    price_effective_from = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    price_effective_to = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
                     stock_quantity = table.Column<int>(type: "int", nullable: true),
                     duration_minute = table.Column<int>(type: "int", nullable: false),
                     booking_type = table.Column<string>(type: "longtext", nullable: false)
@@ -210,9 +222,14 @@ namespace Kathavachak.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     description = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
-                    currency = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, defaultValue: "INR")
+                    amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    mrp = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    currency = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    discount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    tax = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    price_effective_from = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
+                    price_effective_to = table.Column<DateTime>(type: "datetime(6)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
                     is_active = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     display_order = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
@@ -254,7 +271,9 @@ namespace Kathavachak.Infrastructure.Migrations
                     catalog_attribute_group_id = table.Column<int>(type: "int", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP(6)"),
                     kathavachak_id = table.Column<int>(type: "int", nullable: true),
-                    expertise_id = table.Column<int>(type: "int", nullable: false)
+                    expertise_id = table.Column<int>(type: "int", nullable: false),
+                    attribute_group_name_snap = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

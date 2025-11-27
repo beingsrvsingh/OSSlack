@@ -4,7 +4,7 @@ using Pooja.Application.Services;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
-namespace Temple.Application.Features.EventHandlers.Query
+namespace Pooja.Application.Features.EventHandlers.Query
 {
     public class GetTrendingQueryHandler : IRequestHandler<GetTrendingQuery, Result>
     {

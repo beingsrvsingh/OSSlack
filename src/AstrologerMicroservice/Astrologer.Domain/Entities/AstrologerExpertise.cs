@@ -1,6 +1,7 @@
 
 using Astrologer.Domain.Entities;
 using Shared.Domain.Entities;
+using Shared.Domain.Entities.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,11 +21,7 @@ namespace AstrologerMicroservice.Domain.Entities
         [Required, MaxLength(100)]
         public string Name { get; set; } = null!;
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? MRP { get; set; }
+        public BasePrice Price { get; set; }
 
         public int? StockQuantity { get; set; }
 
