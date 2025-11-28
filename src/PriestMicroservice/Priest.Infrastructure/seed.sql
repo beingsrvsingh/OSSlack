@@ -203,6 +203,7 @@ VALUES
 (1, 1, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Pandit Raghav Profile Photo', 1, NOW(), NOW()),
 (2, 2, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Pandit Sharma Profile Photo', 1, NOW(), NOW());
 
+
 INSERT INTO priest_expertise_image
 (id, priest_expertise_id, media_type, image_url, alt_text, sort_order, created_at, updated_at)
 VALUES
@@ -212,18 +213,46 @@ VALUES
 (4, 4, 'image', 'https://picsum.photos/seed/priest1/200/300', 'Saraswati Pooja Performance', 1, NOW(), NOW());
 
 
-INSERT INTO priest_attribute_value
-(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id,
- attribute_key, attribute_label, value, attribute_group_name_snap, created_at)
+
+INSERT INTO priest_attribute_value (id,priest_id,expertise_id,catalog_attribute_id,catalog_attribute_value_id,attribute_key,attribute_label,value,created_at,attribute_group_name_snap
+)
 VALUES
-(1, 1, 1, 1, 'Experience', 'Experience', '12 Years', 'Basic Info', NOW()),
-(2, 1, 2, 2, 'Specialization', 'Specialization', 'Ganesh Pooja', 'Basic Info', NOW()),
-(3, 2, 1, 3, 'Experience', 'Experience', '10 Years', 'Basic Info', NOW()),
-(4, 2, 2, 4, 'Specialization', 'Specialization', 'Lakshmi Pooja', 'Basic Info', NOW()),
-(5, 3, 1, 5, 'Experience', 'Experience', '15 Years', 'Basic Info', NOW()),
-(6, 3, 2, 6, 'Specialization', 'Specialization', 'Navagraha Pooja', 'Basic Info', NOW()),
-(7, 4, 1, 7, 'Experience', 'Experience', '8 Years', 'Basic Info', NOW()),
-(8, 4, 2, 8, 'Specialization', 'Specialization', 'Saraswati Pooja', 'Basic Info', NOW());
+-- ===========================================================
+-- PRIEST 1 — BASIC INFO (like product-level attributes)
+-- ===========================================================
+(1, 1, NULL, 1, 1, 'full_name', 'Full Name', 'Pandit Rajesh Sharma', NOW(), 'Basic Info'),
+(2, 1, NULL, 2, NULL, 'language', 'Languages Known', 'Hindi, English, Sanskrit', NOW(), 'Basic Info'),
+(3, 1, NULL, 3, NULL, 'priest_level', 'Priest Level', 'Senior', NOW(), 'Basic Info'),
+(4, 1, NULL, 4, NULL, 'availability', 'Availability', 'Morning', NOW(), 'Basic Info'),
+
+-- ===========================================================
+-- PRIEST 1 — EXPERTISE 1 (Variant-style)
+-- ===========================================================
+(5, 1, 1, 10, 1, 'experience', 'Experience', '12 Years', NOW(), 'Expertise Info'),
+(6, 1, 1, 11, 2, 'specialization', 'Specialization', 'Ganesh Pooja', NOW(), 'Expertise Info'),
+(7, 1, 1, 12, NULL, 'expertise_code', 'Expertise Code', 'EXP-GANESH-01', NOW(), 'Expertise Info'),
+
+-- ===========================================================
+-- PRIEST 1 — EXPERTISE 2 (Variant-style)
+-- ===========================================================
+(8, 1, 2, 10, 3, 'experience', 'Experience', '10 Years', NOW(), 'Expertise Info'),
+(9, 1, 2, 11, 4, 'specialization', 'Specialization', 'Lakshmi Pooja', NOW(), 'Expertise Info'),
+(10, 1, 2, 12, NULL, 'expertise_code', 'Expertise Code', 'EXP-LAXMI-02', NOW(), 'Expertise Info'),
+
+-- ===========================================================
+-- PRIEST 2 — BASIC INFO
+-- ===========================================================
+(11, 2, NULL, 1, 2, 'full_name', 'Full Name', 'Pandit Suresh Iyer', NOW(), 'Basic Info'),
+(12, 2, NULL, 2, NULL, 'language', 'Languages Known', 'Tamil, English', NOW(), 'Basic Info'),
+(13, 2, NULL, 3, NULL, 'priest_level', 'Priest Level', 'Intermediate', NOW(), 'Basic Info'),
+(14, 2, NULL, 4, NULL, 'availability', 'Availability', 'Evening', NOW(), 'Basic Info'),
+
+-- ===========================================================
+-- PRIEST 2 — EXPERTISE 3
+-- ===========================================================
+(15, 2, 3, 10, 5, 'experience', 'Experience', '15 Years', NOW(), 'Expertise Info'),
+(16, 2, 3, 11, 6, 'specialization', 'Specialization', 'Navagraha Pooja', NOW(), 'Expertise Info'),
+(17, 2, 3, 12, NULL, 'expertise_code', 'Expertise Code', 'EXP-NAVA-03', NOW(), 'Expertise Info');
 
 
 INSERT INTO priest_addon

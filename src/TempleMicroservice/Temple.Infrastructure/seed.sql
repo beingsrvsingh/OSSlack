@@ -67,29 +67,51 @@ INSERT INTO temple_expertise (
 (4, 1, 13, 401, 'Donation', 'General Donation', 'Support Temple Activities', NULL, FALSE, 100.00, '00:00:00', 0.00, 0, TRUE, CURRENT_TIMESTAMP(6), CURRENT_TIMESTAMP(6));
 
 
-INSERT INTO attribute_value (
+INSERT INTO temple_attribute_value (
     id,
+    temple_id,
     expertise_id,
     catalog_attribute_id,
     catalog_attribute_value_id,
-    value,
     attribute_key,
     attribute_label,
-    attribute_data_type_id,
-    catalog_attribute_group_id,
-    created_at
-) VALUES
--- For Aarti
-(1, 1, 1001, 5001, 'Sunrise', 'time_of_day', 'Time of Day', 1, NULL, CURRENT_TIMESTAMP(6)),
+    value,
+    created_at,
+    attribute_group_name_snap
+)
+VALUES
+-- ===========================================================
+-- TEMPLE 1 — BASIC INFO
+-- ===========================================================
+(1, 1, NULL, 1, NULL, 'temple_name', 'Temple Name', 'Shree Ganesh Mandir', NOW(), 'Basic Info'),
+(2, 1, NULL, 2, NULL, 'location', 'Location', 'City Center', NOW(), 'Basic Info'),
+(3, 1, NULL, 3, NULL, 'established', 'Established Year', '1950', NOW(), 'Basic Info'),
+(4, 1, NULL, 4, NULL, 'popularity', 'Popularity', 'High', NOW(), 'Basic Info'),
+(5, 1, NULL, 5, NULL, 'daily_visitors', 'Daily Visitors', '500', NOW(), 'Basic Info'),
 
--- For Pooja
-(2, 2, 1002, 5002, 'Ganesh Idol', 'main_deity', 'Main Deity', 2, NULL, CURRENT_TIMESTAMP(6)),
+-- ===========================================================
+-- TEMPLE 1 — FESTIVALS / SPECIAL EVENTS (Variant-style)
+-- ===========================================================
+(6, 1, 1, 6, NULL, 'festival_name', 'Festival Name', 'Ganesh Chaturthi', NOW(), 'Expertise Info'),
+(7, 1, 1, 7, NULL, 'festival_duration', 'Duration', '3 Days', NOW(), 'Expertise Info'),
+(8, 1, 1, 8, NULL, 'festival_speciality', 'Special Features', 'Grand Procession', NOW(), 'Expertise Info'),
 
--- For Prasad
-(3, 3, 1003, 5003, '5', 'quantity', 'Number of Items', 3, NULL, CURRENT_TIMESTAMP(6)),
+-- ===========================================================
+-- TEMPLE 2 — BASIC INFO
+-- ===========================================================
+(9, 2, NULL, 1, NULL, 'temple_name', 'Temple Name', 'Shree Lakshmi Mandir', NOW(), 'Basic Info'),
+(10, 2, NULL, 2, NULL, 'location', 'Location', 'Uptown', NOW(), 'Basic Info'),
+(11, 2, NULL, 3, NULL, 'established', 'Established Year', '1970', NOW(), 'Basic Info'),
+(12, 2, NULL, 4, NULL, 'popularity', 'Popularity', 'Medium', NOW(), 'Basic Info'),
+(13, 2, NULL, 5, NULL, 'daily_visitors', 'Daily Visitors', '300', NOW(), 'Basic Info'),
 
--- For Donation
-(4, 4, 1004, 5004, 'INR', 'currency', 'Currency Type', 2, NULL, CURRENT_TIMESTAMP(6));
+-- ===========================================================
+-- TEMPLE 2 — FESTIVALS / SPECIAL EVENTS
+-- ===========================================================
+(14, 2, 2, 6, NULL, 'festival_name', 'Festival Name', 'Lakshmi Pooja', NOW(), 'Expertise Info'),
+(15, 2, 2, 7, NULL, 'festival_duration', 'Duration', '2 Days', NOW(), 'Expertise Info'),
+(16, 2, 2, 8, NULL, 'festival_speciality', 'Special Features', 'Evening Aarti', NOW(), 'Expertise Info');
+
 
 
 INSERT INTO temple_schedule (

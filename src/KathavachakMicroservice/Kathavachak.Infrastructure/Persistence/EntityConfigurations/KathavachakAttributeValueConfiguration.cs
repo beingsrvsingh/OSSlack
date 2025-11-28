@@ -17,19 +17,16 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                    .ValueGeneratedOnAdd();
 
             builder.Property(aav => aav.ExpertiseId)
-                   .HasColumnName("expertise_id")
-                   .IsRequired();
+                   .HasColumnName("expertise_id");
 
             builder.Property(aav => aav.KathavachakId)
                    .HasColumnName("kathavachak_id");
 
             builder.Property(aav => aav.CatalogAttributeId)
-                   .HasColumnName("catalog_attribute_id")
-                   .IsRequired();
+                   .HasColumnName("catalog_attribute_id");
 
             builder.Property(aav => aav.CatalogAttributeValueId)
-                   .HasColumnName("catalog_attribute_value_id")
-                   .IsRequired();
+                   .HasColumnName("catalog_attribute_value_id");
 
             builder.Property(aav => aav.Value)
                    .HasColumnName("value")

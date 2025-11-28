@@ -210,21 +210,57 @@ VALUES
 (4, 4, 'Image', 'https://picsum.photos/seed/picsum/200/300', 'Palmistry Consultation', 1, NOW());
 
 
-INSERT INTO astrologer_attribute_value
-(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id, 
- attribute_key, attribute_label, value, attribute_group_name_snap, created_at)
+
+INSERT INTO astrologer_attribute_value (
+    id,
+    astrologer_id,
+    expertise_id,
+    catalog_attribute_id,
+    catalog_attribute_value_id,
+    attribute_key,
+    attribute_label,
+    value,
+    attribute_group_name_snap,
+    created_at
+)
 VALUES
-(1, 1, 1, 1, 'Experience', 'Experience', '10 Years', 'Basic Info', NOW()),
-(2, 1, 2, 2, 'ExpertiseLevel', 'Expertise Level', 'Advanced', 'Basic Info', NOW()),
 
-(3, 2, 1, 3, 'Experience', 'Experience', '8 Years', 'Basic Info', NOW()),
-(4, 2, 2, 4, 'ExpertiseLevel', 'Expertise Level', 'Intermediate', 'Basic Info', NOW()),
+-- ===========================================================
+-- ASTROLOGER 1 — BASIC INFO (product-level equivalent)
+-- ===========================================================
+(1, 1, NULL, 1, NULL, 'full_name', 'Full Name', 'Astrologer Ramesh Sharma', 'Basic Info', NOW()),
+(2, 1, NULL, 2, NULL, 'languages', 'Languages Known', 'Hindi, English', 'Basic Info', NOW()),
+(3, 1, NULL, 3, NULL, 'rating', 'Rating', '4.8', 'Basic Info', NOW()),
+(4, 1, NULL, 4, NULL, 'availability', 'Availability', 'Morning & Evening', 'Basic Info', NOW()),
 
-(5, 3, 1, 5, 'Experience', 'Experience', '12 Years', 'Basic Info', NOW()),
-(6, 3, 2, 6, 'ExpertiseLevel', 'Expertise Level', 'Expert', 'Basic Info', NOW()),
+-- ===========================================================
+-- ASTROLOGER 1 — EXPERTISE 1 (variant-level equivalent)
+-- ===========================================================
+(5, 1, 1, 10, 1, 'experience', 'Experience', '10 Years', 'Expertise Info', NOW()),
+(6, 1, 1, 11, 2, 'expertise_level', 'Expertise Level', 'Advanced', 'Expertise Info', NOW()),
+(7, 1, 1, 12, NULL, 'expertise_code', 'Expertise Code', 'ASTRO-ADV-01', 'Expertise Info', NOW()),
 
-(7, 4, 1, 7, 'Experience', 'Experience', '6 Years', 'Basic Info', NOW()),
-(8, 4, 2, 8, 'ExpertiseLevel', 'Expertise Level', 'Intermediate', 'Basic Info', NOW());
+-- ===========================================================
+-- ASTROLOGER 1 — EXPERTISE 2
+-- ===========================================================
+(8, 1, 2, 10, 3, 'experience', 'Experience', '8 Years', 'Expertise Info', NOW()),
+(9, 1, 2, 11, 4, 'expertise_level', 'Expertise Level', 'Intermediate', 'Expertise Info', NOW()),
+(10, 1, 2, 12, NULL, 'expertise_code', 'Expertise Code', 'ASTRO-INT-02', 'Expertise Info', NOW()),
+
+-- ===========================================================
+-- ASTROLOGER 2 — BASIC INFO
+-- ===========================================================
+(11, 2, NULL, 1, NULL, 'full_name', 'Full Name', 'Astrologer Suman Iyer', 'Basic Info', NOW()),
+(12, 2, NULL, 2, NULL, 'languages', 'Languages Known', 'Tamil, English', 'Basic Info', NOW()),
+(13, 2, NULL, 3, NULL, 'rating', 'Rating', '4.6', 'Basic Info', NOW()),
+(14, 2, NULL, 4, NULL, 'availability', 'Availability', 'Evening', 'Basic Info', NOW()),
+
+-- ===========================================================
+-- ASTROLOGER 2 — EXPERTISE 3
+-- ===========================================================
+(15, 2, 3, 10, 5, 'experience', 'Experience', '12 Years', 'Expertise Info', NOW()),
+(16, 2, 3, 11, 6, 'expertise_level', 'Expertise Level', 'Expert', 'Expertise Info', NOW()),
+(17, 2, 3, 12, NULL, 'expertise_code', 'Expertise Code', 'ASTRO-EXP-03', 'Expertise Info', NOW());
 
 
 INSERT INTO astrologer_addon 

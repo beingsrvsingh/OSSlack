@@ -8,7 +8,7 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AttributeValue> builder)
         {
-            builder.ToTable("attribute_value");
+            builder.ToTable("temple_attribute_value");
 
             builder.HasKey(av => av.Id);
 
@@ -22,11 +22,9 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("temple_id");
 
             builder.Property(av => av.CatalogAttributeId)
-                .IsRequired()
                 .HasColumnName("catalog_attribute_id");
 
             builder.Property(av => av.CatalogAttributeValueId)
-                .IsRequired()
                 .HasColumnName("catalog_attribute_value_id");
 
             builder.Property(av => av.Value)

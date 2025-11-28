@@ -47,21 +47,61 @@ VALUES
 (3, 3, 'Image', 'https://picsum.photos/seed/picsum/200/300', 'Bhagavad Katha Session', 1, NOW()),
 (4, 4, 'Image', 'https://picsum.photos/seed/picsum/200/300', 'Devotional Stories Session', 1, NOW());
 
-INSERT INTO kathavachak_attribute_value
-(id, expertise_id, catalog_attribute_id, catalog_attribute_value_id,
- attribute_key, attribute_label, value, attribute_group_name_snap, created_at)
+INSERT INTO kathavachak_attribute_value (
+    id,
+    kathavachak_id,
+    expertise_id,
+    catalog_attribute_id,
+    catalog_attribute_value_id,
+    attribute_key,
+    attribute_label,
+    value,
+    attribute_group_name_snap,
+    created_at
+)
 VALUES
-(1, 1, 1, 1, 'Experience', 'Experience', '15 Years', 'Basic Info', NOW()),
-(2, 1, 2, 2, 'ProficiencyLevel', 'Proficiency Level', 'Expert', 'Basic Info', NOW()),
+-- ===========================================================
+-- KATHAVACHAK 1 — BASIC INFO
+-- ===========================================================
+(1, 1, NULL, 1, NULL, 'full_name', 'Full Name', 'Kathavachak Ramesh Sharma', 'Basic Info', NOW()),
+(2, 1, NULL, 2, NULL, 'languages', 'Languages Known', 'Hindi, English', 'Basic Info', NOW()),
+(3, 1, NULL, 3, NULL, 'rating', 'Rating', '4.9', 'Basic Info', NOW()),
 
-(3, 2, 1, 3, 'Experience', 'Experience', '12 Years', 'Basic Info', NOW()),
-(4, 2, 2, 4, 'ProficiencyLevel', 'Proficiency Level', 'Advanced', 'Basic Info', NOW()),
+-- ===========================================================
+-- KATHAVACHAK 1 — EXPERTISE 1
+-- ===========================================================
+(4, 1, 1, 10, 1, 'experience', 'Experience', '15 Years', 'Expertise Info', NOW()),
+(5, 1, 1, 11, 2, 'proficiency_level', 'Proficiency Level', 'Expert', 'Expertise Info', NOW()),
+(6, 1, 1, 12, NULL, 'expertise_code', 'Expertise Code', 'KATHA-EXP-01', 'Expertise Info', NOW()),
 
-(5, 3, 1, 5, 'Experience', 'Experience', '18 Years', 'Basic Info', NOW()),
-(6, 3, 2, 6, 'ProficiencyLevel', 'Proficiency Level', 'Expert', 'Basic Info', NOW()),
+-- ===========================================================
+-- KATHAVACHAK 1 — EXPERTISE 2
+-- ===========================================================
+(7, 1, 2, 10, 3, 'experience', 'Experience', '12 Years', 'Expertise Info', NOW()),
+(8, 1, 2, 11, 4, 'proficiency_level', 'Proficiency Level', 'Advanced', 'Expertise Info', NOW()),
+(9, 1, 2, 12, NULL, 'expertise_code', 'Expertise Code', 'KATHA-ADV-02', 'Expertise Info', NOW()),
 
-(7, 4, 1, 7, 'Experience', 'Experience', '10 Years', 'Basic Info', NOW()),
-(8, 4, 2, 8, 'ProficiencyLevel', 'Proficiency Level', 'Intermediate', 'Basic Info', NOW());
+-- ===========================================================
+-- KATHAVACHAK 2 — BASIC INFO
+-- ===========================================================
+(10, 2, NULL, 1, NULL, 'full_name', 'Full Name', 'Kathavachak Suresh Iyer', 'Basic Info', NOW()),
+(11, 2, NULL, 2, NULL, 'languages', 'Languages Known', 'Tamil, English', 'Basic Info', NOW()),
+(12, 2, NULL, 3, NULL, 'rating', 'Rating', '4.7', 'Basic Info', NOW()),
+
+-- ===========================================================
+-- KATHAVACHAK 2 — EXPERTISE 3
+-- ===========================================================
+(13, 2, 3, 10, 5, 'experience', 'Experience', '18 Years', 'Expertise Info', NOW()),
+(14, 2, 3, 11, 6, 'proficiency_level', 'Proficiency Level', 'Expert', 'Expertise Info', NOW()),
+(15, 2, 3, 12, NULL, 'expertise_code', 'Expertise Code', 'KATHA-EXP-03', 'Expertise Info', NOW()),
+
+-- ===========================================================
+-- KATHAVACHAK 2 — EXPERTISE 4
+-- ===========================================================
+(16, 2, 4, 10, 7, 'experience', 'Experience', '10 Years', 'Expertise Info', NOW()),
+(17, 2, 4, 11, 8, 'proficiency_level', 'Proficiency Level', 'Intermediate', 'Expertise Info', NOW()),
+(18, 2, 4, 12, NULL, 'expertise_code', 'Expertise Code', 'KATHA-INT-04', 'Expertise Info', NOW());
+
 
 INSERT INTO kathavachak_addon
 (id, kathavachak_id, kathavachak_expertise_id, name, description,
