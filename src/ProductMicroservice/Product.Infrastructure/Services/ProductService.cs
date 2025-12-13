@@ -425,8 +425,8 @@ namespace Product.Infrastructure.Services
             if (attributeIds != null && attributeIds.Any())
             {
                 // Ensure product has all selected attribute IDs
-                query = query.Where(p => attributeIds.All(attrId =>
-                    p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
+                query = query.Where(v => v.VariantMasters.Any(vm => attributeIds.All(atr => vm.Attributes.Any(attr => attr.CatalogAttributeValueId == atr))));
+
             }
 
             // Take top N products
