@@ -13,7 +13,8 @@ VALUES
 (4, 'Samsung Galaxy S23', 'https://picsum.photos/seed/picsum/200/300', TRUE, 5, 98, 1, 4, 'Electronics', 'Mobile Phones', 'INR', 74999, 79999, 5, 18, NOW(), NULL, TRUE, FALSE, NOW(), NOW()),
 ----Laptop
 (5, 'Dell Inspiron 15', 'https://picsum.photos/seed/picsum/200/300', TRUE, 5, 210, 2, 5, 'Electronics', 'Laptops', 'INR',52999, 59999, 10, 18, NOW(), NULL, TRUE, FALSE, NOW(), NOW()),
-(6, 'HP Pavilion 14', 'https://picsum.photos/seed/picsum/200/300', TRUE, 4, 185,2, 6, 'Electronics', 'Laptops', 'INR', 56999, 62999, 8, 18, NOW(), NULL, FALSE, TRUE, NOW(), NOW());
+(6, 'HP Pavilion 14', 'https://picsum.photos/seed/picsum/200/300', TRUE, 4, 185,2, 6, 'Electronics', 'Laptops', 'INR', 56999, 62999, 8, 18, NOW(), NULL, FALSE, TRUE, NOW(), NOW()),
+(7, 'iPhone 15', 'https://picsum.photos/seed/picsum/200/300', TRUE, 5, 120, 1, 3, 'Electronics', 'Mobile Phones', 'INR', 79900, 89900, 0, 18, NOW(), NULL, TRUE, TRUE, NOW(), NOW());
 
 
 
@@ -32,7 +33,8 @@ VALUES
 
 -- HP Pavilion 14
 (10, 6, 'HP Pavilion 14 - i5 / 8GB / 512GB SSD', 56999, 62999, 'INR', 8, 18, NOW(), NULL, 50, TRUE),
-(11, 6, 'HP Pavilion 14 - i7 / 16GB / 1TB SSD', 71999, 78999, 'INR', 8, 18, NOW(), NULL, 30, FALSE);
+(11, 6, 'HP Pavilion 14 - i7 / 16GB / 1TB SSD', 71999, 78999, 'INR', 8, 18, NOW(), NULL, 30, FALSE),
+(12, 7, 'iPhone 15 - 256GB', 79900.00, 84900.00, 'INR', 0, 18, NOW(), NULL, 50, TRUE);
 
 -- Note: Yoga Mat has no variants
 
@@ -57,8 +59,8 @@ VALUES
 (8, NULL, 2, 10, 2, 'color', 'Color', 'White', NOW(), 'Variant Info'),
 
 -- Variant Info: Storage
-(9, NULL, 1, 11, 3, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
-(10, NULL, 2, 11, 3, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
+(9, NULL, 1, 11, 13, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
+(10, NULL, 2, 11, 14, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
 	
 -- Technical Info (Variant-specific if applicable)
 (11, NULL, 1, 12, NULL, 'sar_value', 'SAR Value', '1.18 W/kg', NOW(), 'Technical Info'),
@@ -82,7 +84,7 @@ VALUES
 (22, NULL, 6, 10, 2, 'color', 'Color', 'Green', NOW(), 'Variant Info'),
 
 -- Variant Info: Storage
-(23, NULL, 5, 11, 3, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
+(23, NULL, 5, 11, 14, 'storage', 'Storage', '128 GB', NOW(), 'Variant Info'),
 (24, NULL, 6, 11, 4, 'storage', 'Storage', '256 GB', NOW(), 'Variant Info'),
 
 -- Technical Info (Variant-specific)
@@ -127,41 +129,65 @@ VALUES
 (50, NULL, 11, 11, 4, 'ram', 'RAM', '16 GB', NOW(), 'Variant Info'),
 
 (51, NULL, 10, 14, NULL, 'model_number', 'Model Number', 'HP14-AC123', NOW(), 'Variant Info'),
-(52, NULL, 11, 14, NULL, 'model_number', 'Model Number', 'HP14-AC456', NOW(), 'Variant Info');
+(52, NULL, 11, 14, NULL, 'model_number', 'Model Number', 'HP14-AC456', NOW(), 'Variant Info'),
+(53, 7, NULL, 1, NULL, 'brand', 'Brand', 'Apple', NOW(), 'Basic Info'),
+(54, 7, NULL, 2, NULL, 'model_name', 'Model Name', 'iPhone 15', NOW(), 'Basic Info'),
+(55, 7, NULL, 3, NULL, 'in_the_box', 'In the Box', 'Handset, USB-C Cable, Documentation', NOW(), 'Basic Info'),
+
+-- Technical Details (Product Level)
+(56, 7, NULL, 4, NULL, 'processor', 'Processor', 'A15 Bionic Chip', NOW(), 'Technical Details'),
+(57, 7, NULL, 5, NULL, 'display', 'Display', '6.1-inch Super Retina XDR', NOW(), 'Technical Details'),
+(58, 7, NULL, 6, NULL, 'battery', 'Battery', '3227 mAh', NOW(), 'Technical Details'),
+-- Variant Info: Color
+(59, NULL, 12, 10, 1, 'color', 'Color', 'Black', NOW(), 'Variant Info'),
+
+-- Variant Info: Storage
+(60, NULL, 12, 11, 3, 'storage', 'Storage', '256 GB', NOW(), 'Variant Info'),
+	
+-- Technical Info (Variant-specific if applicable)
+(61, NULL, 12, 12, NULL, 'sar_value', 'SAR Value', '1.18 W/kg', NOW(), 'Technical Info'),
+
+-- Variant-specific Model Codes (Real-world)
+(62, NULL, 12, 14, NULL, 'model_number', 'Model Number', 'A2882', NOW(), 'Variant Info');
+
 
 
 INSERT INTO product_image 
 (id, product_id, media_type, image_url, alt_text, sort_order, created_at)
 VALUES
-(1, 1, 'image', 'https://example.com/images/iphone14_front.png', 'iPhone 14 Front', 1, NOW()),
-(2, 1, 'image', 'https://example.com/images/iphone14_back.png', 'iPhone 14 Back', 2, NOW()),
-(3, 2, 'image', 'https://example.com/images/abc_jeans_front.png', 'Cargo Jeans Front', 1, NOW()),
-(4, 2, 'image', 'https://example.com/images/abc_jeans_back.png', 'Cargo Jeans Back', 2, NOW()),
-(5, 3, 'image', 'https://example.com/images/yoga_mat.png', 'Yoga Mat', 1, NOW()),
-(6, 4, 'image', 'https://example.com/images/s23_front.png', 'Samsung Galaxy S23 Front', 1, NOW()),
-(7, 4, 'image', 'https://example.com/images/s23_back.png', 'Samsung Galaxy S23 Back', 2, NOW()),
+(1, 1, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 Front', 1, NOW()),
+(2, 1, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 Back', 2, NOW()),
+(3, 2, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Cargo Jeans Front', 1, NOW()),
+(4, 2, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Cargo Jeans Back', 2, NOW()),
+(5, 3, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Yoga Mat', 1, NOW()),
+(6, 4, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Samsung Galaxy S23 Front', 1, NOW()),
+(7, 4, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Samsung Galaxy S23 Back', 2, NOW()),
 -- Dell
-(8, 5, 'image', 'https://example.com/images/dell_inspiron15_front.png', 'Dell Inspiron 15 Front', 1, NOW()),
-(9, 5, 'image', 'https://example.com/images/dell_inspiron15_back.png', 'Dell Inspiron 15 Back', 2, NOW()),
+(8, 5, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Dell Inspiron 15 Front', 1, NOW()),
+(9, 5, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Dell Inspiron 15 Back', 2, NOW()),
 
 -- HP
-(10, 6, 'image', 'https://example.com/images/hp_pavilion14_front.png', 'HP Pavilion 14 Front', 1, NOW()),
-(11, 6, 'image', 'https://example.com/images/hp_pavilion14_back.png', 'HP Pavilion 14 Back', 2, NOW());
+(10, 6, 'image', 'https://picsum.photos/seed/picsum/200/300', 'HP Pavilion 14 Front', 1, NOW()),
+(11, 6, 'image', 'https://picsum.photos/seed/picsum/200/300', 'HP Pavilion 14 Back', 2, NOW()),
+(12, 7, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 Front', 1, NOW()),
+(13, 7, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 Back', 2, NOW());
 
 INSERT INTO product_variant_image 
 (id, product_variant_id, media_type, image_url, alt_text, sort_order, created_at)
 VALUES
-(1, 1, 'image', 'https://example.com/images/iphone14_128_black.png', 'iPhone 14 128GB Black', 1, NOW()),
-(2, 2, 'image', 'https://example.com/images/iphone14_256_white.png', 'iPhone 14 256GB White', 1, NOW()),
-(3, 5, 'image', 'https://example.com/images/s23_128_black.png', 'Samsung Galaxy S23 128GB Phantom Black', 1, NOW()),
-(4, 6, 'image', 'https://example.com/images/s23_256_green.png', 'Samsung Galaxy S23 256GB Green', 1, NOW()),
+(1, 1, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 128GB Black', 1, NOW()),
+(2, 2, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 256GB White', 1, NOW()),
+(3, 5, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Samsung Galaxy S23 128GB Phantom Black', 1, NOW()),
+(4, 6, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Samsung Galaxy S23 256GB Green', 1, NOW()),
 -- Dell
-(5, 8, 'image', 'https://example.com/images/dell_i5_8gb.png', 'Dell Inspiron 15 i5 Variant', 1, NOW()),
-(6, 9, 'image', 'https://example.com/images/dell_i7_16gb.png', 'Dell Inspiron 15 i7 Variant', 1, NOW()),
+(5, 8, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Dell Inspiron 15 i5 Variant', 1, NOW()),
+(6, 9, 'image', 'https://picsum.photos/seed/picsum/200/300', 'Dell Inspiron 15 i7 Variant', 1, NOW()),
 
 -- HP
-(7, 10, 'image', 'https://example.com/images/hp_i5_8gb.png', 'HP Pavilion 14 i5 Variant', 1, NOW()),
-(8, 11, 'image', 'https://example.com/images/hp_i7_16gb.png', 'HP Pavilion 14 i7 Variant', 1, NOW());
+(7, 10, 'image', 'https://picsum.photos/seed/picsum/200/300', 'HP Pavilion 14 i5 Variant', 1, NOW()),
+(8, 11, 'image', 'https://picsum.photos/seed/picsum/200/300', 'HP Pavilion 14 i7 Variant', 1, NOW()),
+(9, 12, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 128GB Black', 1, NOW()),
+(10, 12, 'image', 'https://picsum.photos/seed/picsum/200/300', 'iPhone 14 256GB White', 1, NOW())
 
 
 INSERT INTO product_addon
@@ -189,5 +215,7 @@ VALUES
 
 -- HP Pavilion 14 Addons
 (9, 6, NULL, 'Accidental Damage Protection', 'Covers drops & spills for 1 year', 2499, 2999, 'INR', 0, 18, NOW(), NULL, TRUE, 1, NOW(), NOW()),
-(10, NULL, 10, 'Wireless Mouse', '2.4GHz Wireless Mouse', 599, 699, 'INR', 0, 18, NOW(), NULL, TRUE, 2, NOW(), NOW());
+(10, NULL, 10, 'Wireless Mouse', '2.4GHz Wireless Mouse', 599, 699, 'INR', 0, 18, NOW(), NULL, TRUE, 2, NOW(), NOW()),
+(11, NULL, 12, 'Screen Protector', 'Tempered Glass Screen Protector', 499.00, 599.00, 'INR', 0, 18, NOW(), NULL, TRUE, 1, NOW(), NOW()),
+(12, 1, NULL, 'Fast Charger', '20W USB-C Power Adapter', 1499.00, 1799.00, 'INR', 0, 18, NOW(), NULL, TRUE, 2, NOW(), NOW())
 
