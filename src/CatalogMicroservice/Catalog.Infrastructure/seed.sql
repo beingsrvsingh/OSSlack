@@ -1584,7 +1584,8 @@ VALUES
 (8, 1, 'priest', 'Priest / Expert', 'priest_options', 0, 0, 1, 0, 8, NOW(), NOW()),
 (9, 1, 'location', 'Location', 'location_options', 0, 0, 1, 0, 9, NOW(), NOW()),
 (10, 1, 'language', 'Language', 'language_options', 0, 0, 1, 0, 10, NOW(), NOW()),
-(11, 1, 'price', 'Price', 'price_options', 0, 1, 1, 1, 11, NOW(), NOW());
+(11, 1, 'price', 'Price', 'price_options', 0, 1, 1, 1, 11, NOW(), NOW()),
+(12, 1, 'experience', 'Experience', '', 0, 1, 1, 1, 11, NOW(), NOW());
 
 -- Brands
 INSERT INTO attribute_allowed_value (id, attribute_id, value, sort_order, created_at)
@@ -1640,10 +1641,10 @@ VALUES
 (25, 7, '30min', 1, NOW()),
 (26, 7, '1h', 2, NOW()),
 (27, 7, '2h', 3, NOW()),
-(28, 8, 'Priest A', 1, NOW()),
-(29, 8, 'Priest B', 2, NOW()),
-(30, 8, 'Astrologer A', 3, NOW()),
-(31, 8, 'Kathavachak A', 4, NOW()),
+(28, 8, 'Pandit Ram', 1, NOW()),
+(29, 8, 'Pandit Shyam', 2, NOW()),
+(30, 8, 'Ram Mohan', 3, NOW()),
+(31, 8, 'Ram Sharma', 4, NOW()),
 (32, 9, 'Vishnu Temple', 1, NOW()),
 (33, 9, 'Shiva Temple', 2, NOW()),
 (34, 9, 'Tirupati Temple', 3, NOW()),
@@ -1651,7 +1652,9 @@ VALUES
 (36, 10, 'English', 2, NOW()),
 (37, 11, '100', 1, NOW()),
 (38, 11, '200', 2, NOW()),
-(39, 11, '500', 3, NOW());
+(39, 11, '500', 3, NOW()),
+(40, 12, '11', 3, NOW()),
+(41, 12, '21', 3, NOW());
 
 
 -- Electronics: Mobile Phones
@@ -1666,7 +1669,8 @@ VALUES
 (1, 2, 11, NOW()), -- Color: Silver
 (1, 3, 12, NOW()), -- Storage: 32GB
 (1, 3, 13, NOW()), -- Storage: 64GB
-(1, 3, 14, NOW()); -- Storage: 128GB
+(1, 3, 14, NOW()),
+(19, 12, 40, NOW()); -- Experience: 11 Years
 
 -- Electronics: Laptops
 INSERT INTO subcategory_allowed_value (sub_category_id, attribute_id, allowed_value_id, created_at)
@@ -1795,4 +1799,10 @@ VALUES
 -- Kathavachak
 (32, 107, 21, 10, 1, 1, 0, 1, 0, NOW()),
 (33, 107, 22, 10, 1, 1, 0, 1, 0, NOW()),
-(34, 107, 23, 10, 1, 1, 0, 1, 0, NOW());
+(34, 107, 23, 10, 1, 1, 0, 1, 0, NOW()),
+
+-- Priest
+(35, 108, 21, 10, 1, 1, 0, 1, 0, NOW()),
+(36, 109, 22, 10, 1, 1, 0, 1, 0, NOW()),
+(37, 110, 23, 10, 1, 1, 0, 1, 0, NOW()),
+(38, 106, 19, 12, 2, 2, 0, 1, 0, NOW());
