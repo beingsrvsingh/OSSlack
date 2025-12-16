@@ -15,5 +15,7 @@ namespace Pooja.Domain.Core.Repository
         // Optional: query by temple or priest
         Task<IEnumerable<PoojaMaster>> GetByTempleAsync(int templeId);
         Task<IEnumerable<PoojaMaster>> GetByPriestAsync(int priestId);
+
+        Task<(List<PoojaSearchRaw>, int)> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

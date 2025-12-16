@@ -1,5 +1,6 @@
 ﻿using Pooja.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
+using Shared.Application.Contracts;
 
 namespace Pooja.Application.Services
 {
@@ -21,6 +22,8 @@ namespace Pooja.Application.Services
         // Optional: business-specific methods
         Task<IEnumerable<PoojaMaster>> SearchPoojasAsync(string keyword);
         Task<bool> IsPoojaAvailableAtHomeAsync(int poojaId);
+
+        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 
 }

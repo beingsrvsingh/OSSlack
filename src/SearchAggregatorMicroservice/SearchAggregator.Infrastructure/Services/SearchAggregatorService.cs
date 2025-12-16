@@ -15,6 +15,7 @@ namespace SearchAggregator.Infrastructure.Services
         private readonly IAstrologerClient _astrologerClient;
         private readonly ITempleClient _templeClient;
         private readonly IKathavachakClient _kathavachakClient;
+        private readonly IPoojaClient _poojaClient;
         private readonly ILogger<SearchAggregatorService> _logger;
 
         private const float ExactMatchThreshold = 0.9f;
@@ -25,6 +26,7 @@ namespace SearchAggregator.Infrastructure.Services
             IAstrologerClient astrologerClient,
             ITempleClient templeClient,
             IKathavachakClient kathavachakClient,
+            IPoojaClient poojaClient,
             ILogger<SearchAggregatorService> logger)
         {
             _productClient = productClient;
@@ -32,6 +34,7 @@ namespace SearchAggregator.Infrastructure.Services
             _templeClient = templeClient;
             _astrologerClient = astrologerClient;
             _kathavachakClient = kathavachakClient;
+            _poojaClient = poojaClient;
             _logger = logger;
         }
 
@@ -46,6 +49,7 @@ namespace SearchAggregator.Infrastructure.Services
             var astrologerTask = SafeAstrologerSearchAsync(query, page, pageSize, cancellationToken);
             var templeTask = SafeTempleSearchAsync(query, page, pageSize, cancellationToken);
             var kathavachakTask = SafeKathavachakSearchAsync(query, page, pageSize, cancellationToken);
+            var poojaTask = SafePoojaSearchAsync(query, page, pageSize, cancellationToken);
 
             await Task.WhenAll(productTask, priestTask, astrologerTask, templeTask, kathavachakTask);
 
@@ -99,11 +103,11 @@ namespace SearchAggregator.Infrastructure.Services
 
             // Extract first non-zero category and subcategory ids from results
             int? categoryId = enableFilter
-                ? allResults.Select(r => int.TryParse(r.Cid, out var cid) && cid != 0 ? cid : (int?)null).FirstOrDefault(c => c.HasValue)
+                ? allResults.Select(r => int.TryParse(r.CategoryId, out var cid) && cid != 0 ? cid : (int?)null).FirstOrDefault(c => c.HasValue)
                 : null;
 
             int? subcategoryId = enableFilter
-                ? allResults.Select(r => int.TryParse(r.Scid, out var scid) && scid != 0 ? scid : (int?)null).FirstOrDefault(c => c.HasValue)
+                ? allResults.Select(r => int.TryParse(r.SubCategoryId, out var scid) && scid != 0 ? scid : (int?)null).FirstOrDefault(c => c.HasValue)
                 : null;
 
             return new SearchResponse
@@ -195,6 +199,20 @@ namespace SearchAggregator.Infrastructure.Services
             try
             {
                 var result = await _kathavachakClient.SearchAsync(query, page, pageSize, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Kathavachak search failed");
+                return new List<SearchResponseDto>();
+            }
+        }
+
+        private async Task<List<SearchResponseDto>?> SafePoojaSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _poojaClient.SearchAsync(query, page, pageSize, cancellationToken);
                 return result;
             }
             catch (Exception ex)

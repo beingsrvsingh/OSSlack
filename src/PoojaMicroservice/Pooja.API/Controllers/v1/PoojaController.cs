@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pooja.Application.Features.Commands;
 using Pooja.Application.Features.Queries;
 using Pooja.Application.Features.Query;
+using Shared.Utilities.Response;
 
 namespace Pooja.API.Controllers.v1
 {
@@ -139,13 +140,29 @@ namespace Pooja.API.Controllers.v1
             return Ok(result);
         }
 
-        // Search Poojas
+        /// <summary>
+        /// Search products by query with pagination
+        /// </summary>
+        /// <param name="query">Search keyword</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Page size (default 10)</param>
+        /// <returns>Paginated list of product search results</returns>
         [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> SearchPoojas([FromQuery] string keyword)
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
         {
-            var result = await Mediator.Send(new SearchPoojasQuery { Keyword = keyword });
-            return Ok(result);
+            if (string.IsNullOrWhiteSpace(query.Query))
+                return BadRequest("Query parameter is required.");
+
+            var result = await Mediator.Send(query);
+
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
         }
     }
 }

@@ -152,86 +152,42 @@ namespace Product.Infrastructure.Repositories
             string normalizedQuery = query.Trim();
 
             // Wrap query in double quotes for phrase search in BOOLEAN MODE
-            string booleanQuery = $"\"{normalizedQuery}\"";
+            string booleanQuery = $"+\"{normalizedQuery}\"";
 
             int skip = (page - 1) * pageSize;
 
-            var sql = $@"
+            var escapedQuery = MySqlHelper.EscapeString(booleanQuery);
+
+            var sql = @"
                         SELECT 
-                            p.Id, 
-                            Name, 
-                            thumbnail_url AS ThumbnailUrl, 
-                            Price,
-                            cat_snap AS CategoryNameSnapshot, 
-                            subcat_snap AS SubCategoryNameSnapshot,
-                            category_id AS CategoryId,
-                            subcategory_id AS SubcategoryId,
-
-                            pe.catalog_attribute_id as CatalogAttributeId,
-                            pe.cat_attr_val_id as CatalogAttributeValueId,
-                            pe.value as CatalogAttributeValue,
-                            pe.attribute_key as CatalogAttributeKey,
-                            pe.attribute_label as CatalogAttributeLabel,
-                            pe.attribute_datatype_id as CatalogAttributeDatatype,
-
-                            LEAST(ROUND(IFNULL(MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
-                            LEAST(ROUND(IFNULL(MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
-                            LEAST(ROUND(IFNULL(MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
-                            (
-                                LEAST(ROUND(IFNULL(MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
-                                LEAST(ROUND(IFNULL(MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
-                            ) AS TotalScore
-
+                            pv.Id, 
+                            pv.Name, 
+                            p.thumbnail_url AS ThumbnailUrl, 
+                            pv.Amount AS Price,
+                            p.category_id AS CategoryId,
+                            p.sub_category_id AS SubcategoryId,
+                            LEAST(
+                                ROUND(IFNULL(MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE), 0), 3),
+                                1000
+                            ) AS NameScore,
+                            COUNT(*) OVER() AS TotalCount
                         FROM product_master p
-                        LEFT JOIN product_attribute_value pe ON p.id = pe.product_id
-                        WHERE 
-                            MATCH(name) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(cat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                            OR MATCH(subcat_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                        ORDER BY TotalScore DESC
-                        LIMIT {{1}} OFFSET {{2}};";
+                        INNER JOIN product_variant_master pv 
+                            ON p.id = pv.product_master_id
+                        WHERE MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE)
+                        LIMIT @pageSize OFFSET @skip;";
 
             var products = await _context.ProductSearchRaws
-                .FromSqlRaw(sql, booleanQuery, pageSize, skip)
-                .ToListAsync(cancellationToken);
+                            .FromSqlRaw(
+                                sql,
+                                new MySqlParameter("@q", escapedQuery),
+                                new MySqlParameter("@pageSize", pageSize),
+                                new MySqlParameter("@skip", skip)
+                            ).ToListAsync(cancellationToken);
 
-            var groupedResults = products
-                                .GroupBy(p => p.Id)
-                                .Select(g =>
-                                {
-                                    var product = g.First();
+            int totalCount = products.FirstOrDefault()?.TotalCount ?? 0;
 
-                                    product.AttributeValues = g
-                                        .Where(x => x.CatalogAttributeId.HasValue)
-                                        .Select(x => new BaseAttributeValue
-                                        {
-                                            CatalogAttributeId = x.CatalogAttributeId ?? 0,
-                                            CatalogAttributeValueId = x.CatalogAttributeValueId ?? 0,
-                                            Value = x.CatalogAttributeValue,
-                                            AttributeKey = x.CatalogAttributeKey,
-                                            AttributeLabel = x.CatalogAttributeLabel,
-                                            AttributeDataTypeId = x.CatalogAttributeDatatype ?? 0
-                                        })
-                                        .ToList();
-
-                                    return product;
-                                })
-                                .ToList();
-
-            var countSql = @"
-                            SELECT COUNT(*) FROM product_master p
-                            LEFT JOIN product_attribute_value pe ON p.id = pe.product_id
-                            WHERE 
-                            MATCH(name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(cat_snap) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(subcat_snap) AGAINST ({0} IN BOOLEAN MODE)";
-
-            var totalCount = await _context.ProductMasters
-                .FromSqlRaw(countSql, booleanQuery)
-                .CountAsync(cancellationToken);
-
-            return (groupedResults, totalCount);
+            return (products, totalCount);
         }
     }
 

@@ -461,11 +461,10 @@ namespace Temple.Infrastructure.Services
                     CategoryId = p.CategoryId.ToString(),
                     SubCategoryId = p.SubcategoryId.ToString(),
                     Name = p.Name ?? "",
-                    //Cost = (double)(p.Price ?? 0),
+                    Price = (double)(p.Price ?? 0),
                     ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    //CategoryType = "Temple",
-                    //Quantity = 1,
-                    //Limit = 1,
+                    Quantity = 1,
+                    Limit = 1,
                     Rating = 1,
                     Reviews = 10,
                     AttributeValues = p.AttributeValues ?? [],
@@ -478,18 +477,18 @@ namespace Temple.Infrastructure.Services
 
                 var normalizedQuery = query.Trim();
 
-                bool isCatOrSubcatExact = products.Any(p =>
-                    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                //bool isCatOrSubcatExact = products.Any(p =>
+                //    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                //    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
 
                 bool isNameExact = products.Any(p =>
                     string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
 
-                string matchType = isCatOrSubcatExact || isNameExact ? "Exact" : "Partial";
+                string matchType = isNameExact ? "Exact" : "Partial";
 
-                bool enableFilters = isCatOrSubcatExact || products.Any(p =>
-                (p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
+                //bool enableFilters = isCatOrSubcatExact || products.Any(p =>
+                //(p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                //(p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
 
                 var filterMeta = new BaseSearchFilterMetadata
                 {
@@ -497,7 +496,7 @@ namespace Temple.Infrastructure.Services
                     HasMoreResults = page * pageSize < totalCount,
                     Score = products.FirstOrDefault()?.Score ?? 0,
                     MatchType = matchType,
-                    EnableFilters = enableFilters,
+                    EnableFilters = true,
                     Source = "Temple"
                 };
 

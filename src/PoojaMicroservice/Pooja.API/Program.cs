@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
+using Pooja.Application.Services;
 using Pooja.Infrastructure;
+using Pooja.Infrastructure.Services;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
@@ -51,6 +53,12 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenerate();
+
+builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
 
 var app = builder.Build();
 

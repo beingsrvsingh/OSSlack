@@ -3,6 +3,7 @@ using Pooja.Application.Services;
 using Pooja.Domain.Core.Repository;
 using Pooja.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
+using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Enums;
 
@@ -501,6 +502,84 @@ namespace Pooja.Infrastructure.Services
             {
                 _logger.LogError(ex, $"Failed to check if pooja id {poojaId} is available at home.");
                 return false;
+            }
+        }
+
+        public async Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var (products, totalCount) = await _repository.SearchAsync(query, page, pageSize, cancellationToken);
+
+                var resultDtos = products.Select(p => new SearchItemDto
+                {
+                    Pid = p.Id.ToString(),
+                    CategoryId = p.CategoryId.ToString(),
+                    SubCategoryId = p.SubcategoryId.ToString(),
+                    Name = p.Name ?? "",
+                    Price = (double)(p.Price ?? 0),
+                    ThumbnailUrl = p.ThumbnailUrl ?? "",
+                    Quantity = 1,
+                    Limit = 1,
+                    Rating = 1,
+                    Reviews = 10,
+                    AttributeValues = p.AttributeValues ?? [],
+                    SearchItemMeta = new SearchItemMeta
+                    {
+                        Score = p.Score,
+                        MatchType = p.MatchType ?? "Partial",
+                    }
+                }).ToList();
+
+                var normalizedQuery = query.Trim();
+
+                //bool isCatOrSubcatExact = products.Any(p =>
+                //    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
+                //    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                bool isNameExact = products.Any(p =>
+                    string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+
+                string matchType = isNameExact ? "Exact" : "Partial";
+
+                //bool enableFilters = isCatOrSubcatExact || products.Any(p =>
+                //(p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                //(p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
+
+                var filterMeta = new BaseSearchFilterMetadata
+                {
+                    TotalCount = totalCount,
+                    HasMoreResults = page * pageSize < totalCount,
+                    Score = products.FirstOrDefault()?.Score ?? 0,
+                    MatchType = matchType,
+                    EnableFilters = true,
+                    Source = "Kathavachak"
+                };
+
+                var result = new ProductSearchRawResultDto()
+                {
+                    Results = resultDtos,
+                    Filters = filterMeta
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
+                return new ProductSearchRawResultDto
+                {
+                    Results = new List<SearchItemDto>(),
+                    Filters = new BaseSearchFilterMetadata
+                    {
+                        TotalCount = 0,
+                        HasMoreResults = false,
+                        Score = 0,
+                        MatchType = "Partial",
+                        EnableFilters = false,
+                        Source = "Priest"
+                    }
+                };
             }
         }
     }

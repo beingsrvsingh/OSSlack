@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 using System.Linq.Expressions;
@@ -51,98 +52,42 @@ namespace Temple.Infrastructure.Persistence.Repository
             string normalizedQuery = query.Trim();
 
             // Wrap query in double quotes for phrase search in BOOLEAN MODE
-            string booleanQuery = $"\"{normalizedQuery}\"";
+            string booleanQuery = $"+\"{normalizedQuery}\"";
 
             int skip = (page - 1) * pageSize;
 
-            var sql = $@"
+            var escapedQuery = MySqlHelper.EscapeString(booleanQuery);
+
+            var sql = @"
                         SELECT 
-                            a.id AS Id,
-                            a.name AS Name,
-                            ae.description AS Description,
-                            a.thumbnail_url AS ThumbnailUrl,
-                            ae.price AS Price,
-
-                            1 AS CatalogAttributeId,
-                            1 AS CatalogAttributeValueId,
-                            'Test' AS CatalogAttributeValue,
-                            'test' AS CatalogAttributeKey,
-                            'test' AS CatalogAttributeLabel,
-                            1 AS CatalogAttributeDatatype;
-
-                            ae.category_name_snapshot AS CategoryNameSnapshot,
-                            ae.sub_category_name_snapshot AS SubCategoryNameSnapshot,
-                            ae.category_id AS CategoryId,
-                            ae.sub_category_id AS SubcategoryId,
-
-                            LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS PackageNameScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.sub_category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
-
-                            (
-                                LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.sub_category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
-                            ) AS TotalScore
-
-                        FROM temple_master a
-                        LEFT JOIN temple_expertise ae ON a.id = ae.temple_id
-                        WHERE 
-                            ae.is_active = TRUE AND
-                            (
-                                MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.sub_category_name_snapshot) AGAINST ({{0}} IN BOOLEAN MODE)
-                            )
-                        ORDER BY TotalScore DESC
-                        LIMIT {{1}} OFFSET {{2}};";
-
+                            pv.Id, 
+                            pv.Name, 
+                            p.thumbnail_url AS ThumbnailUrl, 
+                            pv.Amount AS Price,
+                            p.category_id AS CategoryId,
+                            p.sub_category_id AS SubcategoryId,
+                            LEAST(
+                                ROUND(IFNULL(MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE), 0), 3),
+                                1000
+                            ) AS NameScore,
+                            COUNT(*) OVER() AS TotalCount
+                        FROM temple_master p
+                        INNER JOIN temple_expertise pv 
+                            ON p.id = pv.temple_id
+                        WHERE MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE)
+                        LIMIT @pageSize OFFSET @skip;";
 
             var products = await _context.SearchRaws
-                .FromSqlRaw(sql, booleanQuery, pageSize, skip)
-                .ToListAsync(cancellationToken);
+                            .FromSqlRaw(
+                                sql,
+                                new MySqlParameter("@q", escapedQuery),
+                                new MySqlParameter("@pageSize", pageSize),
+                                new MySqlParameter("@skip", skip)
+                            ).ToListAsync(cancellationToken);
 
-            var groupedResults = products
-                                .GroupBy(p => p.Id)
-                                .Select(g =>
-                                {
-                                    var product = g.First();
+            int totalCount = products.FirstOrDefault()?.TotalCount ?? 0;
 
-                                    product.AttributeValues = g
-                                        .Where(x => x.CatalogAttributeId.HasValue)
-                                        .Select(x => new BaseAttributeValue
-                                        {
-                                            CatalogAttributeId = x.CatalogAttributeId ?? 0,
-                                            CatalogAttributeValueId = x.CatalogAttributeValueId ?? 0,
-                                            Value = x.CatalogAttributeValue,
-                                            AttributeKey = x.CatalogAttributeKey,
-                                            AttributeLabel = x.CatalogAttributeLabel,
-                                            AttributeDataTypeId = x.CatalogAttributeDatatype ?? 0
-                                        })
-                                        .ToList();
-
-                                    return product;
-                                })
-                                .ToList();
-
-
-            var countSql = @"
-                            SELECT COUNT(*) FROM temple_master a
-                            LEFT JOIN temple_expertise ae ON a.id = ae.temple_id
-                            WHERE 
-                            MATCH(a.name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.category_name_snapshot) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.sub_category_name_snapshot) AGAINST ({0} IN BOOLEAN MODE)";
-
-            var totalCount = await _context.SearchRaws
-                .FromSqlRaw(countSql, booleanQuery)
-                .CountAsync(cancellationToken);
-
-            return (groupedResults, totalCount);
+            return (products, totalCount);
         }
     }
 }

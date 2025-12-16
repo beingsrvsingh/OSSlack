@@ -57,6 +57,16 @@ namespace Shared.Application.Common.Contracts
 
         [JsonPropertyName("currency")]
         public string? Currency { get; set; } = "INR";
+
+        [JsonPropertyName("price")]
+        public double Price { get; set; } = 0;
+
+        [JsonPropertyName("quantity")]
+        public int Quantity { get; set; } = 1;
+
+        [JsonPropertyName("limit")]
+        public int Limit { get; set; } = 1;
+
     }
 
 

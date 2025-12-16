@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
+using Polly;
 using Priest.Domain.Core.Repository;
 using Priest.Infrastructure.Persistence.Context;
 using PriestMicroservice.Domain.Entities;
@@ -21,92 +23,42 @@ namespace Priest.Infrastructure.Persistence.Repository
             string normalizedQuery = query.Trim();
 
             // Wrap query in double quotes for phrase search in BOOLEAN MODE
-            string booleanQuery = $"\"{normalizedQuery}\"";
+            string booleanQuery = $"+\"{normalizedQuery}\"";
 
             int skip = (page - 1) * pageSize;
 
-            var sql = $@"
+            var escapedQuery = MySqlHelper.EscapeString(booleanQuery);
+
+            var sql = @"
                         SELECT 
-                            a.id AS Id,
-                            a.name AS Name,
-                            ae.description AS Description,
-                            a.thumbnail_url AS ThumbnailUrl,
-                            ae.price AS Price,
-
-                            ae.category_name_snap AS CatSnap,
-                            ae.sub_cat_name_snap AS SubcatSnap,
-                            ae.category_id AS CategoryId,
-                            ae.sub_category_id AS SubcategoryId,
-
-                            LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS PackageNameScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
-                            LEAST(ROUND(IFNULL(MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
-
-                            (
-                                LEAST(ROUND(IFNULL(MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
-                                LEAST(ROUND(IFNULL(MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
-                            ) AS TotalScore
-
-                        FROM priests a
-                        LEFT JOIN priest_expertises ae ON a.id = ae.priest_id
-                        WHERE 
-                            ae.is_active = TRUE AND
-                            (
-                                MATCH(a.name) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.name) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE) OR
-                                MATCH(ae.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE)
-                            )
-                        ORDER BY TotalScore DESC
-                        LIMIT {{1}} OFFSET {{2}};";
-
+                            pv.Id, 
+                            pv.Name, 
+                            p.thumbnail_url AS ThumbnailUrl, 
+                            pv.Amount AS Price,
+                            p.category_id AS CategoryId,
+                            p.sub_category_id AS SubcategoryId,
+                            LEAST(
+                                ROUND(IFNULL(MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE), 0), 3),
+                                1000
+                            ) AS NameScore,
+                            COUNT(*) OVER() AS TotalCount
+                        FROM priest_master p
+                        INNER JOIN priest_expertise pv 
+                            ON p.id = pv.priest_id
+                        WHERE MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE)
+                        LIMIT @pageSize OFFSET @skip;";
 
             var products = await dbContext.SearchRaws
-                .FromSqlRaw(sql, booleanQuery, pageSize, skip)
-                .ToListAsync(cancellationToken);
+                            .FromSqlRaw(
+                                sql,
+                                new MySqlParameter("@q", escapedQuery),
+                                new MySqlParameter("@pageSize", pageSize),
+                                new MySqlParameter("@skip", skip)
+                            ).ToListAsync(cancellationToken);
 
-            var groupedResults = products
-                                .GroupBy(p => p.Id)
-                                .Select(g =>
-                                {
-                                    var product = g.First();
+            int totalCount = products.FirstOrDefault()?.TotalCount ?? 0;
 
-                                    product.AttributeValues = g
-                                        .Where(x => x.CatalogAttributeId.HasValue)
-                                        .Select(x => new BaseAttributeValue
-                                        {
-                                            CategoryNameSnapshot = x.CategoryNameSnapshot,
-                                            CatalogAttributeId = x.CatalogAttributeId,
-                                            CatalogAttributeValueId = x.CatalogAttributeValueId,
-                                            Value = x.CatalogAttributeValue,
-                                            AttributeKey = x.CatalogAttributeKey,
-                                            AttributeLabel = x.CatalogAttributeLabel,
-                                            AttributeDataTypeId = x.CatalogAttributeDatatype
-                                        })
-                                        .ToList();
-
-                                    return product;
-                                })
-                                .ToList();
-
-
-            var countSql = @"
-                            SELECT COUNT(*) FROM priests a
-                            LEFT JOIN priest_expertises ae ON a.id = ae.priest_id
-                            WHERE 
-                            MATCH(a.name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.category_name_snap) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ae.sub_cat_name_snap) AGAINST ({0} IN BOOLEAN MODE)";
-
-            var totalCount = await dbContext.SearchRaws
-                .FromSqlRaw(countSql, booleanQuery)
-                .CountAsync(cancellationToken);
-
-            return (groupedResults, totalCount);
+            return (products, totalCount);
         }
     }
 

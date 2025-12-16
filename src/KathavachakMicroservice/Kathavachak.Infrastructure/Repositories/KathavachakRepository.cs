@@ -2,6 +2,7 @@
 using Kathavachak.Domain.Entities;
 using Kathavachak.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 
@@ -21,84 +22,42 @@ namespace Kathavachak.Infrastructure.Repositories
             string normalizedQuery = query.Trim();
 
             // Wrap query in double quotes for phrase search in BOOLEAN MODE
-            string booleanQuery = $"\"{normalizedQuery}\"";
+            string booleanQuery = $"+\"{normalizedQuery}\"";
 
             int skip = (page - 1) * pageSize;
 
-            var sql = $@"
+            var escapedQuery = MySqlHelper.EscapeString(booleanQuery);
+
+            var sql = @"
                         SELECT 
-                            km.id AS Id,
-                            km.name AS Name,
-                            ke.description AS Description,
-                            km.thumbnail_url AS ThumbnailUrl,
-                            ke.price AS Price,
-                            ke.category_name_snap AS CatSnap,
-                            ke.sub_cat_name_snap AS SubcatSnap,
-                            ke.cat_id AS CategoryId,
-                            ke.subcat_id AS SubcategoryId,
-
-                            LEAST(ROUND(IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS NameScore,
-                            LEAST(ROUND(IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS CatScore,
-                            LEAST(ROUND(IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) AS SubcatScore,
-                            (
-                                LEAST(ROUND(IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 3 +
-                                LEAST(ROUND(IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 2 +
-                                LEAST(ROUND(IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0), 4), 1000) * 1
-                            ) AS TotalScore
-
-                        FROM kathavachak_master km
-                        LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
-
-                        WHERE 
-                            IFNULL(MATCH(km.name) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0 OR
-                            IFNULL(MATCH(ke.category_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0 OR
-                            IFNULL(MATCH(ke.sub_cat_name_snap) AGAINST ({{0}} IN BOOLEAN MODE), 0) > 0
-
-                        ORDER BY TotalScore DESC
-                        LIMIT {{1}} OFFSET {{2}};";
+                            pv.Id, 
+                            pv.Name, 
+                            p.thumbnail_url AS ThumbnailUrl, 
+                            pv.Amount AS Price,
+                            p.category_id AS CategoryId,
+                            p.sub_category_id AS SubcategoryId,
+                            LEAST(
+                                ROUND(IFNULL(MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE), 0), 3),
+                                1000
+                            ) AS NameScore,
+                            COUNT(*) OVER() AS TotalCount
+                        FROM kathavachak_master p
+                        INNER JOIN kathavachak_expertise pv 
+                            ON p.id = pv.kathavachak_id
+                        WHERE MATCH(pv.name) AGAINST (@q IN NATURAL LANGUAGE MODE)
+                        LIMIT @pageSize OFFSET @skip;";
 
             var products = await _context.KathavachakSearchRaws
-                .FromSqlRaw(sql, booleanQuery, pageSize, skip)
-                .ToListAsync(cancellationToken);
+                            .FromSqlRaw(
+                                sql,
+                                new MySqlParameter("@q", escapedQuery),
+                                new MySqlParameter("@pageSize", pageSize),
+                                new MySqlParameter("@skip", skip)
+                            ).ToListAsync(cancellationToken);
 
-            var groupedResults = products
-                                .GroupBy(p => p.Id)
-                                .Select(g =>
-                                {
-                                    var product = g.First();
+            int totalCount = products.FirstOrDefault()?.TotalCount ?? 0;
 
-                                    product.AttributeValues = g
-                                        .Where(x => x.CatalogAttributeId.HasValue)
-                                        .Select(x => new BaseAttributeValue
-                                        {
-                                            CategoryNameSnapshot = x.CategoryNameSnapshot,
-                                            CatalogAttributeId = x.CatalogAttributeId,
-                                            CatalogAttributeValueId = x.CatalogAttributeValueId,
-                                            Value = x.CatalogAttributeValue,
-                                            AttributeKey = x.CatalogAttributeKey,
-                                            AttributeLabel = x.CatalogAttributeLabel,
-                                            AttributeDataTypeId = x.CatalogAttributeDatatype
-                                        })
-                                        .ToList();
-
-                                    return product;
-                                })
-                                .ToList();
-
-
-            var countSql = @"
-                            SELECT COUNT(*) FROM kathavachak_master as km
-                            LEFT JOIN kathavachak_experties ke ON km.id = ke.kathavachak_id
-                            WHERE 
-                            MATCH(km.name) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ke.category_name_snap) AGAINST ({0} IN BOOLEAN MODE)
-                            OR MATCH(ke.sub_cat_name_snap) AGAINST ({0} IN BOOLEAN MODE)";
-
-            var totalCount = await _context.KathavachakSearchRaws
-                .FromSqlRaw(countSql, booleanQuery)
-                .CountAsync(cancellationToken);
-
-            return (groupedResults, totalCount);
+            return (products, totalCount);
         }
     }
 }
