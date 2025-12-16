@@ -109,8 +109,6 @@ namespace Product.Application.Contracts
                 Reviews = entity.Reviews,
                 CategoryId = entity.CategoryId.ToString() ?? string.Empty,
                 SubCategoryId = entity.SubCategoryId.ToString() ?? string.Empty,
-                CategoryNameSnapshot = entity.CategoryNameSnapshot,
-                SubCategoryNameSnapshot = entity.SubCategoryNameSnapshot,
                 IsActive = entity.IsActive,
                 IsTrending = entity.IsTrending ?? false,
                 IsFeatured = entity.IsFeatured ?? false,

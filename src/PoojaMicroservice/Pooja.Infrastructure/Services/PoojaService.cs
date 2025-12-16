@@ -541,6 +541,7 @@ namespace Pooja.Infrastructure.Services
                     string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
 
                 string matchType = isNameExact ? "Exact" : "Partial";
+                bool enableFilters = matchType == "Exact" ? true : false;
 
                 //bool enableFilters = isCatOrSubcatExact || products.Any(p =>
                 //(p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -552,7 +553,7 @@ namespace Pooja.Infrastructure.Services
                     HasMoreResults = page * pageSize < totalCount,
                     Score = products.FirstOrDefault()?.Score ?? 0,
                     MatchType = matchType,
-                    EnableFilters = true,
+                    EnableFilters = enableFilters,
                     Source = "Kathavachak"
                 };
 

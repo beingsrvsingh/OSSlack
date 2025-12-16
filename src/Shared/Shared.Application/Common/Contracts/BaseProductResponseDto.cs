@@ -31,12 +31,6 @@ namespace Shared.Application.Common.Contracts
         [JsonPropertyName("subCategoryId")]
         public string SubCategoryId { get; set; } = string.Empty;
 
-        [JsonPropertyName("categoryNameSnapshot")]
-        public string? CategoryNameSnapshot { get; set; }
-
-        [JsonPropertyName("subCategoryNameSnapshot")]
-        public string? SubCategoryNameSnapshot { get; set; }
-
         [JsonPropertyName("isActive")]
         public bool IsActive { get; set; } = true;
 

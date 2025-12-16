@@ -12,7 +12,6 @@ namespace Shared.Domain.Entities.Base
         public int? AttributeDataTypeId { get; set; }
         public int? CatalogAttributeGroupId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? CategoryNameSnapshot { get; set; }
         public string? AttributeGroupNameSnapshot { get; set; }
     }
 }

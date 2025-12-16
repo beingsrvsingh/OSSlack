@@ -51,7 +51,7 @@ namespace SearchAggregator.Infrastructure.Services
             var kathavachakTask = SafeKathavachakSearchAsync(query, page, pageSize, cancellationToken);
             var poojaTask = SafePoojaSearchAsync(query, page, pageSize, cancellationToken);
 
-            await Task.WhenAll(productTask, priestTask, astrologerTask, templeTask, kathavachakTask);
+            await Task.WhenAll(productTask, priestTask, astrologerTask, templeTask, kathavachakTask, poojaTask);
 
             // Filter out null results
             var sources = new[]
@@ -60,7 +60,8 @@ namespace SearchAggregator.Infrastructure.Services
                 priestTask.Result,
                 astrologerTask.Result,
                 templeTask.Result,
-                kathavachakTask.Result
+                kathavachakTask.Result,
+                poojaTask.Result
             }.Where(result => result != null).ToList();
 
 
@@ -217,7 +218,7 @@ namespace SearchAggregator.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Kathavachak search failed");
+                _logger.LogError(ex, "Pooja search failed");
                 return new List<SearchResponseDto>();
             }
         }
