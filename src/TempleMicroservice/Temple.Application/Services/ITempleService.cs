@@ -1,5 +1,6 @@
 ﻿using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 using Temple.Domain.Entities;
 
 namespace Temple.Application.Services
@@ -14,6 +15,6 @@ namespace Temple.Application.Services
         Task<bool> CreateAsync(TempleMaster temple);
         Task<bool> UpdateAsync(TempleMaster temple);
         Task<bool> DeleteAsync(int id);
-        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

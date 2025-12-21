@@ -25,6 +25,7 @@ namespace Shared.Application.Common.Contracts.Response
         public int? AvailableSlots { get; set; } = 0;
 
         [JsonPropertyName("booking_type")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public BookingType? BookingType { get; set; } = Domain.Entities.BookingType.Online;        
 
         [JsonPropertyName("media")]

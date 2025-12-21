@@ -3,6 +3,7 @@ using AstrologerMicroservice.Domain.Entities;
 using AstrologerMicroservice.Domain.Entities.Enums;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 
 namespace AstrologerMicroservice.Application.Service
 {
@@ -20,6 +21,6 @@ namespace AstrologerMicroservice.Application.Service
         Task<bool> CreateAsync(CreateAstrologerCommand command);
         Task<bool> UpdateAsync(UpdateAstrologerCommand command);
         Task<bool> DeleteAsync(int astrologerId);
-        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }

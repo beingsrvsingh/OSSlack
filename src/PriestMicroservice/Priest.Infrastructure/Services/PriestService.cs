@@ -6,12 +6,13 @@ using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Enums;
+using Shared.Utilities.Response;
 
 namespace Priest.Infrastructure.Services
 {
     public class PriestService : IPriestService
     {
-        private readonly IPriestRepository _priestRepository;
+        private readonly IPriestRepository _repository;
         //private readonly IConsultationModeRepository _consultationModeRepository;
         //private readonly IPriestExpertiseRepository _expertiseRepository;
         //private readonly IPriestLanguageRepository _languageRepository;
@@ -28,7 +29,7 @@ namespace Priest.Infrastructure.Services
             //ITimeSlotRepository timeSlotRepository,
             ILoggerService<PriestService> logger)
         {
-            _priestRepository = priestRepository;
+            _repository = priestRepository;
             //_consultationModeRepository = consultationModeRepository;
             //_expertiseRepository = expertiseRepository;
             //_languageRepository = languageRepository;
@@ -41,7 +42,7 @@ namespace Priest.Infrastructure.Services
         {
             List<PriestMaster> lstProducts = new List<PriestMaster>();
 
-            lstProducts = (List<PriestMaster>)await _priestRepository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
+            lstProducts = (List<PriestMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
 
             var trendingProducts = lstProducts
                                     .Take(topN)
@@ -65,7 +66,7 @@ namespace Priest.Infrastructure.Services
             try
             {
                 // Use IQueryable from repository
-                var query = _priestRepository.Query();
+                var query = _repository.Query();
 
                 if (subCategoryId.HasValue && subCategoryId.Value > 0)
                 {
@@ -182,7 +183,7 @@ namespace Priest.Infrastructure.Services
 
         public async Task<List<CatalogResponseDto>> GetFilteredAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10)
         {
-            var query = _priestRepository.Query();
+            var query = _repository.Query();
 
             if (subCategoryId.HasValue && subCategoryId.Value > 0)
             {
@@ -304,7 +305,7 @@ namespace Priest.Infrastructure.Services
             _logger.LogInfo($"Getting astrologer by Id: {id}");
             try
             {
-                var query = _priestRepository.Query();
+                var query = _repository.Query();
 
                 var productDto = await query
                 .Where(p => p.Id == id)
@@ -419,7 +420,7 @@ namespace Priest.Infrastructure.Services
         {
             try
             {
-                return await _priestRepository.GetAsync(p => p.IsActive);
+                return await _repository.GetAsync(p => p.IsActive);
             }
             catch (Exception ex)
             {
@@ -432,8 +433,8 @@ namespace Priest.Infrastructure.Services
         {
             try
             {
-                await _priestRepository.AddAsync(priest);
-                await _priestRepository.SaveChangesAsync();
+                await _repository.AddAsync(priest);
+                await _repository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -445,8 +446,8 @@ namespace Priest.Infrastructure.Services
         {
             try
             {
-                await _priestRepository.UpdateAsync(priest);
-                await _priestRepository.SaveChangesAsync();
+                await _repository.UpdateAsync(priest);
+                await _repository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -458,15 +459,15 @@ namespace Priest.Infrastructure.Services
         {
             try
             {
-                var priest = await _priestRepository.GetByIdAsync(id);
+                var priest = await _repository.GetByIdAsync(id);
                 if (priest == null)
                 {
                     _logger.LogError($"Priest with ID {id} not found.");
                     return;
                 }
 
-                await _priestRepository.DeleteAsync(priest);
-                await _priestRepository.SaveChangesAsync();
+                await _repository.DeleteAsync(priest);
+                await _repository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -539,82 +540,130 @@ namespace Priest.Infrastructure.Services
             }
         }
 
-        public async Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
-                var (products, totalCount) = await _priestRepository.SearchAsync(query, page, pageSize, cancellationToken);
+                var queryable = _repository.Query();
 
-                var resultDtos = products.Select(p => new SearchItemDto
-                {
-                    Pid = p.Id.ToString(),
-                    CategoryId = p.CategoryId.ToString(),
-                    SubCategoryId = p.SubcategoryId.ToString(),
-                    Name = p.Name ?? "",
-                    Price = (double)(p.Price ?? 0),
-                    ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    Quantity = 1,
-                    Limit = 1,
-                    Rating = 1,
-                    Reviews = 10,
-                    AttributeValues = p.AttributeValues ?? [],
-                    SearchItemMeta = new SearchItemMeta
+                var totalCount = await queryable.CountAsync();
+
+                var skip = (pageNumber - 1) * pageSize;
+
+                // Take top N products
+                var products = await queryable
+                    .Where(p => query.Contains(p.Name))
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .Select(p => new CatalogResponseDto
                     {
-                        Score = p.Score,
-                        MatchType = p.MatchType ?? "Partial",
-                    }
-                }).ToList();
+                        Id = p.Id.ToString(),
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        SubCategoryId = p.SubCategoryId.ToString(),
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+                        Price = new PriceResponseDto
+                        {
+                            Amount = p.Price.Amount,
+                            Currency = p.Price.Currency,
+                            Discount = p.Price.Discount,
+                            Mrp = p.Price.Mrp,
+                            Tax = p.Price.Tax
+                        },
 
-                var normalizedQuery = query.Trim();
+                        // Media
+                        Media = p.PriestMedias.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
 
-                //bool isCatOrSubcatExact = products.Any(p =>
-                //    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
-                //    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                        // Addons
+                        Addons = p.Addons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Description = a.Description,
+                            Price = new PriceResponseDto
+                            {
+                                Amount = a.Price.Amount,
+                                Mrp = a.Price.Mrp
+                            }
+                        }).ToList(),
 
-                bool isNameExact = products.Any(p =>
-                    string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                        // Attributes
+                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                        {
+                            Key = a.AttributeKey,
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                        }).ToList(),
 
-                string matchType = isNameExact ? "Exact" : "Partial";
-                bool enableFilters = matchType == "Exact" ? true : false;
+                        // Variants
+                        Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id.ToString(),
+                            Name = v.Name,
+                            Price = new PriceResponseDto
+                            {
+                                Amount = v.Price.Amount,
+                                Currency = v.Price.Currency,
+                                Discount = v.Price.Discount,
+                                Mrp = v.Price.Mrp,
+                                Tax = v.Price.Tax
+                            },
+                            StockQuantity = v.StockQuantity,
+                            Attributes = v.AttributeValues
+                                .GroupBy(a => a.AttributeGroupNameSnapshot)
+                                .Select(g => new AttributeGroupResponseDto
+                                {
+                                    AttributeGroupName = g.Key,
+                                    Attributes = g.Select(a => new AttributeResponseDto
+                                    {
+                                        Key = a.AttributeKey,
+                                        Label = a.AttributeLabel ?? "",
+                                        Value = a.Value,
+                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                                    }).ToList()
+                                }).ToList(),
+                            Addons = v.Addons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Description = a.Description,
+                                Price = new PriceResponseDto
+                                {
+                                    Amount = a.Price.Amount,
+                                    Mrp = a.Price.Mrp
+                                }
+                            }).ToList(),
+                            Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                .ToListAsync();
 
-                //bool enableFilters = isCatOrSubcatExact || products.Any(p =>
-                //(p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                //(p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
-
-                var filterMeta = new BaseSearchFilterMetadata
+                return new PagedResult<CatalogResponseDto>
                 {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
                     TotalCount = totalCount,
-                    HasMoreResults = page * pageSize < totalCount,
-                    Score = products.FirstOrDefault()?.Score ?? 0,
-                    MatchType = matchType,
-                    EnableFilters = enableFilters,
-                    Source = "Priest"
+                    Items = products
                 };
-
-                var result = new ProductSearchRawResultDto()
-                {
-                    Results = resultDtos,
-                    Filters = filterMeta
-                };
-
-                return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
-                return new ProductSearchRawResultDto
-                {
-                    Results = new List<SearchItemDto>(),
-                    Filters = new BaseSearchFilterMetadata
-                    {
-                        TotalCount = 0,
-                        HasMoreResults = false,
-                        Score = 0,
-                        MatchType = "Partial",
-                        EnableFilters = false,
-                        Source = "Priest"
-                    }
-                };
+                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, pageNumber, pageSize);
+                return new PagedResult<CatalogResponseDto>();
             }
         }
     }

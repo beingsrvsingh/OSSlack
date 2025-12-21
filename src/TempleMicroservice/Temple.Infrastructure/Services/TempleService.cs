@@ -3,6 +3,7 @@ using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Enums;
+using Shared.Utilities.Response;
 using Temple.Application.Services;
 using Temple.Domain.Entities;
 using Temple.Domain.Repositories;
@@ -11,25 +12,25 @@ namespace Temple.Infrastructure.Services
 {
     public class TempleService : ITempleService
     {
-        private readonly ITempleRepository _templeRepository;
+        private readonly ITempleRepository _repository;
         private readonly ILoggerService<TempleService> _logger;
 
         public TempleService(ITempleRepository templeRepository, ILoggerService<TempleService> logger)
         {
-            _templeRepository = templeRepository;
+            _repository = templeRepository;
             _logger = logger;
         }
 
         public async Task<IEnumerable<TempleMaster>> GetAllAsync(int page = 1, int pageSize = 20)
         {
-            return await _templeRepository.GetAllAsync(page, pageSize);
+            return await _repository.GetAllAsync(page, pageSize);
         }
 
         public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
         {
             List<TempleMaster> lstProducts = new List<TempleMaster>();
 
-            lstProducts = (List<TempleMaster>)await _templeRepository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
+            lstProducts = (List<TempleMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
 
             var trendingProducts = lstProducts
                                     .Take(topN)
@@ -53,7 +54,7 @@ namespace Temple.Infrastructure.Services
             try
             {
                 // Use IQueryable from repository
-                var query = _templeRepository.Query();
+                var query = _repository.Query();
 
                 if (subCategoryId.HasValue && subCategoryId.Value > 0)
                 {
@@ -172,7 +173,7 @@ namespace Temple.Infrastructure.Services
         {
             try
             {
-                var query = _templeRepository.Query();
+                var query = _repository.Query();
 
                 var productDto = await query
                 .Where(p => p.Id == id)
@@ -285,7 +286,7 @@ namespace Temple.Infrastructure.Services
 
         public async Task<List<CatalogResponseDto>> GetFilteredTemplesAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10)
         {
-            var query = _templeRepository.Query();
+            var query = _repository.Query();
 
             if (subCategoryId.HasValue && subCategoryId.Value > 0)
             {
@@ -406,7 +407,7 @@ namespace Temple.Infrastructure.Services
         {
             try
             {
-                await _templeRepository.AddAsync(temple);
+                await _repository.AddAsync(temple);
                 return true;
             }
             catch (Exception ex)
@@ -420,8 +421,8 @@ namespace Temple.Infrastructure.Services
         {
             try
             {
-                await _templeRepository.UpdateAsync(temple);
-                await _templeRepository.SaveChangesAsync();
+                await _repository.UpdateAsync(temple);
+                await _repository.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -435,11 +436,11 @@ namespace Temple.Infrastructure.Services
         {
             try
             {
-                var entity = await _templeRepository.GetByIdAsync(id);
+                var entity = await _repository.GetByIdAsync(id);
                 if (entity == null) return false;
 
-                await _templeRepository.DeleteAsync(entity);
-                await _templeRepository.SaveChangesAsync();
+                await _repository.DeleteAsync(entity);
+                await _repository.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -449,82 +450,130 @@ namespace Temple.Infrastructure.Services
             }
         }
 
-        public async Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
-                var (products, totalCount) = await _templeRepository.SearchAsync(query, page, pageSize, cancellationToken);
+                var queryable = _repository.Query();
 
-                var resultDtos = products.Select(p => new SearchItemDto
-                {
-                    Pid = p.Id.ToString(),
-                    CategoryId = p.CategoryId.ToString(),
-                    SubCategoryId = p.SubcategoryId.ToString(),
-                    Name = p.Name ?? "",
-                    Price = (double)(p.Price ?? 0),
-                    ThumbnailUrl = p.ThumbnailUrl ?? "",
-                    Quantity = 1,
-                    Limit = 1,
-                    Rating = 1,
-                    Reviews = 10,
-                    AttributeValues = p.AttributeValues ?? [],
-                    SearchItemMeta = new SearchItemMeta
+                var totalCount = await queryable.CountAsync();
+
+                var skip = (pageNumber - 1) * pageSize;
+
+                // Take top N products
+                var products = await queryable
+                    .Where(p => query.Contains(p.Name))
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .Select(p => new CatalogResponseDto
                     {
-                        Score = p.Score,
-                        MatchType = p.MatchType ?? "Partial",
-                    }
-                }).ToList();
+                        Id = p.Id.ToString(),
+                        Name = p.Name,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        Rating = p.Rating,
+                        Reviews = p.Reviews,
+                        SubCategoryId = p.SubCategoryId.ToString(),
+                        IsTrending = p.IsTrending,
+                        IsFeatured = p.IsFeatured,
+                        Price = new PriceResponseDto
+                        {
+                            Amount = p.Price.Amount,
+                            Currency = p.Price.Currency,
+                            Discount = p.Price.Discount,
+                            Mrp = p.Price.Mrp,
+                            Tax = p.Price.Tax
+                        },
 
-                var normalizedQuery = query.Trim();
+                        // Media
+                        Media = p.TempleImages.Select(img => new MediaResponseDto
+                        {
+                            Url = img.ImageUrl,
+                            Type = img.MediaType.ToString(),
+                            AltText = img.AltText,
+                            SortOrder = img.SortOrder
+                        }).ToList(),
 
-                //bool isCatOrSubcatExact = products.Any(p =>
-                //    string.Equals(p.CategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase)
-                //    || string.Equals(p.SubCategoryNameSnapshot?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                        // Addons
+                        Addons = p.TempleAddons.Select(a => new AddonResponseDto
+                        {
+                            Name = a.Name,
+                            Description = a.Description,
+                            Price = new PriceResponseDto
+                            {
+                                Amount = a.Price.Amount,
+                                Mrp = a.Price.Mrp
+                            }
+                        }).ToList(),
 
-                bool isNameExact = products.Any(p =>
-                    string.Equals(p.Name?.Trim(), normalizedQuery, StringComparison.OrdinalIgnoreCase));
+                        // Attributes
+                        Attributes = p.TempleAttributes.Select(a => new AttributeResponseDto
+                        {
+                            Key = a.AttributeKey,
+                            Label = a.AttributeLabel ?? "",
+                            Value = a.Value,
+                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                        }).ToList(),
 
-                string matchType = isNameExact ? "Exact" : "Partial";
-                bool enableFilters = matchType == "Exact" ? true : false;
+                        // Variants
+                        Variants = p.TempleExpertises.Select(v => new CatalogVariantResponseDto
+                        {
+                            Id = v.Id.ToString(),
+                            Name = v.Name,
+                            Price = new PriceResponseDto
+                            {
+                                Amount = v.Price.Amount,
+                                Currency = v.Price.Currency,
+                                Discount = v.Price.Discount,
+                                Mrp = v.Price.Mrp,
+                                Tax = v.Price.Tax
+                            },
+                            StockQuantity = v.StockQuantity,
+                            Attributes = v.AttributeValues
+                                .GroupBy(a => a.AttributeGroupNameSnapshot)
+                                .Select(g => new AttributeGroupResponseDto
+                                {
+                                    AttributeGroupName = g.Key,
+                                    Attributes = g.Select(a => new AttributeResponseDto
+                                    {
+                                        Key = a.AttributeKey,
+                                        Label = a.AttributeLabel ?? "",
+                                        Value = a.Value,
+                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
+                                    }).ToList()
+                                }).ToList(),
+                            Addons = v.TempleAddons.Select(a => new AddonResponseDto
+                            {
+                                Name = a.Name,
+                                Description = a.Description,
+                                Price = new PriceResponseDto
+                                {
+                                    Amount = a.Price.Amount,
+                                    Mrp = a.Price.Mrp
+                                }
+                            }).ToList(),
+                            Media = v.TempleExpertiseImages.Select(img => new MediaResponseDto
+                            {
+                                Url = img.ImageUrl,
+                                Type = img.MediaType.ToString(),
+                                AltText = img.AltText,
+                                SortOrder = img.SortOrder
+                            }).ToList()
+                        }).ToList()
+                    })
+                .ToListAsync();
 
-                //bool enableFilters = isCatOrSubcatExact || products.Any(p =>
-                //(p.CategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                //(p.SubCategoryNameSnapshot?.Contains(normalizedQuery, StringComparison.OrdinalIgnoreCase) ?? false));
-
-                var filterMeta = new BaseSearchFilterMetadata
+                return new PagedResult<CatalogResponseDto>
                 {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
                     TotalCount = totalCount,
-                    HasMoreResults = page * pageSize < totalCount,
-                    Score = products.FirstOrDefault()?.Score ?? 0,
-                    MatchType = matchType,
-                    EnableFilters = enableFilters,
-                    Source = "Temple"
+                    Items = products
                 };
-
-                var result = new ProductSearchRawResultDto()
-                {
-                    Results = resultDtos,
-                    Filters = filterMeta
-                };
-
-                return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, page, pageSize);
-                return new ProductSearchRawResultDto
-                {
-                    Results = new List<SearchItemDto>(),
-                    Filters = new BaseSearchFilterMetadata
-                    {
-                        TotalCount = 0,
-                        HasMoreResults = false,
-                        Score = 0,
-                        MatchType = "Partial",
-                        EnableFilters = false,
-                        Source = "Product"
-                    }
-                };
+                _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, pageNumber, pageSize);
+                return new PagedResult<CatalogResponseDto>();
             }
         }
     }

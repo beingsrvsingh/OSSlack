@@ -25,21 +25,12 @@ namespace Priest.Application.Features.EventHandlers.Queries
         {
             var searchResult = await priestService.SearchAsync(request.Query, request.Page, request.PageSize, cancellationToken);
 
-            if (searchResult == null || searchResult.Results == null || !searchResult.Results.Any())
+            if (searchResult == null || !searchResult.Items.Any())
             {
                 return Result.Success(new FailureResponse("No record found", "no record found"));
             }
 
-            IEnumerable<BaseCatalogAttributeDto> attributes = Enumerable.Empty<BaseCatalogAttributeDto>();
-
-            if (searchResult.Filters.MatchType == "Exact")
-            {
-                attributes = await catalogService.GetAttributesByCategoryId(Convert.ToInt32(searchResult.Results.FirstOrDefault()!.CategoryId), Convert.ToInt32(searchResult.Results.FirstOrDefault().SubCategoryId), false);
-            }
-
-            var dto = SearchResponseDto.FromEntityList(searchResult, attributes);
-
-            return Result.Success(dto);
+            return Result.Success(searchResult);
         }
 
     }

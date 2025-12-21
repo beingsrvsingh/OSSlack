@@ -1,6 +1,7 @@
 ﻿using Pooja.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 
 namespace Pooja.Application.Services
 {
@@ -23,7 +24,7 @@ namespace Pooja.Application.Services
         Task<IEnumerable<PoojaMaster>> SearchPoojasAsync(string keyword);
         Task<bool> IsPoojaAvailableAtHomeAsync(int poojaId);
 
-        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using Kathavachak.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 
 namespace Kathavachak.Application.Services
 {
@@ -16,7 +17,7 @@ namespace Kathavachak.Application.Services
         Task<bool> CreateAsync(KathavachakMaster entity);
         Task<bool> UpdateAsync(KathavachakMaster entity);
         Task<bool> DeleteAsync(int id);
-        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 
 }

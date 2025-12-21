@@ -1,6 +1,7 @@
 ﻿using PriestMicroservice.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 
 namespace Priest.Application.Services
 {
@@ -29,6 +30,6 @@ namespace Priest.Application.Services
         // Schedules & TimeSlots
         Task<IEnumerable<Schedule>> GetSchedulesByPriestIdAsync(int priestId);
         Task<IEnumerable<TimeSlot>> GetTimeSlotsByScheduleIdAsync(int scheduleId);
-        Task<ProductSearchRawResultDto> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+        Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
     }
 }
