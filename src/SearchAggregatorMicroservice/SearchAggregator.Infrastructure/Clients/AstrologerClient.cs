@@ -1,4 +1,5 @@
 ﻿using SearchAggregator.Application.Clients;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
@@ -20,11 +21,11 @@ namespace SearchAggregator.Infrastructure.Clients
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<List<SearchResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<Result<List<SearchResponseDto>>>(
+                var response = await _httpClient.GetFromJsonAsync<Result<PagedResult<CatalogResponseDto>>>(
                     $"astrologer/search?q={Uri.EscapeDataString(query)}&page={page}&pageSize={pageSize}",
                     cancellationToken
                 );
@@ -32,7 +33,7 @@ namespace SearchAggregator.Infrastructure.Clients
                 if (response == null || response.Data is null)
                 {
                     _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
-                    return new List<SearchResponseDto>(); // Return empty result
+                    return new PagedResult<CatalogResponseDto>(); // Return empty result
                 }
 
                 return response.Data;

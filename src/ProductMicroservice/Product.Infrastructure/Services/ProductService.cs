@@ -53,7 +53,7 @@ namespace Product.Infrastructure.Services
         {
             List<ProductMaster> lstProducts = new List<ProductMaster> ();
 
-            lstProducts = await _productRepository.GetAsync((p) => p.CategoryId == subCategoryId || p.IsTrending == true);
+            lstProducts = await _productRepository.GetAsync((p) => (subCategoryId == null || p.CategoryId == subCategoryId) || p.IsTrending == true);
 
             var trendingProducts = lstProducts
                                     .Take(topN)
@@ -561,7 +561,7 @@ namespace Product.Infrastructure.Services
 
                 // Take top N products
                 var products = await queryable
-                    .Where(p => query.Contains(p.Name))
+                    .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
                     .Skip(skip)
                     .Take(pageSize)
                     .Select(p => new CatalogResponseDto

@@ -476,7 +476,7 @@ namespace Kathavachak.Infrastructure.Services
 
                 // Take top N products
                 var products = await queryable
-                    .Where(p => query.Contains(p.Name))
+                    .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
                     .Skip(skip)
                     .Take(pageSize)
                     .Select(p => new CatalogResponseDto

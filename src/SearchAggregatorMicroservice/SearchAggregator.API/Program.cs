@@ -83,6 +83,12 @@ builder.Services.AddHttpClient<IKathavachakClient, KathavachakClient>(client =>
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
+builder.Services.AddHttpClient<IPoojaClient, PoojaClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Pooja-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
 var app = builder.Build();
 
 var loggerService = app.Services.GetRequiredService<ILoggerService<Program>>();

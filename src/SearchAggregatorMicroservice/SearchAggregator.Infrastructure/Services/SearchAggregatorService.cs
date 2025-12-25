@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure;
+using Azure.Core;
+using Microsoft.Extensions.Logging;
 using NLog.Filters;
 using SearchAggregator.Application.Clients;
 using SearchAggregator.Application.Contracts;
 using SearchAggregator.Application.Contracts.Dtos;
 using SearchAggregator.Application.Services;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
+using Shared.Utilities.Response;
 
 namespace SearchAggregator.Infrastructure.Services
 {
@@ -38,20 +42,27 @@ namespace SearchAggregator.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<SearchResponse> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            var allResults = new List<SearchResponseDto>();
+            var allResults = new List<CatalogResponseDto>();
             bool directMatchFound = false;
 
             // Start all searches in parallel
-            var productTask = SafeProductSearchAsync(query, page, pageSize, cancellationToken);
-            var priestTask = SafePriestSearchAsync(query, page, pageSize, cancellationToken);
-            var astrologerTask = SafeAstrologerSearchAsync(query, page, pageSize, cancellationToken);
-            var templeTask = SafeTempleSearchAsync(query, page, pageSize, cancellationToken);
-            var kathavachakTask = SafeKathavachakSearchAsync(query, page, pageSize, cancellationToken);
-            var poojaTask = SafePoojaSearchAsync(query, page, pageSize, cancellationToken);
+            var productTask = SafeProductSearchAsync(query, pageNumber, pageSize, cancellationToken);
+            var priestTask = SafePriestSearchAsync(query, pageNumber, pageSize, cancellationToken);
+            var astrologerTask = SafeAstrologerSearchAsync(query, pageNumber, pageSize, cancellationToken);
+            var templeTask = SafeTempleSearchAsync(query, pageNumber, pageSize, cancellationToken);
+            var kathavachakTask = SafeKathavachakSearchAsync(query, pageNumber, pageSize, cancellationToken);
+            var poojaTask = SafePoojaSearchAsync(query, pageNumber, pageSize, cancellationToken);
 
-            await Task.WhenAll(productTask, priestTask, astrologerTask, templeTask, kathavachakTask, poojaTask);
+            await Task.WhenAll(
+                productTask,
+                priestTask,
+                astrologerTask,
+                templeTask,
+                kathavachakTask,
+                poojaTask
+                );
 
             // Filter out null results
             var sources = new[]
@@ -65,66 +76,22 @@ namespace SearchAggregator.Infrastructure.Services
             }.Where(result => result != null).ToList();
 
 
-            foreach (var sourceResults in sources)
+            var unifiedResult = new PagedResult<CatalogResponseDto>
             {
-                if (sourceResults == null)
-                    continue;
+                PageNumber = pageNumber,
+                PageSize = pageSize,
 
-                // Check for direct/exact match based on Filter in individual results
-                if (sourceResults.Any(r => IsExactMatch(r)))
-                {
-                    directMatchFound = true;
-                    allResults.AddRange(sourceResults.Where(r => IsExactMatch(r)));
-                }
-            }
+                // Total from all MS
+                TotalCount = sources.Sum(r => r.TotalCount),
 
-            // If no direct match found, add all results (partial matches)
-            if (!directMatchFound)
-            {
-                foreach (var sourceResults in sources)
-                {
-                    if (sourceResults != null)
-                        allResults.AddRange(sourceResults);
-                }
-            }
-
-            // Sort by Filter.Score descending, fallback to 0 if missing
-            var orderedResults = allResults
-                .OrderByDescending(r => r.Filter?.Score ?? 0)
-                .ToList();
-
-            // Pagination
-            var pagedResults = orderedResults
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            // Determine if filtering enabled anywhere in results
-            bool enableFilter = allResults.Any(r => r.Filter?.EnableFilters == true);
-
-            // Extract first non-zero category and subcategory ids from results
-            int? categoryId = enableFilter
-                ? allResults.Select(r => int.TryParse(r.CategoryId, out var cid) && cid != 0 ? cid : (int?)null).FirstOrDefault(c => c.HasValue)
-                : null;
-
-            int? subcategoryId = enableFilter
-                ? allResults.Select(r => int.TryParse(r.SubCategoryId, out var scid) && scid != 0 ? scid : (int?)null).FirstOrDefault(c => c.HasValue)
-                : null;
-
-            return new SearchResponse
-            {
-                Results = pagedResults,
-                Filters = new FilterMetadata
-                {
-                    IsDirectMatch = directMatchFound,
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalCount = allResults.Count,
-                    EnableFilter = enableFilter,
-                    CategoryId = categoryId,
-                    SubcategoryId = subcategoryId
-                }
+                // Merge all items
+                Items = sources
+                        .SelectMany(r => r.Items)
+                        .ToList()
             };
+
+
+            return unifiedResult;
         }
 
         private bool IsExactMatch(SearchResponseDto item)
@@ -139,7 +106,7 @@ namespace SearchAggregator.Infrastructure.Services
 
 
         // Safe wrappers for each client
-        private async Task<List<SearchResponseDto>?> SafeProductSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafeProductSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -149,11 +116,11 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Product search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 
-        private async Task<List<SearchResponseDto>?> SafePriestSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafePriestSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -163,11 +130,11 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Priest search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 
-        private async Task<List<SearchResponseDto>?> SafeAstrologerSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafeAstrologerSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -177,11 +144,11 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Astrologer search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 
-        private async Task<List<SearchResponseDto>?> SafeTempleSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafeTempleSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -191,11 +158,11 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Temple search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 
-        private async Task<List<SearchResponseDto>?> SafeKathavachakSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafeKathavachakSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -205,11 +172,11 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Kathavachak search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 
-        private async Task<List<SearchResponseDto>?> SafePoojaSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        private async Task<PagedResult<CatalogResponseDto>?> SafePoojaSearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -219,7 +186,7 @@ namespace SearchAggregator.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Pooja search failed");
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
         }
 

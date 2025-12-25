@@ -1,4 +1,5 @@
 ﻿using SearchAggregator.Application.Clients;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
@@ -9,18 +10,18 @@ namespace SearchAggregator.Infrastructure.Clients
     public class PoojaClient : IPoojaClient
     {
         private readonly HttpClient _httpClient;
-        private readonly ILoggerService<ProductClient> _logger;
+        private readonly ILoggerService<PoojaClient> _logger;
 
-        public PoojaClient(IHttpClientFactory httpClientFactory, ILoggerService<ProductClient> logger)
+        public PoojaClient(IHttpClientFactory httpClientFactory, ILoggerService<PoojaClient> logger)
         {
             if (httpClientFactory == null)
                 throw new ArgumentNullException(nameof(httpClientFactory));
 
-            _httpClient = httpClientFactory.CreateClient(nameof(IProductClient));
+            _httpClient = httpClientFactory.CreateClient(nameof(IPoojaClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<List<SearchResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             try
             {
@@ -31,15 +32,15 @@ namespace SearchAggregator.Infrastructure.Clients
 
                 response.EnsureSuccessStatusCode();
 
-                var result = await response.Content.ReadFromJsonAsync<Result<List<SearchResponseDto>>>();
+                var result = await response.Content.ReadFromJsonAsync<Result<PagedResult<CatalogResponseDto>>>();
 
                 if (result != null && result.Succeeded)
                 {
-                    return result.Data ?? new List<SearchResponseDto>();                    
+                    return result.Data ?? new PagedResult<CatalogResponseDto>();                    
                 }
 
                 _logger.LogWarning("Received null response from Product service for query '{Query}'", query);
-                return new List<SearchResponseDto>();
+                return new PagedResult<CatalogResponseDto>();
             }
             catch (Exception ex)
             {
