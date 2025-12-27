@@ -59,13 +59,13 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.ProductVariantId).HasColumnName("product_variant_id");
 
             builder.HasOne(p => p.Product)
-                   .WithMany(p => p.ProductAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.ProductId)
                    .HasConstraintName("fk_product_addon_product_id")
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.ProductVariantMaster)
-                   .WithMany(p => p.ProductAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.ProductVariantId)
                    .HasConstraintName("fk_product_addon_product_variant_id")
                    .OnDelete(DeleteBehavior.SetNull);

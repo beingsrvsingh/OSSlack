@@ -73,7 +73,7 @@ namespace Product.Application.Contracts
                 //CategoryType = entity.CategoryNameSnapshot,
                 //Quantity = 1,
                 //Limit = 1,
-                Images = entity.ProductImages.Select(img => new ProductImageDto
+                Images = entity.Media.Select(img => new ProductImageDto
                 {
                     ImageUrl = img.ImageUrl
                 }).ToList(),
@@ -132,7 +132,7 @@ namespace Product.Application.Contracts
                 })
                 .ToList() ?? new List<ProductAttributeDto>(),
 
-                ProductImages = entity?.ProductImages?.Select(i => i.ImageUrl).ToList() ?? new(),
+                ProductImages = entity?.Media?.Select(i => i.ImageUrl).ToList() ?? new(),
 
                 Variants = entity?.VariantMasters?.Select(v => new VariantResponseDto
                 {
@@ -144,7 +144,7 @@ namespace Product.Application.Contracts
                     IsDefault = v.IsDefault,
                     Attributes = v.Attributes?.Where(a => !string.IsNullOrEmpty(a.AttributeKey) && !string.IsNullOrEmpty(a.Value))
                                 .ToDictionary(a => a.AttributeKey!, a => a.Value!) ?? new Dictionary<string, string>(),
-                    VariantImages = v.VariantImages?.Select(i => i.ImageUrl).ToList() ?? new(),
+                    VariantImages = v.Media?.Select(i => i.ImageUrl).ToList() ?? new(),
                 }).ToList() ?? new()
             };
         }

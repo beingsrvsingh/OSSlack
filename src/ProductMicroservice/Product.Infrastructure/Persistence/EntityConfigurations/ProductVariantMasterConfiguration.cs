@@ -66,7 +66,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Relationships for VariantImages
-            builder.HasMany(v => v.VariantImages)
+            builder.HasMany(v => v.Media)
                 .WithOne(vi => vi.ProductVariant)
                 .HasForeignKey(vi => vi.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -77,7 +77,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(a => a.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.ProductAddons)
+            builder.HasMany(v => v.Addons)
                 .WithOne(a => a.ProductVariantMaster)
                 .HasForeignKey(a => a.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -40,7 +40,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.HasOne(img => img.PriestMaster)
-                .WithMany(p => p.PriestMedias)
+                .WithMany(p => p.Medias)
                 .HasForeignKey(img => img.PriestId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

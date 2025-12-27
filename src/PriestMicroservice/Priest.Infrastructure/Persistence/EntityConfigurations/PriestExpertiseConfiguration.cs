@@ -69,7 +69,7 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
 
             // Relationships
             builder.HasOne(ae => ae.PriestMaster)
-                   .WithMany(a => a.PriestExpertise)
+                   .WithMany(a => a.VariantMasters)
                    .HasForeignKey(ae => ae.PriestId)
                    .HasConstraintName("fk_priest_expertise_priest_id");
 
@@ -78,13 +78,13 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(cm => cm.ExpertiseId)
                    .HasConstraintName("fk_priest_consultation_mode_expertise_id");
 
-            builder.HasMany(pe => pe.AttributeValues)
+            builder.HasMany(pe => pe.Attributes)
                    .WithOne(av => av.PriestExpertise)
                    .HasForeignKey(av => av.ExpertiseId)
                    .HasConstraintName("fk_priest_attribute_value_expertise_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.PriestExpertiseMedia)
+            builder.HasMany(v => v.Medias)
                 .WithOne(vi => vi.PriestExpertise)
                 .HasForeignKey(vi => vi.PriestExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);

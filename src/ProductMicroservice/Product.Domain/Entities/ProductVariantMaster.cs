@@ -25,9 +25,9 @@ namespace Product.Domain.Entities
 
         public bool IsDefault { get; set; } = false;
 
-        public virtual ICollection<ProductVariantImage> VariantImages { get; set; } = new List<ProductVariantImage>();
+        public virtual ICollection<ProductVariantImage> Media { get; set; } = new List<ProductVariantImage>();
         public virtual ICollection<ProductAttributeValue> Attributes { get; set; } = new List<ProductAttributeValue>();
 
-        public virtual ICollection<ProductAddon> ProductAddons { get; set; } = new List<ProductAddon>();
+        public virtual ICollection<ProductAddon> Addons { get; set; } = new List<ProductAddon>();
     }
 }

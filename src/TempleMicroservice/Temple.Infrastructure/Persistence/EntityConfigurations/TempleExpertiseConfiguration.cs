@@ -72,23 +72,23 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
 
             // Relationships
             builder.HasOne(te => te.TempleMaster)
-                .WithMany(t => t.TempleExpertises)
+                .WithMany(t => t.VariantMasters)
                 .HasForeignKey(te => te.TempleId)
                 .HasConstraintName("fk_temple_expertise_temple_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(te => te.AttributeValues)
+            builder.HasMany(te => te.Attributes)
                 .WithOne(av => av.TempleExpertise)
                 .HasForeignKey(av => av.ExpertiseId)
                 .HasConstraintName("fk_attribute_value_expertise_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.TempleAddons)
+            builder.HasMany(v => v.Addons)
                 .WithOne(a => a.TempleExpertise)
                 .HasForeignKey(a => a.TempleExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.TempleExpertiseImages)
+            builder.HasMany(v => v.Media)
                 .WithOne(vi => vi.TempleExpertise)
                 .HasForeignKey(vi => vi.TempleExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -40,7 +40,7 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
             entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.HasOne(img => img.PoojaMaster)
-                .WithMany(p => p.PoojaImages)
+                .WithMany(p => p.Medias)
                 .HasForeignKey(img => img.PoojaId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

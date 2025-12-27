@@ -69,7 +69,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
 
             // Relationships
             builder.HasOne(ae => ae.Astrologer)
-                   .WithMany(a => a.AstrologerExpertises)
+                   .WithMany(a => a.VariantMasters)
                    .HasForeignKey(ae => ae.AstrologerId)
                    .HasConstraintName("fk_astrologer_expertise_astrologer_id");
 
@@ -78,18 +78,18 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(cm => cm.ExpertiseId)
                    .HasConstraintName("fk_astrologer_consultation_mode_expertise_id");
 
-            builder.HasMany(pe => pe.AstrologerAttributeValues)
+            builder.HasMany(pe => pe.Attributes)
                    .WithOne(av => av.AstrologerExpertise)
                    .HasForeignKey(av => av.ExpertiseId)
                    .HasConstraintName("fk_astrologer_attribute_value_expertise_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.AstrologerExpertiseMedia)
+            builder.HasMany(v => v.Media)
                 .WithOne(vi => vi.AstrologerExpertise)
                 .HasForeignKey(vi => vi.AstrolgerExpertiesId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.AstrologerAddons)
+            builder.HasMany(v => v.Addons)
                 .WithOne(a => a.AstrologerExpertise)
                 .HasForeignKey(a => a.AstrologerExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);

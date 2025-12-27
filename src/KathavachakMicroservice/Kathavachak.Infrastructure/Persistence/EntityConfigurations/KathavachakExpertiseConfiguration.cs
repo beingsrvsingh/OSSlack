@@ -68,22 +68,22 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("is_default");
 
             builder.HasOne(c => c.KathavachakMaster)
-                 .WithMany(k => k.KathavachakExpertises)
+                 .WithMany(k => k.VariantMasters)
                  .HasForeignKey(c => c.KathavachakId)
                  .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(pe => pe.KathavachakAttributeValues)
+            builder.HasMany(pe => pe.Attributes)
                    .WithOne(av => av.KathavachakExpertise)
                    .HasForeignKey(av => av.ExpertiseId)
                    .HasConstraintName("fk_kathavachak_attribute_value_expertise_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.KathavachakExpertiseMedia)
+            builder.HasMany(v => v.Medias)
                 .WithOne(vi => vi.KathavachakExpertise)
                 .HasForeignKey(vi => vi.KathavachakExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.KathavachakAddons)
+            builder.HasMany(v => v.Addons)
                 .WithOne(a => a.KathavachakExpertise)
                 .HasForeignKey(a => a.KathavachakExpertiseId)
                 .OnDelete(DeleteBehavior.Cascade);

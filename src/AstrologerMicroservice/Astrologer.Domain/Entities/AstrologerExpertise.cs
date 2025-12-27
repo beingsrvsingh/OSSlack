@@ -30,10 +30,10 @@ namespace AstrologerMicroservice.Domain.Entities
 
         public bool IsDefault { get; set; } = false;        
 
-        public virtual ICollection<AstrologerAttributeValue> AstrologerAttributeValues { get; set; } = new List<AstrologerAttributeValue>();
+        public virtual ICollection<AstrologerAttributeValue> Attributes { get; set; } = new List<AstrologerAttributeValue>();
         public ICollection<AstrologerConsultationMode> ConsultationModes { get; set; } = new List<AstrologerConsultationMode>();
-        public virtual ICollection<AstrologerAddon> AstrologerAddons { get; set; } = new List<AstrologerAddon>();
-        public virtual ICollection<AstrologerExpertiesMedia> AstrologerExpertiseMedia { get; set; } = new List<AstrologerExpertiesMedia>();
+        public virtual ICollection<AstrologerAddon> Addons { get; set; } = new List<AstrologerAddon>();
+        public virtual ICollection<AstrologerExpertiesMedia> Media { get; set; } = new List<AstrologerExpertiesMedia>();
 
     }
 

@@ -103,7 +103,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasConstraintName("fk_astrologer_language_astrologer_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(a => a.AstrologerExpertises)
+            builder.HasMany(a => a.VariantMasters)
                    .WithOne(al => al.Astrologer)
                    .HasForeignKey(al => al.AstrologerId)
                    .HasConstraintName("fk_astrologer_expertise_astrologer_id")
@@ -120,13 +120,13 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(t => t.AstrologerId)
                 .OnDelete(DeleteBehavior.Cascade);  
 
-            builder.HasMany(a => a.AstrologerAddons)
+            builder.HasMany(a => a.Addons)
                    .WithOne(aa => aa.Astrologer)
                    .HasForeignKey(aa => aa.AstrologerId)
                    .HasConstraintName("fk_astrologer_addons_astrologer_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(a => a.AstrologerMedia)
+            builder.HasMany(a => a.Media)
                    .WithOne(am => am.Astrologer)
                    .HasForeignKey(am => am.AstrologerId)
                    .HasConstraintName("fk_astrologer_media_astrologer_id")

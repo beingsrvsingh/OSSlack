@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using Product.Domain.Entities;
 using Product.Domain.Repository;
+using Product.Infrastructure.Persistence.Catalog.Queries;
 using Product.Infrastructure.Persistence.Context;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 using System.Linq.Expressions;
@@ -188,6 +190,22 @@ namespace Product.Infrastructure.Repositories
             int totalCount = products.FirstOrDefault()?.TotalCount ?? 0;
 
             return (products, totalCount);
+        }
+
+        public async Task<List<CatalogResponseDto>> GetCatalogAsync(string? search,int skip,int pageSize)
+        {
+            IQueryable<ProductMaster> query = _context.ProductMasters;
+
+            // Apply filters
+            query = CatalogQueries.ApplySearch(query, search);
+
+            // Execute query
+            return await query
+                .AsNoTracking()
+                .Skip(skip)
+                .Take(pageSize)
+                .Select(CatalogQueries.ToCatalogResponse)
+                .ToListAsync();
         }
     }
 

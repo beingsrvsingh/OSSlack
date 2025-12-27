@@ -1,3 +1,4 @@
+using Astrologer.Infrastructure.Persistence.Catalog.Queries;
 using AstrologerMicroservice.Application.Features.Commands;
 using AstrologerMicroservice.Application.Service;
 using AstrologerMicroservice.Domain.Entities;
@@ -9,6 +10,7 @@ using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Enums;
 using Shared.Utilities.Response;
+using System.Linq;
 
 namespace AstrologerMicroservice.Infrastructure.Service
 {
@@ -37,14 +39,15 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
+        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 0, int pageSize = 10)
         {
             List<AstrologerMaster> lstProducts = new List<AstrologerMaster>();
 
-            lstProducts = (List<AstrologerMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
+            lstProducts = (List<AstrologerMaster>)await _repository.GetAsync((p) => (subCategoryId == null || p.CategoryId == subCategoryId) || p.IsTrending == true);
 
             var trendingProducts = lstProducts
-                                    .Take(topN)
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
                                     .Select(product =>
                                     {
                                         return new TrendingResponse
@@ -60,116 +63,24 @@ namespace AstrologerMicroservice.Infrastructure.Service
             return trendingProducts;
         }
 
-        public async Task<List<CatalogResponseDto>?> GetAstrologersBySubCategoryIdAsync(int? subCategoryId = null, int topN = 5)
+        public async Task<List<CatalogResponseDto>?> GetAstrologersBySubCategoryIdAsync(int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
                 // Use IQueryable from repository
-                var query = _repository.Query();
+                var queryable = _repository.Query();
 
                 if (subCategoryId.HasValue && subCategoryId.Value > 0)
                 {
-                    query = query.Where(p => p.SubCategoryId == subCategoryId.Value);
+                    queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
                 }
 
-                var products = await query
-                    .Take(topN)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.AstrologerMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // addons
-                        Addons = p.AstrologerAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = p.Price.Amount,
-                                Mrp = p.Price.Mrp
-                            },
-                        }).ToList(),
-
-                        // attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.AstrologerExpertises.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.AstrologerAttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                            Addons = v.AstrologerAddons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                },
-                            }).ToList(),
-                            Media = v.AstrologerExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    }).ToListAsync();
+                var products = await queryable
+                                    .AsNoTracking()
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
+                                    .Select(CatalogQueries.ToCatalogResponse)
+                                    .ToListAsync();
 
                 return products;
             }
@@ -180,121 +91,32 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<List<CatalogResponseDto>> GetFilteredAstrologersAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10)
+        public async Task<List<CatalogResponseDto>> GetFilteredAstrologersAsync(List<int> attributeIds, int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
-            var query = _repository.Query();
+            var queryable = _repository.Query();
 
             if (subCategoryId.HasValue && subCategoryId.Value > 0)
             {
-                query = query.Where(p => p.SubCategoryId == subCategoryId.Value);
+                queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
             }
 
             if (attributeIds != null && attributeIds.Any())
             {
                 // Ensure product has all selected attribute IDs
-                query = query.Where(p => attributeIds.All(attrId =>
+                queryable = queryable.Where(p => attributeIds.All(attrId =>
                     p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
             }
 
-            // Take top N products
-            var products = await query
-                .Take(topN)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
+            var totalCount = await queryable.CountAsync();
 
-                    // Media
-                    Media = p.AstrologerMedia.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
+            var skip = (pageNumber - 1) * pageSize;
 
-                    // Addons
-                    Addons = p.AstrologerAddons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        }
-                    }).ToList(),
-
-                    // Attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.AstrologerExpertises.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = v.Price.Currency,
-                            Discount = v.Price.Discount,
-                            Mrp = v.Price.Mrp,
-                            Tax = v.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.AstrologerAttributeValues
-                            .GroupBy(a => a.AttributeGroupNameSnapshot)
-                            .Select(g => new AttributeGroupResponseDto
-                            {
-                                AttributeGroupName = g.Key,
-                                Attributes = g.Select(a => new AttributeResponseDto
-                                {
-                                    Key = a.AttributeKey,
-                                    Label = a.AttributeLabel ?? "",
-                                    Value = a.Value,
-                                    DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                }).ToList()
-                            }).ToList(),
-                        Addons = v.AstrologerAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-                        Media = v.AstrologerExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
-                .ToListAsync();
+            var products = await queryable
+                                .AsNoTracking()
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .ToListAsync();
 
             return products;
         }
@@ -304,107 +126,13 @@ namespace AstrologerMicroservice.Infrastructure.Service
             _logger.LogInfo($"Getting astrologer by Id: {astrologerId}");
             try
             {
-                var query = _repository.Query();
+                var queryable = _repository.Query();
 
-                var productDto = await query
-                .Where(p => p.Id == astrologerId)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price!.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-
-                    // Media
-                    Media = p.AstrologerMedia.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
-
-                    // Product-level addons
-                    Addons = p.AstrologerAddons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        },
-                    }).ToList(),
-
-                    // Product-level attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.AstrologerExpertises.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = p.Price!.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.AstrologerAttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                        Addons = v.AstrologerAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            },
-                        }).ToList(),
-                        Media = v.AstrologerExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
-                .FirstOrDefaultAsync();
+                var productDto = await queryable
+                                .AsNoTracking()
+                                .Where(p => p.Id == astrologerId)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .FirstOrDefaultAsync();
 
                 return productDto;
             }
@@ -432,7 +160,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
             }
         }
 
-        public async Task<IEnumerable<AstrologerMaster>> GetAllAsync(int page = 1, int pageSize = 20)
+        public async Task<IEnumerable<AstrologerMaster>> GetAllAsync(int page = 1, int pageNumber = 1, int pageSize = 10)
         {
             _logger.LogInfo($"Getting all astrologers - Page: {page}, PageSize: {pageSize}");
             try
@@ -472,7 +200,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                     });
                 }
 
-                astrologer.AstrologerExpertises.Clear();
+                astrologer.VariantMasters.Clear();
                 //foreach (var expertise in command.Expertise)
                 //{
                 //    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
@@ -522,7 +250,7 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 }
 
                 // Clear existing expertises and insert new ones
-                astrologer.AstrologerExpertises.Clear();
+                astrologer.VariantMasters.Clear();
                 //foreach (var expEnum in command.Expertise)
                 //{
                 //    astrologer.AstrologerExpertises.Add(new AstrologerExpertise
@@ -574,111 +302,18 @@ namespace AstrologerMicroservice.Infrastructure.Service
             {
                 var queryable = _repository.Query();
 
+                queryable = CatalogQueries.ApplySearch(queryable, query);
+
                 var totalCount = await queryable.CountAsync();
 
                 var skip = (pageNumber - 1) * pageSize;
 
-                // Take top N products
                 var products = await queryable
-                    .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
-                    .Skip(skip)
-                    .Take(pageSize)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.AstrologerMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // Addons
-                        Addons = p.AstrologerAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-
-                        // Attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.AstrologerExpertises.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.AstrologerAttributeValues
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                }).ToList(),
-                            Addons = v.AstrologerAddons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                }
-                            }).ToList(),
-                            Media = v.AstrologerExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    })
-                .ToListAsync();
+                                .AsNoTracking()
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .ToListAsync();
 
                 return new PagedResult<CatalogResponseDto>
                 {

@@ -40,7 +40,7 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
             entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.HasOne(img => img.KathavachakMaster)
-                .WithMany(p => p.KathavachakMedia)
+                .WithMany(p => p.Medias)
                 .HasForeignKey(img => img.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

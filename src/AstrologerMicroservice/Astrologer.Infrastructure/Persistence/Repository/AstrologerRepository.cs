@@ -40,7 +40,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
         {
             return await _context.Astrologers
                 .Include(a => a.AstrologerLanguages)
-                .Include(a => a.AstrologerExpertises)
+                .Include(a => a.VariantMasters)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 

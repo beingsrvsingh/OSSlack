@@ -55,12 +55,12 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                    .IsRequired();
 
             builder.HasOne(pav => pav.KathavachakMaster)
-                .WithMany(p => p.AttributeValues)
+                .WithMany(p => p.Attributes)
                 .HasForeignKey(pav => pav.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(aav => aav.KathavachakExpertise)
-                   .WithMany(a => a.KathavachakAttributeValues)
+                   .WithMany(a => a.Attributes)
                    .HasForeignKey(aav => aav.ExpertiseId)
                    .OnDelete(DeleteBehavior.SetNull);
 

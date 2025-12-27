@@ -40,7 +40,7 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
             entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.HasOne(img => img.Astrologer)
-                .WithMany(p => p.AstrologerMedia)
+                .WithMany(p => p.Media)
                 .HasForeignKey(img => img.AstrologerId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

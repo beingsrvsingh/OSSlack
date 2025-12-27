@@ -19,7 +19,7 @@ namespace Pooja.Infrastructure.Persistence.Repository
 
         public async Task<PoojaMaster?> GetByIdAsync(int id) =>
         await _dbContext.PoojaMasters
-            .Include(p => p.PoojaAddons)
+            .Include(p => p.Addons)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task<IEnumerable<PoojaMaster>> GetAllAsync() =>

@@ -100,7 +100,7 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
             });
 
             // Relationships
-            builder.HasMany(t => t.TempleExpertises)
+            builder.HasMany(t => t.VariantMasters)
                 .WithOne(te => te.TempleMaster)
                 .HasForeignKey(te => te.TempleId)
                 .HasConstraintName("fk_temple_expertises_temple_id")
@@ -118,12 +118,12 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
                 .HasConstraintName("fk_temple_exceptions_temple_id")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.TempleImages)
+            builder.HasMany(p => p.Media)
                 .WithOne(img => img.TempleMaster)
                 .HasForeignKey(img => img.TempleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.TempleAddons)
+            builder.HasMany(p => p.Addons)
                 .WithOne(img => img.TempleMaster)
                 .HasForeignKey(img => img.TempleId)
                 .OnDelete(DeleteBehavior.Cascade);

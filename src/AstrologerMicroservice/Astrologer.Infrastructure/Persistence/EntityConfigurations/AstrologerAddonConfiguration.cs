@@ -64,13 +64,13 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.AstrologerExpertiseId).HasColumnName("astrologer_expertise_id");
 
             builder.HasOne(p => p.Astrologer)
-                   .WithMany(p => p.AstrologerAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.AstrologerId)
                    .HasConstraintName("fk_astrologer_addon_astrologer_id")
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.AstrologerExpertise)
-                   .WithMany(p => p.AstrologerAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.AstrologerExpertiseId)
                    .HasConstraintName("fk_astrologer_addon_astrologer_expertise_id")
                    .OnDelete(DeleteBehavior.SetNull);

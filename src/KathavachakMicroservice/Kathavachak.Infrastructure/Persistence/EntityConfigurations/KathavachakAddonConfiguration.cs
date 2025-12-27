@@ -59,13 +59,13 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.KathavachakExpertiseId).HasColumnName("kathavachak_expertise_id");
 
             builder.HasOne(p => p.KathavachakMaster)
-                   .WithMany(p => p.KathavachakAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.KathavachakId)
                    .HasConstraintName("fk_kathavachak_addon_kathavachak_id")
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.KathavachakExpertise)
-                   .WithMany(p => p.KathavachakAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.KathavachakExpertiseId)
                    .HasConstraintName("fk_kathavachak_addon_kathavachak_variant_id")
                    .OnDelete(DeleteBehavior.SetNull);

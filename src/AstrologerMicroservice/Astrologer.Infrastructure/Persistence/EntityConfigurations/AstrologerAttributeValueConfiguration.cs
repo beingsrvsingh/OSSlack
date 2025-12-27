@@ -60,7 +60,7 @@ namespace Astrologer.Infrastructure.Persistence.EntityConfigurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(aav => aav.AstrologerExpertise)
-                   .WithMany(a => a.AstrologerAttributeValues)
+                   .WithMany(a => a.Attributes)
                    .HasForeignKey(aav => aav.ExpertiseId)
                    .OnDelete(DeleteBehavior.SetNull);
 

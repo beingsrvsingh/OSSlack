@@ -40,7 +40,7 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(vi => vi.ProductVariant)
-                .WithMany(v => v.VariantImages)
+                .WithMany(v => v.Media)
                 .HasForeignKey(vi => vi.ProductVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

@@ -126,12 +126,12 @@ namespace Product.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(t => t.ProductMasterId)
                 .OnDelete(DeleteBehavior.Cascade);                           
                 
-            builder.HasMany(p => p.ProductImages)
+            builder.HasMany(p => p.Media)
                 .WithOne(img => img.Product)
                 .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.ProductAddons)
+            builder.HasMany(p => p.Addons)
                 .WithOne(img => img.Product)
                 .HasForeignKey(img => img.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -59,13 +59,13 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.PoojaVariantId).HasColumnName("pooja_variant_id");
 
             builder.HasOne(p => p.PoojaMaster)
-                   .WithMany(p => p.PoojaAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.PoojaId)
                    .HasConstraintName("fk_pooja_addon_pooja_id")
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.PoojaVariantMaster)
-                   .WithMany(p => p.PoojaAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.PoojaVariantId)
                    .HasConstraintName("fk_pooja_addon_pooja_variant_id")
                    .OnDelete(DeleteBehavior.SetNull);

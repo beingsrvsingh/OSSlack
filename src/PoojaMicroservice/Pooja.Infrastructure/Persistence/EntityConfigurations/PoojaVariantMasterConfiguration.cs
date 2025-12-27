@@ -68,23 +68,23 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
                 .HasColumnName("pooja_master_id");
 
             builder.HasOne(v => v.PoojaMaster)
-                .WithMany(p => p.PoojaVariantMasters)   // navigation property in ProductMaster
+                .WithMany(p => p.VariantMasters)   // navigation property in ProductMaster
                 .HasForeignKey(v => v.PoojaId) // matches the FK property
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Relationships for VariantImages
-            builder.HasMany(v => v.PoojaVariantImages)
+            builder.HasMany(v => v.Medias)
                 .WithOne(vi => vi.PoojaVariantMaster)
                 .HasForeignKey(vi => vi.PoojaVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Relationships for Attributes
-            builder.HasMany(v => v.PoojaAttributeValues)
+            builder.HasMany(v => v.Attributes)
                 .WithOne(a => a.PoojaVariantMaster)
                 .HasForeignKey(a => a.PoojaVariantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(v => v.PoojaAddons)
+            builder.HasMany(v => v.Addons)
                 .WithOne(a => a.PoojaVariantMaster)
                 .HasForeignKey(a => a.PoojaVariantId)
                 .OnDelete(DeleteBehavior.Cascade);

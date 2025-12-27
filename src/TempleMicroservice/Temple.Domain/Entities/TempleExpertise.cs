@@ -30,9 +30,9 @@ namespace Temple.Domain.Entities
         public bool IsDefault { get; set; } = false;
 
         // Attributes associated with this expertise
-        public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
-        public virtual ICollection<TempleExpertiseImage> TempleExpertiseImages { get; set; } = new List<TempleExpertiseImage>();
-        public virtual ICollection<TempleAddon> TempleAddons { get; set; } = new List<TempleAddon>();
+        public virtual ICollection<AttributeValue> Attributes { get; set; } = new List<AttributeValue>();
+        public virtual ICollection<TempleExpertiseImage> Media { get; set; } = new List<TempleExpertiseImage>();
+        public virtual ICollection<TempleAddon> Addons { get; set; } = new List<TempleAddon>();
     }
 
 }

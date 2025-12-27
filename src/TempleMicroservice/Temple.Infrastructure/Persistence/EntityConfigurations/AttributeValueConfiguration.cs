@@ -52,12 +52,12 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
 
             // Foreign key relationship
             builder.HasOne(pav => pav.TempleMaster)
-                .WithMany(p => p.TempleAttributes)
+                .WithMany(p => p.AttributeValues)
                 .HasForeignKey(pav => pav.TempleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(aav => aav.TempleExpertise)
-                   .WithMany(a => a.AttributeValues)
+                   .WithMany(a => a.Attributes)
                    .HasForeignKey(aav => aav.TempleId)
                    .OnDelete(DeleteBehavior.SetNull);
 

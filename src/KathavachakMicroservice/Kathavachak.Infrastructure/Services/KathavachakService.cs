@@ -1,6 +1,7 @@
 ﻿using Kathavachak.Application.Services;
 using Kathavachak.Domain.Core.Repository;
 using Kathavachak.Domain.Entities;
+using Kathavachak.Infrastructure.Persistence.Catalog.Queries;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Contracts;
@@ -21,14 +22,15 @@ namespace Kathavachak.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
+        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10)
         {
             List<KathavachakMaster> lstProducts = new List<KathavachakMaster>();
 
             lstProducts = (List<KathavachakMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
 
             var trendingProducts = lstProducts
-                                    .Take(topN)
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
                                     .Select(product =>
                                     {
                                         return new TrendingResponse
@@ -44,7 +46,7 @@ namespace Kathavachak.Infrastructure.Services
             return trendingProducts;
         }
 
-        public async Task<List<CatalogResponseDto>?> GetKathavachaksBySubCategoryIdAsync(int? subCategoryId = null, int topN = 5)
+        public async Task<List<CatalogResponseDto>?> GetKathavachaksBySubCategoryIdAsync(int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -57,103 +59,10 @@ namespace Kathavachak.Infrastructure.Services
                 }
 
                 var products = await query
-                    .Take(topN)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.KathavachakMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // addons
-                        Addons = p.KathavachakAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = p.Price.Amount,
-                                Mrp = p.Price.Mrp
-                            },
-                        }).ToList(),
-
-                        // attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.KathavachakExpertises.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.KathavachakAttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                            Addons = v.KathavachakAddons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                },
-                            }).ToList(),
-                            Media = v.KathavachakExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    }).ToListAsync();
+                    .Skip(pageNumber)
+                    .Take(pageSize)
+                    .Select(CatalogQueries.ToCatalogResponse)
+                    .ToListAsync();
 
                 return products;
             }
@@ -164,7 +73,7 @@ namespace Kathavachak.Infrastructure.Services
             }
         }
 
-        public async Task<List<CatalogResponseDto>> GetFilteredKathavachaksAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10)
+        public async Task<List<CatalogResponseDto>> GetFilteredKathavachaksAsync(List<int> attributeIds, int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
             var query = _repository.Query();
 
@@ -177,107 +86,13 @@ namespace Kathavachak.Infrastructure.Services
             {
                 // Ensure product has all selected attribute IDs
                 query = query.Where(p => attributeIds.All(attrId =>
-                    p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
+                    p.Attributes.Any(av => av.CatalogAttributeValueId == attrId)));
             }
 
-            // Take top N products
             var products = await query
-                .Take(topN)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
-
-                    // Media
-                    Media = p.KathavachakMedia.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
-
-                    // Addons
-                    Addons = p.KathavachakAddons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        }
-                    }).ToList(),
-
-                    // Attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.KathavachakExpertises.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = v.Price.Currency,
-                            Discount = v.Price.Discount,
-                            Mrp = v.Price.Mrp,
-                            Tax = v.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.KathavachakAttributeValues
-                            .GroupBy(a => a.AttributeGroupNameSnapshot)
-                            .Select(g => new AttributeGroupResponseDto
-                            {
-                                AttributeGroupName = g.Key,
-                                Attributes = g.Select(a => new AttributeResponseDto
-                                {
-                                    Key = a.AttributeKey,
-                                    Label = a.AttributeLabel ?? "",
-                                    Value = a.Value,
-                                    DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                }).ToList()
-                            }).ToList(),
-                        Addons = v.KathavachakAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-                        Media = v.KathavachakExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
+                .Skip(pageNumber)
+                .Take(pageSize)
+                .Select(CatalogQueries.ToCatalogResponse)                
                 .ToListAsync();
 
             return products;
@@ -292,102 +107,7 @@ namespace Kathavachak.Infrastructure.Services
 
                 var productDto = await query
                 .Where(p => p.Id == id)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price!.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-
-                    // Media
-                    Media = p.KathavachakMedia.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
-
-                    // Product-level addons
-                    Addons = p.KathavachakAddons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        },
-                    }).ToList(),
-
-                    // Product-level attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.KathavachakExpertises.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = p.Price!.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.KathavachakAttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                        Addons = v.KathavachakAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            },
-                        }).ToList(),
-                        Media = v.KathavachakExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
+                .Select(CatalogQueries.ToCatalogResponse)                
                 .FirstOrDefaultAsync();
 
                 return productDto;
@@ -470,110 +190,17 @@ namespace Kathavachak.Infrastructure.Services
             {
                 var queryable = _repository.Query();
 
+                queryable = CatalogQueries.ApplySearch(queryable, query);
+
                 var totalCount = await queryable.CountAsync();
 
                 var skip = (pageNumber - 1) * pageSize;
 
-                // Take top N products
                 var products = await queryable
                     .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
                     .Skip(skip)
                     .Take(pageSize)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.KathavachakMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // Addons
-                        Addons = p.KathavachakAddons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-
-                        // Attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.KathavachakExpertises.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.KathavachakAttributeValues
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                }).ToList(),
-                            Addons = v.KathavachakAddons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                }
-                            }).ToList(),
-                            Media = v.KathavachakExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    })
+                    .Select(CatalogQueries.ToCatalogResponse)                    
                 .ToListAsync();
 
                 return new PagedResult<CatalogResponseDto>

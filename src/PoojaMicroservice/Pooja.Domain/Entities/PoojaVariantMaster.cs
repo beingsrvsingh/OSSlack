@@ -28,8 +28,8 @@ namespace Pooja.Domain.Entities
 
         public bool IsDefault { get; set; } = false;
 
-        public virtual ICollection<PoojaVariantImage> PoojaVariantImages { get; set; } = new List<PoojaVariantImage>();
-        public virtual ICollection<PoojaAttributeValue> PoojaAttributeValues { get; set; } = new List<PoojaAttributeValue>();
-        public virtual ICollection<PoojaAddon> PoojaAddons { get; set; } = new List<PoojaAddon>();
+        public virtual ICollection<PoojaVariantImage> Medias { get; set; } = new List<PoojaVariantImage>();
+        public virtual ICollection<PoojaAttributeValue> Attributes { get; set; } = new List<PoojaAttributeValue>();
+        public virtual ICollection<PoojaAddon> Addons { get; set; } = new List<PoojaAddon>();
     }
 }

@@ -29,10 +29,10 @@ namespace PriestMicroservice.Domain.Entities
 
         public bool IsDefault { get; set; } = false;
 
-        public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
+        public virtual ICollection<AttributeValue> Attributes { get; set; } = new List<AttributeValue>();
         public ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
         public virtual ICollection<Addon> Addons { get; set; } = new List<Addon>();
-        public virtual ICollection<PriestExpertiseMedia> PriestExpertiseMedia { get; set; } = new List<PriestExpertiseMedia>();
+        public virtual ICollection<PriestExpertiseMedia> Medias { get; set; } = new List<PriestExpertiseMedia>();
 
     }
 

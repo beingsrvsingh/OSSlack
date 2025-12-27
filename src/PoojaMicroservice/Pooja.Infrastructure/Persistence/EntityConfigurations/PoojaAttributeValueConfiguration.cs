@@ -51,12 +51,12 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             builder.HasOne(pav => pav.PoojaMaster)
-                .WithMany(p => p.PoojaAttribute)
+                .WithMany(p => p.AttributeValues)
                 .HasForeignKey(pav => pav.PoojaMasterId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(pav => pav.PoojaVariantMaster)
-                .WithMany(v => v.PoojaAttributeValues)
+                .WithMany(v => v.Attributes)
                 .HasForeignKey(pav => pav.PoojaVariantId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

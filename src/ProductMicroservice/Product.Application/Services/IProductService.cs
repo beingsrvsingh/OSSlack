@@ -9,8 +9,8 @@ namespace Product.Application.Services
     public interface IProductService
     {
         Task<ProductMaster?> GetProductWithVariantsAsync(int productId);
-        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5);
-        Task<List<CatalogResponseDto>?> GetProductBySubCategoryIdAsync(int? subCategoryId, int topN = 5);
+        Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10);
+        Task<List<CatalogResponseDto>?> GetProductBySubCategoryIdAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10);
         Task<List<ProductMaster>> GetProductByProductNameAsync(string prodName);
         Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId);
         Task<IEnumerable<ProductVariantMaster>> GetVariantsAsync(int productId);
@@ -24,7 +24,7 @@ namespace Product.Application.Services
         Task<bool> DeleteProductAsync(int productId);
         Task<CatalogResponseDto?> GetProductWithAttributesAsync(int productId);
 
-        Task<List<CatalogResponseDto>> GetFilteredProductsAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10);
+        Task<List<CatalogResponseDto>> GetFilteredProductsAsync(List<int> attributeIds, int? subCategoryId = null, int pageNumber = 1, int pageSize = 10);
 
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int pageNumber, int pageSize, CancellationToken cancellationToken);
     }

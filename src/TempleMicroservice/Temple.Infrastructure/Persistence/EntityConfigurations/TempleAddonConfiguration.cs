@@ -59,13 +59,13 @@ namespace Temple.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.TempleExpertiseId).HasColumnName("temple_expertise_id");
 
             builder.HasOne(p => p.TempleMaster)
-                   .WithMany(p => p.TempleAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.TempleId)
                    .HasConstraintName("fk_temple_addon_temple_id")
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.TempleExpertise)
-                   .WithMany(p => p.TempleAddons)
+                   .WithMany(p => p.Addons)
                    .HasForeignKey(p => p.TempleExpertiseId)
                    .HasConstraintName("fk_temple_addon_temple_variant_id")
                    .OnDelete(DeleteBehavior.SetNull);

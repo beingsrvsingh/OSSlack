@@ -103,7 +103,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .HasConstraintName("fk_priest_language_priest_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(a => a.PriestExpertise)
+            builder.HasMany(a => a.VariantMasters)
                    .WithOne(al => al.PriestMaster)
                    .HasForeignKey(al => al.PriestId)
                    .HasConstraintName("fk_priest_expertise_priest_id")
@@ -126,7 +126,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .HasConstraintName("fk_priest_addons_priest_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(a => a.PriestMedias)
+            builder.HasMany(a => a.Medias)
                    .WithOne(am => am.PriestMaster)
                    .HasForeignKey(am => am.PriestId)
                    .HasConstraintName("fk_priest_media_priest_id")

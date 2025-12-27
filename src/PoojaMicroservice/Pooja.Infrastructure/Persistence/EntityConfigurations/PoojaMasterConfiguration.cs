@@ -97,22 +97,22 @@ namespace Pooja.Infrastructure.Persistence.EntityConfigurations
 
             // Relationships
 
-            builder.HasMany(p => p.PoojaVariantMasters)
+            builder.HasMany(p => p.VariantMasters)
                 .WithOne(v => v.PoojaMaster)
                 .HasForeignKey(v => v.PoojaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.PoojaAttribute)
+            builder.HasMany(p => p.AttributeValues)
                 .WithOne(s => s.PoojaMaster)
                 .HasForeignKey(t => t.PoojaMasterId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.PoojaImages)
+            builder.HasMany(p => p.Medias)
                 .WithOne(img => img.PoojaMaster)
                 .HasForeignKey(img => img.PoojaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.PoojaAddons)
+            builder.HasMany(p => p.Addons)
                 .WithOne(img => img.PoojaMaster)
                 .HasForeignKey(img => img.PoojaId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -97,7 +97,7 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
 
             // Navigation properties
 
-            builder.HasMany(k => k.KathavachakExpertises)
+            builder.HasMany(k => k.VariantMasters)
                 .WithOne(e => e.KathavachakMaster)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -122,18 +122,18 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(p => p.AttributeValues)
+            builder.HasMany(p => p.Attributes)
                 .WithOne(s => s.KathavachakMaster)
                 .HasForeignKey(t => t.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(a => a.KathavachakAddons)
+            builder.HasMany(a => a.Addons)
                    .WithOne(aa => aa.KathavachakMaster)
                    .HasForeignKey(aa => aa.KathavachakId)
                    .HasConstraintName("fk_kathavachak_addons_kathavachak_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(k => k.KathavachakMedia)
+            builder.HasMany(k => k.Medias)
                 .WithOne(e => e.KathavachakMaster)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);

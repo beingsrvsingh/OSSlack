@@ -60,7 +60,7 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(aav => aav.PriestExpertise)
-                   .WithMany(a => a.AttributeValues)
+                   .WithMany(a => a.Attributes)
                    .HasForeignKey(aav => aav.ExpertiseId)
                    .OnDelete(DeleteBehavior.SetNull);
 

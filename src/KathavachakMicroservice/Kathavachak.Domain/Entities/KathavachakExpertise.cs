@@ -28,10 +28,10 @@ namespace Kathavachak.Domain.Entities
 
         public bool IsDefault { get; set; } = false;
 
-        public ICollection<KathavachakAttributeValue> KathavachakAttributeValues { get; set; } = new List<KathavachakAttributeValue>();
+        public ICollection<KathavachakAttributeValue> Attributes { get; set; } = new List<KathavachakAttributeValue>();
 
-        public virtual ICollection<KathavachakAddon> KathavachakAddons { get; set; } = new List<KathavachakAddon>();
-        public virtual ICollection<KathavachakExpertiseMedia> KathavachakExpertiseMedia { get; set; } = new List<KathavachakExpertiseMedia>();
+        public virtual ICollection<KathavachakAddon> Addons { get; set; } = new List<KathavachakAddon>();
+        public virtual ICollection<KathavachakExpertiseMedia> Medias { get; set; } = new List<KathavachakExpertiseMedia>();
     }
 
 }

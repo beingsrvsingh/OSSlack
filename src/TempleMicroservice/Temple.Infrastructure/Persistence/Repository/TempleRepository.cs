@@ -41,7 +41,7 @@ namespace Temple.Infrastructure.Persistence.Repository
         public async Task<TempleMaster?> GetByIdWithDetailsAsync(int id)
         {
             return await _context.TempleMasters
-                .Include(t => t.TempleExpertises)
+                .Include(t => t.VariantMasters)
                 .Include(t => t.TempleSchedules)
                 .Include(t => t.TempleExceptions)
                 .FirstOrDefaultAsync(t => t.Id == id);

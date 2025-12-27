@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
+using Priest.Infrastructure.Persistence.Catalog.Queries;
 using PriestMicroservice.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
-using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
-using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
 namespace Priest.Infrastructure.Services
@@ -38,14 +37,15 @@ namespace Priest.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int topN = 5)
+        public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10)
         {
             List<PriestMaster> lstProducts = new List<PriestMaster>();
 
             lstProducts = (List<PriestMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
 
             var trendingProducts = lstProducts
-                                    .Take(topN)
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
                                     .Select(product =>
                                     {
                                         return new TrendingResponse
@@ -61,116 +61,24 @@ namespace Priest.Infrastructure.Services
             return trendingProducts;
         }
 
-        public async Task<List<CatalogResponseDto>?> GetPriestsBySubCategoryIdAsync(int? subCategoryId = null, int topN = 5)
+        public async Task<List<CatalogResponseDto>?> GetPriestsBySubCategoryIdAsync(int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
                 // Use IQueryable from repository
-                var query = _repository.Query();
+                var queryable = _repository.Query();
 
                 if (subCategoryId.HasValue && subCategoryId.Value > 0)
                 {
-                    query = query.Where(p => p.SubCategoryId == subCategoryId.Value);
+                    queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
                 }
 
-                var products = await query
-                    .Take(topN)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.PriestMedias.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // addons
-                        Addons = p.Addons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = p.Price.Amount,
-                                Mrp = p.Price.Mrp
-                            },
-                        }).ToList(),
-
-                        // attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.AttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                            Addons = v.Addons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                },
-                            }).ToList(),
-                            Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    }).ToListAsync();
+                var products = await queryable
+                                    .AsNoTracking()
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
+                                    .Select(CatalogQueries.ToCatalogResponse)
+                                    .ToListAsync();
 
                 return products;
             }
@@ -181,121 +89,28 @@ namespace Priest.Infrastructure.Services
             }
         }
 
-        public async Task<List<CatalogResponseDto>> GetFilteredAsync(List<int> attributeIds, int? subCategoryId = null, int topN = 10)
+        public async Task<List<CatalogResponseDto>> GetFilteredAsync(List<int> attributeIds, int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)
         {
-            var query = _repository.Query();
+            var queryable = _repository.Query();
 
             if (subCategoryId.HasValue && subCategoryId.Value > 0)
             {
-                query = query.Where(p => p.SubCategoryId == subCategoryId.Value);
+                queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
             }
 
             if (attributeIds != null && attributeIds.Any())
             {
                 // Ensure product has all selected attribute IDs
-                query = query.Where(p => attributeIds.All(attrId =>
+                queryable = queryable.Where(p => attributeIds.All(attrId =>
                     p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
             }
 
-            // Take top N products
-            var products = await query
-                .Take(topN)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
-
-                    // Media
-                    Media = p.PriestMedias.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
-
-                    // Addons
-                    Addons = p.Addons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        }
-                    }).ToList(),
-
-                    // Attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = v.Price.Currency,
-                            Discount = v.Price.Discount,
-                            Mrp = v.Price.Mrp,
-                            Tax = v.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.AttributeValues
-                            .GroupBy(a => a.AttributeGroupNameSnapshot)
-                            .Select(g => new AttributeGroupResponseDto
-                            {
-                                AttributeGroupName = g.Key,
-                                Attributes = g.Select(a => new AttributeResponseDto
-                                {
-                                    Key = a.AttributeKey,
-                                    Label = a.AttributeLabel ?? "",
-                                    Value = a.Value,
-                                    DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                }).ToList()
-                            }).ToList(),
-                        Addons = v.Addons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-                        Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
-                .ToListAsync();
+            var products = await queryable
+                                    .AsNoTracking()
+                                    .Skip(pageNumber)
+                                    .Take(pageSize)
+                                    .Select(CatalogQueries.ToCatalogResponse)
+                                    .ToListAsync();
 
             return products;
         }
@@ -305,107 +120,12 @@ namespace Priest.Infrastructure.Services
             _logger.LogInfo($"Getting astrologer by Id: {id}");
             try
             {
-                var query = _repository.Query();
+                var queryable = _repository.Query();
 
-                var productDto = await query
-                .Where(p => p.Id == id)
-                .Select(p => new CatalogResponseDto
-                {
-                    Id = p.Id.ToString(),
-                    Name = p.Name,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Rating = p.Rating,
-                    Reviews = p.Reviews,
-                    SubCategoryId = p.SubCategoryId.ToString(),
-                    Price = new PriceResponseDto
-                    {
-                        Amount = p.Price.Amount,
-                        Currency = p.Price!.Currency,
-                        Discount = p.Price.Discount,
-                        Mrp = p.Price.Mrp,
-                        Tax = p.Price.Tax
-                    },
-                    IsTrending = p.IsTrending,
-                    IsFeatured = p.IsFeatured,
-
-                    // Media
-                    Media = p.PriestMedias.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList(),
-
-                    // Product-level addons
-                    Addons = p.Addons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        },
-                    }).ToList(),
-
-                    // Product-level attributes
-                    Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                    {
-                        Key = a.AttributeKey,
-                        Label = a.AttributeLabel ?? "",
-                        Value = a.Value,
-                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String,
-                    }).ToList(),
-
-                    // Variants
-                    Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
-                    {
-                        Id = v.Id.ToString(),
-                        Name = v.Name,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = v.Price.Amount,
-                            Currency = p.Price!.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-                        StockQuantity = v.StockQuantity,
-                        Attributes = v.AttributeValues.AsEnumerable()
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                })
-                                .ToList(),
-                        Addons = v.Addons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            },
-                        }).ToList(),
-                        Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList()
-                    }).ToList()
-                })
-                .FirstOrDefaultAsync();
+                var productDto = await queryable
+                                .AsNoTracking()
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .FirstOrDefaultAsync();
 
                 return productDto;
             }
@@ -546,111 +266,18 @@ namespace Priest.Infrastructure.Services
             {
                 var queryable = _repository.Query();
 
+                queryable = CatalogQueries.ApplySearch(queryable, query);
+
                 var totalCount = await queryable.CountAsync();
 
                 var skip = (pageNumber - 1) * pageSize;
 
-                // Take top N products
                 var products = await queryable
-                    .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
-                    .Skip(skip)
-                    .Take(pageSize)
-                    .Select(p => new CatalogResponseDto
-                    {
-                        Id = p.Id.ToString(),
-                        Name = p.Name,
-                        ThumbnailUrl = p.ThumbnailUrl,
-                        Rating = p.Rating,
-                        Reviews = p.Reviews,
-                        SubCategoryId = p.SubCategoryId.ToString(),
-                        IsTrending = p.IsTrending,
-                        IsFeatured = p.IsFeatured,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = p.Price.Amount,
-                            Currency = p.Price.Currency,
-                            Discount = p.Price.Discount,
-                            Mrp = p.Price.Mrp,
-                            Tax = p.Price.Tax
-                        },
-
-                        // Media
-                        Media = p.PriestMedias.Select(img => new MediaResponseDto
-                        {
-                            Url = img.ImageUrl,
-                            Type = img.MediaType.ToString(),
-                            AltText = img.AltText,
-                            SortOrder = img.SortOrder
-                        }).ToList(),
-
-                        // Addons
-                        Addons = p.Addons.Select(a => new AddonResponseDto
-                        {
-                            Name = a.Name,
-                            Description = a.Description,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = a.Price.Amount,
-                                Mrp = a.Price.Mrp
-                            }
-                        }).ToList(),
-
-                        // Attributes
-                        Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                        {
-                            Key = a.AttributeKey,
-                            Label = a.AttributeLabel ?? "",
-                            Value = a.Value,
-                            DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                        }).ToList(),
-
-                        // Variants
-                        Variants = p.PriestExpertise.Select(v => new CatalogVariantResponseDto
-                        {
-                            Id = v.Id.ToString(),
-                            Name = v.Name,
-                            Price = new PriceResponseDto
-                            {
-                                Amount = v.Price.Amount,
-                                Currency = v.Price.Currency,
-                                Discount = v.Price.Discount,
-                                Mrp = v.Price.Mrp,
-                                Tax = v.Price.Tax
-                            },
-                            StockQuantity = v.StockQuantity,
-                            Attributes = v.AttributeValues
-                                .GroupBy(a => a.AttributeGroupNameSnapshot)
-                                .Select(g => new AttributeGroupResponseDto
-                                {
-                                    AttributeGroupName = g.Key,
-                                    Attributes = g.Select(a => new AttributeResponseDto
-                                    {
-                                        Key = a.AttributeKey,
-                                        Label = a.AttributeLabel ?? "",
-                                        Value = a.Value,
-                                        DataTypeId = a.AttributeDataTypeId ?? (int)AttributeDataType.String
-                                    }).ToList()
-                                }).ToList(),
-                            Addons = v.Addons.Select(a => new AddonResponseDto
-                            {
-                                Name = a.Name,
-                                Description = a.Description,
-                                Price = new PriceResponseDto
-                                {
-                                    Amount = a.Price.Amount,
-                                    Mrp = a.Price.Mrp
-                                }
-                            }).ToList(),
-                            Media = v.PriestExpertiseMedia.Select(img => new MediaResponseDto
-                            {
-                                Url = img.ImageUrl,
-                                Type = img.MediaType.ToString(),
-                                AltText = img.AltText,
-                                SortOrder = img.SortOrder
-                            }).ToList()
-                        }).ToList()
-                    })
-                .ToListAsync();
+                                .AsNoTracking()
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .ToListAsync();
 
                 return new PagedResult<CatalogResponseDto>
                 {
