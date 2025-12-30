@@ -30,7 +30,7 @@ namespace PaymentMicroservice.API.Controllers.v1
         [HttpGet("summary/{orderId:int}")]
         [ProducesResponseType(typeof(IEnumerable<PaymentTransactionLogDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetPaymentTransactionByOrderIdAsync([FromRoute] int orderId)
+        public async Task<IActionResult> GetPaymentTransactionByOrderIdAsync([FromRoute] string orderId)
         {
             var result = await Mediator.Send(new GetPaymentsByOrderIdQuery(orderId));
 

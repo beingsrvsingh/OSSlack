@@ -30,7 +30,7 @@ namespace PaymentMicroservice.Infrastructure.Services
             }
         }
 
-       public async Task<PaymentInfoDto?> GetPaymentTransactionByOrderIdAsync(int orderId)
+       public async Task<PaymentInfoDto?> GetPaymentTransactionByOrderIdAsync(string orderId)
         {
             try
             {

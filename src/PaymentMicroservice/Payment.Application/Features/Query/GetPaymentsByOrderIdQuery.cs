@@ -5,9 +5,9 @@ namespace PaymentMicroservice.Application.Features.Query
 {
     public class GetPaymentsByOrderIdQuery : IRequest<Result>
     {
-        public int OrderId { get; }
+        public string OrderId { get; }
 
-        public GetPaymentsByOrderIdQuery(int orderId)
+        public GetPaymentsByOrderIdQuery(string orderId)
         {
             OrderId = orderId;
         }

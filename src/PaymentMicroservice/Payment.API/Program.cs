@@ -19,7 +19,7 @@ builder.Services.AddHttpContextAccessor();
 //Authentication and authorization        
 builder.Services.AddJwtTokenAuthentication();
 //Services
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {

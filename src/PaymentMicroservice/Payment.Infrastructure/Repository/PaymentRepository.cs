@@ -30,7 +30,7 @@ namespace PaymentMicroservice.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<PaymentTransaction?> GetPaymentTransactionByOrderIdAsync(int orderId)
+        public async Task<PaymentTransaction?> GetPaymentTransactionByOrderIdAsync(string orderId)
         {
             var payment = await _context.PaymentTransactions
                 .Include(t => t.PaymentMethodDetails)

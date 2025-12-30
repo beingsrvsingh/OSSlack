@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Utilities;
+using Payment.Infrastructure.Configuration;
 
 namespace PaymentMicroservice.Infrastructure
 {
     public static class InfrastructureServiceRegistration
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             var config = Configuration.LoadAppSettings();
             var connectionString = config.GetConnectionString("DefaultConnection");
@@ -22,6 +23,8 @@ namespace PaymentMicroservice.Infrastructure
                     options.UseMySql(connectionString,
                     new MySqlServerVersion(new Version(8, 0, 28)),
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
+            services.Configure<CashfreeSettings>(configuration.GetSection("Cashfree"));
 
             services.AddApplicationServices();
 

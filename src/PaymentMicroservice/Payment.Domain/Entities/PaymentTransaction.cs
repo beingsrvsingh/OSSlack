@@ -16,7 +16,7 @@ namespace PaymentMicroservice.Domain.Entities
         public string UserId { get; set; } = null!;
 
         [Required]
-        public int OrderId { get; set; }
+        public string? OrderId { get; set; }
 
         [Required]
         public decimal Amount { get; set; }
