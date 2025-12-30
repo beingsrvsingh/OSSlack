@@ -5,6 +5,7 @@ using Priest.Infrastructure.Persistence.Catalog.Queries;
 using PriestMicroservice.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
+using Shared.Infrastructure.Repositories;
 using Shared.Utilities.Response;
 
 namespace Priest.Infrastructure.Services
@@ -59,6 +60,40 @@ namespace Priest.Infrastructure.Services
 
 
             return trendingProducts;
+        }
+
+
+        public async Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var queryable = _repository.Query();
+
+                var totalCount = await queryable.CountAsync();
+
+                var skip = (pageNumber - 1) * pageSize;
+
+                var products = await queryable
+                                .AsNoTracking()
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .Where((p) => p.IsTrending == true)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .ToListAsync();
+
+                return new PagedResult<CatalogResponseDto>
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    Items = products
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for products. Page: {Page}, PageSize: {PageSize}", pageNumber, pageSize);
+                return new PagedResult<CatalogResponseDto>();
+            }
         }
 
         public async Task<List<CatalogResponseDto>?> GetPriestsBySubCategoryIdAsync(int? subCategoryId = null, int pageNumber = 1, int pageSize = 10)

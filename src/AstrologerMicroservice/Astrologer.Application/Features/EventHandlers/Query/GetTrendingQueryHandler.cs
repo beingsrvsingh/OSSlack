@@ -20,7 +20,15 @@ namespace Astrologer.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetTrendingQuery request, CancellationToken cancellationToken)
         {
-            var result = await _astrologerService.GetSubcategoryTrendingAsync(request.Scid, request.Records);
+            dynamic? result = null;
+            if (request.Scid is not null)
+            {
+                result = await _astrologerService.GetSubcategoryTrendingAsync(request.Scid, request.PageNumber);
+            }
+            else
+            {
+                result = await _astrologerService.GetTrendingProdcutsAsync(request.PageNumber);
+            }
             if (result is null)
             {
                 return Result.Failure(new FailureResponse("NOT_FOUND", "Astrologer not found"));

@@ -16,5 +16,7 @@ namespace Temple.Application.Services
         Task<bool> UpdateAsync(TempleMaster temple);
         Task<bool> DeleteAsync(int id);
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+
+        Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10);
     }
 }

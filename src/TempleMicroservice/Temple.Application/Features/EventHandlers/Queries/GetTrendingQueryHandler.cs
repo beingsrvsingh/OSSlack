@@ -19,7 +19,15 @@ namespace Temple.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetTrendingQuery request, CancellationToken cancellationToken)
         {
-            var result = await templeService.GetSubcategoryTrendingAsync(request.Scid, request.Records);
+            dynamic? result = null;
+            if (request.Scid is not null)
+            {
+                result = await templeService.GetSubcategoryTrendingAsync(request.Scid, request.PageNumber);
+            }
+            else
+            {
+                result = await templeService.GetTrendingProdcutsAsync(request.PageNumber);
+            }
             if (result is null)
             {
                 return Result.Failure(new FailureResponse("NOT_FOUND", "Products not found"));

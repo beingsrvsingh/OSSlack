@@ -19,7 +19,16 @@ namespace Product.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetTrendingProductQuery request, CancellationToken cancellationToken)
         {
-            var result = await productService.GetSubcategoryTrendingAsync(request.Scid, request.Records);
+            dynamic? result = null;
+            if(request.Scid is not null)
+            {
+                result = await productService.GetSubcategoryTrendingAsync(request.Scid, request.PageNumber);
+            }
+            else
+            {
+                result = await productService.GetTrendingProdcutsAsync(request.PageNumber);
+            }
+
             if (result is null)
             {
                 return Result.Failure(new FailureResponse("NOT_FOUND", "Products not found"));

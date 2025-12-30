@@ -7,5 +7,7 @@ namespace SearchAggregator.Application.Clients
     public interface ITempleClient
     {
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+
+        Task<PagedResult<CatalogResponseDto>> GetTrendingTempleAsync(int page, int pageSize, CancellationToken cancellationToken);
     }
 }

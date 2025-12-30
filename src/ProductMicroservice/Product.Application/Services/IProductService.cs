@@ -27,6 +27,8 @@ namespace Product.Application.Services
         Task<List<CatalogResponseDto>> GetFilteredProductsAsync(List<int> attributeIds, int? subCategoryId = null, int pageNumber = 1, int pageSize = 10);
 
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int pageNumber, int pageSize, CancellationToken cancellationToken);
+
+        Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10);
     }
 
 }

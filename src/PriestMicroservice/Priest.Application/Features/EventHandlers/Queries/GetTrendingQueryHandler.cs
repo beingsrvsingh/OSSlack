@@ -19,7 +19,15 @@ namespace Priest.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetTrendingQuery request, CancellationToken cancellationToken)
         {
-            var result = await _priestService.GetSubcategoryTrendingAsync(request.Scid, request.Records);
+            dynamic? result = null;
+            if (request.Scid is not null)
+            {
+                result = await _priestService.GetSubcategoryTrendingAsync(request.Scid, request.PageNumber);
+            }
+            else
+            {
+                result = await _priestService.GetTrendingProdcutsAsync(request.PageNumber);
+            }
             if (result is null)
             {
                 return Result.Failure(new FailureResponse("NOT_FOUND", "Priest not found"));

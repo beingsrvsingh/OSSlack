@@ -6,6 +6,7 @@ using Product.Infrastructure.Persistence.Catalog.Queries;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Product.Infrastructure.Services
 {
@@ -66,6 +67,39 @@ namespace Product.Infrastructure.Services
 
 
             return trendingProducts;
+        }
+
+        public async Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var queryable = repository.Query();
+
+                var totalCount = await queryable.CountAsync();
+
+                var skip = (pageNumber - 1) * pageSize;
+
+                var products = await queryable
+                                .AsNoTracking()
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .Where((p) => p.IsTrending == true)
+                                .Select(CatalogQueries.ToCatalogResponse)
+                                .ToListAsync();
+
+                return new PagedResult<CatalogResponseDto>
+                {
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    Items = products
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while searching for products. Page: {Page}, PageSize: {PageSize}", pageNumber, pageSize);
+                return new PagedResult<CatalogResponseDto>();
+            }
         }
 
         public async Task<IEnumerable<ProductRegionPriceMaster>> GetRegionPricesAsync(int productId)

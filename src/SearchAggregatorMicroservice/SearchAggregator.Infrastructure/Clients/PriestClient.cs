@@ -44,5 +44,33 @@ namespace SearchAggregator.Infrastructure.Clients
                 throw;
             }
         }
+
+        public async Task<PagedResult<CatalogResponseDto>> GetTrendingPriestAsync(int page, int pageSize, CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                var url = $"priest/trending";
+
+                var response = await _httpClient.GetAsync(url);
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadFromJsonAsync<Result<PagedResult<CatalogResponseDto>>>();
+
+                if (result != null && result.Succeeded)
+                {
+                    return result.Data ?? new PagedResult<CatalogResponseDto>();
+                }
+
+                _logger.LogWarning("Received null response from Product service for query.");
+                return new PagedResult<CatalogResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calling Product service for query");
+                throw;
+            }
+        }
     }
 }

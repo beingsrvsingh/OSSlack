@@ -22,5 +22,7 @@ namespace AstrologerMicroservice.Application.Service
         Task<bool> UpdateAsync(UpdateAstrologerCommand command);
         Task<bool> DeleteAsync(int astrologerId);
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+
+        Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10);
     }
 }

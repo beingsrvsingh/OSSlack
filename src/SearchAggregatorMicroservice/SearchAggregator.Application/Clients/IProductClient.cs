@@ -7,5 +7,7 @@ namespace SearchAggregator.Application.Clients
     public interface IProductClient
     {
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
+
+        Task<PagedResult<CatalogResponseDto>> GetTrendingProductAsync(int page, int pageSize, CancellationToken cancellationToken);
     }
 }

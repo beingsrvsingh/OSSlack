@@ -6,6 +6,7 @@ namespace Temple.Application.Features.Query
     public class GetTrendingQuery : IRequest<Result>
     {
         public int? Scid { get; set; }
-        public int Records { get; set; } = 5;
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 5;
     }
 }
