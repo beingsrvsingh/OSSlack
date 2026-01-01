@@ -17,9 +17,9 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .IsRequired()
                 .HasColumnName("order_header_id");
 
-            builder.Property(e => e.ProductId)
+            builder.Property(e => e.ProductVariantId)
                 .IsRequired()
-                .HasColumnName("product_id");
+                .HasColumnName("product_variant_id");
 
             builder.Property(e => e.ProductType)
                 .IsRequired()

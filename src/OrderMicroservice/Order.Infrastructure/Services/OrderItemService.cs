@@ -22,21 +22,21 @@ namespace Order.Infrastructure.Services
             // 1. Get recent order items
             var recentOrderItems = await _orderItemRepository.GetTrendingProductsByCategoryAsync(fromDate);
 
-            var productIds = recentOrderItems.Select(oi => oi.ProductId).Distinct().ToList();
+            var productIds = recentOrderItems.Select(oi => oi.ProductVariantId).Distinct().ToList();
 
             // 2. Get product info from catalog microservice
             var products = await productService.GetProductsByIdAndCategoryIdAsync(productIds, categoryId);
 
             // 4. Filter order items for filtered products
             var filteredOrderItems = recentOrderItems
-                .Where(oi => products.Any(p => p.Id == oi.ProductId))
+                .Where(oi => products.Any(p => p.Id == oi.ProductVariantId))
                 .ToList();
 
             // 5. Aggregate trending data
             var productMap = products.ToDictionary(p => p.Id);
 
             var trendingProducts = filteredOrderItems
-                                .GroupBy(oi => oi.ProductId)
+                                .GroupBy(oi => oi.ProductVariantId)
                                 .Where(g => productMap.ContainsKey(g.Key))
                                 .Select(g =>
                                 {

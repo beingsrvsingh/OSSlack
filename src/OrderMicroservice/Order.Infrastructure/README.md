@@ -1,5 +1,7 @@
 find . -name "*.csproj";
 
+cd src/OrderMicroservice/order.infrastructure
+
 dotnet sln add ./src/OrderMicroservice/*/*.csproj
 
 dotnet ef migrations add Initial-Create --output-dir Migrations --context OrderDbContext --startup-project ../Order.API 

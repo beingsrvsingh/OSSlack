@@ -11,7 +11,7 @@ namespace CartMicroservice.Infrastructure.Persistence.Context
         {
         }
 
-        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartMicroservice.Domain.Entities.Cart> Carts => Set<CartMicroservice.Domain.Entities.Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();
 
         protected override void OnModelCreating(ModelBuilder builder)

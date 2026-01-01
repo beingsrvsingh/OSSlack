@@ -16,7 +16,7 @@ namespace CartMicroservice.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<Cart?> GetCartByUserIdAsync(string userId)
+        public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartByUserIdAsync(string userId)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace CartMicroservice.Infrastructure.Services
             }
         }
 
-        public async Task<Cart?> GetCartWithItemsAsync(int cartId)
+        public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartWithItemsAsync(int cartId)
         {
             try
             {
@@ -42,16 +42,30 @@ namespace CartMicroservice.Infrastructure.Services
             }
         }
 
-        public async Task<bool> AddOrUpdateCartItemAsync(CartItem item)
+        public async Task<bool> AddCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
         {
             try
             {
-                await _cartRepository.AddOrUpdateCartItemAsync(item);
+                await _cartRepository.AddCartItemAsync(item);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in AddOrUpdateCartItemAsync: {ex.Message}", ex);
+                _logger.LogError($"Error in AddCartItemAsync: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
+        {
+            try
+            {
+                await _cartRepository.UpdateCartItemAsync(item);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in UpdateCartItemAsync: {ex.Message}", ex);
                 return false;
             }
         }

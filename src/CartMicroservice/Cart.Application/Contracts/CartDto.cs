@@ -12,7 +12,7 @@ namespace CartMicroservice.Application.Contracts
         public decimal TotalTax { get; set; }
         public decimal TotalAmount { get; set; }
         public string? AppliedCouponCode { get; set; }
-        public ICollection<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
+        public ICollection<AddCartDto> CartItems { get; set; } = new List<AddCartDto>();
     }
 
 }

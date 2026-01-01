@@ -27,7 +27,7 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
                 if (item is null)
                     return Result.Failure(new FailureResponse("NotFound", "Cart item not found"));
 
-                var dto = item.Adapt<CartItemDto>();
+                var dto = item.Adapt<AddCartDto>();
                 return Result.Success(dto);
             }
             catch (Exception ex)

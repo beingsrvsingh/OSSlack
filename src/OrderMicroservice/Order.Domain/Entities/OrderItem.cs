@@ -13,7 +13,7 @@ namespace Order.Domain.Entities
         public int OrderHeaderId { get; set; }  // FK to OrderHeader
 
         [Required]
-        public int ProductId { get; set; }  // Reference to product microservice
+        public int ProductVariantId { get; set; }  // Reference to product microservice
 
         [Required]
         [MaxLength(20)]

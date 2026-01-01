@@ -1,4 +1,5 @@
 using BaseApi;
+using CartMicroservice.Application.Contracts;
 using CartMicroservice.Application.Features.Commands;
 using CartMicroservice.Application.Features.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -39,17 +40,38 @@ namespace CartMicroservice.API.Controllers.v1
         [HttpPost("item")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddOrUpdateCartItem([FromBody] AddOrUpdateCartItemCommand command)
+        public async Task<IActionResult> AddCartItem([FromBody] AddCartDto cart)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var command = new AddCartItemCommand(cart);
 
             var result = await Mediator.Send(command);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok(new { Message = "Cart item added/updated successfully." });
+            return Ok(new { Message = "Cart item add successfully." });
+        }
+
+        // PUT api/cart/item
+        [HttpPut("item")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartDto cart)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new UpdateCartItemCommand(cart);
+
+            var result = await Mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { Message = "Cart item updated successfully." });
         }
 
         // DELETE api/cart/item/{cartItemId}

@@ -13,13 +13,13 @@ namespace CartMicroservice.Domain.Entities
         public int CartId { get; set; }
 
         [Required]
-        public int ProductId { get; set; } // ProductId, ServicePackageId, KitId
+        public int ProductVariantId { get; set; } // ProductId, ServicePackageId, KitId
 
         public int? SubCategoryId { get; set; } // sub_category_id
 
         [Required]
         [MaxLength(20)]
-        public ProviderType ProviderType { get; set; } // Product, Service, Kit
+        public String ProviderType { get; set; } // Product, Service, Kit
 
         [MaxLength(150)]
         public string ItemNameSnapshot { get; set; } = null!;
@@ -41,12 +41,9 @@ namespace CartMicroservice.Domain.Entities
 
         public bool IsInStock { get; set; } = true;
 
-        // For services like consultation, kundli, pooja
-        public int? SelectedAstrologerId { get; set; }
-
         public DateTime? PreferredServiceDateTime { get; set; }
 
-        [Column(TypeName = "jsonb")]
+        [Column(TypeName = "json")]
         public string? SelectedOptionsJson { get; set; }
 
         public bool IsGift { get; set; } = false;
@@ -64,7 +61,7 @@ namespace CartMicroservice.Domain.Entities
         public DateTime? UpdatedAt { get; set; } // updated_at
 
         [ForeignKey(nameof(CartId))]
-        public virtual Cart Cart { get; set; } = null!;
+        public virtual CartMicroservice.Domain.Entities.Cart Cart { get; set; } = null!;
     }
 
 }

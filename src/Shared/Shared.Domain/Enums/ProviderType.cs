@@ -4,7 +4,9 @@ namespace Shared.Domain
     {
         Astrologer,
         Priest,
+        Pooja,
         Temple,
-        Product
+        Product,
+        Kathavachak
     }
 }

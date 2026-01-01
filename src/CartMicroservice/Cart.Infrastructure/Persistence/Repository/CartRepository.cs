@@ -6,7 +6,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace CartMicroservice.Infrastructure.Persistence.Repository
 {
-    public class CartRepository : Repository<Cart>, ICartRepository
+    public class CartRepository : Repository<CartMicroservice.Domain.Entities.Cart>, ICartRepository
     {
         private readonly CartDbContext _context;
 
@@ -15,38 +15,46 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
             this._context = dbContext;
         }
 
-        public async Task<Cart?> GetCartByUserIdAsync(string userId)
+        public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartByUserIdAsync(string userId)
         {
             return await _context.Carts
                 .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.UserId == userId && !c.IsDeleted);
         }
 
-        public async Task<Cart?> GetCartWithItemsAsync(int cartId)
+        public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartWithItemsAsync(int cartId)
         {
             return await _context.Carts
                 .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.Id == cartId && !c.IsDeleted);
         }
 
-        public async Task AddOrUpdateCartItemAsync(CartItem item)
+        public async Task AddCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
         {
-            var existingItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.CartId == item.CartId
-                                        && ci.ProductId == item.ProductId
-                                        && ci.ProviderType == item.ProviderType
+            await _context.Carts.AddAsync(item);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
+        {
+            foreach(var cartItem in item.CartItems) {
+                var existingItem = await _context.CartItems
+                .FirstOrDefaultAsync(ci => ci.CartId == cartItem.CartId
+                                        && ci.ProductVariantId == cartItem.ProductVariantId
                                         && !ci.IsDeleted);
 
-            if (existingItem != null)
-            {
-                existingItem.Quantity += item.Quantity;
-                _context.CartItems.Update(existingItem);
-            }
-            else
-            {
-                await _context.CartItems.AddAsync(item);
-            }
-            await _context.SaveChangesAsync();
+                if (existingItem != null)
+                {
+                    existingItem.PriceSnapshot = cartItem.PriceSnapshot;
+                    existingItem.DiscountAmount = cartItem.DiscountAmount;
+                    existingItem.TaxAmount = cartItem.TaxAmount;
+                    existingItem.Quantity = cartItem.Quantity;
+                    _context.CartItems.Update(existingItem);
+                }
+
+                await _context.SaveChangesAsync();
+            }            
         }
 
         public async Task<bool> RemoveCartItemAsync(int cartItemId)

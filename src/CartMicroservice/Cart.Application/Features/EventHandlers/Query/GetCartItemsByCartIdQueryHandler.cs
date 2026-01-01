@@ -24,7 +24,7 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
             try
             {
                 var items = await _cartItemService.GetItemsByCartIdAsync(request.CartId);
-                var dtos = items.Adapt<IEnumerable<CartItemDto>>();
+                var dtos = items.Adapt<IEnumerable<AddCartDto>>();
                 return Result.Success(dtos);
             }
             catch (Exception ex)
