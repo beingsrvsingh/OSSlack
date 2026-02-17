@@ -20,6 +20,13 @@ namespace Product.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<decimal> GetPriceAsync(int productId)
+        {
+            var amount = await _context.ProductVariantMasters.Where(x => x.Id == productId).Select(x => x.Price.Amount).FirstOrDefaultAsync();
+
+            return amount;
+        }
+
         public async Task<ProductMaster?> GetProductWithVariantsAsync(int productId)
         {
             return await _context.ProductMasters.AsNoTracking()

@@ -53,6 +53,8 @@ namespace CartMicroservice.Domain.Entities
         [MaxLength(250)]
         public string? GiftMessage { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
         public bool IsDeleted { get; set; } = false; // is_deleted
 
@@ -62,6 +64,16 @@ namespace CartMicroservice.Domain.Entities
 
         [ForeignKey(nameof(CartId))]
         public virtual CartMicroservice.Domain.Entities.Cart Cart { get; set; } = null!;
+
+        public void UpdateQuantity(int quantity)
+        {
+            if (quantity < 1)
+                throw new Exception("Quantity must be at least 1.");
+
+            Quantity = quantity;
+            PriceSnapshot = Quantity * PriceSnapshot;
+        }
+
     }
 
 }

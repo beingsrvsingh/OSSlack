@@ -27,7 +27,7 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
             if (cart is null)
                 return Result.Success("No Carts Founds");
 
-            var dto = cart.Adapt<CartDto>();
+            var dto = cart.Adapt<CartResponseDto>();
             return Result.Success(dto);
         }
         catch (Exception ex)

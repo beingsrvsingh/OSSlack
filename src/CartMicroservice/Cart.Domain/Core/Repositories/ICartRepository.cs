@@ -11,10 +11,14 @@ namespace CartMicroservice.Domain.Core.Repositories
         // Fetch cart including items by CartId
         Task<CartMicroservice.Domain.Entities.Cart?> GetCartWithItemsAsync(int cartId);
 
+        Task<CartMicroservice.Domain.Entities.Cart?> GetCartByProductIdAsync(int productId);
+
         // Add or update a cart item
         Task AddCartItemAsync(CartMicroservice.Domain.Entities.Cart item);
 
-        Task UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item);
+        Task UpdateCartIAsync(CartMicroservice.Domain.Entities.Cart item);
+
+        Task<bool> RemoveCartAsync(int cartId);
 
         // Remove cart item by id
         Task<bool> RemoveCartItemAsync(int cartItemId);
@@ -24,6 +28,8 @@ namespace CartMicroservice.Domain.Core.Repositories
 
         // Optional: Clear cart items for a cart (e.g. on checkout)
         Task ClearCartItemsAsync(int cartId);
+
+        Task UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart item);
     }
 
 }

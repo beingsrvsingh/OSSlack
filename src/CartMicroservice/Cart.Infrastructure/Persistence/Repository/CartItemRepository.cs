@@ -28,5 +28,22 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
                 .ToListAsync();
         }
 
+        public async Task AddCartItemAsync(CartMicroservice.Domain.Entities.CartItem item)
+        {
+            await _context.CartItems.AddAsync(item);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> RemoveCartItemAsync(int productId)
+        {
+            var item = await _context.CartItems.FirstOrDefaultAsync((p) => p.ProductVariantId == productId);
+            if (item == null) return false;
+
+            _context.CartItems.Remove(item);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

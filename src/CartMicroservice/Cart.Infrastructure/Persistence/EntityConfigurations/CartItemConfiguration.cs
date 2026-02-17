@@ -88,6 +88,10 @@ namespace CartMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValue(false)
                 .HasColumnName("is_gift");
 
+            builder.Property(ci => ci.ImageUrl)
+                .HasDefaultValue(false)
+                .HasColumnName("image_url");
+
             builder.Property(ci => ci.IsDeleted)
                 .HasDefaultValue(false)
                 .HasColumnName("is_deleted");

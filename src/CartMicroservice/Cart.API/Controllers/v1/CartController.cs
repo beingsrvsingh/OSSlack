@@ -1,4 +1,5 @@
 using BaseApi;
+using Cart.Application.Features.Commands;
 using CartMicroservice.Application.Contracts;
 using CartMicroservice.Application.Features.Commands;
 using CartMicroservice.Application.Features.Query;
@@ -9,7 +10,7 @@ namespace CartMicroservice.API.Controllers.v1
     public class CartController : BaseController
     {
         // GET api/cart/user/{userId}
-        [HttpGet("user/{userId}")]
+        [HttpGet("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCartByUserId(string userId)
@@ -37,7 +38,7 @@ namespace CartMicroservice.API.Controllers.v1
         }
 
         // POST api/cart/item
-        [HttpPost("item")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddCartItem([FromBody] AddCartDto cart)
@@ -49,50 +50,42 @@ namespace CartMicroservice.API.Controllers.v1
 
             var result = await Mediator.Send(command);
 
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            return Ok(new { Message = "Cart item add successfully." });
+            return Ok(result);
         }
 
-        // PUT api/cart/item
-        [HttpPut("item")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartDto cart)
+        [HttpPatch("{productId}/quantity")]
+        public async Task<IActionResult> UpdateCartItemQuantity(int productId, [FromBody] int quantity)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var command = new UpdateCartItemCommand(cart);
+            var command = new UpdateCartItemCommand(productId, quantity);
 
             var result = await Mediator.Send(command);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok(new { Message = "Cart item updated successfully." });
+            return Ok(new { Message = "Cart item quantity updated successfully." });
         }
 
+
         // DELETE api/cart/item/{cartItemId}
-        [HttpDelete("item/{cartItemId}")]
+        [HttpDelete("{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RemoveCartItem(int cartItemId)
+        public async Task<IActionResult> RemoveCartItem(int productId)
         {
-            var result = await Mediator.Send(new RemoveCartItemCommand(cartItemId));
+            var result = await Mediator.Send(new RemoveCartItemCommand(productId));
 
             if (!result.Succeeded)
-                return NotFound(new { Message = "Cart item not found or could not be removed." });
+                return Ok(new { Message = "Cart item not found or could not be removed." });
 
             return Ok(new { Message = "Cart item removed successfully." });
         }
 
-        // DELETE api/cart/{cartId}/clear
-        [HttpDelete("{cartId}/clear")]
+        // DELETE api/cart/{cartId}/remove
+        [HttpDelete("{cartId}/remove")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ClearCartItems(int cartId)
+        public async Task<IActionResult> RemoveCartItems(int cartId)
         {
             var result = await Mediator.Send(new ClearCartItemsCommand(cartId));
 

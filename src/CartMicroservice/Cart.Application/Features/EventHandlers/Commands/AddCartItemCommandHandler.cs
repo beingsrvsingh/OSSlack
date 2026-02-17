@@ -3,6 +3,7 @@ using CartMicroservice.Application.Services;
 using CartMicroservice.Domain.Entities;
 using Mapster;
 using MediatR;
+using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
@@ -12,53 +13,82 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
     {
         private readonly ICartService _cartService;
         private readonly ILoggerService<AddCartItemCommandHandler> _logger;
+        private readonly IUserProvider userProvider;
 
-        public AddCartItemCommandHandler(ICartService cartService, ILoggerService<AddCartItemCommandHandler> logger)
+        public AddCartItemCommandHandler(ICartService cartService, ILoggerService<AddCartItemCommandHandler> logger, IUserProvider userProvider)
         {
             _cartService = cartService;
             _logger = logger;
+            this.userProvider = userProvider;
         }
 
         public async Task<Result> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var item = new Cart
-                {
-                    UserId = request.CartItem.UserId,
-                    TotalAmount = (decimal)request.CartItem.Amount,
-                    TotalDiscount = (decimal)request.CartItem.Discount,
-                    TotalTax = (decimal)request.CartItem.Tax,                    
-                };
+                var userId = userProvider.UserId ?? "Test-User";
 
-                var carts = new List<CartItem>();
+                var cart = await _cartService.GetCartByUserIdAsync(userId);
 
-                foreach (var cart in request.CartItem.CartItems)
+                bool success = false;
+
+                if (cart == null)
                 {
-                    var CartItem = new CartItem
+                    cart = new CartMicroservice.Domain.Entities.Cart
                     {
-                        ProductVariantId = cart.ProductVariantId,
-                        ProviderType = cart.ProductType,
-                        ItemNameSnapshot = cart.ProductName,
-                        Quantity = cart.Quantity,
-                        PriceSnapshot = (decimal)cart.Amount,
-                        DiscountAmount = (decimal)cart.Discount,
-                        TaxAmount = (decimal)cart.Tax,
+                        UserId = userId,
+                        TotalAmount = (decimal)request.CartItem.Amount,
+                        Subtotal = (decimal)request.CartItem.Amount,
+                        CartItems = new List<CartItem>()
+                        {
+                            new CartItem
+                            {
+                                ProductVariantId = request.CartItem.ProductVariantId,
+                                ProviderType = request.CartItem.ProductType,
+                                ItemNameSnapshot = request.CartItem.ProductName,
+                                Quantity = request.CartItem.Quantity,
+                                PriceSnapshot = request.CartItem.Quantity * (decimal)request.CartItem.Amount,
+                                ImageUrl = request.CartItem.ImageUrl
+                            }
+                        }
                     };
 
-                    carts.Add(CartItem);
-
+                    success = await _cartService.AddCartAsync(cart);
                 }
+                else if (cart.CartItems.Any((c) => c.ProductVariantId == request.CartItem.ProductVariantId && c.CartId == cart.Id))
+                {
+                    return Result.Success(cart.Id);
+                }
+                else
+                {
+                    cart.TotalAmount = (decimal)request.CartItem.Amount + cart.TotalAmount;
+                    cart.Subtotal = (decimal)request.CartItem.Amount + cart.Subtotal;
 
-                item.CartItems = carts;
+                    var cartItem = new CartItem
+                    {
+                        CartId = cart.Id,
+                        ProductVariantId = request.CartItem.ProductVariantId,
+                        ProviderType = request.CartItem.ProductType,
+                        ItemNameSnapshot = request.CartItem.ProductName,
+                        Quantity = request.CartItem.Quantity,
+                        PriceSnapshot = request.CartItem.Quantity * (decimal)request.CartItem.Amount,
+                        ImageUrl = request.CartItem.ImageUrl
+                    };
 
-                bool success = success = await _cartService.AddCartItemAsync(item);
+                    success = await _cartService.AddCartItemAsync(cartItem);
 
-                return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to add cart item"));
+                    if (success) {
+                        success = await _cartService.UpdateCartAsync(cart);
+                    }
+                }                
+
+                return success
+                    ? Result.Success(cart.Id)
+                    : Result.Failure(new FailureResponse("Error", "Failed to add cart item"));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in AddCartItemCommandHandler: {ex.Message}", ex);
+                _logger.LogError(ex, "Error in AddCartItemCommandHandler");
                 return Result.Failure(new FailureResponse("Error", "Exception occurred"));
             }
         }

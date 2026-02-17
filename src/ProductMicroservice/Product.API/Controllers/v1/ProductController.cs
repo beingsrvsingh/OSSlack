@@ -20,6 +20,19 @@ namespace Product.API.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("{id:int}/price")]
+        [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductPriceByIdAsync(int id)
+        {
+            var query = new GetProductPriceQuery { ProductId = id };
+
+            var result = await Mediator.Send(query);
+
+            return Ok(result);
+        }
+
         [HttpGet("by-subcategory")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

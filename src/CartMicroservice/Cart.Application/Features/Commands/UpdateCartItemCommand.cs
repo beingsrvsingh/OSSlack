@@ -1,9 +1,9 @@
-using CartMicroservice.Application.Contracts;
-using MediatR;
+﻿using MediatR;
 using Shared.Utilities.Response;
 
-namespace CartMicroservice.Application.Features.Commands
+namespace Cart.Application.Features.Commands
 {
-    public record UpdateCartItemCommand(UpdateCartDto CartItem) : IRequest<Result>;
+    public record UpdateCartItemCommand(int productVariantId, int Quantity)
+    : IRequest<Result>;
 
 }

@@ -22,6 +22,11 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
                 .FirstOrDefaultAsync(c => c.UserId == userId && !c.IsDeleted);
         }
 
+        public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartByProductIdAsync(int productId)
+        {
+            return await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c =>c.CartItems.Any(ci => ci.ProductVariantId == productId));
+        }
+
         public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartWithItemsAsync(int cartId)
         {
             return await _context.Carts
@@ -36,25 +41,26 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
+        public async Task UpdateCartIAsync(CartMicroservice.Domain.Entities.Cart item)
         {
-            foreach(var cartItem in item.CartItems) {
-                var existingItem = await _context.CartItems
-                .FirstOrDefaultAsync(ci => ci.CartId == cartItem.CartId
-                                        && ci.ProductVariantId == cartItem.ProductVariantId
-                                        && !ci.IsDeleted);
+            _context.Carts.Update(item);
+            await _context.SaveChangesAsync();
+        }
 
-                if (existingItem != null)
-                {
-                    existingItem.PriceSnapshot = cartItem.PriceSnapshot;
-                    existingItem.DiscountAmount = cartItem.DiscountAmount;
-                    existingItem.TaxAmount = cartItem.TaxAmount;
-                    existingItem.Quantity = cartItem.Quantity;
-                    _context.CartItems.Update(existingItem);
-                }
+        public async Task UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart item)
+        {
+            _context.Carts.Update(item);
+            await _context.SaveChangesAsync();
+        }
 
-                await _context.SaveChangesAsync();
-            }            
+        public async Task<bool> RemoveCartAsync(int cartId)
+        {
+            var item = await _context.Carts.FindAsync(cartId);
+            if (item == null) return false;
+
+            _context.Carts.Remove(item);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> RemoveCartItemAsync(int cartItemId)

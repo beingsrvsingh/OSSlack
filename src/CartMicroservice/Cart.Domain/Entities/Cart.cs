@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CartMicroservice.Domain.Entities
 {
     public class Cart
     {
         [Key]
+        [Column(name:"id")]
         public int Id { get; set; }
 
         [Required]
@@ -44,5 +46,25 @@ namespace CartMicroservice.Domain.Entities
         public string Status { get; set; } = "Active"; // Active, Abandoned, CheckedOut
 
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+        public void UpdateItemQuantity(int productVariantId, int quantity)
+        {
+            var cartItem = CartItems
+                .FirstOrDefault(ci => ci.ProductVariantId == productVariantId);
+
+            if (cartItem == null)
+                throw new Exception("Cart item not found.");
+
+            cartItem.UpdateQuantity(quantity);
+
+            RecalculateTotals();
+        }
+
+        private void RecalculateTotals()
+        {
+            Subtotal = CartItems.Sum(ci => ci.PriceSnapshot);
+            TotalAmount = Subtotal - TotalDiscount + TotalTax;
+        }
+
     }
 }

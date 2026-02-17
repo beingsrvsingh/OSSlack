@@ -5,14 +5,23 @@ namespace CartMicroservice.Application.Services
 {
     public interface ICartService
     {
-        Task<Cart?> GetCartByUserIdAsync(string userId);
-        Task<Cart?> GetCartWithItemsAsync(int cartId);
+        Task<CartMicroservice.Domain.Entities.Cart?> GetCartByUserIdAsync(string userId);
+        Task<CartMicroservice.Domain.Entities.Cart?> GetCartWithItemsAsync(int cartId);
 
-        Task<bool> AddCartItemAsync(Cart item);
-        Task<bool> UpdateCartItemAsync(Cart item);
-        Task<bool> RemoveCartItemAsync(int cartItemId);
+        Task<bool> AddCartAsync(CartMicroservice.Domain.Entities.Cart item);
+        Task<bool> AddCartItemAsync(CartMicroservice.Domain.Entities.CartItem item);
+        Task<bool> RemoveCartItemAsync(int productId);
+
+        Task<bool> RemoveCartAsync(int cartId);
         Task<IEnumerable<CartItem>> GetCartItemsAsync(int cartId);
         Task<bool> ClearCartItemsAsync(int cartId);
+
+        Task<CartMicroservice.Domain.Entities.Cart?> GetCartByProductIdAsync(int productId);
+
+        void RecalculateCart(CartMicroservice.Domain.Entities.Cart cart);
+
+        Task<bool> UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart cart, int productVariantId, int quantity);
+        Task<bool> UpdateCartAsync(CartMicroservice.Domain.Entities.Cart cart);
     }
 
 }

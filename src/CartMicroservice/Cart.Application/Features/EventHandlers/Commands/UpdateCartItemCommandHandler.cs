@@ -1,65 +1,47 @@
-using CartMicroservice.Application.Features.Commands;
+﻿using Cart.Application.Features.Commands;
 using CartMicroservice.Application.Services;
-using CartMicroservice.Domain.Entities;
-using Mapster;
+using CartMicroservice.Domain.Core.Repositories;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 
-namespace CartMicroservice.Application.Features.EventHandlers.Commands
+namespace Cart.Application.Features.EventHandlers.Commands
 {
     public class UpdateCartItemCommandHandler : IRequestHandler<UpdateCartItemCommand, Result>
     {
-        private readonly ICartService _cartService;
-        private readonly ILoggerService<UpdateCartItemCommandHandler> _logger;
+        private readonly ILoggerService<UpdateCartItemCommandHandler> logger;
+        private readonly ICartService cartService;
 
-        public UpdateCartItemCommandHandler(ICartService cartService, ILoggerService<UpdateCartItemCommandHandler> logger)
+        public UpdateCartItemCommandHandler(ILoggerService<UpdateCartItemCommandHandler> logger, ICartService cartService)
         {
-            _cartService = cartService;
-            _logger = logger;
+            this.logger = logger;
+            this.cartService = cartService;
         }
 
         public async Task<Result> Handle(UpdateCartItemCommand request, CancellationToken cancellationToken)
         {
-            try
+            var cart = await cartService.GetCartByProductIdAsync(request.productVariantId);
+
+            bool isUpdated = false;
+
+            if (cart is null)
             {
-                var item = new Cart
-                {
-                    UserId = request.CartItem.UserId,
-                    TotalAmount = (decimal)request.CartItem.Amount,
-                    TotalDiscount = (decimal)request.CartItem.Discount,
-                    TotalTax = (decimal)request.CartItem.Tax,
-                };
-
-                var carts = new List<CartItem>();
-
-                foreach (var cart in request.CartItem.CartItems)
-                {
-                    var CartItem = new CartItem
-                    {
-                        CartId = cart.CartId,
-                        ProductVariantId = cart.ProductVariantId,
-                        Quantity = cart.Quantity,
-                        PriceSnapshot = (decimal)cart.Amount,
-                        DiscountAmount = (decimal)cart.Discount,
-                        TaxAmount = (decimal)cart.Tax,
-                    };
-
-                    carts.Add(CartItem);
-
-                }
-
-                item.CartItems = carts;
-
-                bool success = await _cartService.UpdateCartItemAsync(item);
-
-                return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to update cart item"));
+                return Result.Failure(
+                    new FailureResponse("ITEM_NOT_FOUND", "Cart item not found."));
             }
-            catch (Exception ex)
+
+            isUpdated = await cartService.UpdateCartItemQuantityAsync(cart, request.productVariantId, request.Quantity);
+
+            if(isUpdated && cart.CartItems.Any((c) => c.Quantity == 1))
             {
-                _logger.LogError($"Error in UpdateCartItemCommandHandler: {ex.Message}", ex);
-                return Result.Failure(new FailureResponse("Error", "Exception occurred"));
+                isUpdated = await cartService.RemoveCartAsync(request.productVariantId);
             }
+
+            if (isUpdated) {
+                return Result.Success();
+            }
+
+            return Result.Failure("Something went wrong.");
         }
     }
 }

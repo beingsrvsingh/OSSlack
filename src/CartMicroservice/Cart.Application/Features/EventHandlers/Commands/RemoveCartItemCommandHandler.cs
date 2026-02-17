@@ -1,5 +1,6 @@
 using CartMicroservice.Application.Features.Commands;
 using CartMicroservice.Application.Services;
+using CartMicroservice.Domain.Entities;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
@@ -21,8 +22,19 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
     {
         try
         {
-            var success = await _cartService.RemoveCartItemAsync(request.CartItemId);
-            return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to remove cart item"));
+                var cart = await _cartService.GetCartByProductIdAsync(request.productId);
+                bool success = false;                
+
+                if (cart.CartItems.Count == 1)
+                {
+                    success = await _cartService.RemoveCartAsync(cart.Id);
+                }
+                else
+                {
+                    success = await _cartService.RemoveCartItemAsync(request.productId);
+                }
+
+                    return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to remove cart item"));
         }
         catch (Exception ex)
         {
