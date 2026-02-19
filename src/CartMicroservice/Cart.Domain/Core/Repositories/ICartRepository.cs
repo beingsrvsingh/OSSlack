@@ -29,7 +29,7 @@ namespace CartMicroservice.Domain.Core.Repositories
         // Optional: Clear cart items for a cart (e.g. on checkout)
         Task ClearCartItemsAsync(int cartId);
 
-        Task UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart item);
+        Task UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item);
     }
 
 }

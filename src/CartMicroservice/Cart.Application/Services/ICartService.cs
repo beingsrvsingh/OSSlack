@@ -20,7 +20,7 @@ namespace CartMicroservice.Application.Services
 
         void RecalculateCart(CartMicroservice.Domain.Entities.Cart cart);
 
-        Task<bool> UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart cart, int productVariantId, int quantity);
+        Task<bool> UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart cart, int productVariantId, int quantity);
         Task<bool> UpdateCartAsync(CartMicroservice.Domain.Entities.Cart cart);
     }
 

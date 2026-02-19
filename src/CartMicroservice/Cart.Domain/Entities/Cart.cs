@@ -47,7 +47,7 @@ namespace CartMicroservice.Domain.Entities
 
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
-        public void UpdateItemQuantity(int productVariantId, int quantity)
+        public void UpdateItem(int productVariantId, decimal basePrice, int quantity)
         {
             var cartItem = CartItems
                 .FirstOrDefault(ci => ci.ProductVariantId == productVariantId);
@@ -55,7 +55,7 @@ namespace CartMicroservice.Domain.Entities
             if (cartItem == null)
                 throw new Exception("Cart item not found.");
 
-            cartItem.UpdateQuantity(quantity);
+            cartItem.UpdateQuantity(basePrice, quantity);
 
             RecalculateTotals();
         }

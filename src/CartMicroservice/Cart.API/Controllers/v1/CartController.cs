@@ -54,7 +54,7 @@ namespace CartMicroservice.API.Controllers.v1
         }
 
         [HttpPatch("{productId}/quantity")]
-        public async Task<IActionResult> UpdateCartItemQuantity(int productId, [FromBody] int quantity)
+        public async Task<IActionResult> UpdateCartItem(int productId, [FromBody] int quantity)
         {
             var command = new UpdateCartItemCommand(productId, quantity);
 

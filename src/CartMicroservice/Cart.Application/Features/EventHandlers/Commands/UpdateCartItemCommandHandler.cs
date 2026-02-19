@@ -30,9 +30,9 @@ namespace Cart.Application.Features.EventHandlers.Commands
                     new FailureResponse("ITEM_NOT_FOUND", "Cart item not found."));
             }
 
-            isUpdated = await cartService.UpdateCartItemQuantityAsync(cart, request.productVariantId, request.Quantity);
+            isUpdated = await cartService.UpdateCartItemAsync(cart, request.productVariantId, request.Quantity);
 
-            if(isUpdated && cart.CartItems.Any((c) => c.Quantity == 1))
+            if(isUpdated && cart.CartItems.Any((c) => c.Quantity == 0))
             {
                 isUpdated = await cartService.RemoveCartAsync(request.productVariantId);
             }

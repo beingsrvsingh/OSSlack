@@ -2,6 +2,7 @@
 using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 using Shared.Domain.Enums;
+using Shared.Utilities.Response;
 
 namespace Cart.Infrastructure.Services
 {
@@ -22,9 +23,9 @@ namespace Cart.Infrastructure.Services
         {
             try
             {
-                var price = await _httpClientService.GetAsync<decimal>(Microservice.Product, $"products/{productId}/price");
+                var response = await _httpClientService.GetAsync<Result<decimal?>> (Microservice.Product, $"product/{productId}/price");
 
-                return price;
+                return response?.Data ?? 0m;
             }
             catch (Exception ex)
             {

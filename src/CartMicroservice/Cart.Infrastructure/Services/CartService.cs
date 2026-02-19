@@ -1,4 +1,5 @@
 using Azure.Core;
+using Cart.Application.Services;
 using CartMicroservice.Application.Services;
 using CartMicroservice.Domain.Core.Repositories;
 using CartMicroservice.Domain.Entities;
@@ -10,12 +11,14 @@ namespace CartMicroservice.Infrastructure.Services
     {
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository cartItemRepository;
+        private readonly IPricingClient pricingClient;
         private readonly ILoggerService<CartService> _logger;
 
-        public CartService(ICartRepository cartRepository, ICartItemRepository cartItemRepository, ILoggerService<CartService> logger)
+        public CartService(ICartRepository cartRepository, ICartItemRepository cartItemRepository, IPricingClient pricingClient, ILoggerService<CartService> logger)
         {
             _cartRepository = cartRepository;
             this.cartItemRepository = cartItemRepository;
+            this.pricingClient = pricingClient;
             _logger = logger;
         }
 
@@ -86,17 +89,18 @@ namespace CartMicroservice.Infrastructure.Services
             }
         }
 
-        public async Task<bool> UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart cart, int productVariantId, int quantity)
+        public async Task<bool> UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart cart, int productVariantId, int quantity)
         {
             try
             {
-                cart.UpdateItemQuantity(productVariantId, quantity);
-                await _cartRepository.UpdateCartItemQuantityAsync(cart);
+                decimal basePrice = await this.pricingClient.GetPriceByProductId(productVariantId, Shared.Domain.Enums.Microservice.Product);
+                cart.UpdateItem(productVariantId, basePrice, quantity);
+                await _cartRepository.UpdateCartItemAsync(cart);
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in UpdateCartItemQuantityAsync: {ex.Message}", ex);
+                _logger.LogError($"Error in UpdateCartItemAsync: {ex.Message}", ex);
                 return false;
             }
         }
@@ -110,7 +114,7 @@ namespace CartMicroservice.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in UpdateCartItemQuantityAsync: {ex.Message}", ex);
+                _logger.LogError($"Error in UpdateCartItemAsync: {ex.Message}", ex);
                 return false;
             }
         }

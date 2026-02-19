@@ -47,7 +47,7 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCartItemQuantityAsync(CartMicroservice.Domain.Entities.Cart item)
+        public async Task UpdateCartItemAsync(CartMicroservice.Domain.Entities.Cart item)
         {
             _context.Carts.Update(item);
             await _context.SaveChangesAsync();

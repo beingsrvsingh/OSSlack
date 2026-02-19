@@ -65,13 +65,13 @@ namespace CartMicroservice.Domain.Entities
         [ForeignKey(nameof(CartId))]
         public virtual CartMicroservice.Domain.Entities.Cart Cart { get; set; } = null!;
 
-        public void UpdateQuantity(int quantity)
+        public void UpdateQuantity(decimal basePrice, int quantity)
         {
             if (quantity < 1)
                 throw new Exception("Quantity must be at least 1.");
 
             Quantity = quantity;
-            PriceSnapshot = Quantity * PriceSnapshot;
+            PriceSnapshot = Quantity * basePrice;
         }
 
     }
