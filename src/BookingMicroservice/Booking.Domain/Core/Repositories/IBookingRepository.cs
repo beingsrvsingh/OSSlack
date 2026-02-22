@@ -5,6 +5,6 @@ namespace BookingMicroservice.Domain.Repositories
 {
     public interface IBookingRepository : IRepository<BookingMaster>
     {
-        Task<IEnumerable<BookingMaster>> GetAvailableAsync(int bookingId);
+        Task<List<BookingMaster>>GetBookingsByDateAsync(int entityId, DateTime date);
     }
 }

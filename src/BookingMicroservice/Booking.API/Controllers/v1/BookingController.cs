@@ -26,16 +26,16 @@ namespace Booking.API.Controllers.v1
             return Created(string.Empty, result);
         }
 
-        // Get Booking by Id
-        [HttpGet("{id:int}")]
+        // Get Available Slots
+        [HttpGet("{id:int}/slots")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetBookingById(int id)
+        public async Task<IActionResult> GetBookingsByDate(int id, DateTime date)
         {
-            var result = await Mediator.Send(new GetBookingByIdQuery(id));
+            var result = await Mediator.Send(new GetBookingsByDateQuery(id, date));
 
             if (!result.Succeeded || result.Data == null)
-                return NotFound(new { Message = "Booking not found." });
+                return NotFound(new { Message = "No available slots found for today." });
 
             return Ok(result.Data);
         }

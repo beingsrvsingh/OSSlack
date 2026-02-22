@@ -2,9 +2,6 @@ using BookingMicroservice.Domain.Entities;
 using BookingMicroservice.Domain.Repositories;
 using BookingMicroservice.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
-using Polly;
-using Shared.Domain.Entities.Base;
 using Shared.Infrastructure.Repositories;
 
 namespace BookingMicroservice.Infrastructure.Persistence.Repository
@@ -21,6 +18,15 @@ namespace BookingMicroservice.Infrastructure.Persistence.Repository
         {
             return await _context.Bookings
             .Where(a => a.Id == bookingId)
+            .ToListAsync();
+        }
+
+        public async Task<List<BookingMaster>> GetBookingsByDateAsync(int entityId, DateTime date)
+        {
+            return await _context.Bookings
+            .Where(x => x.EntityId == entityId
+                     && x.Date.Date == date
+                     && x.Status != BookingStatus.Cancelled)
             .ToListAsync();
         }
     }

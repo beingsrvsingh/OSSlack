@@ -1,6 +1,7 @@
 using BookingMicroservice.Application.Service;
 using BookingMicroservice.Domain.Entities;
 using BookingMicroservice.Domain.Repositories;
+using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
 
 namespace BookingMicroservice.Infrastructure.Service
@@ -24,18 +25,31 @@ namespace BookingMicroservice.Infrastructure.Service
             return booking.Id.ToString();
         }
 
-        public async Task<IEnumerable<BookingMaster>> GetAvailableAsync(int bookingId)
+        public async Task<IEnumerable<BookingResponseDto>> GetBookingsByDateAsync(int entityId, DateTime date)
         {
             try
             {
-                return await _repository.GetAvailableAsync(bookingId);
+                var bookedSlots =  await _repository.GetBookingsByDateAsync(entityId, date);
+
+                return bookedSlots.Select(b => new BookingResponseDto
+                {
+                    BookingId = b.Id,
+                    EntityId = b.EntityId,
+                    StartTime = b.StartTime,
+                    EndTime = b.EndTime,
+                }).ToList();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch available astrologers.");
-                return Enumerable.Empty<BookingMaster>();
+                return Enumerable.Empty<BookingResponseDto>();
             }
-        }        
+        }
+
+        public Task<IEnumerable<BookingMaster>> GetBookingByIdAsync(int bookingId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

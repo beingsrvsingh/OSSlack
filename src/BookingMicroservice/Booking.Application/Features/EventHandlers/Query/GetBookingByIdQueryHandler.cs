@@ -22,7 +22,7 @@ namespace BookingMicroservice.Application.Features.EventHandlers.Query
         public async Task<Result> Handle(GetBookingByIdQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInfo("Fetching astrologer with ID: {Id}", request.Id!);
-            var astrologer = await _bookingService.GetAvailableAsync(request.Id);
+            var astrologer = await _bookingService.GetBookingByIdAsync(request.Id);
 
             if (astrologer != null)
             {

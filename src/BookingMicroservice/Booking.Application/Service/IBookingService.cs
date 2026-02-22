@@ -7,7 +7,9 @@ namespace BookingMicroservice.Application.Service
 {
     public interface IBookingService
     {
-        Task<IEnumerable<BookingMaster>> GetAvailableAsync(int bookingId);
+        Task<IEnumerable<BookingResponseDto>> GetBookingsByDateAsync(int entityId, DateTime date);
+
+        Task<IEnumerable<BookingMaster>> GetBookingByIdAsync(int bookingId);
 
         Task<string> CreateAsync(BookingMaster booking);
     }
