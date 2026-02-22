@@ -3,7 +3,7 @@ using Shared.Domain.Repository;
 
 namespace Temple.Domain.Repositories
 {
-    public interface IScheduleRepository : IRepository<TempleSchedule>
+    public interface IScheduleRepository : IRepository<Schedule>
     {
         
     }

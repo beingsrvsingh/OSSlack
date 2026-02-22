@@ -17,8 +17,7 @@ namespace Kathavachak.Infrastructure.Persistence.Context
         public DbSet<KathavachakLanguage> KathavachakLanguages => Set<KathavachakLanguage>();
         public DbSet<KathavachakTopic> KathavachakTopics => Set<KathavachakTopic>();
         public DbSet<KathavachakSessionMode> KathavachakSessionModes => Set<KathavachakSessionMode>();
-        public DbSet<KathavachakSchedule> KathavachakSchedules => Set<KathavachakSchedule>();
-        public DbSet<KathavachakTimeSlot> KathavachakTimeSlots => Set<KathavachakTimeSlot>();
+        public DbSet<Schedule> KathavachakSchedules => Set<Schedule>();
         public DbSet<KathavachakMedia> KathavachakMedia => Set<KathavachakMedia>();
         public DbSet<KathavachakAddon> KathavachakAddon => Set<KathavachakAddon>();
         public DbSet<KathavachakExpertiseMedia> KathavachakExpertiseMedia => Set<KathavachakExpertiseMedia>();

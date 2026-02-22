@@ -132,6 +132,11 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasConstraintName("fk_astrologer_media_astrologer_id")
                    .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasMany(a => a.ScheduleExceptions)
+               .WithOne(se => se.Astrologer)
+               .HasForeignKey(se => se.AstrologerId)
+               .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }

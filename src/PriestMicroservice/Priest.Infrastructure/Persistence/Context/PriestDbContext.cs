@@ -18,7 +18,6 @@ namespace Priest.Infrastructure.Persistence.Context
         public DbSet<PriestExpertise> PriestExpertise => Set<PriestExpertise>();
         public DbSet<PriestLanguage> PriestLanguages => Set<PriestLanguage>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
-        public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
         public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();
 
         protected override void OnModelCreating(ModelBuilder builder)

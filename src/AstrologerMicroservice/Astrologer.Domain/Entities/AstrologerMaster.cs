@@ -13,6 +13,7 @@ namespace AstrologerMicroservice.Domain.Entities
         public virtual ICollection<AstrologerAttributeValue> AttributeValues { get; set; } = new List<AstrologerAttributeValue>();
         public virtual ICollection<AstrologerAddon> Addons { get; set; } = new List<AstrologerAddon>();
         public virtual ICollection<AstrologerMedia> Media { get; set; } = new List<AstrologerMedia>();
+        public virtual ICollection<ScheduleException> ScheduleExceptions { get; set; } = new List<ScheduleException>();
     }
 
 }

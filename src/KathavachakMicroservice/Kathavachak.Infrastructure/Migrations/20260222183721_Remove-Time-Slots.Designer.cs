@@ -4,6 +4,7 @@ using Kathavachak.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kathavachak.Infrastructure.Migrations
 {
     [DbContext(typeof(KathavachakDbContext))]
-    partial class KathavachakDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222183721_Remove-Time-Slots")]
+    partial class RemoveTimeSlots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,6 +419,46 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.ToTable("kathavachak_image", (string)null);
                 });
 
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("end_date");
+
+                    b.Property<bool>("IsAvailable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_available");
+
+                    b.Property<bool>("IsRecurring")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_recurring");
+
+                    b.Property<int>("KathavachakId")
+                        .HasColumnType("int")
+                        .HasColumnName("kathavachak_id");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("start_date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KathavachakId");
+
+                    b.ToTable("kathavachak_schedule", (string)null);
+                });
+
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakSearchRaw", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -500,44 +543,6 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.HasIndex("KathavachakId");
 
                     b.ToTable("kathavachak_topic", (string)null);
-                });
-
-            modelBuilder.Entity("Kathavachak.Domain.Entities.Schedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Day")
-                        .HasColumnType("int")
-                        .HasColumnName("day_of_week");
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time(6)")
-                        .HasColumnName("end_time");
-
-                    b.Property<bool>("IsAvailable")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_available");
-
-                    b.Property<int>("KathavachakId")
-                        .HasColumnType("int")
-                        .HasColumnName("kathavachak_id");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time(6)")
-                        .HasColumnName("start_time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KathavachakId");
-
-                    b.ToTable("schedules", (string)null);
                 });
 
             modelBuilder.Entity("Kathavachak.Domain.Entities.ScheduleException", b =>
@@ -811,6 +816,17 @@ namespace Kathavachak.Infrastructure.Migrations
                     b.Navigation("KathavachakMaster");
                 });
 
+            modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakSchedule", b =>
+                {
+                    b.HasOne("Kathavachak.Domain.Entities.KathavachakMaster", "Kathavachak")
+                        .WithMany("Schedules")
+                        .HasForeignKey("KathavachakId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Kathavachak");
+                });
+
             modelBuilder.Entity("Kathavachak.Domain.Entities.KathavachakSessionMode", b =>
                 {
                     b.HasOne("Kathavachak.Domain.Entities.KathavachakMaster", "Kathavachak")
@@ -826,17 +842,6 @@ namespace Kathavachak.Infrastructure.Migrations
                 {
                     b.HasOne("Kathavachak.Domain.Entities.KathavachakMaster", "Kathavachak")
                         .WithMany("Topics")
-                        .HasForeignKey("KathavachakId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Kathavachak");
-                });
-
-            modelBuilder.Entity("Kathavachak.Domain.Entities.Schedule", b =>
-                {
-                    b.HasOne("Kathavachak.Domain.Entities.KathavachakMaster", "Kathavachak")
-                        .WithMany("Schedules")
                         .HasForeignKey("KathavachakId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

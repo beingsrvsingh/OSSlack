@@ -17,7 +17,6 @@ namespace Priest.Infrastructure.Services
         //private readonly IPriestExpertiseRepository _expertiseRepository;
         //private readonly IPriestLanguageRepository _languageRepository;
         //private readonly IScheduleRepository _scheduleRepository;
-        //private readonly ITimeSlotRepository _timeSlotRepository;
         private readonly ILoggerService<PriestService> _logger;
 
         public PriestService(
@@ -279,19 +278,6 @@ namespace Priest.Infrastructure.Services
             {
                 _logger.LogError(ex, $"Failed to fetch schedules for priest ID: {priestId}");
                 return Enumerable.Empty<Schedule>();
-            }
-        }
-
-        public async Task<IEnumerable<TimeSlot>> GetTimeSlotsByScheduleIdAsync(int scheduleId)
-        {
-            try
-            {
-                return [];// await _timeSlotRepository.GetAsync(t => t.ScheduleId == scheduleId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Failed to fetch time slots for schedule ID: {scheduleId}");
-                return Enumerable.Empty<TimeSlot>();
             }
         }
 

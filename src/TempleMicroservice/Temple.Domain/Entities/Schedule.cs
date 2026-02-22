@@ -1,13 +1,14 @@
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PriestMicroservice.Domain.Entities
+namespace Temple.Domain.Entities
 {
     public class Schedule
     {
         public int Id { get; set; }
 
-        public int PriestId { get; set; }
+        public int TempleMasterId { get; set; }
 
         public DayOfWeek Day { get; set; }
 
@@ -16,8 +17,7 @@ namespace PriestMicroservice.Domain.Entities
 
         public bool IsAvailable { get; set; } = true;
 
-        [ForeignKey(nameof(PriestId))]
-        public virtual PriestMaster Priest { get; set; } = null!;
+        [ForeignKey(nameof(TempleMasterId))]
+        public virtual TempleMaster TempleMaster { get; set; } = null!;
     }
-
 }

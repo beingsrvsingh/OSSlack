@@ -25,7 +25,7 @@ namespace Temple.Application.Features.EventHandlers.Commands
 
             try
             {
-                var templeScheduleRequest = request.Adapt<TempleSchedule>();
+                var templeScheduleRequest = request.Adapt<Schedule>();
                 var updated = await _service.UpdateAsync(templeScheduleRequest);
                 if (updated)
                     return Result.Success("Temple schedule updated successfully.");

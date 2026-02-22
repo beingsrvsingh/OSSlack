@@ -25,7 +25,7 @@ namespace Temple.Application.Features.EventHandlers.Commands
 
             try
             {
-                var scheduleRequest = request.Adapt<TempleSchedule>();
+                var scheduleRequest = request.Adapt<Schedule>();
                 var created = await _service.CreateAsync(scheduleRequest);
                 if (created)
                     return Result.Success("Temple schedule created successfully.");

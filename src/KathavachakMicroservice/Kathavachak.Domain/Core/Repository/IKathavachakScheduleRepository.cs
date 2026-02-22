@@ -3,7 +3,7 @@ using Shared.Domain.Repository;
 
 namespace Kathavachak.Domain.Core.Repository
 {
-    public interface IKathavachakScheduleRepository : IRepository<KathavachakSchedule>
+    public interface IKathavachakScheduleRepository : IRepository<Schedule>
     {
     }
 

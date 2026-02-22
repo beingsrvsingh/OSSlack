@@ -14,9 +14,8 @@ namespace Temple.Infrastructure.Persistence.Context
         public DbSet<TempleMaster> TempleMasters => Set<TempleMaster>();
         public DbSet<TempleExpertise> TempleExpertises => Set<TempleExpertise>();
         public DbSet<AttributeValue> AttributeValues => Set<AttributeValue>();
-        public DbSet<TempleSchedule> TempleSchedules => Set<TempleSchedule>();
+        public DbSet<Schedule> TempleSchedules => Set<Schedule>();
         public DbSet<TempleException> TempleExceptions => Set<TempleException>();
-        public DbSet<TempleTimeSlot> TempleTimeSlots => Set<TempleTimeSlot>();
         public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();
         public DbSet<TempleAddon> TempleAddons => Set<TempleAddon>();
         public DbSet<TempleImage> TempleImages => Set<TempleImage>();

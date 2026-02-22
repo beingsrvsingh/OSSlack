@@ -137,6 +137,11 @@ namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
                 .WithOne(e => e.KathavachakMaster)
                 .HasForeignKey(e => e.KathavachakId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.ScheduleExceptions)
+               .WithOne(se => se.Kathavachak)
+               .HasForeignKey(se => se.KathavachakId)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

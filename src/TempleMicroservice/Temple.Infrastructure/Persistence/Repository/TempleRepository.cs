@@ -42,7 +42,7 @@ namespace Temple.Infrastructure.Persistence.Repository
         {
             return await _context.TempleMasters
                 .Include(t => t.VariantMasters)
-                .Include(t => t.TempleSchedules)
+                .Include(t => t.Schedules)
                 .Include(t => t.TempleExceptions)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }

@@ -25,8 +25,7 @@ namespace Priest.Infrastructure.Services
                 var schedule = new Schedule
                 {
                     PriestId = command.PriestId,
-                    DayOfWeek = command.Day,
-                    Date = command.Date,
+                    Day = command.Day,
                 };
 
                 await _repository.AddAsync(schedule);
@@ -47,8 +46,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure("Schedule not found.");
 
-                existing.DayOfWeek = command.Day;
-                existing.Date = command.Date;
+                existing.Day = command.Day;
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Schedule updated successfully.");

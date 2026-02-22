@@ -173,20 +173,6 @@ namespace Priest.API.Controllers.v1
             return Ok(result);
         }
 
-        // Get TimeSlots By Schedule ID
-        [HttpGet("schedules/{scheduleId:int}/timeslots")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTimeSlotsByScheduleId(int scheduleId)
-        {
-            var result = await Mediator.Send(new GetTimeSlotsByScheduleIdQuery { ScheduleId = scheduleId });
-
-            if (!result.Succeeded)
-                return NotFound(result);
-
-            return Ok(result);
-        }
-
         /// <summary>
         /// Search products by query with pagination
         /// </summary>

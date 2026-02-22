@@ -1,9 +1,0 @@
-﻿using PriestMicroservice.Domain.Entities;
-using Shared.Domain.Repository;
-
-namespace Priest.Domain.Core.Repository
-{
-    public interface ITimeSlotRepository : IRepository<TimeSlot>
-    {
-    }
-}

@@ -29,7 +29,6 @@ namespace Priest.Application.Services
 
         // Schedules & TimeSlots
         Task<IEnumerable<Schedule>> GetSchedulesByPriestIdAsync(int priestId);
-        Task<IEnumerable<TimeSlot>> GetTimeSlotsByScheduleIdAsync(int scheduleId);
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
 
         Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10);

@@ -1,8 +1,8 @@
+﻿using Kathavachak.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PriestMicroservice.Domain.Entities;
 
-namespace Priest.Infrastructure.Persistence.EntityConfigurations
+namespace Kathavachak.Infrastructure.Persistence.EntityConfigurations
 {
     public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
     {
@@ -15,8 +15,8 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             builder.Property(s => s.Id)
                    .HasColumnName("id");
 
-            builder.Property(s => s.PriestId)
-                   .HasColumnName("priest_id")
+            builder.Property(s => s.KathavachakId)
+                   .HasColumnName("kathavachak_id")
                    .IsRequired();
 
             builder.Property(s => s.Day)
@@ -36,12 +36,10 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .IsRequired()
                    .HasDefaultValue(true);
 
-            builder.HasOne(s => s.Priest)
-               .WithMany(p => p.Schedules)
-               .HasForeignKey(s => s.PriestId)
-               .HasConstraintName("fk_schedules_priest_id")
-               .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(s => s.Kathavachak)
+                .WithMany(k => k.Schedules)
+                .HasForeignKey(s => s.KathavachakId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
 }

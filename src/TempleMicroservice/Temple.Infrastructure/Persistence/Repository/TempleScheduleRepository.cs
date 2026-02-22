@@ -5,7 +5,7 @@ using Temple.Infrastructure.Persistence.Context;
 
 namespace Temple.Infrastructure.Persistence.Repository
 {
-    public class TempleScheduleRepository : Repository<TempleSchedule>, ITempleScheduleRepository
+    public class TempleScheduleRepository : Repository<Schedule>, ITempleScheduleRepository
     {
         private readonly TempleDbContext _context;
         public TempleScheduleRepository(TempleDbContext dbContext) : base(dbContext)

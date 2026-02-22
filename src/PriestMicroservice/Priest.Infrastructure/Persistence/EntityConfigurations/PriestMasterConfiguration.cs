@@ -131,6 +131,11 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .HasForeignKey(am => am.PriestId)
                    .HasConstraintName("fk_priest_media_priest_id")
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(a => a.ScheduleExceptions)
+               .WithOne(se => se.Priest)
+               .HasForeignKey(se => se.PriestId)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

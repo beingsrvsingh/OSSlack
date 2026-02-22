@@ -13,6 +13,7 @@ namespace PriestMicroservice.Domain.Entities
         public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
         public virtual ICollection<Addon> Addons { get; set; } = new List<Addon>();
         public virtual ICollection<PriestMedia> Medias { get; set; } = new List<PriestMedia>();
+        public virtual ICollection<ScheduleException> ScheduleExceptions { get; set; } = new List<ScheduleException>();
     }
 
 }

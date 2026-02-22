@@ -11,13 +11,14 @@ namespace Temple.Domain.Entities
         // Navigation properties if needed
         public virtual ICollection<TempleImage> Media { get; set; } = new List<TempleImage>();
         public virtual ICollection<TempleExpertise> VariantMasters { get; set; } = new List<TempleExpertise>();
-        public virtual ICollection<TempleSchedule> TempleSchedules { get; set; } = new List<TempleSchedule>();
+        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<TempleException> TempleExceptions { get; set; } = new List<TempleException>();
 
         // Attributes directly associated with temple (not expertise-specific)
         public virtual ICollection<AttributeValue> AttributeValues { get; set; } = new List<AttributeValue>();
 
         public virtual ICollection<TempleAddon> Addons { get; set; } = new List<TempleAddon>();
+        public virtual ICollection<ScheduleException> ScheduleExceptions { get; set; } = new List<ScheduleException>();
 
     }
 }

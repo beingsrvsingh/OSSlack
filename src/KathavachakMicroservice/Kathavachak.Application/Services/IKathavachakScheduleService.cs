@@ -4,10 +4,10 @@ namespace Kathavachak.Application.Services
 {
     public interface IKathavachakScheduleService
     {
-        Task<IEnumerable<KathavachakSchedule>> GetAllAsync();
-        Task<KathavachakSchedule?> GetByIdAsync(int id);
-        Task<bool> CreateAsync(KathavachakSchedule entity);
-        Task<bool> UpdateAsync(KathavachakSchedule entity);
+        Task<IEnumerable<Schedule>> GetAllAsync();
+        Task<Schedule?> GetByIdAsync(int id);
+        Task<bool> CreateAsync(Schedule entity);
+        Task<bool> UpdateAsync(Schedule entity);
         Task<bool> DeleteAsync(int id);
     }
 

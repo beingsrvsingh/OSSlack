@@ -271,3 +271,41 @@ VALUES
 (4, 2, 4, 'Saraswati Pooja Book', 'Booklet with Saraswati Pooja details',
  250.00, 300.00, 'INR', 5.00, 0.00, TRUE, 2, NOW(), NOW());
 
+ 
+-- Fixed Long Timing
+INSERT INTO schedules (id, priest_id, day_of_week, start_time, end_time, is_available)
+VALUES
+(1, 2, 1,    '10:00:00', '19:00:00', TRUE),
+(2, 2, 2,   '10:00:00', '19:00:00', TRUE),
+(3, 2, 3, '10:00:00', '19:00:00', TRUE),
+(4, 2, 4,  '10:00:00', '19:00:00', TRUE),
+(5, 2, 5,    '10:00:00', '19:00:00', TRUE),
+(6, 2, 6,  '10:00:00', '19:00:00', TRUE),
+(7, 2, 7,    '10:00:00', '19:00:00', TRUE);
+
+-- Morning And Evening Shift
+INSERT INTO schedules (id, priest_id, day_of_week, start_time, end_time, is_available)
+VALUES
+(8, 1, 1, '10:00:00', '14:00:00', TRUE),
+(9, 1, 1, '17:00:00', '19:00:00', TRUE);
+
+-- Single Shift
+INSERT INTO schedules (id, priest_id, day_of_week, start_time, end_time, is_available)
+VALUES
+(10, 1, 3, '09:00:00', '13:00:00', TRUE);
+
+-- Emergency 1 Hour Break
+INSERT INTO schedule_exceptions (id, priest_id, date, start_time, end_time, is_blocked)
+VALUES
+(1, 1, '2026-02-24', '11:00:00', '12:00:00', TRUE);
+
+-- Full Day Off
+INSERT INTO schedule_exceptions (id, priest_id, date, start_time, end_time, is_blocked)
+VALUES
+(2, 1, '2026-02-25', NULL, NULL, TRUE);
+
+-- Festival Closure
+INSERT INTO schedule_exceptions (id, priest_id, date, start_time, end_time, is_blocked)
+VALUES
+(3, 2, '2026-02-26', NULL, NULL, TRUE);
+

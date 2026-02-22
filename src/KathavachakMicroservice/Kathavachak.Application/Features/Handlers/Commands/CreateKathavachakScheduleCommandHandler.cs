@@ -23,7 +23,7 @@ namespace Kathavachak.Application.Features.CommandHandlers.Commands
         {
             try
             {
-                var entity = request.Adapt<KathavachakSchedule>();
+                var entity = request.Adapt<Schedule>();
                 var success = await _service.CreateAsync(entity);
                 return success ? Result.Success("Schedule created.") : Result.Failure(new FailureResponse("CREATE_FAILED", "Unable to create schedule."));
             }

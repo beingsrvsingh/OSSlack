@@ -3,24 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kathavachak.Domain.Entities
 {
-    public class KathavachakSchedule
+    public class Schedule
     {
-        [Key]
         public int Id { get; set; }
 
         public int KathavachakId { get; set; }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DayOfWeek Day { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
 
-        public bool IsRecurring { get; set; }
+        public bool IsAvailable { get; set; } = true;
 
         [ForeignKey(nameof(KathavachakId))]
         public virtual KathavachakMaster Kathavachak { get; set; } = null!;
-
-        public ICollection<KathavachakTimeSlot> TimeSlots { get; set; } = new List<KathavachakTimeSlot>();
     }
 
 }

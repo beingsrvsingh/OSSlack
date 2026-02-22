@@ -18,7 +18,7 @@ namespace Kathavachak.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<KathavachakSchedule>> GetAllAsync()
+        public async Task<IEnumerable<Schedule>> GetAllAsync()
         {
             try
             {
@@ -27,11 +27,11 @@ namespace Kathavachak.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetAllAsync");
-                return Enumerable.Empty<KathavachakSchedule>();
+                return Enumerable.Empty<Schedule>();
             }
         }
 
-        public async Task<KathavachakSchedule?> GetByIdAsync(int id)
+        public async Task<Schedule?> GetByIdAsync(int id)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace Kathavachak.Infrastructure.Services
             }
         }
 
-        public async Task<bool> CreateAsync(KathavachakSchedule entity)
+        public async Task<bool> CreateAsync(Schedule entity)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Kathavachak.Infrastructure.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(KathavachakSchedule entity)
+        public async Task<bool> UpdateAsync(Schedule entity)
         {
             try
             {

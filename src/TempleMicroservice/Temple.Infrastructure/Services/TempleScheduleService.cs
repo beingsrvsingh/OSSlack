@@ -16,7 +16,7 @@ namespace Temple.Infrastructure.Services
             _logger = logger;
         }
 
-        public async Task<bool> CreateAsync(TempleSchedule schedule)
+        public async Task<bool> CreateAsync(Schedule schedule)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Temple.Infrastructure.Services
             }
         }
 
-        public async Task<bool> UpdateAsync(TempleSchedule schedule)
+        public async Task<bool> UpdateAsync(Schedule schedule)
         {
             try
             {
@@ -64,12 +64,12 @@ namespace Temple.Infrastructure.Services
             }
         }
 
-        public async Task<TempleSchedule?> GetByIdAsync(int id)
+        public async Task<Schedule?> GetByIdAsync(int id)
         {
             return await _scheduleRepository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<TempleSchedule>> GetAllAsync()
+        public async Task<IEnumerable<Schedule>> GetAllAsync()
         {
             return await _scheduleRepository.GetAllAsync();
         }

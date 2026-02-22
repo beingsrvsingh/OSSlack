@@ -36,10 +36,6 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .IsRequired()
                    .HasDefaultValue(true);
 
-            builder.HasIndex(s => new { s.AstrologerId, s.Day })
-                   .HasDatabaseName("ix_schedules_astrologer_day")
-                   .IsUnique();
-
             builder.HasOne(s => s.Astrologer)
                    .WithMany(a => a.Schedules)
                    .HasForeignKey(s => s.AstrologerId)

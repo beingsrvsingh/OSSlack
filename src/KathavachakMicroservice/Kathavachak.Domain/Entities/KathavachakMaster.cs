@@ -13,8 +13,9 @@ namespace Kathavachak.Domain.Entities
         public ICollection<KathavachakLanguage> Languages { get; set; } = new List<KathavachakLanguage>();
         public ICollection<KathavachakTopic> Topics { get; set; } = new List<KathavachakTopic>();
         public ICollection<KathavachakSessionMode> SessionModes { get; set; } = new List<KathavachakSessionMode>();
-        public ICollection<KathavachakSchedule> Schedules { get; set; } = new List<KathavachakSchedule>();        
-        public ICollection<KathavachakMedia> Medias { get; set; } = new List<KathavachakMedia>();        
+        public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();        
+        public ICollection<KathavachakMedia> Medias { get; set; } = new List<KathavachakMedia>();
+        public virtual ICollection<ScheduleException> ScheduleExceptions { get; set; } = new List<ScheduleException>();
     }
 
 }

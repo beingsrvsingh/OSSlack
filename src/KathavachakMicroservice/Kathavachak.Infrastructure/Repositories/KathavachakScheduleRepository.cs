@@ -5,7 +5,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace Kathavachak.Infrastructure.Repositories
 {
-    public class KathavachakScheduleRepository : Repository<KathavachakSchedule>, IKathavachakScheduleRepository
+    public class KathavachakScheduleRepository : Repository<Schedule>, IKathavachakScheduleRepository
     {
         private readonly KathavachakDbContext _context;
 
