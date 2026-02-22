@@ -191,10 +191,10 @@ VALUES
 (id, priest_id, name, amount, mrp, currency, tax, discount, duration_minute,
  booking_type, is_default, stock_quantity, price_effective_from, price_effective_to)
 VALUES
-(1, 1, 'Ganesh Pooja Performance', 1500.00, 1800.00, 'INR', 8.00, 5.00, 30, 'Onsite', TRUE, 20, NOW(), NOW()),
-(2, 1, 'Lakshmi Pooja Performance', 1800.00, 2100.00, 'INR', 8.00, 0.00, 40, 'Onsite', TRUE, 18, NOW(), NOW()),
-(3, 2, 'Navagraha Pooja Performance', 2000.00, 2400.00, 'INR', 10.00, 5.00, 50, 'Onsite', TRUE, 15, NOW(), NOW()),
-(4, 2, 'Saraswati Pooja Performance', 1700.00, 2000.00, 'INR', 7.00, 0.00, 35, 'Onsite', TRUE, 22, NOW(), NOW());
+(1, 1, 'Ganesh Pooja', 1500.00, 1800.00, 'INR', 8.00, 5.00, 30, 'Onsite', TRUE, 20, NOW(), NOW()),
+(2, 1, 'Lakshmi Pooja', 1800.00, 2100.00, 'INR', 8.00, 0.00, 40, 'Onsite', TRUE, 18, NOW(), NOW()),
+(3, 2, 'Navagraha Pooja', 2000.00, 2400.00, 'INR', 10.00, 5.00, 50, 'Onsite', TRUE, 15, NOW(), NOW()),
+(4, 2, 'Saraswati Pooja', 1700.00, 2000.00, 'INR', 7.00, 0.00, 35, 'Onsite', TRUE, 22, NOW(), NOW());
 
 
 INSERT INTO priest_image
