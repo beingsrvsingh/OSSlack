@@ -21,6 +21,10 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .IsRequired()
                 .HasColumnName("product_variant_id");
 
+            builder.Property(e => e.BookingId)
+                .HasColumnName("booking_id")
+                .IsRequired(false);
+
             builder.Property(e => e.ProductType)
                 .IsRequired()
                 .HasMaxLength(20)

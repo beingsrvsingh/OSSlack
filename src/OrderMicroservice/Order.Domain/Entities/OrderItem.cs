@@ -15,6 +15,8 @@ namespace Order.Domain.Entities
         [Required]
         public int ProductVariantId { get; set; }  // Reference to product microservice
 
+        public int? BookingId { get; set; }  // Reference to booking microservice
+
         [Required]
         [MaxLength(20)]
         public ProviderType ProductType { get; set; } // Product, Service, Kit
