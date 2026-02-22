@@ -13,6 +13,7 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Context
 
         public DbSet<AstrologerMaster> Astrologers => Set<AstrologerMaster>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
+        public DbSet<ScheduleException> ScheduleExceptions => Set<ScheduleException>();
 
         public DbSet<AstrologerLanguage> AstrologerLanguages => Set<AstrologerLanguage>();
         public DbSet<AstrologerExpertise> AstrologerExpertises => Set<AstrologerExpertise>();

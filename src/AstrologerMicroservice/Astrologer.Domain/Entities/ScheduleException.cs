@@ -1,7 +1,7 @@
 ﻿using AstrologerMicroservice.Domain.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Astrologer.Domain.Entities
+namespace AstrologerMicroservice.Domain.Entities
 {
     public partial class ScheduleException
     {

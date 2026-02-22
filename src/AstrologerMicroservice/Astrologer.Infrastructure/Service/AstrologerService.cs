@@ -1,3 +1,5 @@
+using Astrologer.Application.Contracts;
+using Astrologer.Application.Service;
 using Astrologer.Infrastructure.Persistence.Catalog.Queries;
 using AstrologerMicroservice.Application.Features.Commands;
 using AstrologerMicroservice.Application.Service;
@@ -6,11 +8,8 @@ using AstrologerMicroservice.Domain.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Common.Contracts.Response;
-using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
-using Shared.Domain.Enums;
 using Shared.Utilities.Response;
-using System.Linq;
 
 namespace AstrologerMicroservice.Infrastructure.Service
 {
@@ -18,11 +17,15 @@ namespace AstrologerMicroservice.Infrastructure.Service
     public class AstrologerService : IAstrologerService
     {
         private readonly IAstrologerRepository _repository;
+        private readonly IScheduleRepository scheduleRepository;
+        private readonly IBookingClient bookingClient;
         private readonly ILoggerService<AstrologerService> _logger;
 
-        public AstrologerService(IAstrologerRepository repository, ILoggerService<AstrologerService> logger)
+        public AstrologerService(IAstrologerRepository repository, IScheduleRepository scheduleRepository, IBookingClient bookingClient, ILoggerService<AstrologerService> logger)
         {
             _repository = repository;
+            this.scheduleRepository = scheduleRepository;
+            this.bookingClient = bookingClient;
             _logger = logger;
         }
 
@@ -361,6 +364,66 @@ namespace AstrologerMicroservice.Infrastructure.Service
                 _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, pageNumber, pageSize);
                 return new PagedResult<CatalogResponseDto>();
             }
+        }
+
+        public async Task<List<TimeSlotDto>>GetTodayAvailableSlotsAsync(int astrologerId, DateTime date)
+        {
+            var today = date;
+            var todayDay = date.DayOfWeek;
+
+            // Get schedules
+            var schedules = await scheduleRepository.GetSchedulesByDayAsync(astrologerId, todayDay);
+
+            if (!schedules.Any())
+                return new List<TimeSlotDto>();
+
+            // Check full day exception
+            var fullDayBlocked = await scheduleRepository.IsFullDayBlockedAsync(astrologerId, today);
+
+            if (fullDayBlocked)
+                return new List<TimeSlotDto>();
+
+            // Get time exceptions
+            var exceptions = await scheduleRepository.GetTimeExceptionsAsync(astrologerId, today);
+
+            // Get bookings
+            var bookings = await bookingClient.GetBookingsByDateAsync(astrologerId, today);
+
+            var availableSlots = new List<TimeSlotDto>();
+
+            foreach (var schedule in schedules)
+            {
+                var start = schedule.StartTime;
+                var end = schedule.EndTime;
+
+                // Remove blocked exception times
+                foreach (var ex in exceptions)
+                {
+                    if (ex.StartTime.HasValue && ex.EndTime.HasValue)
+                    {
+                        if (ex.StartTime.Value > start && ex.StartTime.Value < end)
+                            end = ex.StartTime.Value;
+                    }
+                }
+
+                // Remove booking times
+                foreach (var booking in bookings)
+                {
+                    if (booking.StartTime > start && booking.StartTime < end)
+                        end = booking.StartTime;
+                }
+
+                if (start < end)
+                {
+                    availableSlots.Add(new TimeSlotDto
+                    {
+                        StartTime = start,
+                        EndTime = end
+                    });
+                }
+            }
+
+            return availableSlots;
         }
     }
 

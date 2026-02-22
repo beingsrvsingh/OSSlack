@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+using Astrologer.Application.Service;
 using Astrologer.Application.Services;
+using Astrologer.Infrastructure.Service;
 using Astrologer.Infrastructure.Services;
 using AstrologerMicroservice.Infrastructure;
 using Autofac;
@@ -57,6 +59,12 @@ builder.Services.AddSwaggerGenerate();
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
 {
     var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IBookingClient, BookingClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Booking-BaseUrl");
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
