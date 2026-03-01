@@ -110,7 +110,7 @@ namespace Identity.API.Controllers.v1
         {
             if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.PhoneNumber.ToString()))
             {
-                return BadRequest(Result.Failure("Either Email or PhoneNumber must be provided."));
+                return BadRequest(Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong.")));
             }
 
             Result result;

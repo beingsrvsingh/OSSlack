@@ -34,7 +34,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create priest language.");
-                return Result.Failure("Unable to create priest language.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -44,7 +44,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(command.Id);
                 if (existing == null)
-                    return Result.Failure("Priest language not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 existing.LanguageName = command.Language;
 
@@ -54,7 +54,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update priest language.");
-                return Result.Failure("Unable to update priest language.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -64,7 +64,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(id);
                 if (existing == null)
-                    return Result.Failure("Priest language not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 await _repository.DeleteAsync(existing);
                 return Result.Success("Priest language deleted successfully.");
@@ -72,7 +72,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete priest language.");
-                return Result.Failure("Unable to delete priest language.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
     public async Task<Result> Handle(UpdateSubCategoryCommand request, CancellationToken cancellationToken)
     {
         var result = await _service.UpdateSubCategoryAsync(request.SubCategory);
-        return result ? Result.Success() : Result.Failure("Failed to update subcategory.");
+        return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

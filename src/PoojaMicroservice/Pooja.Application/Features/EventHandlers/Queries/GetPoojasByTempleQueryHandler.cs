@@ -21,13 +21,13 @@ public class GetPoojasByTempleQueryHandler : IRequestHandler<GetPoojasByTempleQu
         {
             var poojas = await _service.GetPoojasByTempleAsync(request.TempleId);
             if (!poojas.Any())
-                return Result.Failure("No poojas found for this temple.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             return Result.Success(poojas);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to fetch poojas for temple id: {request.TempleId}");
-            return Result.Failure("Unable to retrieve poojas.");
+            return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Pooja.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete pooja with id: {request.Id}");
-                return Result.Failure("Unable to delete pooja.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

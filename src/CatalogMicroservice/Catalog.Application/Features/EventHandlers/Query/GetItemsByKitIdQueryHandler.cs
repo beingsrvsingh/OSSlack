@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
         public async Task<Result> Handle(GetItemsByKitIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _service.GetItemsByKitIdAsync(request.PoojaKitId);
-            return result.Any() ? Result.Success(result) : Result.Failure("No items found.");
+            return result.Any() ? Result.Success(result) : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 

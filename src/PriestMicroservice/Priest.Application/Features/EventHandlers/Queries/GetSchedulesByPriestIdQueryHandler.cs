@@ -27,7 +27,7 @@ namespace Priest.Application.Features.EventHandlers.Queries
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to fetch schedules for priest ID {request.PriestId}");
-                return Result.Failure("Error fetching schedules.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

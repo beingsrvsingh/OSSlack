@@ -26,7 +26,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create consultation mode.");
-                return Result.Failure("Unable to create consultation mode.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

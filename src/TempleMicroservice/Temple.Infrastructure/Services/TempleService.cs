@@ -15,13 +15,15 @@ namespace Temple.Infrastructure.Services
     {
         private readonly ITempleRepository _repository;
         private readonly ILoggerService<TempleService> _logger;
-        private readonly ITempleScheduleRepository scheduleRepository;
+        private readonly IScheduleRepository scheduleRepository;
+        private readonly IBookingClient bookingClient;
 
-        public TempleService(ITempleRepository repository, ILoggerService<TempleService> logger, ITempleScheduleRepository scheduleRepository, IBookingClient bookingClient)
+        public TempleService(ITempleRepository repository, ILoggerService<TempleService> logger, IScheduleRepository scheduleRepository, IBookingClient bookingClient)
         {
             _repository = repository;
             _logger = logger;
             this.scheduleRepository = scheduleRepository;
+            this.bookingClient = bookingClient;
         }
 
         public async Task<IEnumerable<TempleMaster>> GetAllAsync(int page = 1, int pageSize = 20)

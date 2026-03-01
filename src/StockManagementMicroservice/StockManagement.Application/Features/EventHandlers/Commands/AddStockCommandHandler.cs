@@ -20,7 +20,7 @@ namespace StockManagement.Application.Features.EventHandlers.Commands
         public async Task<Result> Handle(AddStockCommand request, CancellationToken cancellationToken)
         {
             var success = await _service.AddStockAsync(request.Stock);
-            return success ? Result.Success() : Result.Failure("Failed to add stock.");
+            return success ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 

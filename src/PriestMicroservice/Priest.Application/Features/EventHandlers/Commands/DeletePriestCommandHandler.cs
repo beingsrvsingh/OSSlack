@@ -27,7 +27,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete priest with ID {request.Id}");
-                return Result.Failure("Error deleting priest.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

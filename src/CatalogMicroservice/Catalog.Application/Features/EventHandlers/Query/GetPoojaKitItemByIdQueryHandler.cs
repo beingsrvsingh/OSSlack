@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
         public async Task<Result> Handle(GetPoojaKitItemByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _service.GetItemByIdAsync(request.Id);
-            return result is not null ? Result.Success(result) : Result.Failure("Item not found.");
+            return result is not null ? Result.Success(result) : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

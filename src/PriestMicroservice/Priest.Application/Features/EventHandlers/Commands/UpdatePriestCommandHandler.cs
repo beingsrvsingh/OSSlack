@@ -23,7 +23,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
             {
                 var priest = await _priestService.GetPriestByIdAsync(request.Id);
                 if (priest == null)
-                    return Result.Failure($"Priest with ID {request.Id} not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 priest.Name = request.DisplayName ?? priest.Name;
                 priest.ThumbnailUrl = request.ProfilePictureUrl ?? priest.ThumbnailUrl;
@@ -34,7 +34,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to update priest with ID {request.Id}");
-                return Result.Failure("Error updating priest.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

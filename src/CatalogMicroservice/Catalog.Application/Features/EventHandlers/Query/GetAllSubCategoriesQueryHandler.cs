@@ -19,7 +19,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
     public async Task<Result> Handle(GetAllSubCategoriesQuery request, CancellationToken cancellationToken)
     {
         var data = await _service.GetAllSubCategoriesAsync();
-        return data.Any() ? Result.Success(data) : Result.Failure("No subcategories found.");
+        return data.Any() ? Result.Success(data) : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

@@ -1,5 +1,4 @@
-﻿using Astrologer.Application.Contracts;
-using MediatR;
+﻿using MediatR;
 using Shared.Utilities.Response;
 
 namespace Astrologer.Application.Features.Query

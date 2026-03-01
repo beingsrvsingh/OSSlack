@@ -48,7 +48,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create consultation mode.");
-                return Result.Failure("Unable to create consultation mode.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -58,7 +58,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(command.Id);
                 if (existing == null)
-                    return Result.Failure("Consultation mode not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 existing.Mode = command.Mode;
 
@@ -68,7 +68,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update consultation mode.");
-                return Result.Failure("Unable to update consultation mode.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -78,7 +78,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(id);
                 if (existing == null)
-                    return Result.Failure("Consultation mode not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 await _repository.DeleteAsync(existing);
                 return Result.Success("Consultation mode deleted successfully.");
@@ -86,7 +86,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete consultation mode.");
-                return Result.Failure("Unable to delete consultation mode.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

@@ -58,7 +58,7 @@ public class CreateUserEmailCommandHandler : IRequestHandler<CreateUserEmailComm
             {
                 _logger.LogWarning("User registration failed for email: {0}. Errors: {1}",
                     request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
-                return Result.Failure(result.Errors);
+                return Result.Failure(result.Errors.Select(e => new FailureResponse(e.Code, e.Description)).ToArray());
             }
 
             var user = await identityService.GetUserByEmailAsync(request.Email);

@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
     public async Task<Result> Handle(DeleteSubCategoryCommand request, CancellationToken cancellationToken)
     {
         var result = await _service.DeleteSubCategoryAsync(request.Id);
-        return result ? Result.Success() : Result.Failure("Failed to delete subcategory.");
+        return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

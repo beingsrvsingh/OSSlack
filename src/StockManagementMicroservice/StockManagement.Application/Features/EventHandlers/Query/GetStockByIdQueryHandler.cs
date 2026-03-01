@@ -23,13 +23,13 @@ namespace StockManagement.Application.Features.EventHandlers.Query
             {
                 var stock = await _service.GetByIdAsync(request.StockId);
                 return stock is null
-                    ? Result.Failure("Stock not found")
+                    ? Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."))
                     : Result.Success(stock);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error fetching stock", ex);
-                return Result.Failure("Internal error");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

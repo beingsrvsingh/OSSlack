@@ -21,13 +21,13 @@ public class SearchPoojasQueryHandler : IRequestHandler<SearchPoojasQuery, Resul
         {
             var poojas = await _service.SearchPoojasAsync(request.Keyword);
             if (!poojas.Any())
-                return Result.Failure("No poojas match the search keyword.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             return Result.Success(poojas);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to search poojas with keyword: {request.Keyword}");
-            return Result.Failure("Unable to search poojas.");
+            return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

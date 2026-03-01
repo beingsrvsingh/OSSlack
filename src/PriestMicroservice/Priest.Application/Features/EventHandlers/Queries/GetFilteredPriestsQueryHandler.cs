@@ -46,7 +46,7 @@ namespace Priest.Application.Features.EventHandlers.Queries
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch filtered priests.");
-                return Result.Failure("An error occurred while filtering priests.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

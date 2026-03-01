@@ -27,7 +27,7 @@ namespace Priest.Application.Features.EventHandlers.Queries
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to fetch expertises for priest ID {request.PriestId}");
-                return Result.Failure("Error fetching expertises.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

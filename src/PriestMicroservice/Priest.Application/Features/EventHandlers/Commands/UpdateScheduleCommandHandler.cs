@@ -26,7 +26,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update schedule.");
-                return Result.Failure("Unable to update schedule.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

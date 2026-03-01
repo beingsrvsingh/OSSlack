@@ -27,7 +27,7 @@ namespace StockManagement.Application.Features.EventHandlers.Query
             catch (Exception ex)
             {
                 _logger.LogError("Failed to fetch warehouses", ex);
-                return Result.Failure("Internal error");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

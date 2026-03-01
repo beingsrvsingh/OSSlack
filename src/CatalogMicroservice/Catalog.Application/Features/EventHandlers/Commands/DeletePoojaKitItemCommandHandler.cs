@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
     public async Task<Result> Handle(DeletePoojaKitItemCommand request, CancellationToken cancellationToken)
     {
         var result = await _service.DeleteItemAsync(request.Id);
-        return result ? Result.Success() : Result.Failure("Failed to delete item.");
+        return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

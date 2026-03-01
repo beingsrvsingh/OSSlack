@@ -21,13 +21,13 @@ public class GetPoojaByIdQueryHandler : IRequestHandler<GetPoojaByIdQuery, Resul
         {
             var pooja = await _service.GetPoojaByIdAsync(request.Id);
             if (pooja == null)
-                return Result.Failure("Pooja not found.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             return Result.Success(pooja);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to fetch pooja with id: {request.Id}");
-            return Result.Failure("Unable to retrieve pooja.");
+            return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

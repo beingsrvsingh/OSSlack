@@ -24,7 +24,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
     public async Task<Result> Handle(UpdatePoojaKitItemCommand request, CancellationToken cancellationToken)
     {
         var result = await _service.UpdateItemAsync(request.Item);
-        return result ? Result.Success() : Result.Failure("Failed to update item.");
+        return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

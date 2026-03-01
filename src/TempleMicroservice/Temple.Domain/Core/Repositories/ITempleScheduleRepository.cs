@@ -3,6 +3,7 @@ using Temple.Domain.Entities;
 
 namespace Temple.Domain.Core.Repositories
 {
-    public interface ITempleScheduleRepository : IRepository<Schedule> { }
+    public interface ITempleScheduleRepository : IRepository<Schedule> {
+    }
 
 }

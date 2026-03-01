@@ -41,7 +41,7 @@ namespace Cart.Application.Features.EventHandlers.Commands
                 return Result.Success();
             }
 
-            return Result.Failure("Something went wrong.");
+            return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

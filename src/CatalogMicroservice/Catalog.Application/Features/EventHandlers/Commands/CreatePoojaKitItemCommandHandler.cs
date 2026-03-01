@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
     public async Task<Result> Handle(CreatePoojaKitItemCommand request, CancellationToken cancellationToken)
     {
         var result = await _service.CreateItemAsync(request.Item);
-        return result ? Result.Success() : Result.Failure("Failed to create item.");
+        return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
     }
 }
 }

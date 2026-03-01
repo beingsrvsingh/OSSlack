@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Commands
         public async Task<Result> Handle(AddOrUpdateSubCategoryLocalizedTextCommand request, CancellationToken cancellationToken)
         {
             var result = await _service.AddOrUpdateLocalizedTextAsync(request.LocalizedText);
-            return result ? Result.Success() : Result.Failure("Failed to add/update localized text.");
+            return result ? Result.Success() : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }

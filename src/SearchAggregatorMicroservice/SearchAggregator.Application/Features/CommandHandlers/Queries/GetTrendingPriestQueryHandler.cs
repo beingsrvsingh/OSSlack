@@ -26,7 +26,7 @@ namespace SearchAggregator.Application.Features.CommandHandlers.Queries
                 if (result is null)
                 {
                     logger.LogInfo("No trending Priest data found.");
-                    return Result.Failure("No trending data available.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
                 }
 
                 return Result.Success(result);

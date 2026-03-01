@@ -34,7 +34,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create schedule.");
-                return Result.Failure("Unable to create schedule.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -44,7 +44,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(command.Id);
                 if (existing == null)
-                    return Result.Failure("Schedule not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 existing.Day = command.Day;
 
@@ -54,7 +54,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update schedule.");
-                return Result.Failure("Unable to update schedule.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
 
@@ -64,7 +64,7 @@ namespace Priest.Infrastructure.Services
             {
                 var existing = await _repository.GetByIdAsync(id);
                 if (existing == null)
-                    return Result.Failure("Schedule not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 await _repository.DeleteAsync(existing);
                 return Result.Success("Schedule deleted successfully.");
@@ -72,7 +72,7 @@ namespace Priest.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete schedule.");
-                return Result.Failure("Unable to delete schedule.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

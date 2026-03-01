@@ -23,13 +23,13 @@ namespace Priest.Application.Features.EventHandlers.Queries
             {
                 var priest = await _priestService.GetPriestByIdAsync(request.Id);
                 if (priest == null)
-                    return Result.Failure($"Priest with ID {request.Id} not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
                 return Result.Success(priest);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to retrieve priest with ID {request.Id}");
-                return Result.Failure("Internal error occurred.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

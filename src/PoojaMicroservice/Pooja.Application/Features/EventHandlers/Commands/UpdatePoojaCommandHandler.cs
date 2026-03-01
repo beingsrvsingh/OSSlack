@@ -23,7 +23,7 @@ namespace Pooja.Application.Features.EventHandlers.Commands
             {
                 var pooja = await _service.GetPoojaByIdAsync(request.Id);
                 if (pooja == null)
-                    return Result.Failure("Pooja not found.");
+                    return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 pooja.Name = request.Name;
 
@@ -33,7 +33,7 @@ namespace Pooja.Application.Features.EventHandlers.Commands
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to update pooja with id: {request.Id}");
-                return Result.Failure("Unable to update pooja.");
+                return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
         }
     }

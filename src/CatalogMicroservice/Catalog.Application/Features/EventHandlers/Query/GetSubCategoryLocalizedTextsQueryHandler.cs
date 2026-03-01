@@ -20,7 +20,7 @@ namespace Catalog.Application.Features.EventHandlers.Query
         public async Task<Result> Handle(GetSubCategoryLocalizedTextsQuery request, CancellationToken cancellationToken)
         {
             var result = await _service.GetLocalizedTextsAsync(request.SubCategoryId);
-            return result.Any() ? Result.Success(result) : Result.Failure("No localized texts found.");
+            return result.Any() ? Result.Success(result) : Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
         }
     }
 }
