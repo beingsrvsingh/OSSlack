@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Application.Common.Contracts.Response;
-using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
-using Shared.Domain.Enums;
-using Shared.Infrastructure.Repositories;
 using Shared.Utilities.Response;
-using System.Linq;
+using Temple.Application.Service;
 using Temple.Application.Services;
+using Temple.Domain.Core.Repositories;
 using Temple.Domain.Entities;
 using Temple.Domain.Repositories;
 using Temple.Infrastructure.Persistence.Catalog.Queries;
@@ -17,11 +15,13 @@ namespace Temple.Infrastructure.Services
     {
         private readonly ITempleRepository _repository;
         private readonly ILoggerService<TempleService> _logger;
+        private readonly ITempleScheduleRepository scheduleRepository;
 
-        public TempleService(ITempleRepository repository, ILoggerService<TempleService> logger)
+        public TempleService(ITempleRepository repository, ILoggerService<TempleService> logger, ITempleScheduleRepository scheduleRepository, IBookingClient bookingClient)
         {
             _repository = repository;
             _logger = logger;
+            this.scheduleRepository = scheduleRepository;
         }
 
         public async Task<IEnumerable<TempleMaster>> GetAllAsync(int page = 1, int pageSize = 20)
@@ -238,6 +238,66 @@ namespace Temple.Infrastructure.Services
                 _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, pageNumber, pageSize);
                 return new PagedResult<CatalogResponseDto>();
             }
+        }
+
+        public async Task<List<TimeSlotDto>> GetTodayAvailableSlotsAsync(int astrologerId, DateTime date)
+        {
+            var today = date;
+            var todayDay = date.DayOfWeek;
+
+            // Get schedules
+            var schedules = await scheduleRepository.GetSchedulesByDayAsync(astrologerId, todayDay);
+
+            if (!schedules.Any())
+                return new List<TimeSlotDto>();
+
+            // Check full day exception
+            var fullDayBlocked = await scheduleRepository.IsFullDayBlockedAsync(astrologerId, today);
+
+            if (fullDayBlocked)
+                return new List<TimeSlotDto>();
+
+            // Get time exceptions
+            var exceptions = await scheduleRepository.GetTimeExceptionsAsync(astrologerId, today);
+
+            // Get bookings
+            var bookings = await bookingClient.GetBookingsByDateAsync(astrologerId, today);
+
+            var availableSlots = new List<TimeSlotDto>();
+
+            foreach (var schedule in schedules)
+            {
+                var start = schedule.StartTime;
+                var end = schedule.EndTime;
+
+                // Remove blocked exception times
+                foreach (var ex in exceptions)
+                {
+                    if (ex.StartTime.HasValue && ex.EndTime.HasValue)
+                    {
+                        if (ex.StartTime.Value > start && ex.StartTime.Value < end)
+                            end = ex.StartTime.Value;
+                    }
+                }
+
+                // Remove booking times
+                foreach (var booking in bookings)
+                {
+                    if (booking.StartTime > start && booking.StartTime < end)
+                        end = booking.StartTime;
+                }
+
+                if (start < end)
+                {
+                    availableSlots.Add(new TimeSlotDto
+                    {
+                        StartTime = start,
+                        EndTime = end
+                    });
+                }
+            }
+
+            return availableSlots;
         }
     }
 

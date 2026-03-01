@@ -9,6 +9,8 @@ using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
 using Temple.Application.Services;
 using Temple.Infrastructure.Services;
+using Temple.Application.Service;
+using Temple.Infrastructure.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,12 @@ builder.Services.AddSwaggerGenerate();
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
 {
     var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IBookingClient, BookingClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Booking-BaseUrl");
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 

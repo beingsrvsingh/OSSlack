@@ -15,29 +15,29 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
             this._context = dbContext;
         }
 
-        public async Task<List<Schedule>>GetSchedulesByDayAsync(int astrologerId, DayOfWeek day)
+        public async Task<List<Schedule>>GetSchedulesByDayAsync(int entityId, DayOfWeek day)
         {
             return await _context.Schedules
-                .Where(x => x.AstrologerId == astrologerId
+                .Where(x => x.AstrologerId == entityId
                          && (int)x.Day == (int)day
                          && x.IsAvailable)
                 .ToListAsync();
         }
 
-        public async Task<bool>IsFullDayBlockedAsync(int astrologerId, DateTime date)
+        public async Task<bool>IsFullDayBlockedAsync(int entityId, DateTime date)
         {
             return await _context.ScheduleExceptions
-                .AnyAsync(x => x.AstrologerId == astrologerId
+                .AnyAsync(x => x.AstrologerId == entityId
                             && x.Date == date
                             && x.IsBlocked
                             && x.StartTime == null
                             && x.EndTime == null);
         }
 
-        public async Task<List<ScheduleException>>GetTimeExceptionsAsync(int astrologerId, DateTime date)
+        public async Task<List<ScheduleException>>GetTimeExceptionsAsync(int entityId, DateTime date)
         {
             return await _context.ScheduleExceptions
-                .Where(x => x.AstrologerId == astrologerId
+                .Where(x => x.AstrologerId == entityId
                          && x.Date == date
                          && x.IsBlocked
                          && x.StartTime != null)

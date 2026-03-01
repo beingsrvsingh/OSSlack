@@ -2,8 +2,10 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
 using Kathavachak.Infrastructure.Services;
+using Priest.Application.Service;
 using Priest.Application.Services;
 using Priest.Infrastructure;
+using Priest.Infrastructure.Service;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;
@@ -57,6 +59,12 @@ builder.Services.AddSwaggerGenerate();
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
 {
     var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IBookingClient, BookingClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Booking-BaseUrl");
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 

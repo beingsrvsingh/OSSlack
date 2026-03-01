@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Priest.Application.Service;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
 using Priest.Infrastructure.Persistence.Catalog.Queries;
@@ -18,6 +19,8 @@ namespace Priest.Infrastructure.Services
         //private readonly IPriestLanguageRepository _languageRepository;
         //private readonly IScheduleRepository _scheduleRepository;
         private readonly ILoggerService<PriestService> _logger;
+        private readonly IScheduleRepository scheduleRepository;
+        private readonly IBookingClient bookingClient;
 
         public PriestService(
             IPriestRepository priestRepository,
@@ -26,7 +29,9 @@ namespace Priest.Infrastructure.Services
             //IPriestLanguageRepository languageRepository,
             //IScheduleRepository scheduleRepository,
             //ITimeSlotRepository timeSlotRepository,
-            ILoggerService<PriestService> logger)
+            ILoggerService<PriestService> logger,
+            IScheduleRepository scheduleRepository,
+            IBookingClient bookingClient)
         {
             _repository = priestRepository;
             //_consultationModeRepository = consultationModeRepository;
@@ -35,6 +40,8 @@ namespace Priest.Infrastructure.Services
             //_scheduleRepository = scheduleRepository;
             //_timeSlotRepository = timeSlotRepository;
             _logger = logger;
+            this.scheduleRepository = scheduleRepository;
+            this.bookingClient = bookingClient;
         }
 
         public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10)
@@ -313,6 +320,66 @@ namespace Priest.Infrastructure.Services
                 _logger.LogError(ex, "Error occurred while searching for products. Query: '{Query}', Page: {Page}, PageSize: {PageSize}", query, pageNumber, pageSize);
                 return new PagedResult<CatalogResponseDto>();
             }
+        }
+
+        public async Task<List<TimeSlotDto>> GetTodayAvailableSlotsAsync(int astrologerId, DateTime date)
+        {
+            var today = date;
+            var todayDay = date.DayOfWeek;
+
+            // Get schedules
+            var schedules = await scheduleRepository.GetSchedulesByDayAsync(astrologerId, todayDay);
+
+            if (!schedules.Any())
+                return new List<TimeSlotDto>();
+
+            // Check full day exception
+            var fullDayBlocked = await scheduleRepository.IsFullDayBlockedAsync(astrologerId, today);
+
+            if (fullDayBlocked)
+                return new List<TimeSlotDto>();
+
+            // Get time exceptions
+            var exceptions = await scheduleRepository.GetTimeExceptionsAsync(astrologerId, today);
+
+            // Get bookings
+            var bookings = await bookingClient.GetBookingsByDateAsync(astrologerId, today);
+
+            var availableSlots = new List<TimeSlotDto>();
+
+            foreach (var schedule in schedules)
+            {
+                var start = schedule.StartTime;
+                var end = schedule.EndTime;
+
+                // Remove blocked exception times
+                foreach (var ex in exceptions)
+                {
+                    if (ex.StartTime.HasValue && ex.EndTime.HasValue)
+                    {
+                        if (ex.StartTime.Value > start && ex.StartTime.Value < end)
+                            end = ex.StartTime.Value;
+                    }
+                }
+
+                // Remove booking times
+                foreach (var booking in bookings)
+                {
+                    if (booking.StartTime > start && booking.StartTime < end)
+                        end = booking.StartTime;
+                }
+
+                if (start < end)
+                {
+                    availableSlots.Add(new TimeSlotDto
+                    {
+                        StartTime = start,
+                        EndTime = end
+                    });
+                }
+            }
+
+            return availableSlots;
         }
     }
 

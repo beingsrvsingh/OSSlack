@@ -15,29 +15,29 @@ namespace Kathavachak.Infrastructure.Repositories
             _context = dbContext;
         }
 
-        public async Task<List<Schedule>> GetSchedulesByDayAsync(int kathavachakId, DayOfWeek day)
+        public async Task<List<Schedule>> GetSchedulesByDayAsync(int entityId, DayOfWeek day)
         {
             return await _context.KathavachakSchedules
-                .Where(x => x.KathavachakId == kathavachakId
+                .Where(x => x.KathavachakId == entityId
                          && (int)x.Day == (int)day
                          && x.IsAvailable)
                 .ToListAsync();
         }
 
-        public async Task<bool> IsFullDayBlockedAsync(int kathavachakId, DateTime date)
+        public async Task<bool> IsFullDayBlockedAsync(int entityId, DateTime date)
         {
             return await _context.ScheduleExceptions
-                .AnyAsync(x => x.KathavachakId == kathavachakId
+                .AnyAsync(x => x.KathavachakId == entityId
                             && x.Date == date
                             && x.IsBlocked
                             && x.StartTime == null
                             && x.EndTime == null);
         }
 
-        public async Task<List<ScheduleException>> GetTimeExceptionsAsync(int kathavachakId, DateTime date)
+        public async Task<List<ScheduleException>> GetTimeExceptionsAsync(int entityId, DateTime date)
         {
             return await _context.ScheduleExceptions
-                .Where(x => x.KathavachakId == kathavachakId
+                .Where(x => x.KathavachakId == entityId
                          && x.Date == date
                          && x.IsBlocked
                          && x.StartTime != null)

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Priest.Domain.Entities;
 using PriestMicroservice.Domain.Entities;
 using System.Reflection;
 
@@ -18,6 +19,7 @@ namespace Priest.Infrastructure.Persistence.Context
         public DbSet<PriestExpertise> PriestExpertise => Set<PriestExpertise>();
         public DbSet<PriestLanguage> PriestLanguages => Set<PriestLanguage>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
+        public DbSet<ScheduleException> ScheduleExceptions => Set<ScheduleException>();
         public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();
 
         protected override void OnModelCreating(ModelBuilder builder)
