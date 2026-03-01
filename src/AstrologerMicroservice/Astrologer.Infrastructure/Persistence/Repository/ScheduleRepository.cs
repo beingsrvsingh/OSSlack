@@ -15,12 +15,11 @@ namespace AstrologerMicroservice.Infrastructure.Persistence.Repository
             this._context = dbContext;
         }
 
-        public async Task<List<Schedule>>
-        GetSchedulesByDayAsync(int astrologerId, DayOfWeek day)
+        public async Task<List<Schedule>>GetSchedulesByDayAsync(int astrologerId, DayOfWeek day)
         {
             return await _context.Schedules
                 .Where(x => x.AstrologerId == astrologerId
-                         && x.Day == day
+                         && (int)x.Day == (int)day
                          && x.IsAvailable)
                 .ToListAsync();
         }

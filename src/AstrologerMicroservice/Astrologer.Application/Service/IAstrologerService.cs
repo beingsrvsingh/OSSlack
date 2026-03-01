@@ -1,4 +1,3 @@
-using Astrologer.Application.Contracts;
 using AstrologerMicroservice.Application.Features.Commands;
 using AstrologerMicroservice.Domain.Entities;
 using AstrologerMicroservice.Domain.Entities.Enums;
@@ -25,6 +24,6 @@ namespace AstrologerMicroservice.Application.Service
         Task<PagedResult<CatalogResponseDto>> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken);
 
         Task<PagedResult<CatalogResponseDto>> GetTrendingProdcutsAsync(int pageNumber = 1, int pageSize = 10);
-        Task<List<TimeSlotDto>> GetTodayAvailableSlotsAsync(int astrologerId, DateTime date);
+        Task<List<TimeSlotDto>> GetTodayAvailableSlotsAsync(int entityId, DateTime date);
     }
 }

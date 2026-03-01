@@ -18,6 +18,7 @@ namespace Kathavachak.Infrastructure.Persistence.Context
         public DbSet<KathavachakTopic> KathavachakTopics => Set<KathavachakTopic>();
         public DbSet<KathavachakSessionMode> KathavachakSessionModes => Set<KathavachakSessionMode>();
         public DbSet<Schedule> KathavachakSchedules => Set<Schedule>();
+        public DbSet<ScheduleException> ScheduleExceptions => Set<ScheduleException>();
         public DbSet<KathavachakMedia> KathavachakMedia => Set<KathavachakMedia>();
         public DbSet<KathavachakAddon> KathavachakAddon => Set<KathavachakAddon>();
         public DbSet<KathavachakExpertiseMedia> KathavachakExpertiseMedia => Set<KathavachakExpertiseMedia>();

@@ -1,5 +1,4 @@
-﻿using Astrologer.Application.Contracts;
-using Astrologer.Application.Features.Query;
+﻿using Astrologer.Application.Features.Query;
 using AstrologerMicroservice.Application.Service;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
@@ -20,7 +19,7 @@ namespace Astrologer.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetAvailableSlotsQuery request,CancellationToken cancellationToken)
         {
-            var availableSlots = await astrologerService.GetTodayAvailableSlotsAsync(request.AstrologerId, request.Date);
+            var availableSlots = await astrologerService.GetTodayAvailableSlotsAsync(request.EntityId, request.Date);
             return Result.Success(availableSlots);
         }
     }

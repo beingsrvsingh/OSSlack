@@ -37,7 +37,7 @@ namespace Booking.API.Controllers.v1
             if (!result.Succeeded || result.Data == null)
                 return NotFound(new { Message = "No available slots found for today." });
 
-            return Ok(result.Data);
+            return Ok(result);
         }
     }
 }

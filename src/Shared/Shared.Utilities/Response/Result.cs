@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using Shared.Utilities.Interfaces;
 
 namespace Shared.Utilities.Response
@@ -7,33 +8,30 @@ namespace Shared.Utilities.Response
     {
         public object? Data { get; init; }
 
-        public Result(bool succeeded, object? data, object? errors)
+        [JsonConstructor]
+        public Result(bool succeeded, object? data, IEnumerable<FailureResponse>? errors)
         {
             Succeeded = succeeded;
-            Errors = errors;
             Data = data;
+            Errors = errors?.ToArray() ?? Array.Empty<FailureResponse>();
         }
 
         public static Result Success()
-            => new Result(true, Array.Empty<string>(), Array.Empty<string>());
+        => new(true, null, null);
 
         public static Result Success(object data)
-            => new Result(true, data, Array.Empty<String>());
+            => new(true, data, null);
 
-        public static Result Failure() => new Result(false, Array.Empty<String>(), Array.Empty<String>());
-
-        public static Result Failure(object errors)
-            => new Result(false, Array.Empty<String>(), errors);
-
-        public static Result Failure(FailureResponse errors)
-            => new Result(false, Array.Empty<String>(), errors);
+        public static Result Failure(params FailureResponse[] errors)
+            => new(false, null, errors);
     }
 
     public class Result<T> : BaseResponse, IResult<T>
     {
         public T? Data { get; init; }
 
-        public Result(bool succeeded, T? data, object? errors)
+        [JsonConstructor]
+        public Result(bool succeeded, T? data, IReadOnlyList<FailureResponse> errors)
         {
             Succeeded = succeeded;
             Data = data;
@@ -41,13 +39,10 @@ namespace Shared.Utilities.Response
         }
 
         public static Result<T> Success(T data)
-            => new Result<T>(true, data, Array.Empty<String>());
+        => new(true, data, null);
 
-        public static Result<T> Failure(object errors)
-            => new Result<T>(false, default, errors);
-
-        public static Result<T> Failure(FailureResponse errors)
-            => new Result<T>(false, default, errors);
+        public static Result<T> Failure(params FailureResponse[] errors)
+            => new(false, default, errors);
     }
 
     public class FailureResponse

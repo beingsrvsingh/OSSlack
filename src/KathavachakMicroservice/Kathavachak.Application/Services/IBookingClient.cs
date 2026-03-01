@@ -1,6 +1,6 @@
 ﻿using Shared.Application.Common.Contracts.Response;
 
-namespace Astrologer.Application.Service
+namespace Kathavachak.Application.Service
 {
     public interface IBookingClient
     {

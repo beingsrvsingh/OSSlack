@@ -5,6 +5,9 @@ namespace Kathavachak.Domain.Core.Repository
 {
     public interface IKathavachakScheduleRepository : IRepository<Schedule>
     {
+        Task<List<Schedule>> GetSchedulesByDayAsync(int entityId, DayOfWeek day);
+        Task<bool> IsFullDayBlockedAsync(int entityId, DateTime date);
+        Task<List<ScheduleException>> GetTimeExceptionsAsync(int entityId, DateTime date);
     }
 
 }

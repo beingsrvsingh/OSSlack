@@ -1,8 +1,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
+using Kathavachak.Application.Service;
 using Kathavachak.Application.Services;
 using Kathavachak.Infrastructure;
+using Kathavachak.Infrastructure.Service;
 using Kathavachak.Infrastructure.Services;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
@@ -57,6 +59,12 @@ builder.Services.AddSwaggerGenerate();
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(client =>
 {
     var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Catalog-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IBookingClient, BookingClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Booking-BaseUrl");
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 

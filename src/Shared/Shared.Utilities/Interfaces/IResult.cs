@@ -1,10 +1,12 @@
 
+using Shared.Utilities.Response;
+
 namespace Shared.Utilities.Interfaces
 {
     public interface IResult
     {
         bool Succeeded { get; }
-        object? Errors { get; }
+        IReadOnlyList<FailureResponse> Errors { get; }
     }
 
     public interface IResult<T> : IResult

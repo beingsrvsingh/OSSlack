@@ -8,7 +8,7 @@ namespace Shared.Utilities.Response.Extensions
         {
             return result.Succeeded
                 ? Result.Success(userId)
-                : Result.Failure(result.Errors.Select(e => e.Description));
+                : Result.Failure(result.Errors.Select(e => new FailureResponse(e.Code, e.Description)).ToArray());
         }
     }
 }

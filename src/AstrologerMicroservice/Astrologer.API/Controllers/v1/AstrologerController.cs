@@ -78,14 +78,14 @@ namespace Astrologer.API.Controllers.v1
         [HttpGet("{id:int}/slots")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTodayAvailableSlots(int id, DateTime date)
+        public async Task<IActionResult> GetTodayAvailableSlots(int entityId, DateTime date)
         {
-            var result = await Mediator.Send(new GetAvailableSlotsQuery(id, date));
+            var result = await Mediator.Send(new GetAvailableSlotsQuery(entityId, date));
 
             if (!result.Succeeded || result.Data == null)
                 return NotFound(new { Message = "No available slots found for today." });
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         [HttpGet("by-subcategory")]

@@ -1,10 +1,10 @@
-﻿using Astrologer.Application.Service;
+﻿using Kathavachak.Application.Service;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
 using System.Net.Http.Json;
 
-namespace Astrologer.Infrastructure.Service
+namespace Kathavachak.Infrastructure.Service
 {
     public class BookingClient : IBookingClient
     {

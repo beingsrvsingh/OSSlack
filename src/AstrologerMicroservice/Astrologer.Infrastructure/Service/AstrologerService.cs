@@ -1,4 +1,3 @@
-using Astrologer.Application.Contracts;
 using Astrologer.Application.Service;
 using Astrologer.Infrastructure.Persistence.Catalog.Queries;
 using AstrologerMicroservice.Application.Features.Commands;

@@ -1,4 +1,4 @@
-﻿namespace Astrologer.Application.Contracts
+﻿namespace Shared.Application.Common.Contracts.Response
 {
     public class TimeSlotDto
     {
