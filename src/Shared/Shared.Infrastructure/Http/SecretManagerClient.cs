@@ -9,11 +9,9 @@ public class SecretManagerClient : ISecretManagerClient
     private readonly HttpClient _httpClient;
     private readonly ILoggerService<SecretManagerClient> _logger;
 
-    public SecretManagerClient(
-        ILoggerService<SecretManagerClient> logger,
-        IHttpClientFactory httpClientFactory)
+    public SecretManagerClient(ILoggerService<SecretManagerClient> logger, IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClientFactory.CreateClient(nameof(SecretManagerClient)) ?? throw new ArgumentNullException(nameof(httpClientFactory));
+        _httpClient = httpClientFactory.CreateClient(nameof(ISecretManagerClient)) ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));        
     }
 

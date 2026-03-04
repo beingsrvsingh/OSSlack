@@ -2,6 +2,7 @@
 using Payment.Application.Contracts;
 using Payment.Application.Services;
 using Payment.Infrastructure.Configuration;
+using Shared.Application.Interfaces;
 using System.Text;
 using System.Text.Json;
 
@@ -10,25 +11,22 @@ namespace Payment.Infrastructure.Services
     public class CashfreeService : ICashfreeService
     {
         private readonly HttpClient _http;
+        private readonly ISecretManagerClient secretManagerClient;
         private readonly CashfreeSettings _settings;
 
-        public CashfreeService(HttpClient http, IOptions<CashfreeSettings> options)
+        public CashfreeService(HttpClient http, IOptions<CashfreeSettings> options, ISecretManagerClient secretManagerClient)
         {
             _http = http;
+            this.secretManagerClient = secretManagerClient;
             _settings = options.Value;
         }
 
-        public async Task<CreatePaymentResponse> CreateOrderAsync(
-            string orderId,
-            decimal amount,
-            string customerId,
-            string customerEmail,
-            string customerPhone)
+        public async Task<CreatePaymentResponse> CreateOrderAsync(string orderId,decimal amount,string customerId,string customerEmail,string customerPhone)
         {
-            var request = new HttpRequestMessage(
-                HttpMethod.Post,
-                $"{_settings.BaseUrl}/orders"
-            );
+            var request = new HttpRequestMessage(HttpMethod.Post,$"{_settings.BaseUrl}/orders");
+
+            //TODO
+            var keys = await this.secretManagerClient.GetSecretKeyAsync("environment", "Cashfree_Sandbox_ClientId");
 
             request.Headers.Add("x-client-id", _settings.ClientId);
             request.Headers.Add("x-client-secret", _settings.ClientSecret);

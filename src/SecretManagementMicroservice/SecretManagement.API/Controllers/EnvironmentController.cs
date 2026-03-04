@@ -11,7 +11,7 @@ namespace SecretManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("get/{key}")]
+        [HttpGet("{key}")]
         public async Task<IActionResult> GetVariable(string key)
         {
             var result = await Mediator.Send(new GetEnvironmentVariableQuery(key));
