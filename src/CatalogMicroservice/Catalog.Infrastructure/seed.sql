@@ -1531,14 +1531,377 @@ INSERT INTO subcategory_master (
 -- Pooja (Service)
 (13, 104, 'Ganesh Pooja', 'Ganesh Chaturthi pooja and rituals', 1, NULL, NOW(), NOW()),
 (14, 104, 'Lakshmi Pooja', 'Pooja for Goddess Lakshmi prosperity blessings', 1, NULL, NOW(), NOW()),
-(15, 104, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 13, NOW(), NOW()),
+(15, 104, 'Ganesh Chaturthi', 'Special Ganesh Chaturthi pooja event', 1, 13, NOW(), NOW());
 
 -- Temple (Service)
-(16, 105, 'Vishnu Temple', 'Temples dedicated to Lord Vishnu', 1, NULL, NOW(), NOW()),
-(17, 105, 'Shiva Temple', 'Temples dedicated to Lord Shiva', 1, NULL, NOW(), NOW()),
-(18, 105, 'Tirupati Temple', 'Famous Vishnu temple located in Tirupati', 1, 16, NOW(), NOW()),
+
+-- Insert parent record (Daily / Regular Services)
+INSERT INTO subcategory_master 
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Daily / Regular Services (Nitya / Naimittika)', 'Daily or regular temple services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- Get the last inserted ID to use as parent_id
+SET @parent_id = LAST_INSERT_ID();
+
+-- Insert child records (Archana Services)
+INSERT INTO subcategory_master 
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Single Name Archana', 'Archana for single name', 1, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Family Archana', 'Archana for family', 2, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Nakshatra Archana', 'Archana based on Nakshatra', 3, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Vahana Archana', 'Archana for vehicle', 4, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Birthday Archana', 'Archana on birthday', 5, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Anniversary Archana', 'Archana on anniversary', 6, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Nalangu Archana', 'Nalangu ceremony Archana', 7, NULL, 1, @parent_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+
+-- 1 Abhishekam / Ritual Cleanings
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Abhishekam / Ritual Cleanings', 'Various abhishekam and ritual cleansing services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @abhishekam_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Rudra Abhishekam', 'Rudra abhishekam ritual', 1, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Lakshmi Abhishekam', 'Lakshmi abhishekam ritual', 2, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Raja Abhishekam', 'Raja abhishekam ritual', 3, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Navagraha Abhishekam', 'Navagraha abhishekam ritual', 4, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Vahana Abhishekam', 'Vahana abhishekam ritual', 5, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Sudarshana Abhishekam', 'Sudarshana abhishekam ritual', 6, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Navadurgas Abhishekam', 'Navadurgas abhishekam ritual', 7, NULL, 1, @abhishekam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 2 Daily Aarti / Dharshan Services
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Daily Aarti / Dharshan Services', 'Morning, afternoon, evening and night aarti services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @aarti_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Morning Aarti', 'Morning aarti service', 1, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Afternoon Aarti', 'Afternoon aarti service', 2, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Evening Aarti', 'Evening aarti service', 3, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Night Prahar Aarti', 'Night prahar aarti service', 4, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Temple Bells / Deepa Aarti', 'Temple bells and deepa aarti', 5, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Floating Lamp / Candle Aarti', 'Floating lamp and candle aarti', 6, NULL, 1, @aarti_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 3 Devotional Chanting & Recitations
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Devotional Chanting & Recitations', 'Recitations of Sahasranama and Veda patha', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @chanting_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Sahasranama (Shiva / Vishnu / Devi)', 'Chanting Sahasranama for deities', 1, NULL, 1, @chanting_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Veda Patha / Samhita Chanting', 'Recitation of Veda Patha', 2, NULL, 1, @chanting_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Swarna (Gold) Sahasranama', 'Gold Sahasranama recitation', 3, NULL, 1, @chanting_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Amma Rashtram / Lalitha Sahasranama', 'Lalitha Sahasranama recitation', 4, NULL, 1, @chanting_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 4 Alankaram / Decoration Services
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Alankaram / Decoration Services', 'Daily, seasonal and special alankaram decorations', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @alankaram_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Daily Alankaram', 'Daily decoration service', 1, NULL, 1, @alankaram_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Seasonal Flower Alankaram', 'Decoration with seasonal flowers', 2, NULL, 1, @alankaram_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Special Diamond / Gold Kavach Alankaram', 'Special decorations with diamond or gold kavach', 3, NULL, 1, @alankaram_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Peacock Feather / Tulasi Alankaram', 'Decoration using peacock feathers or tulasi', 4, NULL, 1, @alankaram_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 1 Homam / Fire Rituals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Homam / Fire Rituals', 'Various fire rituals and homams', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @homam_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Rudrabhishekam (Laghu / Maha)', 'Rudrabhishekam fire ritual', 1, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Sarva Devata Homam', 'Fire ritual for all deities', 2, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Sudarshana Homam', 'Sudarshana homam ritual', 3, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Navagraha Homam', 'Fire ritual for nine planets', 4, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Chandi / Durga Homam', 'Chandi or Durga fire ritual', 5, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Ganapati Homam', 'Ganapati fire ritual', 6, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Lakshmi Kubera Homam', 'Lakshmi Kubera fire ritual', 7, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Mrityunjaya Homam', 'Mrityunjaya fire ritual', 8, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Vastrasan Homam', 'Vastrasan fire ritual', 9, NULL, 1, @homam_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 2 Yagna / Vedic Rituals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Yagna / Vedic Rituals', 'Various Yagna and Vedic fire rituals', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @yagna_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Agni Yagna', 'Agni fire ritual', 1, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Soma Yagna', 'Soma Yagna ritual', 2, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Vastu Yagna', 'Vastu Yagna ritual', 3, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Maha Yagna', 'Maha Yagna ritual', 4, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Aditya / Surya Yagna', 'Sun deity fire ritual', 5, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Puja with Havan & Homa', 'Puja accompanied with Havan & Homa', 6, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Navagraha Pooja + Havan', 'Navagraha pooja with Havan', 7, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Dhoop / Dhupa Homa', 'Dhoop or Dhupa fire ritual', 8, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Phala Deepa Homa', 'Phala Deepa fire ritual', 9, NULL, 1, @yagna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+------
+
+-- 1 Shiva Festivals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Shiva Festivals', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @shiva_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Maha Shivaratri (Abhishekam + Night Vigil)', 'Festival & Annual Services', 1, NULL, 1, @shiva_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Shravan Month Aarti / Fasting Seva', 'Festival & Annual Services', 2, NULL, 1, @shiva_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 2 Devi / Navaratri Services
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Devi / Navaratri Services', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @navaratri_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Navaratri Daily Pooja', 'Festival & Annual Services', 1, NULL, 1, @navaratri_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Garba / Dandiya Pooja', 'Festival & Annual Services', 2, NULL, 1, @navaratri_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Kanya Bhojan Seva', 'Festival & Annual Services', 3, NULL, 1, @navaratri_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 3 Krishna / Rama Festivals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Krishna / Rama Festivals', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @krishna_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Janmashtami Pooja', 'Festival & Annual Services', 1, NULL, 1, @krishna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Rukmini / Sita Rama Pooja', 'Festival & Annual Services', 2, NULL, 1, @krishna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Rama Navami', 'Festival & Annual Services', 3, NULL, 1, @krishna_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 4 Vinayaka / Ganesha Festivals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Vinayaka / Ganesha Festivals', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @ganesha_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Ganesh Chaturthi Pooja', 'Festival & Annual Services', 1, NULL, 1, @ganesha_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Ganapati Visarjan Support', 'Festival & Annual Services', 2, NULL, 1, @ganesha_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 5 Regional / State Specific Festivals
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Regional / State Specific Festivals', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @regional_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Karthika Deepam', 'Festival & Annual Services', 1, NULL, 1, @regional_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Pongal / Thai Pooja', 'Festival & Annual Services', 2, NULL, 1, @regional_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Ugadi / Gudi Padwa Pooja', 'Festival & Annual Services', 3, NULL, 1, @regional_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Onam Temple Poojas', 'Festival & Annual Services', 4, NULL, 1, @regional_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+-- 6 Temple Annual Events
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Temple Annual Events', 'Festival & Annual Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @annual_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Brahmotsavam', 'Festival & Annual Services', 1, NULL, 1, @annual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Rathyatra (Chariot Festival)', 'Festival & Annual Services', 2, NULL, 1, @annual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Kumbhabhishekam (Consecration)', 'Festival & Annual Services', 3, NULL, 1, @annual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Temple Pradakshina (Circumambulation)', 'Festival & Annual Services', 4, NULL, 1, @annual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+----------
+
+-- 1 Life Milestone Poojas
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Life Milestone Poojas', 'Life Event Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @life_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Griha Pravesh (Housewarming)', 'Life Event Services', 1, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Naming Ceremony (Namkaran)', 'Life Event Services', 2, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Annaprashan (First Feed)', 'Life Event Services', 3, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Mundan / First Haircut', 'Life Event Services', 4, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Upanayana (Thread Ceremony)', 'Life Event Services', 5, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Marriage / Temple Wedding', 'Life Event Services', 6, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Family & Personal Rituals', 'Life Event Services', 7, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Shatabhishekam (100th Birthday)', 'Life Event Services', 8, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Birthday / Anniversary Pooja', 'Life Event Services', 9, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Satyanarayan Vrat', 'Life Event Services', 10, NULL, 1, @life_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+---------------
+
+-- 1 Darshan Tickets
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Darshan Tickets', 'Darshan & Access Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @darshan_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Free Darshan', 'Darshan & Access Services', 1, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Special / Timed Darshan', 'Darshan & Access Services', 2, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'VIP / Priority Darshan', 'Darshan & Access Services', 3, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Sheeghra (Express) Darshan', 'Darshan & Access Services', 4, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Queue / Slot Booking', 'Darshan & Access Services', 5, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Online Queue Pass', 'Darshan & Access Services', 6, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Time?Specific Entry Pass', 'Darshan & Access Services', 7, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Early Morning Darshan', 'Darshan & Access Services', 8, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Late Night Darshan', 'Darshan & Access Services', 9, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Group / Family Pass', 'Darshan & Access Services', 10, NULL, 1, @darshan_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+----------------------------------
+
+-- 1 Food / Prasad Services
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Food / Prasad Services', 'Prasadam / Offerings', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @prasad_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Temple Prasadam Order', 'Prasadam / Offerings', 1, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Annadanam (Free Food Distribution)', 'Prasadam / Offerings', 2, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Prasadam by Seal / Packet', 'Prasadam / Offerings', 3, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Festival / Special Prasad', 'Prasadam / Offerings', 4, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Prasad Delivery Services', 'Prasadam / Offerings', 5, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Postal Delivery', 'Prasadam / Offerings', 6, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Pickup at Temple', 'Prasadam / Offerings', 7, NULL, 1, @prasad_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+------------------
+
+-- 1 General Donations
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'General Donations', 'Donations / Seva Offerings', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @donations_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Hundi / Temple Fund', 'Donations / Seva Offerings', 1, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Seva Fund Support', 'Donations / Seva Offerings', 2, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Seva & Service Endowments', 'Donations / Seva Offerings', 3, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Annadanam (Food Sponsorship)', 'Donations / Seva Offerings', 4, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Deepa / Lamp Sponsorship', 'Donations / Seva Offerings', 5, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Cow / Goshala Seva', 'Donations / Seva Offerings', 6, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Water / Well Renovation', 'Donations / Seva Offerings', 7, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Temple Renovation / Infrastructure', 'Donations / Seva Offerings', 8, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Devotee Chairs / Tiles / Bricks Sponsorship', 'Donations / Seva Offerings', 9, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Special Item Donations', 'Donations / Seva Offerings', 10, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Vahana / Animal Feeding (Cow, Horse, Elephant)', 'Donations / Seva Offerings', 11, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Tulasi Plant / Sapling Donation', 'Donations / Seva Offerings', 12, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Flower / Garland Supply Donation', 'Donations / Seva Offerings', 13, NULL, 1, @donations_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+--------------------------
+
+-- 1 Live & Virtual Services
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Live & Virtual Services', 'Devotee Experience Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @live_virtual_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Live Streaming of Seva', 'Devotee Experience Services', 1, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Remote Participation', 'Devotee Experience Services', 2, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Photo / Video Recording', 'Devotee Experience Services', 3, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'E?Certificate of Participation', 'Devotee Experience Services', 4, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Blessings / Prayers Messages', 'Devotee Experience Services', 5, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Priest?Recorded Blessings', 'Devotee Experience Services', 6, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Audio / Video Dedicated Prayer', 'Devotee Experience Services', 7, NULL, 1, @live_virtual_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+------------------------
+
+-- 1 Vedic / Scripture Learning
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Vedic / Scripture Learning', 'Educational & Cultural Services', 0, NULL, 1, NULL, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
+
+SET @vedic_id = LAST_INSERT_ID();
+
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES
+(105, 'Veda Classes', 'Educational & Cultural Services', 1, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Gita Classes', 'Educational & Cultural Services', 2, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Bhajan / Kirtan Sessions', 'Educational & Cultural Services', 3, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Cultural Programs', 'Educational & Cultural Services', 4, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Temple Dance / Music Festival', 'Educational & Cultural Services', 5, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Lecture / Satsang Events', 'Educational & Cultural Services', 6, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30'),
+(105, 'Youth & Kids Programs', 'Educational & Cultural Services', 7, NULL, 1, @vedic_id, '2025-11-20 23:11:30', '2025-11-20 23:11:30');
 
 -- Astrologer (Service)
+INSERT INTO subcategory_master
+(category_id, name, description, display_order, image_url, is_active, parent_id, created_at, updated_at)
+VALUES(
 (19, 106, 'Vedic Astrology', 'Personal horoscope analysis', 1, NULL, NOW(), NOW()),
 (20, 106, 'Numerology', 'Future predictions through palm analysis', 1, NULL, NOW(), NOW()),
 

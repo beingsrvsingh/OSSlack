@@ -28,7 +28,7 @@ namespace Catalog.Infrastructure.Services
         {
             try
             {
-                return await _subCategoryRepository.GetAllAsync();
+                return await _subCategoryRepository.GetAsync((s) => s.IsActive);
             }
             catch (Exception ex)
             {

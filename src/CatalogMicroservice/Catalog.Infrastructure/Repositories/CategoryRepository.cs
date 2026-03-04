@@ -51,7 +51,7 @@ namespace Catalog.Infrastructure.Repositories
                             FROM category_master c
                             INNER JOIN subcategory_master s
                                 ON s.category_id = c.id
-                            WHERE s.parent_id IS NULL
+                            WHERE s.parent_id IS NULL AND s.is_active AND c.is_active
                             ORDER BY c.name, s.id;";
 
             return await _context.Database
