@@ -1,6 +1,7 @@
 ﻿using Cart.Application.Services;
 using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Entities.Base;
 using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
@@ -30,6 +31,21 @@ namespace Cart.Infrastructure.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving price for product {ProductId}", productId);
+                throw;
+            }
+        }
+
+        public async Task<BasePrice> GetPriceByPriestExpertiseIdAndModeId(int priestExpertiseId, int modeId, Microservice microservice)
+        {
+            try
+            {
+                var response = await _httpClientService.GetAsync<Result<BasePrice>>(Microservice.Priest, $"priest/{priestExpertiseId}/{modeId}/price");
+
+                return response.Data;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving price for priest {priestExpertiseId}", priestExpertiseId);
                 throw;
             }
         }

@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\CommandHandlers\" />
+    <Compile Remove="Features\Commands\CommandHandlers\**" />
+    <EmbeddedResource Remove="Features\Commands\CommandHandlers\**" />
+    <None Remove="Features\Commands\CommandHandlers\**" />
   </ItemGroup>
 
   <ItemGroup>

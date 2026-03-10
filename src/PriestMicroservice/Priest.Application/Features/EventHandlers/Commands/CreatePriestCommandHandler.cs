@@ -25,7 +25,6 @@ namespace Priest.Application.Features.EventHandlers.Commands
                 var priest = new PriestMaster
                 {
                     Name = request.DisplayName,
-                    ThumbnailUrl = request.ProfilePictureUrl,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 };

@@ -25,7 +25,7 @@ namespace Priest.Infrastructure.Services
                 var schedule = new Schedule
                 {
                     PriestId = command.PriestId,
-                    Day = command.Day,
+                    DayOfWeek = command.Day,
                 };
 
                 await _repository.AddAsync(schedule);
@@ -46,7 +46,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
-                existing.Day = command.Day;
+                existing.DayOfWeek = command.Day;
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Schedule updated successfully.");

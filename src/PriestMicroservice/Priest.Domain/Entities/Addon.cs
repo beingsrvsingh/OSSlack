@@ -6,14 +6,12 @@ namespace Priest.Domain.Entities
 {
     public class Addon : BaseAddon
     {
-        public int? PriestId { get; set; } 
         public int? PriestExpertiseId { get; set; }
-
-        [ForeignKey(nameof(PriestId))]
-        public virtual PriestMaster? PriestMaster { get; set; }
 
         [ForeignKey(nameof(PriestExpertiseId))]
         public virtual PriestExpertise? PriestExpertise { get; set; }
+
+        public ICollection<AddOnMedia> AddOnMedias { get; set; } = new List<AddOnMedia>();
     }
 
 }

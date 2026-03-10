@@ -16,6 +16,11 @@ namespace PriestMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .IsRequired()
                    .HasColumnName("id");
 
+            builder.Property(l => l.ModeKey)
+                   .IsRequired()
+                   .HasColumnName("mode_key")
+                   .HasMaxLength(50);
+
             builder.Property(l => l.Mode)
                    .IsRequired()
                    .HasColumnName("mode")

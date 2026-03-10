@@ -9,7 +9,7 @@ namespace PriestMicroservice.Domain.Entities
 
         public int PriestId { get; set; }
 
-        public DayOfWeek Day { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
 
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }

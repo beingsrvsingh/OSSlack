@@ -3,6 +3,7 @@ using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
 using PriestMicroservice.Domain.Entities;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Entities.Base;
 using Shared.Utilities.Response;
 
 namespace Priest.Infrastructure.Services
@@ -38,7 +39,7 @@ namespace Priest.Infrastructure.Services
                 var mode = new ConsultationMode
                 {
                     ExpertiseId = command.ExpertieseId,
-                    Mode = command.Mode,
+                    //Mode = command.Mode,
                     ConsultationModeMasterId = command.ConsultationModeMasterId
                 };
 
@@ -60,7 +61,7 @@ namespace Priest.Infrastructure.Services
                 if (existing == null)
                     return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
-                existing.Mode = command.Mode;
+                //existing.Mode = command.Mode;
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Consultation mode updated successfully.");
@@ -88,6 +89,21 @@ namespace Priest.Infrastructure.Services
                 _logger.LogError(ex, "Failed to delete consultation mode.");
                 return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
             }
+        }
+
+        public async Task<BasePrice> GetPriestExpertiseModeIdPrice(int entityId, int modeId)
+        {
+            var consultationMode = await _repository.GetByAsync(c => c.ExpertiseId == entityId && c.ConsultationModeMasterId == modeId);
+
+            if (consultationMode == null)
+                return new BasePrice();
+
+            return new BasePrice()
+            {
+                Amount = consultationMode.Price.Amount,
+                Discount = consultationMode.Price.Discount,
+                Mrp = consultationMode.Price.Mrp
+            };
         }
     }
 

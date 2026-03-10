@@ -2,6 +2,7 @@
 using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Priest.Application;
 using Shared.Infrastructure.Repositories;
 
 namespace Catalog.Infrastructure.Repositories
@@ -56,6 +57,31 @@ namespace Catalog.Infrastructure.Repositories
 
             return await _context.Database
                 .SqlQueryRaw<ParentCategoryRaw>(query)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<SubCategoryMaster>> GetCategoryDetailsAsync(List<int> categoryIds,List<int> subCategoryIds)
+        {
+            return await _context.SubCategories
+                .Where(sc => categoryIds.Contains(sc.CategoryMasterId)
+                             && sc.ParentSubcategoryId == null)
+                .Select(parent => new SubCategoryMaster
+                {
+                    Id = parent.Id,
+                    Name = parent.Name,
+
+                    ChildSubcategories = parent.ChildSubcategories
+                        .Where(child => subCategoryIds.Contains(child.Id))
+                        .Select(child => new SubCategoryMaster
+                        {
+                            Id = child.Id,
+                            Name = child.Name,
+                            ImageUrl = child.ImageUrl,
+                            Description = child.Description
+                        })
+                        .ToList()
+                })
+                .Where(p => p.ChildSubcategories.Any())
                 .ToListAsync();
         }
     }

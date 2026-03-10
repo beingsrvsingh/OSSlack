@@ -22,6 +22,8 @@ namespace Shared.Domain.Entities.Base
 
         public bool IsActive { get; set; } = true;
 
+        public bool IsThumbnailUrl { get; set; } = false;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }

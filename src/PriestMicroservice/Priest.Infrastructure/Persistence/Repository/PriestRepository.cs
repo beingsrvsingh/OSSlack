@@ -18,6 +18,11 @@ namespace Priest.Infrastructure.Persistence.Repository
             this.dbContext = dbContext;
         }
 
+        public IQueryable<PriestMaster> Query()
+        {
+            return dbContext.PriestMasters.AsNoTracking().Where(p => p.IsActive);
+        }
+
         public async Task<(List<SearchRaw>, int)> SearchAsync(string query, int page, int pageSize, CancellationToken cancellationToken)
         {
             string normalizedQuery = query.Trim();

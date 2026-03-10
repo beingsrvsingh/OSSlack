@@ -16,7 +16,7 @@ namespace PriestMicroservice.Domain.Entities
         public string? LanguageName { get; set; }
 
         [ForeignKey(nameof(PriestId))]
-        public PriestMaster Priest { get; set; } = null!;
+        public virtual PriestMaster Priest { get; set; } = null!;
     }
 
 }

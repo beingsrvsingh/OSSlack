@@ -9,7 +9,6 @@ namespace PriestMicroservice.Domain.Entities
     public class PriestExpertise
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int PriestId { get; set; }
@@ -17,22 +16,16 @@ namespace PriestMicroservice.Domain.Entities
         [ForeignKey(nameof(PriestId))]
         public virtual PriestMaster PriestMaster { get; set; } = null!;
 
-        [Required, MaxLength(100)]
-        public string Name { get; set; } = null!;
-
-        public BasePrice Price { get; set; }
-
-        public int? StockQuantity { get; set; }
+        public int CategoryId { get; set; }
+        public int SubCategoryId { get; set; }
 
         public int DurationMinutes { get; set; }
-        public BookingType BookingType { get; set; }
-
         public bool IsDefault { get; set; } = false;
 
         public virtual ICollection<AttributeValue> Attributes { get; set; } = new List<AttributeValue>();
-        public ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
+        public virtual ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
         public virtual ICollection<Addon> Addons { get; set; } = new List<Addon>();
-        public virtual ICollection<PriestExpertiseMedia> Medias { get; set; } = new List<PriestExpertiseMedia>();
+        public virtual ICollection<PriestExpertiseMedia> ExpertiseMedias { get; set; } = new List<PriestExpertiseMedia>();
 
     }
 

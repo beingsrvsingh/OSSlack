@@ -36,11 +36,6 @@ namespace Priest.Application.Features.EventHandlers.Queries
                     );
                 }
 
-                if (!string.IsNullOrWhiteSpace(request.Expertise))
-                {
-                    filteredPriests = filteredPriests.Where(p => p.VariantMasters.Any(e => e.Name == request.Expertise));
-                }
-
                 return Result.Success(filteredPriests.ToList());
             }
             catch (Exception ex)

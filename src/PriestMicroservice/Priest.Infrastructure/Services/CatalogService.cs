@@ -1,10 +1,12 @@
+using Priest.Application;
 using Priest.Application.Services;
 using Shared.Application.Common.Contracts;
 using Shared.Application.Interfaces.Logging;
+using Shared.Contracts.Contracts;
 using Shared.Utilities.Response;
 using System.Net.Http.Json;
 
-namespace Kathavachak.Infrastructure.Services
+namespace Priest.Infrastructure.Services
 {
     public class CatalogService : ICatalogService
     {
@@ -44,6 +46,39 @@ namespace Kathavachak.Infrastructure.Services
                 _logger.LogError(ex, "Error calling Catalog MS for CategoryId: {CategoryId}, SubCategoryId: {SubCategoryId} {IsSummary}", categoryId, subCategoryId, isSummary);
                 // or throw if you want to propagate the error
                 return Enumerable.Empty<BaseCatalogAttributeDto>();
+            }
+        }
+
+        public async Task<IEnumerable<CategoryDetailsResponseDto>> GetCategoryDetails(List<int> categoryIds, List<int> subCategoryIds)
+        {
+            try
+            {
+                var request = new CategoryDetailsRequest
+                {
+                    CategoryIds = categoryIds,
+                    SubCategoryIds = subCategoryIds
+                };
+
+                var response = await _httpClient.PostAsJsonAsync("category/details", request);
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content
+                    .ReadFromJsonAsync<Result<IEnumerable<CategoryDetailsResponseDto>>>();
+
+                if (result != null && result.Succeeded)
+                {
+                    return result.Data ?? Enumerable.Empty<CategoryDetailsResponseDto>();
+                }
+
+                return Enumerable.Empty<CategoryDetailsResponseDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Error calling Catalog MS for CategoryIds and SubCategoryIds");
+
+                return Enumerable.Empty<CategoryDetailsResponseDto>();
             }
         }
 

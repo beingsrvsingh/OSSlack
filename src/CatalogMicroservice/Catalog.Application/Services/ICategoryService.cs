@@ -1,5 +1,6 @@
 ﻿using Catalog.Application.Contracts;
 using Catalog.Domain.Entities;
+using Priest.Application;
 
 namespace Catalog.Application.Services
 {
@@ -18,6 +19,7 @@ namespace Catalog.Application.Services
         Task<IEnumerable<CatalogAttributeDto>> GetAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false);
         Task<IEnumerable<CatalogAttributeGroupDto>> GetGroupedAttributesAsync(int categoryId, int subCategoryId, bool summaryOnly = false);
         Task<FilterAttributeGroupDto> GetFilterableAttributes(int scid);
+        Task<IEnumerable<CategoryDetailsResponseDto>> GetCategoryDetails(List<int> categoryIds, List<int> subCategoryIds);
 
     }
 }

@@ -1,11 +1,11 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using JwtTokenAuthentication;
-using Kathavachak.Infrastructure.Services;
 using Priest.Application.Service;
 using Priest.Application.Services;
 using Priest.Infrastructure;
 using Priest.Infrastructure.Service;
+using Priest.Infrastructure.Services;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
 using Shared.Infrastructure;

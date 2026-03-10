@@ -25,7 +25,6 @@ namespace Priest.Infrastructure.Services
                 var expertise = new PriestExpertise
                 {
                     PriestId = command.PriestId,
-                    Name = command.ExpertiseArea.ToString()
                 };
 
                 await _repository.AddAsync(expertise);
@@ -45,8 +44,6 @@ namespace Priest.Infrastructure.Services
                 var existing = await _repository.GetByIdAsync(command.Id);
                 if (existing == null)
                     return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
-
-                existing.Name = command.ExpertiseArea.ToString();
 
                 await _repository.UpdateAsync(existing);
                 return Result.Success("Priest expertise updated successfully.");

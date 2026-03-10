@@ -55,14 +55,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             builder.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             // Foreign key
-            builder.Property(p => p.PriestId).HasColumnName("priest_id");
             builder.Property(p => p.PriestExpertiseId).HasColumnName("priest_expertise_id");
-
-            builder.HasOne(p => p.PriestMaster)
-                   .WithMany(p => p.Addons)
-                   .HasForeignKey(p => p.PriestId)
-                   .HasConstraintName("fk_priest_addon_priest_id")
-                   .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(p => p.PriestExpertise)
                    .WithMany(p => p.Addons)

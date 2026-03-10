@@ -2,6 +2,8 @@ using BaseApi;
 using Catalog.Application.Features.Commands;
 using Catalog.Application.Features.Query;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Contracts.Contracts;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Catalog.API.Controllers.v1
 {
@@ -155,6 +157,20 @@ namespace Catalog.API.Controllers.v1
 
             if (!(result.Succeeded && result.Data != null))
                 return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpPost("details")]
+        public async Task<IActionResult> GetCategoryDetails([FromBody] CategoryDetailsRequest request)
+        {
+            var query = new GetCategoryDetailsQuery
+            {
+                CategoryIds = request.CategoryIds,
+                SubCategoryIds = request.SubCategoryIds
+            };
+
+            var result = await Mediator.Send(query);
 
             return Ok(result);
         }

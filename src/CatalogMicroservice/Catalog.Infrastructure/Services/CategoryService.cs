@@ -2,6 +2,8 @@
 using Catalog.Application.Services;
 using Catalog.Domain.Core.Repository;
 using Catalog.Domain.Entities;
+using Mapster;
+using Priest.Application;
 using Shared.Application.Interfaces.Logging;
 
 namespace Catalog.Infrastructure.Services
@@ -274,6 +276,30 @@ namespace Catalog.Infrastructure.Services
 
                 return new FilterAttributeGroupDto();
             }
+        }
+
+        public async Task<IEnumerable<CategoryDetailsResponseDto>> GetCategoryDetails(List<int> categoryIds, List<int> subCategoryIds)
+        {
+            var categories = await _categoryRepository.GetCategoryDetailsAsync(categoryIds, subCategoryIds);
+
+            if (categories == null || !categories.Any())
+                return Enumerable.Empty<CategoryDetailsResponseDto>();
+
+            var dtos = categories.Select(c => new CategoryDetailsResponseDto
+            {
+                CategoryId = c.Id,
+                CategoryName = c.Name,
+                SubCategories = c.ChildSubcategories.Where(sc => subCategoryIds == null || subCategoryIds.Contains(sc.Id))
+                                .Select(sc => new SubCategoryDto
+                                {
+                                    SubCategoryId = sc.Id,
+                                    SubCategoryName = sc.Name,
+                                    ThumbnailUril = sc.ImageUrl ?? "",
+                                    Description = sc.Description ?? ""
+                                }).ToList()
+            });
+
+            return dtos;
         }
 
     }

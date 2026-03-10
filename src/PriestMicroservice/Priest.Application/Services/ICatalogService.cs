@@ -6,6 +6,7 @@ namespace Priest.Application.Services
     public interface ICatalogService
     {
         Task<IEnumerable<BaseCatalogAttributeDto>> GetAttributesByCategoryId(int categoryId, int subCategoryId, bool isSummary = false);
+        Task<IEnumerable<CategoryDetailsResponseDto>> GetCategoryDetails(List<int> categoryIds, List<int> subCategoryIds);
     }
 
 }

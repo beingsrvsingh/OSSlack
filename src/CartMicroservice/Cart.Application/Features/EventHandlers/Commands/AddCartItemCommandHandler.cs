@@ -1,3 +1,4 @@
+using Cart.Application.Services;
 using CartMicroservice.Application.Features.Commands;
 using CartMicroservice.Application.Services;
 using CartMicroservice.Domain.Entities;
@@ -6,6 +7,7 @@ using MediatR;
 using Shared.Application.Interfaces;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
+using System.Text.Json;
 
 namespace CartMicroservice.Application.Features.EventHandlers.Commands
 {
@@ -14,12 +16,14 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
         private readonly ICartService _cartService;
         private readonly ILoggerService<AddCartItemCommandHandler> _logger;
         private readonly IUserProvider userProvider;
+        private readonly IPricingClient pricingClient;
 
-        public AddCartItemCommandHandler(ICartService cartService, ILoggerService<AddCartItemCommandHandler> logger, IUserProvider userProvider)
+        public AddCartItemCommandHandler(ICartService cartService, ILoggerService<AddCartItemCommandHandler> logger, IUserProvider userProvider, IPricingClient pricingClient)
         {
             _cartService = cartService;
             _logger = logger;
             this.userProvider = userProvider;
+            this.pricingClient = pricingClient;
         }
 
         public async Task<Result> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
@@ -27,6 +31,15 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
             try
             {
                 var userId = userProvider.UserId ?? "Test-User";
+
+                int mode = 0;
+
+                if (request.CartItem.CustomOptions.TryGetValue("mode", out var modeElement))
+                {
+                    int.TryParse(modeElement.GetString(), out mode);
+                }
+
+                var priceDetails = await pricingClient.GetPriceByPriestExpertiseIdAndModeId(request.CartItem.ProductVariantId, mode, Shared.Domain.Enums.Microservice.Priest);
 
                 var cart = await _cartService.GetCartByUserIdAsync(userId);
 
@@ -37,8 +50,9 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
                     cart = new CartMicroservice.Domain.Entities.Cart
                     {
                         UserId = userId,
-                        TotalAmount = (decimal)request.CartItem.Amount,
-                        Subtotal = (decimal)request.CartItem.Amount,
+                        TotalAmount = priceDetails.Amount,
+                        Subtotal = priceDetails.Amount,
+                        CurrencyCode = priceDetails.Currency,
                         CartItems = new List<CartItem>()
                         {
                             new CartItem
@@ -47,8 +61,11 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
                                 ProviderType = request.CartItem.ProductType,
                                 ItemNameSnapshot = request.CartItem.ProductName,
                                 Quantity = request.CartItem.Quantity,
-                                PriceSnapshot = request.CartItem.Quantity * (decimal)request.CartItem.Amount,
-                                ImageUrl = request.CartItem.ImageUrl
+                                PriceSnapshot = request.CartItem.Quantity * priceDetails.Amount,
+                                ImageUrl = request.CartItem.ImageUrl,
+                                SubCategoryId = request.CartItem.SubCategoryId,
+                                PreferredServiceDateTime = request.CartItem.PreferredServiceDatetime,
+                                SelectedOptionsJson = JsonSerializer.Serialize(request.CartItem.CustomOptions)
                             }
                         }
                     };

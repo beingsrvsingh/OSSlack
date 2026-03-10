@@ -1,16 +1,11 @@
 
-namespace PriestMicroservice.Domain.Entities
+namespace TempleMicroservice.Domain.Entities
 {
     public class ConsultationModeMaster
     {
         public int Id { get; set; }
-
-        public string ModeKey { get; set; } = string.Empty;
-
-        public string Mode { get; set; } = string.Empty;
-
+        public string Mode { get; set; } = String.Empty;
         public int DisplayOrder { get; set; }
-
         public ICollection<ConsultationMode> ConsultationModes { get; set; } = new List<ConsultationMode>();
 
     }

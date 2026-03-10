@@ -9,7 +9,7 @@ namespace Temple.Domain.Entities
         public int LocationId { get; set; }
 
         // Navigation properties if needed
-        public virtual ICollection<TempleImage> Media { get; set; } = new List<TempleImage>();
+        public virtual ICollection<TempleMedia> Media { get; set; } = new List<TempleMedia>();
         public virtual ICollection<TempleExpertise> VariantMasters { get; set; } = new List<TempleExpertise>();
         public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
         public virtual ICollection<TempleException> TempleExceptions { get; set; } = new List<TempleException>();
@@ -20,5 +20,6 @@ namespace Temple.Domain.Entities
         public virtual ICollection<TempleAddon> Addons { get; set; } = new List<TempleAddon>();
         public virtual ICollection<ScheduleException> ScheduleExceptions { get; set; } = new List<ScheduleException>();
 
+        public virtual ICollection<PriestTempleService> PriestServices { get; set; } = new List<PriestTempleService>();
     }
 }

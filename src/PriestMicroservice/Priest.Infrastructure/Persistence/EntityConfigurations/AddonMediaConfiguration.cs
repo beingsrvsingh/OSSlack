@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Priest.Infrastructure.Persistence.EntityConfigurations
 {
-    public class PriestImageConfiguration : IEntityTypeConfiguration<PriestMedia>
+    public class AddonMediaConfiguration : IEntityTypeConfiguration<AddOnMedia>
     {
-        public void Configure(EntityTypeBuilder<PriestMedia> entity)
+        public void Configure(EntityTypeBuilder<AddOnMedia> entity)
         {
-            entity.ToTable("priest_image");
+            entity.ToTable("add_on_media");
 
             entity.HasKey(img => img.Id);
 
@@ -27,8 +27,8 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             entity.Property(entity => entity.AltText)
                 .HasColumnName("alt_text");
 
-            entity.Property(img => img.PriestId)
-                .HasColumnName("priest_id")
+            entity.Property(img => img.AddonId)
+                .HasColumnName("add_on_id")
                 .IsRequired();
 
             entity.Property(vi => vi.MediaType)
@@ -39,9 +39,9 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
             entity.Property(p => p.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
             entity.Property(p => p.UpdatedAt).HasColumnName("updated_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
-            entity.HasOne(img => img.PriestMaster)
-                .WithMany(p => p.Medias)
-                .HasForeignKey(img => img.PriestId)
+            entity.HasOne(img => img.Addon)
+                .WithMany(p => p.AddOnMedias)
+                .HasForeignKey(img => img.AddonId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

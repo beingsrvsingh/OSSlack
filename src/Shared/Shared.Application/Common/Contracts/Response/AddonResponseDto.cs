@@ -11,6 +11,6 @@ namespace Shared.Application.Common.Contracts.Response
         public string? Description { get; set; }
 
         [JsonPropertyName("price")]
-        public PriceResponseDto Price { get; set; } = null!;
+        public PriceResponseDto Price { get; set; } = new();
     }
 }

@@ -27,24 +27,22 @@ namespace Priest.Infrastructure.Persistence.Catalog.Queries
             {
                 Id = p.Id.ToString(),
                 Name = p.Name,
-                ThumbnailUrl = p.ThumbnailUrl,
+                //ThumbnailUrl = p.ThumbnailUrl,
                 Rating = p.Rating,
                 Reviews = p.Reviews,
-                SubCategoryId = p.SubCategoryId.ToString(),
-                IsTrending = p.IsTrending,
-                IsFeatured = p.IsFeatured,
+                SubCategoryId = 1.ToString(),
 
-                Price = new PriceResponseDto
-                {
-                    Amount = p.Price.Amount,
-                    Currency = p.Price.Currency,
-                    Discount = p.Price.Discount,
-                    Mrp = p.Price.Mrp,
-                    Tax = p.Price.Tax
-                },
+                //Price = new PriceResponseDto
+                //{
+                //    Amount = p.Price.Amount,
+                //    Currency = p.Price.Currency,
+                //    Discount = p.Price.Discount,
+                //    Mrp = p.Price.Mrp,
+                //    Tax = p.Price.Tax
+                //},
 
                 // Media
-                Media = p.Medias.Select(img => new MediaResponseDto
+                Media = p.PriestMedias.Select(img => new MediaResponseDto
                 {
                     Url = img.ImageUrl,
                     Type = img.MediaType.ToString(),
@@ -53,77 +51,77 @@ namespace Priest.Infrastructure.Persistence.Catalog.Queries
                 }).ToList(),
 
                 // Addons
-                Addons = p.Addons.Select(a => new AddonResponseDto
-                {
-                    Name = a.Name,
-                    Description = a.Description,
-                    Price = new PriceResponseDto
-                    {
-                        Amount = a.Price.Amount,
-                        Mrp = a.Price.Mrp
-                    }
-                }).ToList(),
+                //Addons = p.Addons.Select(a => new AddonResponseDto
+                //{
+                //    Name = a.Name,
+                //    Description = a.Description,
+                //    Price = new PriceResponseDto
+                //    {
+                //        Amount = a.Price.Amount,
+                //        Mrp = a.Price.Mrp
+                //    }
+                //}).ToList(),
 
                 // Attributes
-                Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
-                {
-                    Key = a.AttributeKey,
-                    Label = a.AttributeLabel ?? "",
-                    Value = a.Value,
-                    DataTypeId = a.AttributeDataTypeId
-                        ?? (int)AttributeDataType.String
-                }).ToList(),
+                //Attributes = p.AttributeValues.Select(a => new AttributeResponseDto
+                //{
+                //    Key = a.AttributeKey,
+                //    Label = a.AttributeLabel ?? "",
+                //    Value = a.Value,
+                //    DataTypeId = a.AttributeDataTypeId
+                //        ?? (int)AttributeDataType.String
+                //}).ToList(),
 
                 // Variants
-                Variants = p.VariantMasters.Select(v => new CatalogVariantResponseDto
-                {
-                    Id = v.Id.ToString(),
-                    Name = v.Name,
-                    StockQuantity = v.StockQuantity,
+                //Variants = p.VariantMasters.Select(v => new CatalogVariantResponseDto
+                //{
+                //    Id = v.Id.ToString(),
+                //    Name = v.Name,
+                //    StockQuantity = v.StockQuantity,
 
-                    Price = new PriceResponseDto
-                    {
-                        Amount = v.Price.Amount,
-                        Currency = v.Price.Currency,
-                        Discount = v.Price.Discount,
-                        Mrp = v.Price.Mrp,
-                        Tax = v.Price.Tax
-                    },
+                //    Price = new PriceResponseDto
+                //    {
+                //        Amount = v.Price.Amount,
+                //        Currency = v.Price.Currency,
+                //        Discount = v.Price.Discount,
+                //        Mrp = v.Price.Mrp,
+                //        Tax = v.Price.Tax
+                //    },
 
-                    Attributes = v.Attributes
-                        .GroupBy(a => a.AttributeGroupNameSnapshot)
-                        .Select(g => new AttributeGroupResponseDto
-                        {
-                            AttributeGroupName = g.Key,
-                            Attributes = g.Select(a => new AttributeResponseDto
-                            {
-                                Key = a.AttributeKey,
-                                Label = a.AttributeLabel ?? "",
-                                Value = a.Value,
-                                DataTypeId = a.AttributeDataTypeId
-                                    ?? (int)AttributeDataType.String
-                            }).ToList()
-                        }).ToList(),
+                //    Attributes = v.Attributes
+                //        .GroupBy(a => a.AttributeGroupNameSnapshot)
+                //        .Select(g => new AttributeGroupResponseDto
+                //        {
+                //            AttributeGroupName = g.Key,
+                //            Attributes = g.Select(a => new AttributeResponseDto
+                //            {
+                //                Key = a.AttributeKey,
+                //                Label = a.AttributeLabel ?? "",
+                //                Value = a.Value,
+                //                DataTypeId = a.AttributeDataTypeId
+                //                    ?? (int)AttributeDataType.String
+                //            }).ToList()
+                //        }).ToList(),
 
-                    Addons = v.Addons.Select(a => new AddonResponseDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        Price = new PriceResponseDto
-                        {
-                            Amount = a.Price.Amount,
-                            Mrp = a.Price.Mrp
-                        }
-                    }).ToList(),
+                //    Addons = v.Addons.Select(a => new AddonResponseDto
+                //    {
+                //        Name = a.Name,
+                //        Description = a.Description,
+                //        Price = new PriceResponseDto
+                //        {
+                //            Amount = a.Price.Amount,
+                //            Mrp = a.Price.Mrp
+                //        }
+                //    }).ToList(),
 
-                    Media = v.Medias.Select(img => new MediaResponseDto
-                    {
-                        Url = img.ImageUrl,
-                        Type = img.MediaType.ToString(),
-                        AltText = img.AltText,
-                        SortOrder = img.SortOrder
-                    }).ToList()
-                }).ToList()
+                //    Media = v.Medias.Select(img => new MediaResponseDto
+                //    {
+                //        Url = img.ImageUrl,
+                //        Type = img.MediaType.ToString(),
+                //        AltText = img.AltText,
+                //        SortOrder = img.SortOrder
+                //    }).ToList()
+                //}).ToList()
             };
     }
 }

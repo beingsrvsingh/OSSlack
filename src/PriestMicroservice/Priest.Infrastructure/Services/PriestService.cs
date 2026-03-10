@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Priest.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
+using Priest.Application;
 using Priest.Application.Service;
 using Priest.Application.Services;
 using Priest.Domain.Core.Repository;
@@ -6,7 +8,6 @@ using Priest.Infrastructure.Persistence.Catalog.Queries;
 using PriestMicroservice.Domain.Entities;
 using Shared.Application.Common.Contracts.Response;
 using Shared.Application.Interfaces.Logging;
-using Shared.Infrastructure.Repositories;
 using Shared.Utilities.Response;
 
 namespace Priest.Infrastructure.Services
@@ -14,41 +15,25 @@ namespace Priest.Infrastructure.Services
     public class PriestService : IPriestService
     {
         private readonly IPriestRepository _repository;
-        //private readonly IConsultationModeRepository _consultationModeRepository;
-        //private readonly IPriestExpertiseRepository _expertiseRepository;
-        //private readonly IPriestLanguageRepository _languageRepository;
-        //private readonly IScheduleRepository _scheduleRepository;
         private readonly ILoggerService<PriestService> _logger;
         private readonly IScheduleRepository scheduleRepository;
         private readonly IBookingClient bookingClient;
+        private readonly ICatalogService catalogService;
 
-        public PriestService(
-            IPriestRepository priestRepository,
-            //IConsultationModeRepository consultationModeRepository,
-            //IPriestExpertiseRepository expertiseRepository,
-            //IPriestLanguageRepository languageRepository,
-            //IScheduleRepository scheduleRepository,
-            //ITimeSlotRepository timeSlotRepository,
-            ILoggerService<PriestService> logger,
-            IScheduleRepository scheduleRepository,
-            IBookingClient bookingClient)
+        public PriestService(IPriestRepository priestRepository,ILoggerService<PriestService> logger,IScheduleRepository scheduleRepository,IBookingClient bookingClient, ICatalogService catalogService)
         {
             _repository = priestRepository;
-            //_consultationModeRepository = consultationModeRepository;
-            //_expertiseRepository = expertiseRepository;
-            //_languageRepository = languageRepository;
-            //_scheduleRepository = scheduleRepository;
-            //_timeSlotRepository = timeSlotRepository;
             _logger = logger;
             this.scheduleRepository = scheduleRepository;
             this.bookingClient = bookingClient;
+            this.catalogService = catalogService;
         }
 
         public async Task<List<TrendingResponse>> GetSubcategoryTrendingAsync(int? subCategoryId, int pageNumber = 1, int pageSize = 10)
         {
             List<PriestMaster> lstProducts = new List<PriestMaster>();
 
-            lstProducts = (List<PriestMaster>)await _repository.GetAsync((p) => p.CategoryId == subCategoryId && p.IsTrending == true);
+            lstProducts = (List<PriestMaster>)await _repository.GetAsync((p) => p.PriestExpertises.Any(x => x.CategoryId == subCategoryId));
 
             var trendingProducts = lstProducts
                                     .Skip(pageNumber)
@@ -58,7 +43,6 @@ namespace Priest.Infrastructure.Services
                                         return new TrendingResponse
                                         {
                                             Id = product.Id.ToString(),
-                                            Scid = product.SubCategoryId.ToString(),
                                             Name = product.Name
                                         };
                                     })
@@ -83,7 +67,6 @@ namespace Priest.Infrastructure.Services
                                 .AsNoTracking()
                                 .Skip(skip)
                                 .Take(pageSize)
-                                .Where((p) => p.IsTrending == true)
                                 .Select(CatalogQueries.ToCatalogResponse)
                                 .ToListAsync();
 
@@ -111,7 +94,7 @@ namespace Priest.Infrastructure.Services
 
                 if (subCategoryId.HasValue && subCategoryId.Value > 0)
                 {
-                    queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
+                    queryable = queryable.Where(p => p.PriestExpertises.Any(x => x.SubCategoryId == subCategoryId.Value));
                 }
 
                 var products = await queryable
@@ -136,15 +119,15 @@ namespace Priest.Infrastructure.Services
 
             if (subCategoryId.HasValue && subCategoryId.Value > 0)
             {
-                queryable = queryable.Where(p => p.SubCategoryId == subCategoryId.Value);
+                queryable = queryable.Where(p => p.PriestExpertises.Any(x => x.SubCategoryId == subCategoryId.Value));
             }
 
-            if (attributeIds != null && attributeIds.Any())
-            {
-                // Ensure product has all selected attribute IDs
-                queryable = queryable.Where(p => attributeIds.All(attrId =>
-                    p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
-            }
+            //if (attributeIds != null && attributeIds.Any())
+            //{
+            //    // Ensure product has all selected attribute IDs
+            //    queryable = queryable.Where(p => attributeIds.All(attrId =>
+            //        p.AttributeValues.Any(av => av.CatalogAttributeValueId == attrId)));
+            //}
 
             var products = await queryable
                                     .AsNoTracking()
@@ -156,24 +139,118 @@ namespace Priest.Infrastructure.Services
             return products;
         }
 
-        public async Task<CatalogResponseDto?> GetPriestByIdAsync(int id)
+        public async Task<HubDto> GetPriestByIdAsync(int id)
         {
-            _logger.LogInfo($"Getting astrologer by Id: {id}");
+            _logger.LogInfo($"Getting priest by Id: {id}");
+
             try
             {
-                var queryable = _repository.Query();
+                // Load priest with expertises and consultation modes
+                var priestEntity = await _repository.Query()
+                    .Where(p => p.Id == id && p.IsActive)
+                    .Include(p => p.PriestExpertises)                        
+                        .ThenInclude(e => e.ConsultationModes)
+                            .ThenInclude(c => c.ConsultationModeMaster)
+                     .Include(p => p.PriestExpertises)
+                        .ThenInclude(e => e.Addons)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
 
-                var productDto = await queryable
-                                .AsNoTracking()
-                                .Select(CatalogQueries.ToCatalogResponse)
-                                .FirstOrDefaultAsync();
+                if (priestEntity == null)
+                    return new HubDto();
 
-                return productDto;
+                // Collect distinct CategoryIds and SubCategoryIds
+                var categoryIds = priestEntity.PriestExpertises.Select(e => e.CategoryId).Distinct().ToList();
+                var subCategoryIds = priestEntity.PriestExpertises.Select(e => e.SubCategoryId).Distinct().ToList();
+
+                if (!categoryIds.Any() && !subCategoryIds.Any())
+                    return new HubDto();
+
+                // Get category details from catalog service
+                IEnumerable<CategoryDetailsResponseDto> categories = await catalogService.GetCategoryDetails(categoryIds, subCategoryIds);
+
+                var todaySchedules = priestEntity.Schedules.Where(s => (DayOfWeek)(s.DayOfWeek - 1) == DateTime.Now.DayOfWeek && s.IsAvailable).ToList();
+
+                var isOpenNow = todaySchedules.Any(s => DateTime.Now.TimeOfDay >= s.StartTime && DateTime.Now.TimeOfDay <= s.EndTime);
+
+                // Map priest data to HubDto
+                var hubDto = new HubDto
+                {
+                    Id = priestEntity.Id,
+                    Name = priestEntity.Name,
+                    BannerUrl = priestEntity.PriestMedias.Where(m => m.IsThumbnailUrl).Select(m => m.ImageUrl).FirstOrDefault() ?? "https://picsum.photos/200",
+                    Rating = priestEntity.Rating,
+                    Status = isOpenNow ? "Open now" : "Closed now",
+                    WorkingHours = todaySchedules.Any()? string.Join(", ", todaySchedules.Select(s => $"{s.StartTime:hh\\:mm} - {s.EndTime:hh\\:mm}")): "-",
+                    Categories = categories.Select(c => new CategoryDto
+                    {
+                        Id = c.CategoryId,
+                        Name = c.CategoryName,
+                        Items = priestEntity.PriestExpertises
+                        .Where(e => c.SubCategories.Any(sc => sc.SubCategoryId == e.SubCategoryId))
+                        .Select(e => new ItemDto
+                        {
+                            Id = e.ConsultationModes.FirstOrDefault().Id,
+                            SubCategoryId = e.SubCategoryId,
+                            ExpertiseId = e.Id,
+                            Name = c.SubCategories
+                                .FirstOrDefault(sc => sc.SubCategoryId == e.SubCategoryId)?.SubCategoryName ?? string.Empty,
+
+                            Price = e.ConsultationModes
+                                .Where(m => m.IsDefault)
+                                .Select(m => m.Price.Amount)
+                                .FirstOrDefault(),
+
+                            Modes = e.ConsultationModes
+                                .Select(m => new ConsultationModeDto
+                                {
+                                    Id = m.Id,
+                                    Key = m.ConsultationModeMaster.ModeKey,
+                                    DisplayName = m.ConsultationModeMaster.Mode,
+                                    Price = m.Price.Amount,
+                                    IsDefault = m.IsDefault
+                                })
+                                .ToList(),
+
+                            AddOns = e.Addons.Select(a => new AddonDto
+                            {
+                                Id = a.Id,
+                                Name = a.Name,
+                                Description = a.Description,
+                                Price = a.Price.Amount
+                            }).ToList(),
+
+                            Availability = e.ConsultationModes.Any(m => m.StockQuantity > 0)
+                                ? "available"
+                                : "out-of-stock",
+
+                            Description = $"{e.DurationMinutes} mins",
+
+                            ThumbnailUril = c.SubCategories
+                                .FirstOrDefault(sc => sc.SubCategoryId == e.SubCategoryId)?.ThumbnailUril ?? string.Empty,
+
+                            HasAddon = e.Addons.Any(),
+                            HasModes = e.ConsultationModes.Any(),
+
+                            Metadata = new Dictionary<string, string>
+                            {
+                                {
+                                    "Description",
+                                    c.SubCategories.FirstOrDefault(sc => sc.SubCategoryId == e.SubCategoryId)?.Description ?? string.Empty
+                                }
+                            }
+                        })
+                        .ToList()
+                    })
+                    .ToList()
+                };
+
+                return hubDto;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetByIdWithDetailsAsync: {ex.Message}", ex);
-                return null;
+                _logger.LogError($"Error in GetPriestByIdAsync: {ex.Message}", ex);
+                return new HubDto();
             }
         }
 

@@ -19,8 +19,8 @@ namespace Temple.Infrastructure.Persistence.Context
         public DbSet<ScheduleException> ScheduleExceptions => Set<ScheduleException>();
         public DbSet<SearchRaw> SearchRaws => Set<SearchRaw>();
         public DbSet<TempleAddon> TempleAddons => Set<TempleAddon>();
-        public DbSet<TempleImage> TempleImages => Set<TempleImage>();
-        public DbSet<TempleExpertiseImage> templeExpertiseImages => Set<TempleExpertiseImage>();
+        public DbSet<TempleMedia> TempleImages => Set<TempleMedia>();
+        public DbSet<TempleExpertiseMedia> templeExpertiseImages => Set<TempleExpertiseMedia>();
 
 
         protected override void OnModelCreating(ModelBuilder builder)

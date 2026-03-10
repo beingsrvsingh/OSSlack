@@ -1,4 +1,5 @@
 
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CartMicroservice.Application.Contracts
@@ -53,7 +54,7 @@ namespace CartMicroservice.Application.Contracts
         [JsonPropertyName("product_variant_id")]
         public int ProductVariantId { get; set; }
 
-        [JsonPropertyName("product_type")]
+        [JsonPropertyName("provider_type")]
         public string ProductType { get; set; }
 
         [JsonPropertyName("product_name")]
@@ -67,6 +68,15 @@ namespace CartMicroservice.Application.Contracts
 
         [JsonPropertyName("image_url")]
         public string ImageUrl { get; set; }
+
+        [JsonPropertyName("sub_category_id")]
+        public int SubCategoryId { get; set; }
+
+        [JsonPropertyName("preferred_service_datetime")]
+        public DateTime? PreferredServiceDatetime { get; set; }
+
+        [JsonPropertyName("custom_options_json")]
+        public Dictionary<string, JsonElement> CustomOptions { get; set; }
     }
 
     public class UpdateCartDto

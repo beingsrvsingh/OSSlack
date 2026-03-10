@@ -4,11 +4,11 @@ using Temple.Domain.Entities;
 
 namespace Temple.Infrastructure.Persistence.EntityConfigurations
 {
-    public class TempleImageConfiguration : IEntityTypeConfiguration<TempleImage>
+    public class TempleMediaConfiguration : IEntityTypeConfiguration<TempleMedia>
     {
-        public void Configure(EntityTypeBuilder<TempleImage> entity)
+        public void Configure(EntityTypeBuilder<TempleMedia> entity)
         {
-            entity.ToTable("temple_image");
+            entity.ToTable("temple_media");
 
             entity.HasKey(img => img.Id);
 

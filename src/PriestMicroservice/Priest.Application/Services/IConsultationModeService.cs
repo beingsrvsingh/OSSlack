@@ -1,5 +1,6 @@
 ﻿using Priest.Application.Features.Commands;
 using PriestMicroservice.Domain.Entities;
+using Shared.Domain.Entities.Base;
 using Shared.Utilities.Response;
 
 namespace Priest.Application.Services
@@ -10,6 +11,7 @@ namespace Priest.Application.Services
         Task<Result> CreateConsultationModeAsync(CreateConsultationModeCommand command);
         Task<Result> UpdateConsultationModeAsync(UpdateConsultationModeCommand command);
         Task<Result> DeleteConsultationModeAsync(int id);
+        Task<BasePrice> GetPriestExpertiseModeIdPrice(int entityId, int modeId);
     }
 
 }

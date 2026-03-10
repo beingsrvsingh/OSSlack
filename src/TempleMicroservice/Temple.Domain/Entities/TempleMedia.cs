@@ -5,7 +5,7 @@ using Temple.Domain.Entities;
 
 namespace Temple.Domain.Entities
 {
-    public class TempleImage : BaseMedia
+    public class TempleMedia : BaseMedia
     {
         [Required]
         public int TempleId { get; set; }

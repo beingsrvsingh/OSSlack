@@ -19,7 +19,7 @@ namespace Priest.Infrastructure.Persistence.EntityConfigurations
                    .HasColumnName("priest_id")
                    .IsRequired();
 
-            builder.Property(s => s.Day)
+            builder.Property(s => s.DayOfWeek)
                    .HasColumnName("day_of_week")
                    .IsRequired();
 

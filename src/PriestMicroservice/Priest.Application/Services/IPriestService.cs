@@ -8,7 +8,7 @@ namespace Priest.Application.Services
     public interface IPriestService
     {
         // PriestMaster operations
-        Task<CatalogResponseDto?> GetPriestByIdAsync(int id);
+        Task<HubDto> GetPriestByIdAsync(int id);
         Task<IEnumerable<PriestMaster>> GetAllActivePriestsAsync();
         Task AddPriestAsync(PriestMaster priest);
         Task UpdatePriestAsync(PriestMaster priest);

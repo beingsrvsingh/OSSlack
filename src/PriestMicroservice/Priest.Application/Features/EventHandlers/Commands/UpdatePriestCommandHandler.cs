@@ -26,7 +26,7 @@ namespace Priest.Application.Features.EventHandlers.Commands
                     return Result.Failure(new FailureResponse("INTERNAL_SERVER_ERROR", "Something went wrong."));
 
                 priest.Name = request.DisplayName ?? priest.Name;
-                priest.ThumbnailUrl = request.ProfilePictureUrl ?? priest.ThumbnailUrl;
+                //priest.ThumbnailUrl = request.ProfilePictureUrl ?? priest.ThumbnailUrl;
 
                 //await _priestService.UpdatePriestAsync(priest);
                 return Result.Success(priest);

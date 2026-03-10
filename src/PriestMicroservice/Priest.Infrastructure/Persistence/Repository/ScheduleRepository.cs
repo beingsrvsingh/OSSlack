@@ -20,7 +20,7 @@ namespace Priest.Infrastructure.Persistence.Repository
         {
             return await _context.Schedules
                 .Where(x => x.PriestId == entityId
-                         && (int)x.Day == (int)day
+                         && (int)x.DayOfWeek == (int)day
                          && x.IsAvailable)
                 .ToListAsync();
         }
