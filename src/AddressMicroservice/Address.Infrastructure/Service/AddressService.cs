@@ -19,25 +19,25 @@ namespace Address.Infrastructure.Service
             _logger = logger;
         }
 
-        public async Task<AddressEntity?> GetByOwnerAsync(int ownerId)
+        public async Task<AddressEntity?> GetByOwnerAsync(string userId)
         {
             try
             {
-                return await _repository.GetByOwnerAsync(ownerId);
+                return await _repository.GetByOwnerAsync(userId);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to fetch address for OwnerId: {OwnerId}", ownerId);
+                _logger.LogError(ex, "Failed to fetch address for userId: {userId}", userId);
                 return null;
             }
         }
 
 
-        public async Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(int ownerId, AddressOwnerType ownerType)
+        public async Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(string userId, AddressOwnerType ownerType)
         {
             try
             {
-                return await _repository.GetAllByOwnerAsync(ownerId, ownerType);
+                return await _repository.GetAllByOwnerAsync(userId, ownerType);
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace Address.Infrastructure.Service
         {
             try
             {
-                return await _repository.GetByAsync(a => a.UserId == id);
+                return await _repository.GetByIdAsync(id);
             }
             catch (Exception ex)
             {

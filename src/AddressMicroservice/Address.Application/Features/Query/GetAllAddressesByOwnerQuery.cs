@@ -6,7 +6,7 @@ namespace Address.Application.Features.Query
 {
     public class GetAllAddressesByOwnerQuery : IRequest<Result>
     {
-        public int OwnerId { get; set; }
+        public required string UserId { get; set; }
         public AddressOwnerType OwnerType { get; set; }
     }
 

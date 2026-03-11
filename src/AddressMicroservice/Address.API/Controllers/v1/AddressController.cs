@@ -53,26 +53,26 @@ namespace Address.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("owner/{ownerId:int}/{ownerType}")]
+        [HttpGet("owner/{userId}/{ownerType}")]
         [ProducesResponseType(typeof(IEnumerable<AddressDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllByOwner(int ownerId, AddressOwnerType ownerType)
+        public async Task<IActionResult> GetAllByOwner(string userId, AddressOwnerType ownerType)
         {
             var result = await Mediator.Send(new GetAllAddressesByOwnerQuery
             {
-                OwnerId = ownerId,
+                UserId = userId,
                 OwnerType = ownerType
             });
 
             return Ok(result);
         }
 
-        [HttpGet("owner/{ownerId:int}")]
+        [HttpGet("owner/{userId}")]
         [ProducesResponseType(typeof(IEnumerable<AddressDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByOwner(int ownerId)
+        public async Task<IActionResult> GetByOwner(string userId)
         {
             var result = await Mediator.Send(new GetAddressesByOwnerQuery
             {
-                OwnerId = ownerId
+                UserId = userId
             });
 
             return Ok(result);

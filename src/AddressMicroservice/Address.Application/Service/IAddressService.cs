@@ -7,8 +7,8 @@ namespace Address.Application.Service
 {
     public interface IAddressService
     {
-        Task<AddressEntity?> GetByOwnerAsync(int ownerId);
-        Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(int ownerId, AddressOwnerType ownerType);
+        Task<AddressEntity?> GetByOwnerAsync(string userId);
+        Task<IEnumerable<AddressEntity>> GetAllByOwnerAsync(string userId, AddressOwnerType ownerType);
         Task<AddressEntity?> GetByIdAsync(int id);
         Task<AddressEntity> CreateAsync(CreateAddressCommand request);
         Task<AddressEntity?> UpdateAsync(int id, AddressEntity updated);

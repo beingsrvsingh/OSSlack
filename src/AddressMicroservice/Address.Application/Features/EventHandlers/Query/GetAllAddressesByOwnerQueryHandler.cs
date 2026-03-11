@@ -17,7 +17,7 @@ namespace Address.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetAllAddressesByOwnerQuery request, CancellationToken cancellationToken)
         {
-            var entities = await _service.GetAllByOwnerAsync(request.OwnerId, request.OwnerType);
+            var entities = await _service.GetAllByOwnerAsync(request.UserId, request.OwnerType);
 
             var dtos = AddressResponseDto.ToResponseDtoList(entities);
 

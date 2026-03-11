@@ -13,7 +13,7 @@ namespace Address.Domain.Entities
         public Guid Uid { get; set; } = Guid.NewGuid();
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         
         public int OwnerTypeId { get; set; }
 

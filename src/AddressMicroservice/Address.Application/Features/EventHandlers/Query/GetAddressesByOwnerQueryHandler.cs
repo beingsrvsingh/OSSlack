@@ -18,11 +18,11 @@ namespace Address.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetAddressesByOwnerQuery request, CancellationToken cancellationToken)
         {
-            var address = await _service.GetByOwnerAsync(request.OwnerId);
+            var address = await _service.GetByOwnerAsync(request.UserId);
 
             if (address == null)
             {
-                return Result.Failure(new FailureResponse("ADDRESS_NOT_FOUND", $"No address found for ownerId {request.OwnerId}"));
+                return Result.Failure(new FailureResponse("ADDRESS_NOT_FOUND", $"No address found for ownerId {request.UserId}"));
             }
 
             var dto = AddressResponseDto.ToResponseDto(address);

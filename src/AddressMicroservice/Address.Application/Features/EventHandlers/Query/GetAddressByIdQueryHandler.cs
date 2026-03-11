@@ -1,8 +1,10 @@
+using Address.Application.Contracts;
 using Address.Application.Features.Query;
 using Address.Application.Service;
 using Mapster;
 using MediatR;
 using Shared.Utilities.Response;
+using System.Net;
 
 namespace Address.Application.Features.EventHandlers.Query
 {
@@ -17,11 +19,11 @@ namespace Address.Application.Features.EventHandlers.Query
 
         public async Task<Result> Handle(GetAddressByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _service.GetByIdAsync(request.Id);
-            if (entity == null)
+            var address = await _service.GetByIdAsync(request.Id);
+            if (address == null)
                 return Result.Failure(new FailureResponse("NOT_FOUND", "Address not found"));
 
-            var dto = entity.Adapt(request);
+            var dto = AddressResponseDto.ToResponseDto(address);
             return Result.Success(dto);
         }
     }
