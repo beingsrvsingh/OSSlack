@@ -37,7 +37,6 @@ namespace Address.Application.Contracts
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Label = entity.Label,
                 AddressLine1 = entity.AddressLine1,
                 AddressLine2 = entity.AddressLine2,
                 City = entity.City,
@@ -47,7 +46,8 @@ namespace Address.Application.Contracts
                 Landmark = entity.Landmark,
                 PhoneNumber = entity.PhoneNumber,
                 AddressType = entity.AddressType?.Name ?? "Other",
-                IsDefault = entity.IsDefault
+                IsDefault = entity.IsDefault,
+                Label = entity.AddressType?.DisplayName
             };
         }
 

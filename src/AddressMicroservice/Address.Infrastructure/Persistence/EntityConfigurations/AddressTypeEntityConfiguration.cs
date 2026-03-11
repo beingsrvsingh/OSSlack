@@ -14,12 +14,30 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
             builder.Property(t => t.Id).HasColumnName("id");
 
             builder.Property(t => t.Name).HasColumnName("name").IsRequired();
+            builder.Property(t => t.DisplayName).HasColumnName("display_name").IsRequired();
             builder.Property(t => t.Description).HasColumnName("description");
 
             builder.HasMany(t => t.Addresses)
                .WithOne(a => a.AddressType)
                .HasForeignKey(a => a.AddressTypeId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasData(
+                new AddressType
+                {
+                    Id = 1,
+                    Name = "Home",
+                    DisplayName = "Home",
+                    Description = "Home address"
+                },
+                new AddressType
+                {
+                    Id = 2,
+                    Name = "Work",
+                    DisplayName = "Work",
+                    Description = "Work / Office address"
+                }
+            );
         }
     }
 

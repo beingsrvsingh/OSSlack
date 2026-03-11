@@ -50,7 +50,7 @@ namespace Address.Infrastructure.Service
         {
             try
             {
-                return await _repository.GetByIdAsync(id);
+                return await _repository.GetByAsync(a => a.UserId == id);
             }
             catch (Exception ex)
             {
@@ -138,7 +138,7 @@ namespace Address.Infrastructure.Service
                 if (address == null)
                     return false;
 
-                var others = await _repository.GetAllByOwnerAsync(address.OwnerId, address.OwnerType);
+                var others = await _repository.GetAllByOwnerAsync(address.UserId, AddressOwnerType.User);
                 foreach (var other in others)
                 {
                     other.IsDefault = false;

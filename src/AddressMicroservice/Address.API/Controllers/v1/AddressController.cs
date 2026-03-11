@@ -40,12 +40,12 @@ namespace Address.API.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("shipping/{addressId:int}")]
+        [HttpGet("shipping/{userId:int}")]
         [ProducesResponseType(typeof(AddressDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAddressForShippingById(int addressId)
+        public async Task<IActionResult> GetAddressForShippingById(int userId)
         {
-            var result = await Mediator.Send(new GetAddressForShippingByIdQuery { Id = addressId });
+            var result = await Mediator.Send(new GetAddressForShippingByIdQuery { Id = userId });
 
             if (!result.Succeeded)
                 return NotFound(result);

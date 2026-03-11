@@ -2,8 +2,8 @@ namespace Address.Domain.Enums
 {
     public enum AddressOwnerType
     {
-        User,
-        Partner,
+        User = 1,
+        Partner = 2,
         Temple,
         Priest,
         Astrologer,

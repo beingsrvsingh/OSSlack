@@ -13,14 +13,11 @@ namespace Address.Domain.Entities
         public Guid Uid { get; set; } = Guid.NewGuid();
 
         [Required]
-        public int OwnerId { get; set; }
-
-        [Required]
-        public AddressOwnerType OwnerType { get; set; } = AddressOwnerType.User;
+        public int UserId { get; set; }
+        
+        public int OwnerTypeId { get; set; }
 
         public string? Name { get; set; }
-
-        public string? Label { get; set; }
 
         [Required]
         public string AddressLine1 { get; set; } = null!;
@@ -67,6 +64,9 @@ namespace Address.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [ForeignKey(nameof(OwnerTypeId))]
+        public OwnerType? OwnerType { get; set; }
     }
 
 

@@ -2,20 +2,12 @@
 
 INSERT INTO address_type (id, name, description)
 VALUES
-(1, 'User', 'Represents a general user address'),
-(2, 'Partner', 'Address associated with a business partner'),
-(3, 'Temple', 'Address of a temple location'),
-(4, 'Priest', 'Address associated with a priest'),
-(5, 'Astrologer', 'Address associated with an astrologer'),
-(6, 'Vendor', 'Vendor''s registered address'),
-(7, 'DeliveryPartner', 'Address used by delivery personnel or partners'),
-(8, 'Office', 'Office or workplace address'),
-(9, 'Home', 'Personal or residential address'),
-(10, 'Other', 'Any other type of address');
+(1, 'Office', 'Office or workplace address'),
+(2, 'Home', 'Personal or residential address')
 
 
-INSERT INTO address (
-    uid, owner_id, owner_type, name, label,
+INSERT INTO addressdb.address (
+    uid, user_id, owner_type_id, name,
     address_line_1, address_line_2, city, state, country, pincode,
     landmark, phone_number, address_type_id, is_default, is_active,
     latitude, longitude, time_zone, created_by, updated_by, created_at, updated_at
@@ -23,10 +15,9 @@ INSERT INTO address (
 VALUES
 (
     UUID(),                       -- unique UID
-    1001,                         -- OwnerId
-    0,                            -- OwnerType = User
+    1,                         -- OwnerId
+    1,                            -- OwnerType = User
     'Saurav Sinha',
-    'Home',
     'Gate No.7 7005 - A FirstFloor',
     'Kailash Colony',
     'New Delhi',
@@ -35,7 +26,7 @@ VALUES
     '110066',
     'Near Main Market',
     '981806003',
-    9,                            -- AddressType = Home
+    1,                            -- AddressType = Home
     TRUE,                         -- IsDefault
     TRUE,                         -- IsActive
     NULL,                         -- Latitude
@@ -48,10 +39,9 @@ VALUES
 ),
 (
     UUID(),
-    1001,
-    0,
+    1,
+    1,
     'Jaksh Sinha',
-    'Work',
     'Gate No.9007 - A Fourth',
     'East of Kailash',
     'Lajpat Nagar',
@@ -60,7 +50,7 @@ VALUES
     '110055',
     'Near Metro Station',
     '801806995',
-    8,                            -- AddressType = Office
+    2,                            -- AddressType = Office
     FALSE,
     TRUE,
     NULL,

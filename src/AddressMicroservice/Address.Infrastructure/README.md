@@ -1,5 +1,7 @@
 find . -name "*.csproj";
 
+cd src/AddressMicroservice/address.infrastructure
+
 dotnet sln add ./src/AddressMicroservice/*/*.csproj
 
 dotnet ef migrations add Initial-Create --output-dir Migrations --context AddressDbContext --startup-project ../Address.API

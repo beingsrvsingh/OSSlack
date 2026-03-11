@@ -15,11 +15,10 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(a => a.Uid).HasColumnName("uid").IsRequired();
 
-            builder.Property(a => a.OwnerId).HasColumnName("owner_id").IsRequired();
-            builder.Property(a => a.OwnerType).HasColumnName("owner_type").IsRequired();
+            builder.Property(a => a.UserId).HasColumnName("user_Id").IsRequired();
+            builder.Property(a => a.OwnerTypeId).HasColumnName("owner_type_id").IsRequired();
 
             builder.Property(a => a.Name).HasColumnName("name");
-            builder.Property(a => a.Label).HasColumnName("label");
 
             builder.Property(a => a.AddressLine1).HasColumnName("address_line_1").IsRequired();
             builder.Property(a => a.AddressLine2).HasColumnName("address_line_2");
@@ -49,12 +48,21 @@ namespace Address.Infrastructure.Persistence.EntityConfigurations
 
             builder.Property(a => a.AddressTypeId)
                 .HasColumnName("address_type_id")
-                .HasDefaultValue(1); // e.g., 3 = "Other" in AddressType table
+                .HasDefaultValue(1);
 
             builder.HasOne(a => a.AddressType)
                .WithMany(t => t.Addresses)
                .HasForeignKey(a => a.AddressTypeId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(a => a.OwnerType)
+               .WithMany(ot => ot.Addresses)
+               .HasForeignKey(a => a.OwnerTypeId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(a => new { a.UserId, a.OwnerTypeId, a.IsDefault })
+                   .IsUnique()
+                   .HasFilter("[IsDefault] = 1");
         }
     }
 }
