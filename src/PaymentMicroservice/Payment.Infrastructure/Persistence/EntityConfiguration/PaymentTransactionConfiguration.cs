@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PaymentMicroservice.Domain.Entities;
+using Shared.Domain.Enums;
 
 namespace PaymentMicroservice.Infrastructure.Persistence.EntityConfiguration
 {
@@ -30,9 +31,9 @@ namespace PaymentMicroservice.Infrastructure.Persistence.EntityConfiguration
                 .IsRequired()
                 .HasColumnName("amount");
 
-            builder.Property(x => x.Currency)
+            builder.Property(o => o.Currency)
                 .IsRequired()
-                .HasMaxLength(10)
+                .HasDefaultValue(CurrencyCode.INR)
                 .HasColumnName("currency");
 
             builder.Property(x => x.PaymentMethod)

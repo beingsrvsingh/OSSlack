@@ -15,15 +15,11 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
 
             builder.Property(e => e.OrderHeaderId)
                 .IsRequired()
-                .HasColumnName("order_header_id");
+                .HasColumnName("order_id");
 
             builder.Property(e => e.ProductVariantId)
                 .IsRequired()
                 .HasColumnName("product_variant_id");
-
-            builder.Property(e => e.BookingId)
-                .HasColumnName("booking_id")
-                .IsRequired(false);
 
             builder.Property(e => e.ProductType)
                 .IsRequired()
@@ -39,7 +35,7 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .HasMaxLength(150)
                 .HasColumnName("product_name");
 
-            builder.Property(e => e.Sku)
+            builder.Property(e => e.SKU)
                 .HasMaxLength(100)
                 .HasColumnName("sku");
 
@@ -109,10 +105,25 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");
 
+            //Index
+            builder.HasIndex(e => e.ProductVariantId);
+            builder.HasIndex(e => e.OrderHeaderId);
+            builder.HasIndex(e => e.SKU);
+
             // Relationships
             builder.HasOne(e => e.OrderHeader)
                 .WithMany(o => o.OrderItems)
                 .HasForeignKey(e => e.OrderHeaderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.OrderItemCustomizations)
+                .WithOne(si => si.OrderItem)
+                .HasForeignKey(e => e.OrderItemId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.ShipmentItems)
+                .WithOne(si => si.OrderItem)
+                .HasForeignKey(si => si.OrderItemId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

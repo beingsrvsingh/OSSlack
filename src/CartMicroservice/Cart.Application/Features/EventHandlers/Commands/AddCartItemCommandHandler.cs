@@ -30,16 +30,16 @@ namespace CartMicroservice.Application.Features.EventHandlers.Commands
         {
             try
             {
-                var userId = userProvider.UserId ?? "Test-User";
+                var userId = userProvider.UserId ?? "1";
 
-                int mode = 0;
+                int modeId = 0;
 
-                if (request.CartItem.CustomOptions.TryGetValue("mode", out var modeElement))
+                if (request.CartItem.CustomOptions.TryGetValue("modeId", out var modeElement))
                 {
-                    int.TryParse(modeElement.GetString(), out mode);
+                    int.TryParse(modeElement.GetString(), out modeId);
                 }
 
-                var priceDetails = await pricingClient.GetPriceByPriestExpertiseIdAndModeId(request.CartItem.ProductVariantId, mode, Shared.Domain.Enums.Microservice.Priest);
+                var priceDetails = await pricingClient.GetPriceByPriestExpertiseIdAndModeId(request.CartItem.ProductVariantId, modeId, Shared.Domain.Enums.Microservice.Priest);
 
                 var cart = await _cartService.GetCartByUserIdAsync(userId);
 

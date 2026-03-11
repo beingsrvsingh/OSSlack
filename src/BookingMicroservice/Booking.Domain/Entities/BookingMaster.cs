@@ -10,21 +10,19 @@ namespace BookingMicroservice.Domain.Entities
         [Key]
         public int Id { get; set; }
 
-        // Polymorphic entity reference: Temple, Priest, Event, etc.
+        public string BookingReferenceNumber { get; set; } = Guid.NewGuid().ToString();
+
+        // Temple, Priest, Event, etc.
         [Required]
         [MaxLength(50)]
         public string EntityType { get; set; } = null!;
 
         [Required]
         public int EntityId { get; set; }
+        
+        public required string UserId { get; set; }
 
-        // User who booked
-        public int? UserId { get; set; }
-
-        // Booking details
-        [Required]
-        [MaxLength(100)]
-        public string PoojaType { get; set; } = null!;
+        public string ProductName { get; set; }
 
         [Required]
         public DateTime Date { get; set; }
@@ -35,20 +33,21 @@ namespace BookingMicroservice.Domain.Entities
         [Required]
         public TimeSpan EndTime { get; set; }
 
+        //app, event
         [MaxLength(50)]
-        public string Source { get; set; } = "web"; //app, event
+        public string Source { get; set; } = "web";
+
+        [Column(TypeName = "json")]
+        public string? BookingOptionsJson { get; set; }
 
         [Required]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
-
-        [Required]
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
 
         [MaxLength(500)]
         public string? Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;    
+        public DateTime UpdatedAt { get; set; } 
     }
 
     public enum BookingStatus
@@ -57,14 +56,6 @@ namespace BookingMicroservice.Domain.Entities
         Confirmed,
         Cancelled,
         Completed
-    }
-
-    public enum PaymentStatus
-    {
-        Pending,
-        Paid,
-        Failed,
-        Refunded
     }
 
 }

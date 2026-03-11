@@ -9,14 +9,16 @@ namespace BookingMicroservice.Infrastructure.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<BookingMaster> builder)
         {
             // Table name in snake_case
-            builder.ToTable("booking_master");
+            builder.ToTable("bookings");
 
             // Primary Key
             builder.HasKey(b => b.Id);
-
-            // Properties with snake_case columns
+            
             builder.Property(b => b.Id)
                    .HasColumnName("id");
+
+            builder.Property(b => b.BookingReferenceNumber)
+                   .HasColumnName("booking_ref_num");
 
             builder.Property(b => b.EntityType)
                    .HasColumnName("entity_type")
@@ -30,10 +32,9 @@ namespace BookingMicroservice.Infrastructure.Persistence.EntityConfigurations
             builder.Property(b => b.UserId)
                    .HasColumnName("user_id");
 
-            builder.Property(b => b.PoojaType)
-                   .HasColumnName("pooja_type")
-                   .IsRequired()
-                   .HasMaxLength(100);
+            builder.Property(b => b.ProductName)
+                   .HasColumnName("name")
+                   .IsRequired();
 
             builder.Property(b => b.Date)
                    .HasColumnName("date")
@@ -52,17 +53,15 @@ namespace BookingMicroservice.Infrastructure.Persistence.EntityConfigurations
                    .HasMaxLength(50)
                    .HasDefaultValue("web");
 
+            builder.Property(ci => ci.BookingOptionsJson)
+                .HasColumnType("json")
+                .HasColumnName("booking_options");
+
             builder.Property(b => b.Status)
                    .HasColumnName("status")
                    .IsRequired()
                    .HasConversion<string>()
                    .HasDefaultValue(BookingStatus.Pending);
-
-            builder.Property(b => b.PaymentStatus)
-                   .HasColumnName("payment_status")
-                   .IsRequired()
-                   .HasConversion<string>()
-                   .HasDefaultValue(PaymentStatus.Pending);
 
             builder.Property(b => b.Notes)
                    .HasColumnName("notes")

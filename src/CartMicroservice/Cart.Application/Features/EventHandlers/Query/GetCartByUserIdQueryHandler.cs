@@ -1,10 +1,14 @@
 using Cart.Application.Contracts;
+using Cart.Application.Services;
 using CartMicroservice.Application.Contracts;
 using CartMicroservice.Application.Features.Query;
 using CartMicroservice.Application.Services;
 using Mapster;
 using MediatR;
+using Newtonsoft.Json.Linq;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain;
+using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
 namespace CartMicroservice.Application.Features.EventHandlers.Query
@@ -13,11 +17,13 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
     {
         private readonly ICartService _cartService;
         private readonly ILoggerService<GetCartByUserIdQueryHandler> _logger;
+        private readonly IPricingClient pricingClient;
 
-        public GetCartByUserIdQueryHandler(ICartService cartService, ILoggerService<GetCartByUserIdQueryHandler> logger)
+        public GetCartByUserIdQueryHandler(ICartService cartService, ILoggerService<GetCartByUserIdQueryHandler> logger, IPricingClient pricingClient)
         {
             _cartService = cartService;
             _logger = logger;
+            this.pricingClient = pricingClient;
         }
 
         public async Task<Result> Handle(GetCartByUserIdQuery request, CancellationToken cancellationToken)
@@ -36,6 +42,29 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
                     };
                     return Result.Success(cartResponse);
                 }
+
+                foreach (var item in cart.CartItems)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.SelectedOptionsJson))
+                    {
+                        var optionsArray = JArray.Parse(item.SelectedOptionsJson);
+                        if (optionsArray.Count > 0)
+                        {
+                            int? modeId = (int?)optionsArray[0]["modeId"];
+
+                            if(modeId.HasValue)
+                            {
+                                int actualModeId = modeId.Value;
+
+                                Microservice microservice;
+                                Enum.TryParse(item.ProviderType, true, out microservice);
+
+                                var priceDetails = await pricingClient.GetPriceByPriestExpertiseIdAndModeId(item.ProductVariantId, actualModeId, microservice);
+                                item.PriceSnapshot = priceDetails?.Amount ?? item.PriceSnapshot;
+                            }
+                        }
+                    }                    
+                }                
 
                 var cartItemsDto = cart.CartItems.Select(ci => new CartItemDto
                 {

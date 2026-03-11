@@ -41,7 +41,7 @@ namespace Cart.Infrastructure.Services
             {
                 var response = await _httpClientService.GetAsync<Result<BasePrice>>(Microservice.Priest, $"priest/{priestExpertiseId}/{modeId}/price");
 
-                return response.Data;
+                return response?.Data ?? new BasePrice();
             }
             catch (Exception ex)
             {

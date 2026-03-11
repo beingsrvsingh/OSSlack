@@ -1,5 +1,6 @@
 using BaseApi;
 using Cart.Application.Features.Commands;
+using Cart.Application.Features.Query;
 using CartMicroservice.Application.Contracts;
 using CartMicroservice.Application.Features.Commands;
 using CartMicroservice.Application.Features.Query;
@@ -16,6 +17,19 @@ namespace CartMicroservice.API.Controllers.v1
         public async Task<IActionResult> GetCartByUserId(string userId)
         {
             var result = await Mediator.Send(new GetCartByUserIdQuery(userId));
+
+            if (!result.Succeeded || result.Data == null)
+                return NotFound(new { Message = "Cart not found for user." });
+
+            return Ok(result.Data);
+        }
+
+        [HttpGet("{userId}/order")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetOrderCartByUserIdForOrder(string userId)
+        {
+            var result = await Mediator.Send(new GetOrderCartByUserIdQuery(userId));
 
             if (!result.Succeeded || result.Data == null)
                 return NotFound(new { Message = "Cart not found for user." });

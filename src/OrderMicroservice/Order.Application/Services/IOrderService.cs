@@ -1,4 +1,5 @@
 using Order.Application.Contracts;
+using Order.Application.Features.Commands;
 using Order.Domain.Entities;
 
 namespace Order.Application.Services
@@ -9,7 +10,7 @@ namespace Order.Application.Services
         Task<OrderDetailDto?> GetOrderDetailsAsync(int orderId);
         Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId);
         Task<IEnumerable<OrderItemCustomization>> GetCustomizationsByOrderItemIdAsync(int orderItemId);
-        Task<bool> AddOrderAsync(OrderHeader order);
+        Task<bool> AddOrderAsync(AddOrderCommand order);
         Task<IEnumerable<OrderHeader>> GetAllOrdersAsync();
         Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId);
         Task<bool> UpdateOrderAsync(OrderHeader order);

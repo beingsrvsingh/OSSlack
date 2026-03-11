@@ -1,11 +1,13 @@
-using System.Security.Cryptography;
+using Azure.Core;
 using Order.Application.Contracts;
+using Order.Application.Features.Commands;
 using Order.Application.Services;
 using Order.Domain.Core.Repository;
 using Order.Domain.Entities;
 using Shared.Application.Contracts;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Cryptography;
+using System.Security.Cryptography;
 
 namespace Order.Infrastructure.Services
 {
@@ -15,14 +17,15 @@ namespace Order.Infrastructure.Services
         private readonly ILoggerService<OrderService> _logger;
         private readonly IPaymentService paymentService;
         private readonly IAddressService addressService;
+        private readonly ICartClient cartClient;
 
-        public OrderService(IOrderRepository orderRepository, ILoggerService<OrderService> logger,
-        IPaymentService paymentService, IAddressService addressService)
+        public OrderService(IOrderRepository orderRepository, ILoggerService<OrderService> logger,IPaymentService paymentService, IAddressService addressService, ICartClient cartClient)
         {
             _orderRepository = orderRepository;
             _logger = logger;
             this.paymentService = paymentService;
             this.addressService = addressService;
+            this.cartClient = cartClient;
         }
 
         public async Task<OrderHeader?> GetOrderByIdAsync(int orderId)
@@ -64,11 +67,50 @@ namespace Order.Infrastructure.Services
             }
         }
 
-        public async Task<bool> AddOrderAsync(OrderHeader order)
+        public async Task<bool> AddOrderAsync(AddOrderCommand order)
         {
             try
             {
-                await _orderRepository.AddOrderAsync(order);
+                string userId = "1";
+                var address = await addressService.GetAddressInfoByIdAsync(userId);
+                var carts = await cartClient.GetCartInfoByUserIdAsync(userId);
+
+                if(carts == null)
+                {
+                    return false;
+                }
+
+                List<OrderItem> orderItems = new List<OrderItem>();
+                foreach (var item in carts.CartItem)
+                {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.ProductVariantId = item.ProductId;
+                    orderItem.ProductUrl = item.ProductUrl;
+                    orderItem.Quantity = item.Quantity;
+                    orderItem.UnitPrice = item.UnitPrice;
+                    orderItem.ProductOptions = item.ProductOptions;
+                    orderItem.TaxAmount = item.TaxAmount;
+                    orderItem.DiscountAmount = item.DiscountAmount;
+                    orderItem.TotalPrice = item.TotalPrice;
+
+                    orderItems.Add(orderItem);
+                }
+
+                await _orderRepository.AddOrderAsync(
+                new OrderHeader()
+                {
+                    AddressId = address.Id,
+                    UserId = userId,
+                    BookingId = order.BookingId,
+                    Status = Domain.Enums.OrderStatus.Pending,
+                    TotalAmount = carts.TotalAmount,
+                    GrandTotal = carts.GrandTotal,
+                    TaxAmount = carts.TaxAmount,
+                    PlatformFee = carts.PlatformFee,
+                    SurgeFee = carts.SurgeFee,
+                    DiscountAmount = carts.DiscountAmount,
+                    OrderItems = orderItems
+                });
                 await _orderRepository.SaveChangesAsync();
                 return true;
             }
@@ -143,7 +185,7 @@ namespace Order.Infrastructure.Services
             var order = await _orderRepository.GetOrderDetailsAsync(orderId);
             if(order == null) return null;
             var payment = await paymentService.GetPaymentInfoByIdAsync(orderId);
-            var shippingInfo = await addressService.GetAddressInfoByIdAsync(order.AddressId);
+            var shippingInfo = await addressService.GetAddressInfoByIdAsync(order.UserId);
 
             if (order == null)
                 return null;

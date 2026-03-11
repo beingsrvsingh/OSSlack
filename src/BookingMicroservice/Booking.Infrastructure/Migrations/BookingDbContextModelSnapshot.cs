@@ -31,6 +31,15 @@ namespace Booking.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BookingOptionsJson")
+                        .HasColumnType("json")
+                        .HasColumnName("booking_options");
+
+                    b.Property<string>("BookingReferenceNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("booking_ref_num");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
@@ -60,18 +69,10 @@ namespace Booking.Infrastructure.Migrations
                         .HasColumnType("varchar(500)")
                         .HasColumnName("notes");
 
-                    b.Property<string>("PaymentStatus")
+                    b.Property<string>("ProductName")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("longtext")
-                        .HasDefaultValue("Pending")
-                        .HasColumnName("payment_status");
-
-                    b.Property<string>("PoojaType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("pooja_type");
+                        .HasColumnName("name");
 
                     b.Property<string>("Source")
                         .IsRequired()
@@ -100,8 +101,9 @@ namespace Booking.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdatedAt"));
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -110,7 +112,7 @@ namespace Booking.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ux_booking_entity_time");
 
-                    b.ToTable("booking_master", (string)null);
+                    b.ToTable("bookings", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Temple.Domain.Entities
 {
-    public class TempleExpertiseImage : BaseMedia
+    public class TempleExpertiseMedia : BaseMedia
     {
         [Required]
         public int TempleExpertiseId { get; set; }

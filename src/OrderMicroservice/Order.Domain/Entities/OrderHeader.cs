@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Order.Domain.Enums;
+using Shared.Domain.Enums;
 
 namespace Order.Domain.Entities
 {
@@ -10,7 +11,7 @@ namespace Order.Domain.Entities
         public int Id { get; set; }
 
         [Required, MaxLength(50)]
-        public string OrderNumber { get; set; } = null!;  // Unique, human-friendly order reference
+        public string OrderNumber { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         public required string UserId { get; set; }
@@ -18,23 +19,13 @@ namespace Order.Domain.Entities
         [Required]
         public required int AddressId { get; set; }
 
-        [Required]
-        public int CustomerId { get; set; }  // Reference to customer (could be user service)
+        public int? BookingId { get; set; }
 
         [Required]
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
         [Required]
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-
-        public DateTime? ShippedDate { get; set; }
-        public DateTime? DeliveredDate { get; set; }
-        public DateTime? EstimatedDeliveryDate { get; set; }
-
-        [MaxLength(100)]
-        public string? ShippingMethod { get; set; }
-        [MaxLength(100)]
-        public string? TrackingNumber { get; set; }
 
         [Required, Column(TypeName = "decimal(18,2)")]
         public decimal TotalAmount { get; set; }
@@ -54,8 +45,8 @@ namespace Order.Domain.Entities
         [Required, Column(TypeName = "decimal(18,2)")]
         public decimal DiscountAmount { get; set; }
 
-        [MaxLength(3)]
-        public string CurrencyCode { get; set; } = "USD";
+        [Required, Column(TypeName = "decimal(18,2)")]
+        public decimal GrandTotal { get; set; }
 
         public bool IsGift { get; set; } = false;
 
@@ -69,7 +60,7 @@ namespace Order.Domain.Entities
         public string? AdminNotes { get; set; }
 
         [MaxLength(50)]
-        public string? RefundStatus { get; set; }  // e.g., "None", "Requested", "Completed"
+        public string? RefundStatus { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -82,13 +73,8 @@ namespace Order.Domain.Entities
         [MaxLength(50)]
         public string? UpdatedBy { get; set; }
 
-        [MaxLength(50)]
-        public string? DeliveryPartnerUserId { get; set; } // ID of the assigned delivery person (could be user service reference)
-
-        [MaxLength(100)]
-        public string? DeliveryPartnerNameSnapshot { get; set; } // Optional, for snapshot/reporting purposes
-
+        // Navigation
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
+        public virtual ICollection<OrderShipment> Shipments { get; set; } = new List<OrderShipment>();
     }
 }

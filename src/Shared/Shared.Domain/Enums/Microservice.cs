@@ -7,6 +7,7 @@
         Orders,
         Temple,
         Priest,
+        Astrologer,
         Kathavachak
     }
 

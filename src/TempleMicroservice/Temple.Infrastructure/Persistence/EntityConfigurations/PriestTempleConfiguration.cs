@@ -6,7 +6,7 @@ public class PriestTempleConfiguration : IEntityTypeConfiguration<PriestTemple>
 {
     public void Configure(EntityTypeBuilder<PriestTemple> entity)
     {
-        entity.ToTable("priest_temple"); // snake_case table name
+        entity.ToTable("priest_temple");
 
         entity.HasKey(e => e.Id);
 

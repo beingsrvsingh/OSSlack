@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Order.Domain.Entities;
+using Shared.Domain.Enums;
 
 namespace Order.Infrastructure.Persistence.EntitiesConfigurations
 {
@@ -18,13 +19,12 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .HasMaxLength(50)
                 .HasColumnName("order_number");
 
-            builder.Property(o => o.CustomerId)
-                .IsRequired()
-                .HasColumnName("customer_id");
-
             builder.Property(o => o.AddressId)
                 .IsRequired()
                 .HasColumnName("address_id");
+
+            builder.Property(o => o.BookingId)
+                .HasColumnName("booking_id");
 
             builder.Property(o => o.UserId)
                 .IsRequired()
@@ -37,23 +37,6 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
             builder.Property(o => o.OrderDate)
                 .IsRequired()
                 .HasColumnName("order_date");
-
-            builder.Property(o => o.ShippedDate)
-                .HasColumnName("shipped_date");
-
-            builder.Property(o => o.DeliveredDate)
-                .HasColumnName("delivered_date");
-
-            builder.Property(o => o.EstimatedDeliveryDate)
-                .HasColumnName("estimated_delivery_date");
-
-            builder.Property(o => o.ShippingMethod)
-                .HasMaxLength(100)
-                .HasColumnName("shipping_method");
-
-            builder.Property(o => o.TrackingNumber)
-                .HasMaxLength(100)
-                .HasColumnName("tracking_number");
 
             builder.Property(o => o.TotalAmount)
                 .IsRequired()
@@ -85,11 +68,11 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
                 .HasColumnType("decimal(18,2)")
                 .HasColumnName("discount_amount");
 
-            builder.Property(o => o.CurrencyCode)
+            builder.Property(o => o.GrandTotal)
                 .IsRequired()
-                .HasMaxLength(3)
-                .HasDefaultValue("USD")
-                .HasColumnName("currency_code");
+                .HasColumnType("decimal(18,2)")
+                .HasColumnName("grand_total");
+
 
             builder.Property(o => o.IsGift)
                 .IsRequired()
@@ -125,20 +108,21 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
             builder.Property(o => o.UpdatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");
-            
-            builder.Property(o => o.DeliveryPartnerUserId)
-                .HasMaxLength(50)
-                .HasColumnName("delivery_partner_user_id");
-
-            builder.Property(o => o.DeliveryPartnerNameSnapshot)
-                .HasMaxLength(50)
-                .HasColumnName("delivery_partner_name");
 
             // Relations
             builder.HasMany(o => o.OrderItems)
                 .WithOne(oi => oi.OrderHeader)
                 .HasForeignKey(oi => oi.OrderHeaderId)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(o => o.Shipments)
+                .WithOne(s => s.OrderHeader)
+                .HasForeignKey(s => s.OrderHeaderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Indexes
+            builder.HasIndex(o => o.OrderNumber).IsUnique();
+            builder.HasIndex(o => o.UserId);
+            builder.HasIndex(o => o.Status);
 
         }
     }

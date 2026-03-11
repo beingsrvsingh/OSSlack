@@ -33,9 +33,6 @@ namespace CartMicroservice.Domain.Entities
 
         public int Quantity { get; set; } = 1;
 
-        public decimal PlatformFee { get; set; } = 0m;
-        public decimal SurgeFee { get; set; } = 0m;
-
         [MaxLength(50)]
         public string? AppliedCouponCode { get; set; }
 

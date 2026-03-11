@@ -66,6 +66,12 @@ builder.Services.AddHttpClient<IProductService, ProductService>(client =>
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/product/");
 });
 
+builder.Services.AddHttpClient<ICartClient, CartClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Cart-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/cart/");
+});
+
 
 // Add services to the container.
 builder.Services.AddControllers();

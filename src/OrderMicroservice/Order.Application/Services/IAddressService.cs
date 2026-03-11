@@ -4,6 +4,6 @@ namespace Order.Application.Services
 {
     public interface IAddressService
     {
-        Task<ShippingInfoDto?> GetAddressInfoByIdAsync(int addressId);
+        Task<ShippingInfoDto?> GetAddressInfoByIdAsync(string userId);
     }
 }

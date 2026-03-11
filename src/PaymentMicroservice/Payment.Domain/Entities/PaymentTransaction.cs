@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Payment.Domain.Enums;
 using PaymentMicroservice.Domain.Enums;
+using Shared.Domain.Enums;
 
 namespace PaymentMicroservice.Domain.Entities
 {
@@ -21,8 +22,8 @@ namespace PaymentMicroservice.Domain.Entities
         [Required]
         public decimal Amount { get; set; }
 
-        [Required, MaxLength(10)]
-        public string Currency { get; set; } = "INR";
+        [Required, MaxLength(3)]
+        public CurrencyCode Currency { get; set; } = CurrencyCode.INR;
 
         [Required]
         public PaymentMethod PaymentMethod { get; set; }

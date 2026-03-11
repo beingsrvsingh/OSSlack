@@ -26,7 +26,7 @@ namespace Order.Infrastructure.Persistence.Repository
         {
             return await _context.OrderItems
                 .Where(i => i.OrderHeaderId == orderId)
-                .Include(i => i.Customizations)
+                .Include(i => i.OrderItemCustomizations)
                 .ToListAsync();
         }
 
@@ -55,6 +55,20 @@ namespace Order.Infrastructure.Persistence.Repository
             return await _context.OrderHeaders
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
+        }
+
+        public async Task<string> GenerateOrderNumberAsync()
+        {
+            var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
+
+            // Count orders created today
+            var todayCount = await _context.OrderHeaders
+                .Where(o => o.OrderDate.Date == DateTime.UtcNow.Date)
+                .CountAsync();
+
+            var sequenceNumber = (todayCount + 1).ToString("D4");
+
+            return $"ORD-{datePart}-{sequenceNumber}";
         }
 
     }

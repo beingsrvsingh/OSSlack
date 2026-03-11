@@ -5,6 +5,7 @@ namespace Address.Application.Contracts
 {
     public class ShippingInfoDto
     {
+        public int Id { get; set; }
         public string RecipientName { get; set; } = null!;
         public string AddressLine1 { get; set; }= null!;
         public string? AddressLine2 { get; set; }
@@ -19,6 +20,7 @@ namespace Address.Application.Contracts
         {
             return new ShippingInfoDto
             {
+                Id = address.Id,
                 RecipientName = address.Name ?? string.Empty,  // or you can default to "N/A"
                 AddressLine1 = address.AddressLine1,
                 AddressLine2 = address?.AddressLine2 ?? "",

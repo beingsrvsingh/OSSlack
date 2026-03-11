@@ -51,7 +51,7 @@ namespace Order.Infrastructure.Persistence.EntitiesConfigurations
 
             // Foreign key relation to OrderItem
             builder.HasOne(oic => oic.OrderItem)
-                   .WithMany(oi => oi.Customizations)
+                   .WithMany(oi => oi.OrderItemCustomizations)
                    .HasForeignKey(oic => oic.OrderItemId)
                    .OnDelete(DeleteBehavior.Cascade)
                    .HasConstraintName("fk_order_item_customizations_order_item");

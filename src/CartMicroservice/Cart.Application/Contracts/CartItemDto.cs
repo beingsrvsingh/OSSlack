@@ -23,6 +23,6 @@ namespace Cart.Application.Contracts
         public decimal AdditionalFees { get; set; } = 0m;
 
         [JsonPropertyName("provider_type")]
-        public string ProviderType { get; set; } = "Product";
+        public string ProviderType { get; set; }
     }
 }

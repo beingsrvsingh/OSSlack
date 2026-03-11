@@ -60,16 +60,6 @@ namespace CartMicroservice.Infrastructure.Persistence.EntityConfigurations
                 .HasDefaultValue(0m)
                 .HasColumnName("tax_amount");
 
-            builder.Property(ci => ci.PlatformFee)
-                .HasColumnType("decimal(10,2)")
-                .HasDefaultValue(0m)
-                .HasColumnName("platform_fee");
-
-            builder.Property(ci => ci.SurgeFee)
-                .HasColumnType("decimal(10,2)")
-                .HasDefaultValue(0m)
-                .HasColumnName("surge_fee");
-
             builder.Property(ci => ci.AdditionalFees)
                 .HasColumnType("decimal(10,2)")
                 .HasDefaultValue(0m)

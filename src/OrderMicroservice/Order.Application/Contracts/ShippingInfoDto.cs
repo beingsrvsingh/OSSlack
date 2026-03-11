@@ -3,6 +3,7 @@ namespace Order.Application.Contracts
 {
     public class ShippingInfoDto
     {
+        public int Id { get; set; }
         public string RecipientName { get; set; } = null!;
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }

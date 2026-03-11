@@ -4,9 +4,9 @@ using Temple.Domain.Entities;
 
 namespace Temple.Infrastructure.Persistence.EntityConfigurations
 {
-    public class TempleExpertiseImageConfiguration : IEntityTypeConfiguration<TempleExpertiseImage>
+    public class TempleExpertiseImageConfiguration : IEntityTypeConfiguration<TempleExpertiseMedia>
     {
-        public void Configure(EntityTypeBuilder<TempleExpertiseImage> builder)
+        public void Configure(EntityTypeBuilder<TempleExpertiseMedia> builder)
         {
             builder.ToTable("temple_expertise_image");
 

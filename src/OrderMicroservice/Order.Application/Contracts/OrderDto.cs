@@ -25,7 +25,7 @@ namespace Order.Application.Contracts
                     Title = item.ProductName,
                     Url = item.ProductUrl ?? string.Empty,
                     Cost = (double)item.TotalPrice,
-                    DeliveryDate = order.EstimatedDeliveryDate ?? DateTime.UtcNow,
+                    DeliveryDate = order.Shipments?.FirstOrDefault()?.EstimatedDeliveryDate ?? DateTime.UtcNow,
                     Status = order.Status.ToString()
                 }))
                 .ToList();

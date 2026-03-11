@@ -7,6 +7,7 @@ using CartMicroservice.Infrastructure;
 using JwtTokenAuthentication;
 using Shared.Application.Interfaces.Logging;
 using Shared.BaseApi.Extensions;
+using Shared.Domain.Enums;
 using Shared.Infrastructure;
 using Shared.Infrastructure.Extensions;
 
@@ -53,25 +54,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenerate();
 
-builder.Services.AddHttpClient("Product", client =>
+builder.Services.AddHttpClient(Microservice.Product.ToString(), client =>
 {
     var baseUrl = builder.Configuration["Microservice-Endpoint:Product-BaseUrl"];
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
-builder.Services.AddHttpClient("Astrologer", client =>
+builder.Services.AddHttpClient(Microservice.Astrologer.ToString(), client =>
 {
     var baseUrl = builder.Configuration["Microservice-Endpoint:Astrologer-BaseUrl"];
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
-builder.Services.AddHttpClient("Priest", client =>
+builder.Services.AddHttpClient(Microservice.Priest.ToString(), client =>
 {
     var baseUrl = builder.Configuration["Microservice-Endpoint:Priest-BaseUrl"];
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
 });
 
-builder.Services.AddHttpClient("Temple", client =>
+builder.Services.AddHttpClient(Microservice.Temple.ToString(), client =>
 {
     var baseUrl = builder.Configuration["Microservice-Endpoint:Temple-BaseUrl"];
     client.BaseAddress = new Uri($"{baseUrl}/api/v1/");

@@ -2,7 +2,7 @@ find . -name "*.csproj";
 
 dotnet sln add ./src/BookingMicroservice/*/*.csproj
 
-cd src/BookingMicroservice/astrologer.infrastructure
+cd src/BookingMicroservice/Booking.infrastructure
 
 dotnet ef migrations add Initial-Create --output-dir Migrations --context BookingDbContext --startup-project ../Booking.API 
 
