@@ -34,7 +34,7 @@ namespace CartMicroservice.API.Controllers.v1
             if (!result.Succeeded || result.Data == null)
                 return NotFound(new { Message = "Cart not found for user." });
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // GET api/cart/{cartId}/items

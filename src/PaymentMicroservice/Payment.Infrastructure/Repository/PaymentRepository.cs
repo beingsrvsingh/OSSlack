@@ -34,7 +34,7 @@ namespace PaymentMicroservice.Infrastructure.Repository
         {
             var payment = await _context.PaymentTransactions
                 .Include(t => t.PaymentMethodDetails)
-                .FirstOrDefaultAsync(t => t.OrderId == orderId);
+                .FirstOrDefaultAsync(t => t.OrderId.Equals(orderId));
 
             return payment;
         }

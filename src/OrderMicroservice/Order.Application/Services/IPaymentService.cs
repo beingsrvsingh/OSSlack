@@ -4,6 +4,6 @@ namespace Order.Application.Services
 {
     public interface IPaymentService
     {
-        Task<PaymentInfoDto?> GetPaymentInfoByIdAsync(int orderId);
+        Task<PaymentInfoDto?> GetPaymentInfoByIdAsync(string orderId);
     }
 }

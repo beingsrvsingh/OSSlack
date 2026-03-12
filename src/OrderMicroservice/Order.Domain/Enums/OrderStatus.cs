@@ -8,7 +8,8 @@ namespace Order.Domain.Enums
         Delivered = 3,
         Cancelled = 4,
         Returned = 5,
-        Refunded = 6
+        Refunded = 6,
+        Confirmed = 7
     }
 
 }

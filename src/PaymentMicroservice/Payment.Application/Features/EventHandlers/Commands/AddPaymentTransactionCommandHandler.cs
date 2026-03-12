@@ -1,4 +1,3 @@
-using Mapster;
 using MediatR;
 using Payment.Application.Services;
 using PaymentMicroservice.Application.Features.Commands;
@@ -6,6 +5,7 @@ using PaymentMicroservice.Application.Services;
 using PaymentMicroservice.Domain.Entities;
 using PaymentMicroservice.Domain.Enums;
 using Shared.Application.Interfaces.Logging;
+using Shared.Domain.Enums;
 using Shared.Utilities.Response;
 
 namespace PaymentMicroservice.Application.Features.EventHandlers.Commands
@@ -27,25 +27,28 @@ namespace PaymentMicroservice.Application.Features.EventHandlers.Commands
         {
             try
             {
-                var orderId = Guid.NewGuid().ToString("N");
+                //var payment = await cashfreeService.CreateOrderAsync(request.TransactionDto.OrderId,request.TransactionDto.UserId,request.TransactionDto.Amount,request.TransactionDto.Currency);
 
-                var payment = await cashfreeService.CreateOrderAsync(
-                    orderId,
-                    request.TransactionDto.Amount,
-                    request.TransactionDto.UserId,
-                    request.TransactionDto.Email,
-                    request.TransactionDto.Phone
-                );
+                var transaction = new PaymentTransaction();
 
-                var transaction = request.TransactionDto.Adapt<PaymentTransaction>();
-                transaction.OrderId = orderId;
-                transaction.Status = PaymentStatus.Pending;
+                if (false)
+                {
+                    transaction.Status = PaymentStatus.Pending;
+                }
+                else
+                {
+                    transaction.Status = PaymentStatus.Success;
+                }
+                
+                transaction.OrderId = request.OrderNumber;
+                transaction.PaymentReference = Guid.NewGuid().ToString();
+                transaction.UserId = request.UserId;
+                transaction.Amount = request.Amount;
+                transaction.Currency = Enum.Parse<CurrencyCode>(request.Currency, true);
 
                 var success = await _paymentService.AddPaymentTransactionAsync(transaction);
 
-                return success
-                    ? Result.Success(payment)
-                    : Result.Failure(new FailureResponse("Failed", "Failed to create payment transaction."));
+                return success ? Result.Success(new { paymentRefNum = transaction.PaymentReference, Status = transaction.Status}) : Result.Failure(new FailureResponse("FAILED", "Failed to create payment transaction."));
             }
             catch (Exception ex)
             {

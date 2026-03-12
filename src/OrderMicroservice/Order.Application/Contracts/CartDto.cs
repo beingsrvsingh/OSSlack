@@ -6,9 +6,7 @@ namespace Order.Application.Contracts
     {
         public required string UserId { get; set; }
 
-        public DateTime PreferedDeliveryDate { get; set; }
-
-        public decimal TotalAmount { get; set; }
+        public decimal SubTotal { get; set; }
 
         public decimal TaxAmount { get; set; }
 
@@ -18,7 +16,7 @@ namespace Order.Application.Contracts
 
         public decimal PlatformFee { get; set; }
 
-        public decimal GrandTotal { get; set; }
+        public decimal TotalAmount { get; set; }
 
         public List<CartItemDto> CartItem { get; set; } = default!;
     }

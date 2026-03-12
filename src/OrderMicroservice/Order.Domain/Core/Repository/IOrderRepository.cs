@@ -11,5 +11,7 @@ namespace Order.Domain.Core.Repository
         Task<IEnumerable<OrderItemCustomization>> GetCustomizationsByOrderItemIdAsync(int orderItemId);
         Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId);
         Task AddOrderAsync(OrderHeader order);
+
+        Task<OrderHeader?> GetOrderByOrderNumberAsync(string orderNumber);
     }
 }

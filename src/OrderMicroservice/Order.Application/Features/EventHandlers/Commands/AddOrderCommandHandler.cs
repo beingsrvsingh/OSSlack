@@ -23,8 +23,8 @@ namespace Order.Application.Features.EventHandlers.Commands
         {
             try
             {
-                var success = await _orderService.AddOrderAsync(request);
-                return success ? Result.Success() : Result.Failure(new FailureResponse("Error", "Failed to add order"));
+                var result = await _orderService.AddOrderAsync(request);
+                return result != null ? Result.Success(result) : Result.Failure(new FailureResponse("Error", "Failed to add order"));
             }
             catch (Exception ex)
             {

@@ -1,5 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Booking.Application.Service;
+using Booking.Infrastructure.Service;
 using BookingMicroservice.Infrastructure;
 using JwtTokenAuthentication;
 using Shared.Application.Interfaces.Logging;
@@ -40,6 +42,20 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+
+
+builder.Services.AddHttpClient<IOrderClient, OrderClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Order-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/");
+});
+
+builder.Services.AddHttpClient<IPaymentClient, PaymentClient>(client =>
+{
+    var baseUrl = builder.Configuration.GetValue<string>("Microservice-Endpoint:Payment-BaseUrl");
+    client.BaseAddress = new Uri($"{baseUrl}/api/v1/payment/");
+});
+
 
 builder.Services.AddControllers().AddJsonOptions(opts =>
 {

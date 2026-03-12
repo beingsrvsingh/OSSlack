@@ -21,7 +21,7 @@ namespace Order.Infrastructure.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<PaymentInfoDto?> GetPaymentInfoByIdAsync(int orderId)
+        public async Task<PaymentInfoDto?> GetPaymentInfoByIdAsync(string orderId)
         {
             try
             {

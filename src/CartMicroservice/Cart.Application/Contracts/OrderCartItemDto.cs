@@ -6,6 +6,10 @@ namespace Cart.Application.Contracts
     {
         public  int ProductId { get; set; }
 
+        public string ProductName { get; set; }
+
+        public string ProductType { get; set; }
+
         public string? Sku { get; set; }
 
         public string ProductUrl { get; set; }

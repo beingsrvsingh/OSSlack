@@ -61,7 +61,7 @@ namespace Order.API.Controllers.v1
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Created(string.Empty, new { Message = "Order created successfully." });
+            return Ok(result);
         }
 
         // List Orders by UserId or all if no UserId provided
@@ -85,6 +85,24 @@ namespace Order.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderCommand request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await Mediator.Send(request);
+
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
+
+            return Ok(new { Message = "Order updated successfully." });
+        }
+
+        // Update Order Status
+        [HttpPatch("status")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateOrderStatus([FromBody] UpdateOrderStatusCommand request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

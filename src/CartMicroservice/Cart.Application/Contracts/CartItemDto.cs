@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Cart.Application.Contracts
 {
@@ -6,6 +7,9 @@ namespace Cart.Application.Contracts
     {
         [JsonPropertyName("pid")]
         public string ProductId { get; set; }
+
+        [JsonPropertyName("cart_id")]
+        public int CartId { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
@@ -24,5 +28,8 @@ namespace Cart.Application.Contracts
 
         [JsonPropertyName("provider_type")]
         public string ProviderType { get; set; }
+
+        [JsonPropertyName("meta")]
+        public Dictionary<string, JsonElement> Meta { get; set; }
     }
 }

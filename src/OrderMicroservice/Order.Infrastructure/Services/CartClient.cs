@@ -24,7 +24,7 @@ namespace Order.Infrastructure.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"cart/{userId}");
+                var response = await _httpClient.GetAsync($"{userId}/order");
 
                 response.EnsureSuccessStatusCode();
 

@@ -10,6 +10,7 @@ using Shared.Application.Interfaces.Logging;
 using Shared.Domain;
 using Shared.Domain.Enums;
 using Shared.Utilities.Response;
+using System.Text.Json;
 
 namespace CartMicroservice.Application.Features.EventHandlers.Query
 {
@@ -47,10 +48,10 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
                 {
                     if (!string.IsNullOrWhiteSpace(item.SelectedOptionsJson))
                     {
-                        var optionsArray = JArray.Parse(item.SelectedOptionsJson);
+                        var optionsArray = JObject.Parse(item.SelectedOptionsJson);
                         if (optionsArray.Count > 0)
                         {
-                            int? modeId = (int?)optionsArray[0]["modeId"];
+                            int? modeId = (int?)optionsArray["modeId"];
 
                             if(modeId.HasValue)
                             {
@@ -68,13 +69,15 @@ namespace CartMicroservice.Application.Features.EventHandlers.Query
 
                 var cartItemsDto = cart.CartItems.Select(ci => new CartItemDto
                 {
+                    CartId = ci.CartId,
                     ProductId = ci.ProductVariantId.ToString(),
                     Name = ci.ItemNameSnapshot,
                     Quantity = ci.Quantity,
                     Price = ci.PriceSnapshot,
                     ImageUrl = ci.ImageUrl,
                     AdditionalFees = ci.AdditionalFees,
-                    ProviderType = ci.ProviderType
+                    ProviderType = ci.ProviderType,
+                    Meta = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(ci.SelectedOptionsJson) ?? new Dictionary<string, JsonElement>()
                 }).ToList();
 
                 var billItemsDto = new List<BillItemDto>

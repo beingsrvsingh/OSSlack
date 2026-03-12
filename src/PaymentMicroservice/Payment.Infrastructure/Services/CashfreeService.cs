@@ -21,7 +21,7 @@ namespace Payment.Infrastructure.Services
             _settings = options.Value;
         }
 
-        public async Task<CreatePaymentResponse> CreateOrderAsync(string orderId,decimal amount,string customerId,string customerEmail,string customerPhone)
+        public async Task<CreatePaymentResponse> CreateOrderAsync(string orderId, string userId, decimal amount, string currency)
         {
             var request = new HttpRequestMessage(HttpMethod.Post,$"{_settings.BaseUrl}/orders");
 
@@ -36,20 +36,10 @@ namespace Payment.Infrastructure.Services
             {
                 order_id = orderId,
                 order_amount = amount,
-                order_currency = "INR",
-                customer_details = new
-                {
-                    customer_id = customerId,
-                    customer_email = customerEmail,
-                    customer_phone = customerPhone
-                }
+                order_currency = "INR"
             };
 
-            request.Content = new StringContent(
-                JsonSerializer.Serialize(payload),
-                Encoding.UTF8,
-                "application/json"
-            );
+            request.Content = new StringContent(JsonSerializer.Serialize(payload),Encoding.UTF8,"application/json");
 
             var response = await _http.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -57,11 +47,7 @@ namespace Payment.Infrastructure.Services
             var json = await response.Content.ReadAsStringAsync();
             var doc = JsonDocument.Parse(json);
 
-            return new CreatePaymentResponse(
-                OrderId: orderId,
-                OrderToken: doc.RootElement.GetProperty("order_token").GetString()!,
-                Amount: amount
-            );
+            return new CreatePaymentResponse(OrderId: orderId,OrderToken: doc.RootElement.GetProperty("order_token").GetString()!,Amount: amount);
         }
     }
 

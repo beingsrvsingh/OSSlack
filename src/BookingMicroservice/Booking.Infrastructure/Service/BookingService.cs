@@ -22,7 +22,7 @@ namespace BookingMicroservice.Infrastructure.Service
         {
             await _repository.AddAsync(booking);
             await _repository.SaveChangesAsync();
-            return booking.Id.ToString();
+            return booking.BookingReferenceNumber;
         }
 
         public async Task<IEnumerable<BookingResponseDto>> GetBookingsByDateAsync(int entityId, DateTime date)
@@ -49,6 +49,21 @@ namespace BookingMicroservice.Infrastructure.Service
         public Task<IEnumerable<BookingMaster>> GetBookingByIdAsync(int bookingId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateStatusBookingAsync(BookingMaster booking)
+        {
+            try
+            {
+                await _repository.UpdateAsync(booking);
+                await _repository.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 

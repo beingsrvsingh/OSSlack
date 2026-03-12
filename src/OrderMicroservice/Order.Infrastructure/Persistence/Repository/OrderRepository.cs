@@ -22,6 +22,12 @@ namespace Order.Infrastructure.Persistence.Repository
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
+        public async Task<OrderHeader?> GetOrderByOrderNumberAsync(string orderNumber)
+        {
+            return await _context.OrderHeaders
+                .FirstOrDefaultAsync(o => o.OrderNumber.Equals(orderNumber));
+        }
+
         public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId)
         {
             return await _context.OrderItems
@@ -53,8 +59,8 @@ namespace Order.Infrastructure.Persistence.Repository
         public async Task<OrderHeader?> GetOrderDetailsAsync(int orderId)
         {
             return await _context.OrderHeaders
-                .Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(o => o.Id == orderId);
+                .Include(o => o.OrderItems.Where(oi => oi.Id == orderId))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<string> GenerateOrderNumberAsync()

@@ -41,6 +41,19 @@ namespace Order.Infrastructure.Services
             }
         }
 
+        public async Task<OrderHeader?> GetOrderByOrderNumberAsync(string orderNumber)
+        {
+            try
+            {
+                return await _orderRepository.GetOrderByOrderNumberAsync(orderNumber);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error fetching order by ID", ex);
+                return null;
+            }
+        }
+
         public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId)
         {
             try
@@ -67,7 +80,7 @@ namespace Order.Infrastructure.Services
             }
         }
 
-        public async Task<bool> AddOrderAsync(AddOrderCommand order)
+        public async Task<OrderResponse?> AddOrderAsync(AddOrderCommand order)
         {
             try
             {
@@ -77,7 +90,7 @@ namespace Order.Infrastructure.Services
 
                 if(carts == null)
                 {
-                    return false;
+                    return null;
                 }
 
                 List<OrderItem> orderItems = new List<OrderItem>();
@@ -92,32 +105,38 @@ namespace Order.Infrastructure.Services
                     orderItem.TaxAmount = item.TaxAmount;
                     orderItem.DiscountAmount = item.DiscountAmount;
                     orderItem.TotalPrice = item.TotalPrice;
-
+                    orderItem.ProductName = item.ProductName;
+                    orderItem.ProductType = item.ProductType;
                     orderItems.Add(orderItem);
                 }
 
-                await _orderRepository.AddOrderAsync(
-                new OrderHeader()
+                var orderHeader = new OrderHeader()
                 {
                     AddressId = address.Id,
                     UserId = userId,
-                    BookingId = order.BookingId,
+                    BookingId = order.BookingRefNum,
                     Status = Domain.Enums.OrderStatus.Pending,
-                    TotalAmount = carts.TotalAmount,
-                    GrandTotal = carts.GrandTotal,
+                    TotalAmount = carts.SubTotal,
+                    GrandTotal = carts.TotalAmount,
                     TaxAmount = carts.TaxAmount,
                     PlatformFee = carts.PlatformFee,
                     SurgeFee = carts.SurgeFee,
                     DiscountAmount = carts.DiscountAmount,
                     OrderItems = orderItems
-                });
+                };
+
+                await _orderRepository.AddOrderAsync(orderHeader);
                 await _orderRepository.SaveChangesAsync();
-                return true;
+                return new OrderResponse
+                {
+                    OrderNumber = orderHeader.OrderNumber,
+                    GrandTotal = orderHeader.GrandTotal
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error adding order", ex);
-                return false;
+                return null;
             }
         }
 
@@ -184,7 +203,7 @@ namespace Order.Infrastructure.Services
         {
             var order = await _orderRepository.GetOrderDetailsAsync(orderId);
             if(order == null) return null;
-            var payment = await paymentService.GetPaymentInfoByIdAsync(orderId);
+            var payment = await paymentService.GetPaymentInfoByIdAsync(order.OrderNumber);
             var shippingInfo = await addressService.GetAddressInfoByIdAsync(order.UserId);
 
             if (order == null)
@@ -204,10 +223,10 @@ namespace Order.Infrastructure.Services
                 PaymentInfo = new PaymentInfoDto
                 {
                     Mode = payment!.Mode, 
-                    CardType = payment.CardType,
-                    Name = payment.Name,
+                    CardType = payment.CardType ?? "",
+                    Name = payment.Name ?? "",
                     Status = payment.Status,
-                    CardNumber = payment.CardNumber
+                    CardNumber = payment.CardNumber ?? ""
                 },
                 BillDetails = new BillDetailsDto
                 {

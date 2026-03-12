@@ -6,6 +6,10 @@ namespace Order.Application.Contracts
     {
         public int ProductId { get; set; }
 
+        public string ProductName { get; set; }
+
+        public string ProductType { get; set; }
+
         public string ProductUrl { get; set; } = null!;
 
         public int Quantity { get; set; }
@@ -17,6 +21,8 @@ namespace Order.Application.Contracts
         public decimal DiscountAmount { get; set; }
 
         public decimal TotalPrice { get; set; }
+
+        public string? Sku { get; set; }
 
         public string? ProductOptions { get; set; }
     }

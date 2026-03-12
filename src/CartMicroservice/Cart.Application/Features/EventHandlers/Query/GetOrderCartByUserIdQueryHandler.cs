@@ -33,14 +33,16 @@ namespace Cart.Application.Features.EventHandlers.Query
                 foreach (var item in cart.CartItems) {
                     OrderCartItemDto cartItem = new();
                     cartItem.ProductId = item.ProductVariantId;
-                    cartItem.Quantity = item.Quantity;
                     cartItem.ProductUrl = item.ImageUrl;
-                    cartItem.TotalPrice = item.PriceSnapshot;
-                    cartItem.DiscountAmount = item.DiscountAmount;
-                    cartItem.ProductOptions = item.SelectedOptionsJson;
-                    cartItem.PreferedDeliveryDate = item.PreferredServiceDateTime;
+                    cartItem.Quantity = item.Quantity;
                     cartItem.UnitPrice = item.PriceSnapshot;
+                    cartItem.DiscountAmount = item.DiscountAmount;
+                    cartItem.TaxAmount = item.TaxAmount;
+                    cartItem.TotalPrice = item.PriceSnapshot;                    
+                    cartItem.ProductOptions = item.SelectedOptionsJson;                    
                     cartItem.Sku = item.SkuSnapshot;
+                    cartItem.ProductName = item.ItemNameSnapshot;
+                    cartItem.ProductType = item.ProviderType;
                     cartItems.Add(cartItem);
                 }
 

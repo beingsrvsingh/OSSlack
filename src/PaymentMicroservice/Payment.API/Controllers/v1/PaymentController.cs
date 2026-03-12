@@ -23,11 +23,11 @@ namespace PaymentMicroservice.API.Controllers.v1
             if (!result.Succeeded)
                 return Conflict(result);
 
-            return Created(string.Empty, new { Message = "Payment transaction created successfully." });
+            return Ok(result);
         }
 
         // GET: Get Payment Summary
-        [HttpGet("summary/{orderId:int}")]
+        [HttpGet("summary/{orderId}")]
         [ProducesResponseType(typeof(IEnumerable<PaymentTransactionLogDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPaymentTransactionByOrderIdAsync([FromRoute] string orderId)

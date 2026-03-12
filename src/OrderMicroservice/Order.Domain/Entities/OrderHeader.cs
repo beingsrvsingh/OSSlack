@@ -7,11 +7,16 @@ namespace Order.Domain.Entities
 {
     public class OrderHeader
     {
+        public OrderHeader()
+        {
+            OrderNumber = GenerateTraceableOrderNumber();
+        }
+
         [Key]
         public int Id { get; set; }
 
         [Required, MaxLength(50)]
-        public string OrderNumber { get; set; } = Guid.NewGuid().ToString();
+        public string OrderNumber { get; set; }
 
         [Required]
         public required string UserId { get; set; }
@@ -19,7 +24,7 @@ namespace Order.Domain.Entities
         [Required]
         public required int AddressId { get; set; }
 
-        public int? BookingId { get; set; }
+        public string? BookingId { get; set; }
 
         [Required]
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
@@ -76,5 +81,22 @@ namespace Order.Domain.Entities
         // Navigation
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public virtual ICollection<OrderShipment> Shipments { get; set; } = new List<OrderShipment>();
+
+        public string GenerateTraceableOrderNumber()
+        {
+            Random random = new Random();
+
+            // Part 1: Date in yyMMdd format (e.g., 260312 for Mar 12, 2026)
+            string datePart = DateTime.UtcNow.ToString("yyMMdd");
+
+            // Part 2: Random 5-digit number
+            string randomPart1 = random.Next(10000, 99999).ToString();
+
+            // Part 3: Random 5-digit number
+            string randomPart2 = random.Next(10000, 99999).ToString();
+
+            // Combine like Amazon-style: DATE-RANDOM-RANDOM
+            return $"{datePart}-{randomPart1}-{randomPart2}";
+        }
     }
 }

@@ -10,11 +10,13 @@ namespace Order.Application.Services
         Task<OrderDetailDto?> GetOrderDetailsAsync(int orderId);
         Task<IEnumerable<OrderItem>> GetOrderItemsAsync(int orderId);
         Task<IEnumerable<OrderItemCustomization>> GetCustomizationsByOrderItemIdAsync(int orderItemId);
-        Task<bool> AddOrderAsync(AddOrderCommand order);
+        Task<OrderResponse?> AddOrderAsync(AddOrderCommand order);
         Task<IEnumerable<OrderHeader>> GetAllOrdersAsync();
         Task<IEnumerable<OrderHeader>> GetOrdersByUserIdAsync(string userId);
         Task<bool> UpdateOrderAsync(OrderHeader order);
         Task<bool> DeleteOrderAsync(int orderId);
+
+        Task<OrderHeader?> GetOrderByOrderNumberAsync(string orderNumber);
     }
 
 }

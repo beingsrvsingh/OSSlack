@@ -4,11 +4,6 @@ namespace Payment.Application.Services
 {
     public interface ICashfreeService
     {
-        Task<CreatePaymentResponse> CreateOrderAsync(
-            string orderId,
-            decimal amount,
-            string customerId,
-            string customerEmail,
-            string customerPhone);
+        Task<CreatePaymentResponse> CreateOrderAsync(string orderId,string userId,decimal amount,string currency);
     }
 }

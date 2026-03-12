@@ -19,7 +19,7 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
         {
             return await _context.Carts
                 .Include(c => c.CartItems)
-                .FirstOrDefaultAsync(c => c.UserId == userId && !c.IsDeleted);
+                .FirstOrDefaultAsync(c => c.UserId.Equals(userId) && !c.IsDeleted);
         }
 
         public async Task<CartMicroservice.Domain.Entities.Cart?> GetCartByProductIdAsync(int productId)
@@ -82,9 +82,13 @@ namespace CartMicroservice.Infrastructure.Persistence.Repository
 
         public async Task ClearCartItemsAsync(int cartId)
         {
-            var items = await _context.CartItems.Where(ci => ci.CartId == cartId).ToListAsync();
-            _context.CartItems.RemoveRange(items);
-            await _context.SaveChangesAsync();
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);
+
+            if (cart != null)
+            {
+                _context.Carts.Remove(cart);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 

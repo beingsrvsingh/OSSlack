@@ -1,7 +1,8 @@
+using Booking.Application.Contracts;
+using Booking.Application.Service;
 using BookingMicroservice.Application.Features.Commands;
 using BookingMicroservice.Application.Service;
 using BookingMicroservice.Domain.Entities;
-using Mapster;
 using MediatR;
 using Shared.Application.Interfaces.Logging;
 using Shared.Utilities.Response;
@@ -12,11 +13,15 @@ namespace BookingMicroservice.Application.Features.EventHandlers.Commands
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Result>
     {
         private readonly IBookingService _bookingService;
+        private readonly IOrderClient orderClient;
+        private readonly IPaymentClient paymentClient;
         private readonly ILoggerService<CreateBookingCommandHandler> _logger;
 
-        public CreateBookingCommandHandler(ILoggerService<CreateBookingCommandHandler> logger, IBookingService astrologerService)
+        public CreateBookingCommandHandler(ILoggerService<CreateBookingCommandHandler> logger, IBookingService bookingService, IOrderClient orderClient, IPaymentClient paymentClient)
         {
-            _bookingService = astrologerService;
+            _bookingService = bookingService;
+            this.orderClient = orderClient;
+            this.paymentClient = paymentClient;
             _logger = logger;
         }
 
@@ -36,13 +41,33 @@ namespace BookingMicroservice.Application.Features.EventHandlers.Commands
             };
             try
             {
-                string bookingId = await _bookingService.CreateAsync(booking);
-                return Result.Success(new { Message = "Booking created successfully.", Data = bookingId });
+                string bookingRefNum = await _bookingService.CreateAsync(booking);
+                if (bookingRefNum == null) {
+                    return Result.Failure(new FailureResponse("BOKING_CREATION_FAILED", "Booking creation failed"));
+                }
+                
+                OrderResponse? order = await orderClient.AddOrderAsync(bookingRefNum);
+                if (order == null)
+                {
+                    return Result.Failure(new FailureResponse("ORDER_CREATION_FAILED", "Order creation failed"));
+                }
+
+                PaymentResponse? payment = await paymentClient.Payment(order.OrderNumber, booking.UserId, order.GrandTotal);
+
+                if(payment == null)
+                {
+                    bool paymentStatus = await orderClient.UpdateStatusOrderAsync(order.OrderNumber, "Success");
+                    return Result.Failure(new FailureResponse("PAYMENT_CREATION_FAILED", "Payment creation failed"));
+                }
+                booking.Status = Enum.Parse<BookingStatus>("Confirmed", true);
+                await _bookingService.UpdateStatusBookingAsync(booking);
+                await orderClient.UpdateStatusOrderAsync(order.OrderNumber, "Confirmed");
+                return Result.Success(payment);
             }
             catch (Exception)
             {
                 _logger.LogWarning("Booking creation failed for request {@Request}", request);
-                return Result.Failure(new FailureResponse("ASTRO_CREATION_FAILED", "Booking creation failed"));
+                return Result.Failure(new FailureResponse("BOKING_CREATION_FAILED", "Booking creation failed"));
             }
         }
     }
